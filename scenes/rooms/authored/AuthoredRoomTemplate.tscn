@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dh0yumtipuesq"]
 
 [ext_resource type="Script" uid="uid://bt3uh1ywj3ovd" path="res://scripts/rooms/AuthoredRoomTemplate.gd" id="1_room_template"]
+[ext_resource type="Script" uid="uid://cx8rykbcs27sa" path="res://scripts/iso/IsoAuthoredRoomRuntimeAdapter.gd" id="2_2ddbh"]
 
 [node name="AuthoredRoomTemplate" type="Node2D" unique_id=360639997]
 script = ExtResource("1_room_template")
@@ -51,3 +52,6 @@ position = Vector2(640, 154)
 
 [node name="DoorSocket_Right" type="Marker2D" parent="Markers/DoorSockets" unique_id=424485652]
 position = Vector2(850, 168)
+
+[node name="RuntimeAdapter" type="Node2D" parent="." unique_id=709900137]
+script = ExtResource("2_2ddbh")
