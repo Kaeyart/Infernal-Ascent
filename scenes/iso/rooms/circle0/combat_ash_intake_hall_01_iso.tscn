@@ -16,6 +16,14 @@
 [ext_resource type="Script" uid="uid://cx8rykbcs27sa" path="res://scripts/iso/IsoAuthoredRoomRuntimeAdapter.gd" id="15_8hkts"]
 [ext_resource type="Script" uid="uid://b6yn8nd25rie3" path="res://scripts/iso/IsoPatronFlowController.gd" id="16_8hkts"]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8d855"]
+radius = 33.0
+height = 132.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8hkts"]
+radius = 58.0
+height = 156.0
+
 [node name="IsoCombatAshIntakeHall01" type="Node2D" unique_id=556770769]
 script = ExtResource("1_room")
 room_id = "combat_ash_intake_hall_01_iso"
@@ -192,12 +200,13 @@ marker_label = "PlayerSpawn"
 marker_color = Color(0.42, 0.82, 1, 0.95)
 
 [node name="RewardSocket" type="Node2D" parent="Markers" unique_id=1680463534]
-position = Vector2(268, 282)
+position = Vector2(276, 285)
 script = ExtResource("3_marker")
 marker_label = "RewardSocket"
 marker_color = Color(0.95, 0.76, 0.25, 0.95)
 
 [node name="EnemySpawns" type="Node2D" parent="Markers" unique_id=1498269929]
+position = Vector2(-7, -10)
 
 [node name="EnemySpawn_01" type="Node2D" parent="Markers/EnemySpawns" unique_id=1992095558]
 position = Vector2(452, 324)
@@ -281,3 +290,152 @@ gate_right_position = Vector2(415, 453)
 [node name="RuntimeAdapter" type="Node2D" parent="." unique_id=1760276179]
 position = Vector2(157, 235)
 script = ExtResource("15_8hkts")
+
+[node name="Collision" type="Node2D" parent="." unique_id=1464605368]
+
+[node name="BackBoundary" type="StaticBody2D" parent="Collision" unique_id=1012257704]
+position = Vector2(-94, 40)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision/BackBoundary" unique_id=1733423445]
+position = Vector2(143, 598)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Collision/BackBoundary" unique_id=1521769260]
+position = Vector2(-153, 442)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="Collision/BackBoundary" unique_id=1927012272]
+position = Vector2(-206, 406)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="Collision/BackBoundary" unique_id=1450593113]
+position = Vector2(-267, 377)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D9" type="CollisionShape2D" parent="Collision/BackBoundary" unique_id=1748566842]
+position = Vector2(-313, 350)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Collision/BackBoundary" unique_id=1372603319]
+position = Vector2(-95, 475)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Collision/BackBoundary" unique_id=1481684244]
+position = Vector2(-37, 505)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Collision/BackBoundary" unique_id=165719535]
+position = Vector2(19, 540)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="Collision/BackBoundary" unique_id=1026689496]
+position = Vector2(77, 567)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="Front" type="StaticBody2D" parent="Collision" unique_id=923383965]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision/Front" unique_id=1374002489]
+position = Vector2(763, 263)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Collision/Front" unique_id=108830835]
+position = Vector2(467, 107)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="Collision/Front" unique_id=669808225]
+position = Vector2(414, 71)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="Collision/Front" unique_id=194399473]
+position = Vector2(353, 42)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D9" type="CollisionShape2D" parent="Collision/Front" unique_id=666917571]
+position = Vector2(307, 15)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Collision/Front" unique_id=1635465392]
+position = Vector2(525, 140)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Collision/Front" unique_id=1953258553]
+position = Vector2(583, 170)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Collision/Front" unique_id=724432701]
+position = Vector2(639, 205)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="Collision/Front" unique_id=1115349317]
+position = Vector2(697, 232)
+shape = SubResource("CapsuleShape2D_8d855")
+
+[node name="Left" type="StaticBody2D" parent="Collision" unique_id=424013382]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision/Left" unique_id=1897691830]
+position = Vector2(-355, 334)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Collision/Left" unique_id=843035044]
+position = Vector2(-298, 290)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Collision/Left" unique_id=1300374263]
+position = Vector2(-185, 252)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Collision/Left" unique_id=1028728994]
+position = Vector2(-87, 207)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Collision/Left" unique_id=655101677]
+position = Vector2(7, 144)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="Collision/Left" unique_id=1003610863]
+position = Vector2(105, 107)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="Collision/Left" unique_id=378081321]
+position = Vector2(191, 61)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="Collision/Left" unique_id=1172419358]
+position = Vector2(269, 25.999992)
+rotation = -0.063396655
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="Right" type="StaticBody2D" parent="Collision" unique_id=1700310481]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision/Right" unique_id=577545653]
+position = Vector2(110, 643)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Collision/Right" unique_id=659763063]
+position = Vector2(167, 599)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Collision/Right" unique_id=2014688437]
+position = Vector2(280, 561)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Collision/Right" unique_id=424190069]
+position = Vector2(378, 516)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Collision/Right" unique_id=1189041892]
+position = Vector2(472, 453)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="Collision/Right" unique_id=1151453977]
+position = Vector2(570, 416)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="Collision/Right" unique_id=2074990804]
+position = Vector2(656, 370)
+shape = SubResource("CapsuleShape2D_8hkts")
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="Collision/Right" unique_id=1246950546]
+position = Vector2(734, 335)
+rotation = -0.063396655
+shape = SubResource("CapsuleShape2D_8hkts")
