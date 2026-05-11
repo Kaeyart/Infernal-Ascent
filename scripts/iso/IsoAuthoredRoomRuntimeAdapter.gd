@@ -3,22 +3,16 @@ class_name IsoAuthoredRoomRuntimeAdapter
 
 ## Runtime adapter for hand-authored isometric rooms.
 ##
-## Intended setup:
-##   YourAuthoredIsoRoom
-##     RuntimeAdapter  <- attach this script here
-##
-## It reads existing authored markers and wires the current test runtime:
-## - creates/moves IsoTestPlayer to PlayerSpawn
-## - adds a Camera2D to the player
-## - creates/configures PatronFlow using RewardSocket and Door L/C/R markers
-##
-## This does not spawn real enemies yet. It keeps the current C/E/R debug patron flow.
+## This version can spawn temporary test enemies from authored enemy markers.
+## When all test enemies die, PatronFlow.report_room_cleared() is called.
 
 @export var use_parent_as_room_root: bool = true
 @export var auto_create_test_player: bool = true
 @export var auto_create_camera: bool = true
 @export var auto_create_patron_flow: bool = true
+@export var auto_spawn_test_enemies: bool = true
 @export var move_existing_nodes_to_markers: bool = true
+@export var clear_room_when_test_enemies_dead: bool = true
 @export var debug_print_mapping: bool = true
 
 @export var player_node_name: String = "IsoTestPlayer"
@@ -29,9 +23,15 @@ class_name IsoAuthoredRoomRuntimeAdapter
 @export var camera_smoothing_enabled: bool = true
 @export var camera_smoothing_speed: float = 8.0
 
+@export var test_enemy_health: int = 3
+@export var test_enemy_movement_enabled: bool = false
+
 var room_root: Node = null
 var player_node: Node2D = null
 var patron_flow_node: IsoPatronFlowController = null
+var spawned_enemies: Array[IsoTestEnemy] = []
+var _room_cleared: bool = false
+var _alive_enemy_count: int = 0
 
 func _ready() -> void:
 	room_root = _get_room_root()
@@ -93,15 +93,16 @@ func _ready() -> void:
 	if auto_create_camera and player_node != null:
 		_ensure_camera(player_node)
 
+	if auto_spawn_test_enemies:
+		_spawn_test_enemies_from_markers()
+
 	if debug_print_mapping:
 		_print_mapping(player_spawn, reward_socket, door_left, door_center, door_right)
-
 
 func _get_room_root() -> Node:
 	if use_parent_as_room_root and get_parent() != null:
 		return get_parent()
 	return self
-
 
 func _find_or_create_player(player_spawn: Node2D) -> Node2D:
 	var found_player: Node2D = _find_named_node2d(player_node_name)
@@ -122,7 +123,6 @@ func _find_or_create_player(player_spawn: Node2D) -> Node2D:
 		found_player.global_position = player_spawn.global_position
 
 	return found_player
-
 
 func _find_or_create_patron_flow(
 	reward_socket: Node2D,
@@ -154,6 +154,51 @@ func _find_or_create_patron_flow(
 
 	return found_flow
 
+func _spawn_test_enemies_from_markers() -> void:
+	var enemy_markers: Array[Node2D] = _find_enemy_markers()
+	if enemy_markers.is_empty():
+		print("[IsoRuntimeAdapter] No enemy markers found. Press C can still clear room in debug.")
+		return
+
+	var parent_for_enemies: Node = _get_y_sort_parent()
+	spawned_enemies.clear()
+	_alive_enemy_count = 0
+	_room_cleared = false
+
+	for marker: Node2D in enemy_markers:
+		var enemy: IsoTestEnemy = IsoTestEnemy.new()
+		enemy.name = "IsoTestEnemy_" + marker.name
+		enemy.max_health = test_enemy_health
+		enemy.move_enabled = test_enemy_movement_enabled
+		parent_for_enemies.add_child(enemy)
+		enemy.global_position = marker.global_position
+		enemy.died.connect(_on_test_enemy_died)
+		spawned_enemies.append(enemy)
+		_alive_enemy_count += 1
+
+	print("[IsoRuntimeAdapter] Spawned %d test enemies from authored markers." % _alive_enemy_count)
+
+func _on_test_enemy_died(enemy: IsoTestEnemy) -> void:
+	var enemy_index: int = spawned_enemies.find(enemy)
+	if enemy_index >= 0:
+		spawned_enemies.remove_at(enemy_index)
+
+	_alive_enemy_count = max(0, _alive_enemy_count - 1)
+	print("[IsoRuntimeAdapter] Test enemy defeated. Remaining: %d" % _alive_enemy_count)
+
+	if clear_room_when_test_enemies_dead and _alive_enemy_count <= 0:
+		_complete_test_room_clear()
+
+func _complete_test_room_clear() -> void:
+	if _room_cleared:
+		return
+
+	_room_cleared = true
+	if patron_flow_node != null:
+		print("[IsoRuntimeAdapter] Test room cleared. Calling PatronFlow.")
+		patron_flow_node.report_room_cleared()
+	else:
+		push_warning("[IsoRuntimeAdapter] Room cleared but PatronFlow is missing.")
 
 func _ensure_camera(target_player: Node2D) -> void:
 	var camera: Camera2D = null
@@ -175,7 +220,6 @@ func _ensure_camera(target_player: Node2D) -> void:
 	camera.enabled = true
 	camera.make_current()
 
-
 func _get_y_sort_parent() -> Node:
 	var candidates: Array[String] = [
 		"L3_YSorted",
@@ -192,6 +236,21 @@ func _get_y_sort_parent() -> Node:
 
 	return room_root
 
+func _find_enemy_markers() -> Array[Node2D]:
+	var result: Array[Node2D] = []
+	var marker_root: Node = room_root.find_child(marker_root_name, true, false)
+	var search_root: Node = marker_root if marker_root != null else room_root
+	var all_nodes: Array[Node] = []
+	_collect_nodes(search_root, all_nodes)
+
+	for node: Node in all_nodes:
+		if node is Node2D:
+			var normalized_name: String = _normalize_marker_name(node.name)
+			var is_enemy_marker: bool = normalized_name.find("enemy") >= 0
+			if is_enemy_marker:
+				result.append(node as Node2D)
+
+	return result
 
 func _find_named_node2d(node_name: String) -> Node2D:
 	if room_root == null:
@@ -200,7 +259,6 @@ func _find_named_node2d(node_name: String) -> Node2D:
 	if node is Node2D:
 		return node as Node2D
 	return null
-
 
 func _find_marker(candidate_names: Array[String]) -> Node2D:
 	var marker_root: Node = room_root.find_child(marker_root_name, true, false)
@@ -233,21 +291,18 @@ func _find_marker(candidate_names: Array[String]) -> Node2D:
 
 	return null
 
-
 func _collect_nodes(root: Node, out_nodes: Array[Node]) -> void:
 	for child: Node in root.get_children():
 		out_nodes.append(child)
 		_collect_nodes(child, out_nodes)
 
-
 func _normalize_marker_name(value: String) -> String:
-	var s: String = value.to_lower()
-	s = s.replace(" ", "")
-	s = s.replace("_", "")
-	s = s.replace("-", "")
-	s = s.replace(".", "")
-	return s
-
+	var normalized_value: String = value.to_lower()
+	normalized_value = normalized_value.replace(" ", "")
+	normalized_value = normalized_value.replace("_", "")
+	normalized_value = normalized_value.replace("-", "")
+	normalized_value = normalized_value.replace(".", "")
+	return normalized_value
 
 func _print_mapping(
 	player_spawn: Node2D,
@@ -262,7 +317,6 @@ func _print_mapping(
 	print("[IsoRuntimeAdapter] Door L: %s" % _node_label(door_left))
 	print("[IsoRuntimeAdapter] Door C: %s" % _node_label(door_center))
 	print("[IsoRuntimeAdapter] Door R: %s" % _node_label(door_right))
-
 
 func _node_label(node: Node2D) -> String:
 	if node == null:
