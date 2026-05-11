@@ -1,0 +1,365 @@
+extends Node2D
+
+signal reward_taken()
+signal return_to_hub_requested()
+signal room_choice_requested(room_type: String)
+
+const ChoiceDoorScene := preload("res://scenes/props/ChoiceDoor.tscn")
+const UpgradeCardScene := preload("res://scenes/ui/UpgradeCard.tscn")
+
+@onready var player: Node2D = $Player
+
+var room_type := "upgrade"
+var reward_position := Vector2(640, 330)
+var reward_taken_flag := false
+var interact_radius := 86.0
+var hint := ""
+var choice_doors: Array[Node2D] = []
+var upgrade_cards: Array[Node2D] = []
+
+
+func set_room_type(new_room_type: String) -> void:
+	room_type = new_room_type
+
+
+func _ready() -> void:
+	if player:
+		player.global_position = Vector2(640, 520)
+
+	if room_type == RunState.ROOM_UPGRADE:
+		_spawn_upgrade_cards()
+
+	queue_redraw()
+
+
+func _process(_delta: float) -> void:
+	hint = ""
+
+	if player == null:
+		return
+
+	if room_type == RunState.ROOM_UPGRADE:
+		if reward_taken_flag:
+			hint = "Upgrade chosen — choose your next door"
+		else:
+			hint = "Choose one upgrade card"
+
+		queue_redraw()
+		return
+
+	var near_reward: bool = player.global_position.distance_to(reward_position) <= interact_radius
+
+	if not reward_taken_flag:
+		if near_reward:
+			hint = _get_take_reward_hint()
+
+			if Input.is_action_just_pressed("interact"):
+				_take_reward()
+	else:
+		if room_type == RunState.ROOM_FOUNTAIN:
+			hint = "Fountain used — Press E to return to Hub"
+
+			if near_reward and Input.is_action_just_pressed("interact"):
+				return_to_hub_requested.emit()
+		else:
+			hint = "Reward taken — choose your next door"
+
+	queue_redraw()
+
+
+func _take_reward() -> void:
+	reward_taken_flag = true
+
+	match room_type:
+		RunState.ROOM_SHOP:
+			_apply_shop_reward()
+		RunState.ROOM_FORGE:
+			_apply_forge_reward()
+		RunState.ROOM_SHRINE:
+			_apply_shrine_reward()
+		RunState.ROOM_FOUNTAIN:
+			_apply_fountain_reward()
+		_:
+			_apply_shop_reward()
+
+	reward_taken.emit()
+
+	if room_type != RunState.ROOM_FOUNTAIN:
+		_spawn_choice_doors()
+
+	queue_redraw()
+
+
+func _apply_shop_reward() -> void:
+	if player and player.has_method("gain_ultimate"):
+		player.gain_ultimate(30.0)
+
+
+func _apply_forge_reward() -> void:
+	if player:
+		player.armor = minf(player.armor + 10.0, player.max_armor)
+
+
+func _apply_shrine_reward() -> void:
+	if player:
+		player.hp = minf(player.hp + 25.0, player.max_hp)
+
+	if player and player.has_method("gain_ultimate"):
+		player.gain_ultimate(15.0)
+
+
+func _apply_fountain_reward() -> void:
+	if player:
+		player.hp = minf(player.hp + 35.0, player.max_hp)
+		player.armor = minf(player.armor + 8.0, player.max_armor)
+
+
+func _spawn_upgrade_cards() -> void:
+	if not upgrade_cards.is_empty():
+		return
+
+	var offers: Array[RunUpgradeData] = RunState.generate_upgrade_offers(3)
+
+	if offers.is_empty():
+		hint = "No upgrades left — choose your next door"
+		reward_taken_flag = true
+		_spawn_choice_doors()
+		return
+
+	var positions: Array[Vector2] = [
+		Vector2(385, 300),
+		Vector2(640, 270),
+		Vector2(895, 300)
+	]
+
+	for i in range(offers.size()):
+		var card := UpgradeCardScene.instantiate() as Node2D
+		card.global_position = positions[i]
+		add_child(card)
+
+		if card.has_method("setup"):
+			card.setup(offers[i])
+
+		if card.has_signal("upgrade_selected"):
+			card.upgrade_selected.connect(_on_upgrade_card_selected)
+
+		upgrade_cards.append(card)
+
+
+func _on_upgrade_card_selected(upgrade_data: RunUpgradeData) -> void:
+	if reward_taken_flag:
+		return
+
+	reward_taken_flag = true
+	RunState.apply_upgrade(upgrade_data)
+
+	if player and player.has_method("apply_run_modifiers"):
+		player.apply_run_modifiers()
+
+	for card in upgrade_cards:
+		if card != null and is_instance_valid(card):
+			card.queue_free()
+
+	upgrade_cards.clear()
+	reward_taken.emit()
+	_spawn_choice_doors()
+	queue_redraw()
+
+
+func _spawn_choice_doors() -> void:
+	if not choice_doors.is_empty():
+		return
+
+	var offers: Array[String] = RunState.generate_offers_after_clear()
+
+	if offers.is_empty():
+		return
+
+	var positions: Array[Vector2] = []
+
+	if offers.size() == 1:
+		positions = [Vector2(640, 160)]
+	else:
+		positions = [
+			Vector2(410, 170),
+			Vector2(640, 150),
+			Vector2(870, 170)
+		]
+
+	for i in range(offers.size()):
+		var offered_room_type: String = str(offers[i])
+		var door := ChoiceDoorScene.instantiate() as Node2D
+		door.global_position = positions[i]
+		add_child(door)
+
+		if door.has_method("setup"):
+			door.setup(offered_room_type)
+
+		if door.has_signal("room_choice_requested"):
+			door.room_choice_requested.connect(_on_choice_door_selected)
+
+		choice_doors.append(door)
+
+
+func _on_choice_door_selected(selected_room_type: String) -> void:
+	room_choice_requested.emit(selected_room_type)
+
+
+func _get_take_reward_hint() -> String:
+	match room_type:
+		RunState.ROOM_SHOP:
+			return "Press E — Use Shop Placeholder"
+		RunState.ROOM_FORGE:
+			return "Press E — Use Forge Placeholder"
+		RunState.ROOM_SHRINE:
+			return "Press E — Accept Shrine Blessing"
+		RunState.ROOM_FOUNTAIN:
+			return "Press E — Drink from Fountain"
+		_:
+			return "Press E — Take Reward"
+
+
+func _get_room_subtitle() -> String:
+	match room_type:
+		RunState.ROOM_UPGRADE:
+			return "Choose one run upgrade. It lasts until you return to the Hub."
+		RunState.ROOM_SHOP:
+			return "Shop placeholder. Inventory comes later."
+		RunState.ROOM_FORGE:
+			return "Forge placeholder. Weapon mutation comes later."
+		RunState.ROOM_SHRINE:
+			return "Shrine placeholder. A small blessing for now."
+		RunState.ROOM_FOUNTAIN:
+			return "Boss cleared. Recover, then return to the Hub."
+		_:
+			return "A quiet chamber between punishments."
+
+
+func _get_reward_label() -> String:
+	match room_type:
+		RunState.ROOM_SHOP:
+			return "+30 Ultimate"
+		RunState.ROOM_FORGE:
+			return "+10 Armor"
+		RunState.ROOM_SHRINE:
+			return "Blessing"
+		RunState.ROOM_FOUNTAIN:
+			return "Fountain"
+		_:
+			return "Reward"
+
+
+func _get_reward_color() -> Color:
+	match room_type:
+		RunState.ROOM_UPGRADE:
+			return Color("#dfaa46")
+		RunState.ROOM_SHOP:
+			return Color("#9ed8cd")
+		RunState.ROOM_FORGE:
+			return Color("#ff684a")
+		RunState.ROOM_SHRINE:
+			return Color("#b49ce2")
+		RunState.ROOM_FOUNTAIN:
+			return Color("#76d99b")
+		_:
+			return Color("#dfaa46")
+
+
+func _draw() -> void:
+	_draw_room()
+
+	if room_type != RunState.ROOM_UPGRADE:
+		_draw_reward()
+
+	_draw_hint()
+
+
+func _draw_room() -> void:
+	draw_rect(Rect2(Vector2.ZERO, Vector2(1280, 720)), Color("#12090c"))
+
+	draw_rect(
+		Rect2(Vector2(90, 80), Vector2(1100, 560)),
+		Color("#2a1712"),
+		false,
+		6.0
+	)
+
+	for x in range(140, 1160, 80):
+		draw_line(Vector2(x, 110), Vector2(x, 610), Color(1, 1, 1, 0.045), 1.0)
+
+	for y in range(120, 600, 80):
+		draw_line(Vector2(120, y), Vector2(1160, y), Color(1, 1, 1, 0.045), 1.0)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(30, 34),
+		"%s Room — Depth %d" % [RunState.get_room_display_name(room_type), RunState.depth],
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		20,
+		Color("#f7e8d4")
+	)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(410, 118),
+		_get_room_subtitle(),
+		HORIZONTAL_ALIGNMENT_CENTER,
+		460,
+		18,
+		Color("#c4a98f")
+	)
+
+
+func _draw_reward() -> void:
+	var reward_color: Color = _get_reward_color()
+
+	if reward_taken_flag:
+		draw_circle(reward_position, 34, Color("#27201b"))
+		draw_arc(reward_position, 42, 0.0, TAU, 64, reward_color.darkened(0.35), 3.0)
+
+		draw_string(
+			ThemeDB.fallback_font,
+			reward_position + Vector2(-78, 78),
+			"CLAIMED",
+			HORIZONTAL_ALIGNMENT_CENTER,
+			156,
+			16,
+			Color("#8f7a66")
+		)
+
+		return
+
+	draw_circle(reward_position, 58, Color(reward_color.r, reward_color.g, reward_color.b, 0.16))
+	draw_arc(reward_position, 58, 0.0, TAU, 64, reward_color, 4.0)
+	draw_arc(reward_position, 36, 0.0, TAU, 64, Color("#f7e8d4"), 2.0)
+
+	draw_circle(reward_position, 20, Color("#f7e8d4"))
+	draw_circle(reward_position, 9, reward_color)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		reward_position + Vector2(-78, 84),
+		_get_reward_label(),
+		HORIZONTAL_ALIGNMENT_CENTER,
+		156,
+		16,
+		reward_color
+	)
+
+
+func _draw_hint() -> void:
+	if hint == "":
+		return
+
+	draw_rect(Rect2(Vector2(420, 620), Vector2(440, 44)), Color(0, 0, 0, 0.72))
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(450, 648),
+		hint,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		390,
+		18,
+		Color("#f7e8d4")
+	)

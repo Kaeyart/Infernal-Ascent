@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://cmyj5s7jfy8of"
+
+[deps]
+
+files=["res://art/actors/player/penitent/penitent_animation_v1_manifest.direction.translation", "res://art/actors/player/penitent/penitent_animation_v1_manifest.frame.translation", "res://art/actors/player/penitent/penitent_animation_v1_manifest.file.translation", "res://art/actors/player/penitent/penitent_animation_v1_manifest.canvas.translation", "res://art/actors/player/penitent/penitent_animation_v1_manifest.canvas.translation"]
+
+source_file="res://art/actors/player/penitent/penitent_animation_v1_manifest.csv"
+dest_files=["res://art/actors/player/penitent/penitent_animation_v1_manifest.direction.translation", "res://art/actors/player/penitent/penitent_animation_v1_manifest.frame.translation", "res://art/actors/player/penitent/penitent_animation_v1_manifest.file.translation", "res://art/actors/player/penitent/penitent_animation_v1_manifest.canvas.translation", "res://art/actors/player/penitent/penitent_animation_v1_manifest.canvas.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

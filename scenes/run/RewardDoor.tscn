@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bdr5cwi8olwav"]
+
+[ext_resource type="Script" uid="uid://d3405nyywkiqh" path="res://scripts/rooms/RewardDoor.gd" id="1_8wl0u"]
+
+[node name="RewardDoor" type="Node2D" unique_id=887665764]
+script = ExtResource("1_8wl0u")

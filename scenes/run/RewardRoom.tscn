@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b5dcp1k6cn2m8"]
+
+[ext_resource type="Script" uid="uid://3ghhsg7ss5of" path="res://scripts/rooms/RewardRoom.gd" id="1_cj803"]
+[ext_resource type="PackedScene" uid="uid://258o6hja7d81" path="res://scenes/actors/Player.tscn" id="2_4nnhr"]
+
+[node name="RewardRoom" type="Node2D" unique_id=2077029815]
+script = ExtResource("1_cj803")
+
+[node name="Player" parent="." unique_id=95424277 instance=ExtResource("2_4nnhr")]

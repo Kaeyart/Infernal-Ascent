@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://vmiu2dq070h6"]
+
+[ext_resource type="Script" uid="uid://3wxykta8xbpw" path="res://scripts/ui/HUD.gd" id="1"]
+
+[node name="HUD" type="Control" unique_id=1939192946]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1")
+
+[node name="StatsLabel" type="Label" parent="." unique_id=572053566]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 18.0
+offset_right = 520.0
+offset_bottom = 160.0
+theme_override_font_sizes/font_size = 18
+text = "HUD"
+
+[node name="HelpLabel" type="Label" parent="." unique_id=1350094654]
+layout_mode = 0
+offset_left = 280.0
+offset_top = 676.0
+offset_right = 1120.0
+offset_bottom = 706.0
+theme_override_font_sizes/font_size = 14
+text = "WASD Move · Shift Dash · LMB Light · RMB Heavy · Q Ability · F Ultimate · E Interact"
+horizontal_alignment = 1

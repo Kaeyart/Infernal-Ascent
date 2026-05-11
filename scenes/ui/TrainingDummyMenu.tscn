@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b40s0jsv7dhe5"]
+
+[ext_resource type="Script" uid="uid://d0xp23oxnn7v4" path="res://scripts/ui/TrainingDummyMenu.gd" id="1_nqye6"]
+
+[node name="TrainingDummyMenu" type="CanvasLayer" unique_id=815651052]
+script = ExtResource("1_nqye6")

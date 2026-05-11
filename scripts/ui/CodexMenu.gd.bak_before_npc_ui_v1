@@ -1,0 +1,444 @@
+extends CanvasLayer
+
+var root: Control = null
+var panel: Control = null
+var title_label: Label = null
+var summary_label: Label = null
+var entry_labels: Array[Label] = []
+var detail_label: Label = null
+var controls_label: Label = null
+var preview_box: Control = null
+var preview_sprite: TextureRect = null
+var preview_name_label: Label = null
+var preview_stage_label: Label = null
+
+var active: bool = false
+var source_npc: Node2D = null
+var player: Node2D = null
+var selected_index: int = 0
+var input_guard_timer: float = 0.0
+var auto_close_distance: float = 105.0
+
+var known_kinds: Array[String] = []
+
+var preview_frames: Array[Texture2D] = []
+var preview_time: float = 0.0
+var preview_frame_index: int = 0
+var last_preview_kind: String = ""
+
+
+func _ready() -> void:
+	add_to_group("codex_menu")
+	_build_ui()
+	close_menu()
+	set_process(true)
+
+
+func _process(delta: float) -> void:
+	input_guard_timer = maxf(0.0, input_guard_timer - delta)
+
+	if active:
+		preview_time += delta
+		_update_preview_animation()
+
+	if not active:
+		return
+
+	if player == null or not is_instance_valid(player):
+		player = get_tree().get_first_node_in_group("player") as Node2D
+
+	if source_npc != null and is_instance_valid(source_npc) and player != null:
+		if source_npc.global_position.distance_to(player.global_position) > auto_close_distance:
+			close_menu()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not active:
+		return
+
+	if input_guard_timer > 0.0:
+		return
+
+	if not event is InputEventKey:
+		return
+
+	var key_event := event as InputEventKey
+
+	if not key_event.pressed or key_event.echo:
+		return
+
+	match key_event.keycode:
+		KEY_ESCAPE, KEY_SPACE:
+			get_viewport().set_input_as_handled()
+			close_menu()
+
+		KEY_UP, KEY_W:
+			get_viewport().set_input_as_handled()
+			selected_index = max(0, selected_index - 1)
+			_refresh()
+
+		KEY_DOWN, KEY_S:
+			get_viewport().set_input_as_handled()
+			selected_index = min(max(0, known_kinds.size() - 1), selected_index + 1)
+			_refresh()
+
+
+func open_menu(new_source_npc: Node2D = null) -> void:
+	source_npc = new_source_npc
+	player = get_tree().get_first_node_in_group("player") as Node2D
+	active = true
+	input_guard_timer = 0.18
+	root.visible = true
+	_refresh_known_kinds()
+	_refresh()
+
+
+func close_menu() -> void:
+	active = false
+	source_npc = null
+
+	if root != null:
+		root.visible = false
+
+
+func is_menu_active() -> bool:
+	return active
+
+
+func _build_ui() -> void:
+	root = Control.new()
+	root.name = "CodexMenuRoot"
+	root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(root)
+
+	panel = CodexPanel.new()
+	panel.name = "CodexPanel"
+	panel.position = Vector2(140, 70)
+	panel.size = Vector2(1000, 570)
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(panel)
+
+	title_label = _make_label("Title", "THE CODEX OF WHAT SURVIVES", Vector2(190, 100), Vector2(900, 36), 28, Color("#f4d49a"))
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	root.add_child(title_label)
+
+	summary_label = _make_label("Summary", "", Vector2(190, 148), Vector2(900, 28), 18, Color("#c4a98f"))
+	summary_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	root.add_child(summary_label)
+
+	for i in range(8):
+		var row := _make_label("EntryRow%d" % i, "", Vector2(190, 210 + i * 38), Vector2(300, 32), 16, Color("#f7e8d4"))
+		root.add_child(row)
+		entry_labels.append(row)
+
+	detail_label = _make_label("Detail", "", Vector2(520, 210), Vector2(330, 300), 16, Color("#f7e8d4"))
+	detail_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	root.add_child(detail_label)
+
+	preview_box = PreviewBox.new()
+	preview_box.name = "PreviewBox"
+	preview_box.position = Vector2(880, 210)
+	preview_box.size = Vector2(210, 270)
+	preview_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(preview_box)
+
+	preview_sprite = TextureRect.new()
+	preview_sprite.name = "PreviewSprite"
+	preview_sprite.position = Vector2(905, 250)
+	preview_sprite.size = Vector2(160, 160)
+	preview_sprite.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	preview_sprite.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	preview_sprite.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	preview_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	root.add_child(preview_sprite)
+
+	preview_name_label = _make_label("PreviewName", "", Vector2(890, 420), Vector2(190, 28), 16, Color("#f4d49a"))
+	preview_name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	root.add_child(preview_name_label)
+
+	preview_stage_label = _make_label("PreviewStage", "", Vector2(890, 450), Vector2(190, 24), 14, Color("#c4a98f"))
+	preview_stage_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	root.add_child(preview_stage_label)
+
+	controls_label = _make_label(
+		"Controls",
+		"↑/↓ Select Entry    Space/Escape Close",
+		Vector2(210, 585),
+		Vector2(860, 28),
+		15,
+		Color("#8f7a64")
+	)
+	controls_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	root.add_child(controls_label)
+
+
+func _make_label(node_name: String, text_value: String, pos: Vector2, label_size: Vector2, font_size: int, color: Color) -> Label:
+	var label := Label.new()
+	label.name = node_name
+	label.text = text_value
+	label.position = pos
+	label.size = label_size
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.add_theme_font_size_override("font_size", font_size)
+	label.add_theme_color_override("font_color", color)
+	label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.90))
+	label.add_theme_constant_override("shadow_offset_x", 2)
+	label.add_theme_constant_override("shadow_offset_y", 2)
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	return label
+
+
+func _refresh_known_kinds() -> void:
+	known_kinds.clear()
+
+	var game_state := _get_game_state()
+
+	if game_state == null:
+		return
+
+	if not _object_has_property(game_state, "enemies_killed_by_kind"):
+		return
+
+	var kills: Dictionary = game_state.get("enemies_killed_by_kind")
+
+	for key in kills.keys():
+		known_kinds.append(str(key))
+
+	known_kinds.sort()
+
+	selected_index = clampi(selected_index, 0, max(0, known_kinds.size() - 1))
+
+
+func _refresh() -> void:
+	var game_state := _get_game_state()
+
+	if game_state == null:
+		return
+
+	var total_kills: int = 0
+
+	if _object_has_property(game_state, "total_enemies_killed"):
+		total_kills = int(game_state.get("total_enemies_killed"))
+
+	summary_label.text = "Recorded kills: %d" % total_kills
+
+	if known_kinds.is_empty():
+		for row in entry_labels:
+			row.text = ""
+
+		detail_label.text = "No enemies recorded.\n\nGo below. Kill something. Return with proof."
+		preview_sprite.texture = null
+		preview_name_label.text = "No Entry"
+		preview_stage_label.text = "Unknown"
+		return
+
+	for i in range(entry_labels.size()):
+		if i >= known_kinds.size():
+			entry_labels[i].text = ""
+			continue
+
+		var kind := known_kinds[i]
+		var count: int = int(game_state.call("get_enemy_kill_count", kind))
+		var display_name: String = str(game_state.call("get_enemy_display_name", kind))
+		var stage_name: String = str(game_state.call("get_codex_stage_name", kind))
+
+		var marker := "  "
+		if i == selected_index:
+			marker = "> "
+
+		entry_labels[i].text = "%s%s  x%d  %s" % [marker, display_name, count, stage_name]
+
+	var selected_kind := known_kinds[selected_index]
+	detail_label.text = _get_detail_text(selected_kind)
+	_refresh_preview(selected_kind)
+
+
+func _refresh_preview(enemy_kind: String) -> void:
+	var game_state := _get_game_state()
+
+	if game_state == null:
+		return
+
+	var display_name: String = str(game_state.call("get_enemy_display_name", enemy_kind))
+	var stage_name: String = str(game_state.call("get_codex_stage_name", enemy_kind))
+
+	preview_name_label.text = display_name
+	preview_stage_label.text = stage_name
+
+	if enemy_kind == last_preview_kind and not preview_frames.is_empty():
+		return
+
+	last_preview_kind = enemy_kind
+	preview_frames.clear()
+	preview_frame_index = 0
+	preview_time = 0.0
+
+	var base_path := _get_kind_asset_base_path(enemy_kind)
+	var prefix := enemy_kind
+
+	if base_path == "":
+		preview_sprite.texture = null
+		return
+
+	for i in range(4):
+		var path := "%s/%s_idle_anim_f%d.png" % [base_path, prefix, i]
+
+		if ResourceLoader.exists(path):
+			var texture := load(path) as Texture2D
+
+			if texture != null:
+				preview_frames.append(texture)
+
+	if preview_frames.is_empty():
+		preview_sprite.texture = null
+	else:
+		preview_sprite.texture = preview_frames[0]
+
+
+func _update_preview_animation() -> void:
+	if preview_frames.is_empty():
+		return
+
+	var frame := int(preview_time * 6.0) % preview_frames.size()
+
+	if frame == preview_frame_index:
+		return
+
+	preview_frame_index = frame
+	preview_sprite.texture = preview_frames[preview_frame_index]
+
+
+func _get_kind_asset_base_path(enemy_kind: String) -> String:
+	match enemy_kind:
+		"imp":
+			return "res://art/enemies/imp"
+		"goblin":
+			return "res://art/enemies/goblin"
+		"skelet":
+			return "res://art/enemies/skelet"
+		"chort":
+			return "res://art/enemies/chort"
+		"masked_orc":
+			return "res://art/enemies/masked_orc"
+		"big_zombie":
+			return "res://art/enemies/big_zombie"
+		"ogre":
+			return "res://art/enemies/ogre"
+		"big_demon":
+			return "res://art/bosses/big_demon"
+		_:
+			return ""
+
+
+func _get_detail_text(enemy_kind: String) -> String:
+	var game_state := _get_game_state()
+
+	if game_state == null:
+		return "No Codex state found."
+
+	var display_name: String = str(game_state.call("get_enemy_display_name", enemy_kind))
+	var count: int = int(game_state.call("get_enemy_kill_count", enemy_kind))
+	var stage: int = int(game_state.call("get_codex_stage", enemy_kind))
+
+	var text := "%s\nKilled: %d\n\n" % [display_name, count]
+
+	if stage <= 0:
+		return text + "Unknown. The page is blank."
+
+	if stage >= 1:
+		text += "Discovered:\nThe Codex has named this creature. It is no longer merely movement in the dark.\n\n"
+
+	if stage >= 2:
+		text += "Behavior:\n%s\n\n" % _get_behavior_note(enemy_kind)
+
+	if stage >= 3:
+		text += "Lore:\n%s" % _get_lore_note(enemy_kind)
+	else:
+		text += "Further study required. Full entry unlocks at 10 kills."
+
+	return text
+
+
+func _get_behavior_note(enemy_kind: String) -> String:
+	match enemy_kind:
+		"imp":
+			return "Fast lesser thing. It favors sudden pounces and punishes careless distance."
+		"goblin":
+			return "A malformed wretch with a short cleaving arc. Dodge through or away before the cone closes."
+		"skelet":
+			return "A bonebound shade. Slower, but its line attack reaches farther than instinct expects."
+		"chort":
+			return "A heavier fiend. Its burst punishes standing too close for too long."
+		"masked_orc":
+			return "A brute with a broad cleave. The warning is slow; the hit is not."
+		"big_zombie":
+			return "A swollen dead mass. Slow, obvious, dangerous if ignored."
+		"ogre":
+			return "Large enough that patience becomes a weapon against it."
+		"big_demon":
+			return "A greater thing. Its attack pattern shifts, so memory alone is insufficient."
+		_:
+			return "Observed behavior remains unstable."
+
+
+func _get_lore_note(enemy_kind: String) -> String:
+	match enemy_kind:
+		"imp":
+			return "Not from Dante's named catalogue. For now, treat it as a placeholder lesser jailor of the Inferno prototype."
+		"goblin":
+			return "A temporary shape for malformed lesser sinners. Its final identity will be redesigned later."
+		"skelet":
+			return "A placeholder for the bonebound dead: bodies that forgot the soul but kept the punishment."
+		"chort":
+			return "A temporary demon-form used to test elite pressure."
+		"masked_orc":
+			return "A brute placeholder. Later it may become a named guard, sinner, or infernal office."
+		"big_zombie":
+			return "A swollen dead placeholder for heavy pressure enemies."
+		"ogre":
+			return "A large-body placeholder for miniboss pressure."
+		"big_demon":
+			return "The current boss stand-in. Later bosses should be tied to circles, sins, and named figures."
+		_:
+			return "The Codex admits uncertainty. This entry is not final."
+
+
+func _get_game_state() -> Node:
+	if has_node("/root/GameState"):
+		return get_node("/root/GameState")
+
+	return null
+
+
+func _object_has_property(object: Object, property_name: String) -> bool:
+	if object == null:
+		return false
+
+	for property in object.get_property_list():
+		if str(property["name"]) == property_name:
+			return true
+
+	return false
+
+
+class CodexPanel:
+	extends Control
+
+	func _draw() -> void:
+		draw_rect(Rect2(Vector2.ZERO, size), Color(0.025, 0.018, 0.015, 0.96))
+		draw_rect(Rect2(Vector2(12, 12), size - Vector2(24, 24)), Color(0.08, 0.045, 0.035, 0.90))
+		draw_rect(Rect2(Vector2.ZERO, size), Color("#6b2a1f"), false, 4.0)
+		draw_rect(Rect2(Vector2(10, 10), size - Vector2(20, 20)), Color("#c4a98f"), false, 1.0)
+		draw_line(Vector2(360, 120), Vector2(360, size.y - 58), Color("#c4a98f"), 1.0)
+		draw_line(Vector2(720, 120), Vector2(720, size.y - 58), Color("#c4a98f"), 1.0)
+
+
+class PreviewBox:
+	extends Control
+
+	func _draw() -> void:
+		draw_rect(Rect2(Vector2.ZERO, size), Color(0.01, 0.008, 0.006, 0.70))
+		draw_rect(Rect2(Vector2(8, 8), size - Vector2(16, 16)), Color(0.05, 0.025, 0.02, 0.82))
+		draw_rect(Rect2(Vector2.ZERO, size), Color("#c4a98f"), false, 1.0)
+		draw_line(Vector2(16, size.y - 46), Vector2(size.x - 16, size.y - 46), Color("#c4a98f"), 1.0)

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://8hdp07n23y1i"]
+
+[ext_resource type="Script" uid="uid://cdsk6bxg1ixgm" path="res://scripts/combat/AttackEffect.gd" id="1_mal27"]
+
+[node name="AttackEffect" type="Node2D" unique_id=1301678714]
+script = ExtResource("1_mal27")

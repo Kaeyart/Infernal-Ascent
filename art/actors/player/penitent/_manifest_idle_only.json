@@ -1,0 +1,253 @@
+{
+  "source": "/home/kaey/Desktop/Assets/Penitent_Idle.png",
+  "layout": "4 rows x 4 columns",
+  "rows": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "method": "full-cell idle-only slicing",
+  "exports": [
+    {
+      "direction": "down",
+      "frame": 1,
+      "file": "idle_down_01.png",
+      "source_cell": [
+        0,
+        0,
+        314,
+        314
+      ],
+      "size": [
+        314,
+        314
+      ]
+    },
+    {
+      "direction": "down",
+      "frame": 2,
+      "file": "idle_down_02.png",
+      "source_cell": [
+        314,
+        0,
+        627,
+        314
+      ],
+      "size": [
+        313,
+        314
+      ]
+    },
+    {
+      "direction": "down",
+      "frame": 3,
+      "file": "idle_down_03.png",
+      "source_cell": [
+        627,
+        0,
+        940,
+        314
+      ],
+      "size": [
+        313,
+        314
+      ]
+    },
+    {
+      "direction": "down",
+      "frame": 4,
+      "file": "idle_down_04.png",
+      "source_cell": [
+        940,
+        0,
+        1254,
+        314
+      ],
+      "size": [
+        314,
+        314
+      ]
+    },
+    {
+      "direction": "left",
+      "frame": 1,
+      "file": "idle_left_01.png",
+      "source_cell": [
+        0,
+        314,
+        314,
+        627
+      ],
+      "size": [
+        314,
+        313
+      ]
+    },
+    {
+      "direction": "left",
+      "frame": 2,
+      "file": "idle_left_02.png",
+      "source_cell": [
+        314,
+        314,
+        627,
+        627
+      ],
+      "size": [
+        313,
+        313
+      ]
+    },
+    {
+      "direction": "left",
+      "frame": 3,
+      "file": "idle_left_03.png",
+      "source_cell": [
+        627,
+        314,
+        940,
+        627
+      ],
+      "size": [
+        313,
+        313
+      ]
+    },
+    {
+      "direction": "left",
+      "frame": 4,
+      "file": "idle_left_04.png",
+      "source_cell": [
+        940,
+        314,
+        1254,
+        627
+      ],
+      "size": [
+        314,
+        313
+      ]
+    },
+    {
+      "direction": "right",
+      "frame": 1,
+      "file": "idle_right_01.png",
+      "source_cell": [
+        0,
+        627,
+        314,
+        940
+      ],
+      "size": [
+        314,
+        313
+      ]
+    },
+    {
+      "direction": "right",
+      "frame": 2,
+      "file": "idle_right_02.png",
+      "source_cell": [
+        314,
+        627,
+        627,
+        940
+      ],
+      "size": [
+        313,
+        313
+      ]
+    },
+    {
+      "direction": "right",
+      "frame": 3,
+      "file": "idle_right_03.png",
+      "source_cell": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "size": [
+        313,
+        313
+      ]
+    },
+    {
+      "direction": "right",
+      "frame": 4,
+      "file": "idle_right_04.png",
+      "source_cell": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "size": [
+        314,
+        313
+      ]
+    },
+    {
+      "direction": "up",
+      "frame": 1,
+      "file": "idle_up_01.png",
+      "source_cell": [
+        0,
+        940,
+        314,
+        1254
+      ],
+      "size": [
+        314,
+        314
+      ]
+    },
+    {
+      "direction": "up",
+      "frame": 2,
+      "file": "idle_up_02.png",
+      "source_cell": [
+        314,
+        940,
+        627,
+        1254
+      ],
+      "size": [
+        313,
+        314
+      ]
+    },
+    {
+      "direction": "up",
+      "frame": 3,
+      "file": "idle_up_03.png",
+      "source_cell": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "size": [
+        313,
+        314
+      ]
+    },
+    {
+      "direction": "up",
+      "frame": 4,
+      "file": "idle_up_04.png",
+      "source_cell": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "size": [
+        314,
+        314
+      ]
+    }
+  ]
+}

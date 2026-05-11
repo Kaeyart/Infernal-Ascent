@@ -1,0 +1,183 @@
+extends Node2D
+class_name IsoV2MicroRunTest
+
+const PLAYER_START: Vector2 = Vector2(640.0, 560.0)
+
+@onready var patron_flow: IsoPatronFlowController = $PatronFlow
+@onready var player: IsoTestPlayer = $IsoTestPlayer
+
+func _ready() -> void:
+	player.position = PLAYER_START
+	patron_flow.altar_position = Vector2(640.0, 390.0)
+	patron_flow.gate_left_position = Vector2(410.0, 235.0)
+	patron_flow.gate_center_position = Vector2(640.0, 165.0)
+	patron_flow.gate_right_position = Vector2(870.0, 235.0)
+	patron_flow.next_room_choice_selected.connect(_on_next_room_choice_selected)
+	patron_flow.patron_run_locked.connect(_on_patron_run_locked)
+	queue_redraw()
+
+func _draw() -> void:
+	_draw_backdrop()
+	_draw_iso_room_shell()
+	_draw_clear_target_markers()
+	_draw_micro_run_panel()
+
+func _draw_backdrop() -> void:
+	draw_rect(Rect2(Vector2.ZERO, Vector2(1280.0, 720.0)), Color("#080607"), true)
+	draw_circle(Vector2(640.0, 130.0), 230.0, Color(0.80, 0.28, 0.08, 0.08))
+	draw_circle(Vector2(640.0, 130.0), 135.0, Color(0.95, 0.40, 0.10, 0.08))
+
+func _draw_iso_room_shell() -> void:
+	var floor_color: Color = Color("#171514")
+	var floor_line: Color = Color(0.58, 0.42, 0.25, 0.30)
+	var edge_color: Color = Color("#3a2b22")
+	var gold: Color = Color("#b78345")
+	var ember: Color = Color("#d56b2a")
+
+	# Outer room base.
+	var outer: PackedVector2Array = PackedVector2Array([
+		Vector2(640.0, 105.0),
+		Vector2(1085.0, 330.0),
+		Vector2(640.0, 650.0),
+		Vector2(195.0, 330.0),
+	])
+	draw_colored_polygon(outer, Color("#0f0d0d"))
+	draw_polyline(PackedVector2Array([outer[0], outer[1], outer[2], outer[3], outer[0]]), Color("#5b3926"), 4.0)
+
+	# Tile field.
+	var center: Vector2 = Vector2(640.0, 360.0)
+	for y: int in range(-4, 5):
+		for x: int in range(-6, 7):
+			var tile_center: Vector2 = center + Vector2(float(x - y) * 32.0, float(x + y) * 16.0)
+			if tile_center.y < 150.0 or tile_center.y > 610.0:
+				continue
+			if tile_center.x < 245.0 or tile_center.x > 1035.0:
+				continue
+			var diamond: PackedVector2Array = PackedVector2Array([
+				tile_center + Vector2(0.0, -16.0),
+				tile_center + Vector2(32.0, 0.0),
+				tile_center + Vector2(0.0, 16.0),
+				tile_center + Vector2(-32.0, 0.0),
+			])
+			var color: Color = floor_color
+			if (x + y) % 5 == 0:
+				color = Color("#1f1b18")
+			draw_colored_polygon(diamond, color)
+			draw_polyline(PackedVector2Array([diamond[0], diamond[1], diamond[2], diamond[3], diamond[0]]), floor_line, 1.0)
+
+	# North wall and gate.
+	draw_rect(Rect2(Vector2(440.0, 72.0), Vector2(400.0, 78.0)), Color("#181111"), true)
+	draw_rect(Rect2(Vector2(440.0, 72.0), Vector2(400.0, 78.0)), gold, false, 3.0)
+	draw_rect(Rect2(Vector2(578.0, 55.0), Vector2(124.0, 105.0)), Color("#120d0c"), true)
+	draw_rect(Rect2(Vector2(592.0, 70.0), Vector2(96.0, 84.0)), Color(ember.r, ember.g, ember.b, 0.30), true)
+	for i: int in range(5):
+		var bar_x: float = 600.0 + float(i) * 18.0
+		draw_line(Vector2(bar_x, 70.0), Vector2(bar_x, 154.0), Color("#2b211c"), 4.0)
+	draw_rect(Rect2(Vector2(578.0, 55.0), Vector2(124.0, 105.0)), gold, false, 3.0)
+	draw_circle(Vector2(640.0, 48.0), 22.0, Color(ember.r, ember.g, ember.b, 0.20))
+	draw_arc(Vector2(640.0, 48.0), 26.0, 0.0, TAU, 32, gold, 2.0)
+
+	# Side returns.
+	draw_polyline(PackedVector2Array([
+		Vector2(440.0, 150.0),
+		Vector2(250.0, 260.0),
+		Vector2(210.0, 500.0),
+		Vector2(280.0, 535.0),
+	]), edge_color, 22.0)
+	draw_polyline(PackedVector2Array([
+		Vector2(840.0, 150.0),
+		Vector2(1030.0, 260.0),
+		Vector2(1070.0, 500.0),
+		Vector2(1000.0, 535.0),
+	]), edge_color, 22.0)
+	draw_polyline(PackedVector2Array([
+		Vector2(440.0, 150.0),
+		Vector2(250.0, 260.0),
+		Vector2(210.0, 500.0),
+		Vector2(280.0, 535.0),
+	]), gold, 3.0)
+	draw_polyline(PackedVector2Array([
+		Vector2(840.0, 150.0),
+		Vector2(1030.0, 260.0),
+		Vector2(1070.0, 500.0),
+		Vector2(1000.0, 535.0),
+	]), gold, 3.0)
+
+	# Front edge.
+	draw_polyline(PackedVector2Array([
+		Vector2(280.0, 535.0),
+		Vector2(640.0, 650.0),
+		Vector2(1000.0, 535.0),
+	]), Color("#2b211d"), 24.0)
+	draw_polyline(PackedVector2Array([
+		Vector2(280.0, 535.0),
+		Vector2(640.0, 650.0),
+		Vector2(1000.0, 535.0),
+	]), gold, 3.0)
+
+	# Central seal.
+	draw_circle(Vector2(640.0, 405.0), 56.0, Color(0.0, 0.0, 0.0, 0.18))
+	draw_arc(Vector2(640.0, 405.0), 58.0, 0.0, TAU, 64, gold, 2.0)
+	draw_line(Vector2(600.0, 405.0), Vector2(680.0, 405.0), gold, 2.0)
+	draw_line(Vector2(640.0, 365.0), Vector2(640.0, 445.0), gold, 2.0)
+
+	# Decorative braziers.
+	_draw_brazier(Vector2(425.0, 215.0))
+	_draw_brazier(Vector2(855.0, 215.0))
+	_draw_lectern(Vector2(390.0, 335.0))
+	_draw_lectern(Vector2(890.0, 335.0))
+
+func _draw_brazier(pos: Vector2) -> void:
+	draw_ellipse(Rect2(pos + Vector2(-15.0, 10.0), Vector2(30.0, 10.0)), Color(0.0, 0.0, 0.0, 0.25))
+	draw_rect(Rect2(pos + Vector2(-11.0, -4.0), Vector2(22.0, 24.0)), Color("#211816"), true)
+	draw_rect(Rect2(pos + Vector2(-11.0, -4.0), Vector2(22.0, 24.0)), Color("#b78345"), false, 2.0)
+	draw_circle(pos + Vector2(0.0, -10.0), 13.0, Color(0.9, 0.28, 0.08, 0.30))
+	draw_colored_polygon(PackedVector2Array([
+		pos + Vector2(0.0, -30.0),
+		pos + Vector2(10.0, -10.0),
+		pos + Vector2(0.0, -14.0),
+		pos + Vector2(-10.0, -10.0),
+	]), Color("#e0782e"))
+
+func _draw_lectern(pos: Vector2) -> void:
+	draw_ellipse(Rect2(pos + Vector2(-17.0, 15.0), Vector2(34.0, 10.0)), Color(0.0, 0.0, 0.0, 0.22))
+	draw_colored_polygon(PackedVector2Array([
+		pos + Vector2(-18.0, -8.0),
+		pos + Vector2(18.0, -8.0),
+		pos + Vector2(12.0, 12.0),
+		pos + Vector2(-12.0, 12.0),
+	]), Color("#201817"))
+	draw_polyline(PackedVector2Array([
+		pos + Vector2(-18.0, -8.0),
+		pos + Vector2(18.0, -8.0),
+		pos + Vector2(12.0, 12.0),
+		pos + Vector2(-12.0, 12.0),
+		pos + Vector2(-18.0, -8.0),
+	]), Color("#b78345"), 2.0)
+	draw_line(pos + Vector2(-12.0, -3.0), pos + Vector2(12.0, -3.0), Color("#d8c49a"), 2.0)
+
+func _draw_clear_target_markers() -> void:
+	var font: Font = ThemeDB.fallback_font
+	draw_string(font, Vector2(465.0, 690.0), "WASD / arrows move. C clears room. E interacts. R resets patrons.", HORIZONTAL_ALIGNMENT_CENTER, 350.0, 14, Color("#d0b896"))
+
+func _draw_micro_run_panel() -> void:
+	var font: Font = ThemeDB.fallback_font
+	draw_rect(Rect2(Vector2(800.0, 20.0), Vector2(430.0, 72.0)), Color(0.02, 0.015, 0.012, 0.78), true)
+	draw_rect(Rect2(Vector2(800.0, 20.0), Vector2(430.0, 72.0)), Color("#b78345"), false, 2.0)
+	draw_string(font, Vector2(818.0, 48.0), "Iso V2 Micro-Run Integration Test", HORIZONTAL_ALIGNMENT_LEFT, 400.0, 18, Color("#f1dbc0"))
+	draw_string(font, Vector2(818.0, 74.0), "This is the first playable room-flow wrapper, not the final combat room.", HORIZONTAL_ALIGNMENT_LEFT, 400.0, 13, Color("#bca88b"))
+
+func _on_next_room_choice_selected(choice_data: Dictionary) -> void:
+	var display_name: String = str(choice_data.get("display_name", "Unknown"))
+	print("[IsoV2MicroRun] Next room selected: " + display_name)
+	queue_redraw()
+
+func _on_patron_run_locked(patrons: Array) -> void:
+	print("[IsoV2MicroRun] Patron run locked: " + str(patrons))
+
+func draw_ellipse(rect: Rect2, color: Color) -> void:
+	var points: PackedVector2Array = PackedVector2Array()
+	for i: int in range(28):
+		var angle: float = TAU * float(i) / 28.0
+		points.append(rect.position + rect.size * 0.5 + Vector2(cos(angle) * rect.size.x * 0.5, sin(angle) * rect.size.y * 0.5))
+	draw_colored_polygon(points, color)

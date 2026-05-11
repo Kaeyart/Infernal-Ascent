@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://burcukjiegb0s"]
+
+[ext_resource type="Script" uid="uid://bv76x2g6i68ca" path="res://scripts/ui/TrainingReadoutPanel.gd" id="1_suatt"]
+
+[node name="TrainingReadoutPanel" type="CanvasLayer" unique_id=764483217]
+script = ExtResource("1_suatt")

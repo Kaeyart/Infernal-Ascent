@@ -1,0 +1,3287 @@
+extends Node2D
+
+signal return_to_hub_requested()
+signal reward_room_requested(reward_type: String)
+signal room_choice_requested(room_type: String)
+
+const ChoiceDoorScene := preload("res://scenes/props/ChoiceDoor.tscn")
+const AttackEffectScene := preload("res://scenes/combat/AttackEffect.tscn")
+const DamageNumberScene := preload("res://scenes/combat/DamageNumber.tscn")
+const UpgradeCardScene := preload("res://scenes/ui/UpgradeCard.tscn")
+const SpecialRoomPropScene := preload("res://scenes/props/SpecialRoomProp.tscn")
+
+const USE_AUTHORED_ROOM_SCENES := true
+const AUTHORED_ROOM_SCENE_ROOT := "res://scenes/rooms/circle0/"
+
+const FLOOR_TEXTURE_PATHS := [
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_1.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_2.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_3.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_4.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_5.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_6.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_7.png",
+    "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_8.png"
+]
+
+const COLUMN_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/column.png"
+const CRATE_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/crate.png"
+const CHEST_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/chest_full_open_anim_f0.png"
+const SPIKES_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_spikes_anim_f0.png"
+const BANNER_RED_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_red.png"
+const BANNER_BLUE_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_blue.png"
+const BANNER_GREEN_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_green.png"
+const BANNER_YELLOW_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_yellow.png"
+
+
+const CIRCLE0_FLOOR_DRAW_SIZE := 64
+const CIRCLE0_FLOOR_TILE_SCALE := 0.56
+const CIRCLE0_PROP_SCALE := 0.60
+const CIRCLE0_BIG_PROP_SCALE := 0.82
+
+const CIRCLE0_FLOOR_TILE_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row00_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row00_col01.png",
+	"res://art/environment/circle0/tiles/tiles_row00_col02.png",
+	"res://art/environment/circle0/tiles/tiles_row00_col03.png",
+	"res://art/environment/circle0/tiles/tiles_row00_col04.png",
+	"res://art/environment/circle0/tiles/tiles_row00_col05.png",
+	"res://art/environment/circle0/tiles/tiles_row01_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row01_col01.png"
+]
+
+const CIRCLE0_SIGIL_TILE_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row00_col06.png",
+	"res://art/environment/circle0/tiles/tiles_row01_col02.png",
+	"res://art/environment/circle0/tiles/tiles_row01_col03.png",
+	"res://art/environment/circle0/tiles/tiles_row01_col04.png",
+	"res://art/environment/circle0/tiles/tiles_row01_col05.png",
+	"res://art/environment/circle0/tiles/tiles_row04_col05.png",
+	"res://art/environment/circle0/tiles/tiles_row04_col07.png",
+	"res://art/environment/circle0/tiles/tiles_row04_col08.png"
+]
+
+const CIRCLE0_WALL_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row02_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row02_col01.png",
+	"res://art/environment/circle0/tiles/tiles_row02_col02.png",
+	"res://art/environment/circle0/tiles/tiles_row02_col03.png",
+	"res://art/environment/circle0/tiles/tiles_row02_col04.png",
+	"res://art/environment/circle0/tiles/tiles_row02_col05.png",
+	"res://art/environment/circle0/tiles/tiles_row02_col09.png"
+]
+
+const CIRCLE0_ARCH_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row02_col06.png",
+	"res://art/environment/circle0/tiles/tiles_row02_col07.png",
+	"res://art/environment/circle0/tiles/tiles_row02_col08.png",
+	"res://art/environment/circle0/tiles/tiles_row06_col29.png",
+	"res://art/environment/circle0/tiles/tiles_row06_col30.png"
+]
+
+const CIRCLE0_POST_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row03_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row03_col02.png",
+	"res://art/environment/circle0/tiles/tiles_row03_col03.png",
+	"res://art/environment/circle0/tiles/tiles_row03_col04.png"
+]
+
+const CIRCLE0_COLUMN_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row03_col11.png",
+	"res://art/environment/circle0/tiles/tiles_row03_col12.png",
+	"res://art/environment/circle0/tiles/tiles_row03_col13.png",
+	"res://art/environment/circle0/tiles/tiles_row03_col14.png",
+	"res://art/environment/circle0/tiles/tiles_row03_col15.png",
+	"res://art/environment/circle0/tiles/tiles_row03_col16.png",
+	"res://art/environment/circle0/tiles/tiles_row03_col17.png"
+]
+
+const CIRCLE0_STAIR_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row04_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row04_col01.png",
+	"res://art/environment/circle0/tiles/tiles_row04_col02.png",
+	"res://art/environment/circle0/tiles/tiles_row04_col03.png",
+	"res://art/environment/circle0/tiles/tiles_row04_col04.png"
+]
+
+const CIRCLE0_RUBBLE_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row06_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row06_col01.png",
+	"res://art/environment/circle0/tiles/tiles_row06_col03.png",
+	"res://art/environment/circle0/tiles/tiles_row06_col09.png",
+	"res://art/environment/circle0/tiles/tiles_row06_col16.png",
+	"res://art/environment/circle0/props/props_row04_col02.png",
+	"res://art/environment/circle0/props/props_row04_col03.png",
+	"res://art/environment/circle0/props/props_row04_col04.png",
+	"res://art/environment/circle0/props/props_row04_col05.png",
+	"res://art/environment/circle0/props/props_row04_col06.png"
+]
+
+const CIRCLE0_BRAZIER_PATHS := [
+	"res://art/environment/circle0/props/props_row00_col00.png",
+	"res://art/environment/circle0/props/props_row00_col01.png",
+	"res://art/environment/circle0/props/props_row00_col02.png",
+	"res://art/environment/circle0/props/props_row00_col03.png",
+	"res://art/environment/circle0/props/props_row03_col01.png",
+	"res://art/environment/circle0/props/props_row03_col03.png"
+]
+
+const CIRCLE0_HANGING_FIRE_PATHS := [
+	"res://art/environment/circle0/props/props_row00_col04.png",
+	"res://art/environment/circle0/props/props_row00_col05.png",
+	"res://art/environment/circle0/props/props_row00_col06.png",
+	"res://art/environment/circle0/props/props_row00_col07.png"
+]
+
+const CIRCLE0_BANNER_PATHS := [
+	"res://art/environment/circle0/props/props_row01_col00.png",
+	"res://art/environment/circle0/props/props_row01_col01.png",
+	"res://art/environment/circle0/props/props_row01_col02.png",
+	"res://art/environment/circle0/props/props_row01_col03.png",
+	"res://art/environment/circle0/props/props_row01_col04.png",
+	"res://art/environment/circle0/props/props_row01_col05.png",
+	"res://art/environment/circle0/props/props_row01_col06.png"
+]
+
+const CIRCLE0_CHAIN_POST_PATHS := [
+	"res://art/environment/circle0/props/props_row01_col07.png",
+	"res://art/environment/circle0/props/props_row01_col08.png",
+	"res://art/environment/circle0/props/props_row01_col09.png",
+	"res://art/environment/circle0/props/props_row01_col10.png",
+	"res://art/environment/circle0/props/props_row01_col11.png",
+	"res://art/environment/circle0/props/props_row01_col12.png"
+]
+
+const CIRCLE0_MARKER_PATHS := [
+	"res://art/environment/circle0/props/props_row02_col00.png",
+	"res://art/environment/circle0/props/props_row02_col01.png",
+	"res://art/environment/circle0/props/props_row02_col02.png",
+	"res://art/environment/circle0/props/props_row02_col04.png",
+	"res://art/environment/circle0/props/props_row02_col05.png",
+	"res://art/environment/circle0/props/props_row02_col06.png",
+	"res://art/environment/circle0/props/props_row02_col07.png"
+]
+
+const CIRCLE0_LECTERN_PATHS := [
+	"res://art/environment/circle0/props/props_row02_col03.png",
+	"res://art/environment/circle0/props/props_row02_col08.png",
+	"res://art/environment/circle0/props/props_row02_col09.png"
+]
+
+const CIRCLE0_SLAB_PATHS := [
+	"res://art/environment/circle0/props/props_row02_col10.png",
+	"res://art/environment/circle0/props/props_row02_col12.png",
+	"res://art/environment/circle0/props/props_row03_col08.png"
+]
+
+const CIRCLE0_BENCH_PATHS := [
+	"res://art/environment/circle0/props/props_row03_col02.png",
+	"res://art/environment/circle0/props/props_row03_col05.png",
+	"res://art/environment/circle0/props/props_row03_col09.png"
+]
+
+const CIRCLE0_GATE_PATHS := [
+	"res://art/environment/circle0/props/props_row05_col02.png",
+	"res://art/environment/circle0/props/props_row05_col03.png",
+	"res://art/environment/circle0/props/props_row05_col04.png"
+]
+
+const CIRCLE0_LARGE_SETPIECE_PATHS := [
+	"res://art/environment/circle0/props/props_row05_col00.png",
+	"res://art/environment/circle0/props/props_row05_col01.png",
+	"res://art/environment/circle0/props/props_row05_col02.png"
+]
+
+@export var enemy_scene: PackedScene
+
+var room_type := "combat"
+var choice_doors: Array[Node2D] = []
+var enemies_alive: int = 0
+var room_clear: bool = false
+var room_clear_pulse_timer: float = 0.0
+var spawned_enemies: Array[Node2D] = []
+
+var reward_available: bool = false
+var reward_taken: bool = false
+var reward_position: Vector2 = Vector2(640, 330)
+var reward_radius: float = 86.0
+var hint: String = ""
+
+var boon_offers: Array[Dictionary] = []
+var boon_positions: Array[Vector2] = []
+var upgrade_cards: Array[Node2D] = []
+var special_room_prop: Node2D = null
+
+var collision_root: Node2D = null
+
+var shake_timer: float = 0.0
+var shake_strength: float = 0.0
+
+var hit_stop_active: bool = false
+var attack_fx: Array = []
+
+var room_layout_type: String = "chapel_box"
+var authored_room: Node2D = null
+var authored_room_active: bool = false
+
+var floor_textures: Array[Texture2D] = []
+var column_texture: Texture2D = null
+var crate_texture: Texture2D = null
+var chest_texture: Texture2D = null
+var spikes_texture: Texture2D = null
+var banner_red_texture: Texture2D = null
+var banner_blue_texture: Texture2D = null
+var banner_green_texture: Texture2D = null
+var banner_yellow_texture: Texture2D = null
+
+var arena_rect := Rect2(Vector2(92, 86), Vector2(1096, 548))
+
+
+var circle0_floor_tiles: Array[Texture2D] = []
+var circle0_sigil_tiles: Array[Texture2D] = []
+var circle0_wall_tiles: Array[Texture2D] = []
+var circle0_arch_tiles: Array[Texture2D] = []
+var circle0_post_tiles: Array[Texture2D] = []
+var circle0_column_tiles: Array[Texture2D] = []
+var circle0_stair_tiles: Array[Texture2D] = []
+var circle0_rubble_tiles: Array[Texture2D] = []
+var circle0_brazier_tiles: Array[Texture2D] = []
+var circle0_hanging_fire_tiles: Array[Texture2D] = []
+var circle0_banner_tiles: Array[Texture2D] = []
+var circle0_chain_post_tiles: Array[Texture2D] = []
+var circle0_marker_tiles: Array[Texture2D] = []
+var circle0_lectern_tiles: Array[Texture2D] = []
+var circle0_slab_tiles: Array[Texture2D] = []
+var circle0_bench_tiles: Array[Texture2D] = []
+var circle0_gate_tiles: Array[Texture2D] = []
+var circle0_large_setpiece_tiles: Array[Texture2D] = []
+
+
+func set_room_type(new_room_type: String) -> void:
+	room_type = new_room_type
+
+
+func _ready() -> void:
+	_load_room_art_textures()
+	_choose_room_layout()
+	_try_load_authored_room_scene()
+	_build_room_collision()
+	_place_player_from_template()
+
+	$Player.attack_performed.connect(_on_player_attack)
+	$Player.perfect_dodge_triggered.connect(_on_perfect_dodge)
+
+	_spawn_enemies()
+	queue_redraw()
+
+
+func _exit_tree() -> void:
+	Engine.time_scale = 1.0
+
+
+func _process(delta: float) -> void:
+	hint = ""
+	enemies_alive = _get_alive_enemy_count()
+
+	if enemies_alive <= 0 and not room_clear:
+		room_clear = true
+		room_clear_pulse_timer = 0.90
+		add_screen_shake(0.12, 12.0)
+		_spawn_post_clear_reward()
+
+	room_clear_pulse_timer = maxf(0.0, room_clear_pulse_timer - delta)
+	_update_reward_interaction()
+
+	for fx in attack_fx:
+		fx["time"] -= delta
+
+	attack_fx = attack_fx.filter(func(fx): return fx["time"] > 0.0)
+
+	_update_screen_shake(delta)
+	queue_redraw()
+
+
+func _load_room_art_textures() -> void:
+	floor_textures.clear()
+
+	for path in FLOOR_TEXTURE_PATHS:
+		if ResourceLoader.exists(path):
+			var texture: Texture2D = load(path) as Texture2D
+
+			if texture != null:
+				floor_textures.append(texture)
+
+	column_texture = _load_texture(COLUMN_TEXTURE_PATH)
+	crate_texture = _load_texture(CRATE_TEXTURE_PATH)
+	chest_texture = _load_texture(CHEST_TEXTURE_PATH)
+	spikes_texture = _load_texture(SPIKES_TEXTURE_PATH)
+	banner_red_texture = _load_texture(BANNER_RED_TEXTURE_PATH)
+	banner_blue_texture = _load_texture(BANNER_BLUE_TEXTURE_PATH)
+	banner_green_texture = _load_texture(BANNER_GREEN_TEXTURE_PATH)
+	banner_yellow_texture = _load_texture(BANNER_YELLOW_TEXTURE_PATH)
+
+	circle0_floor_tiles = _load_texture_list(CIRCLE0_FLOOR_TILE_PATHS)
+	circle0_sigil_tiles = _load_texture_list(CIRCLE0_SIGIL_TILE_PATHS)
+	circle0_wall_tiles = _load_texture_list(CIRCLE0_WALL_PATHS)
+	circle0_arch_tiles = _load_texture_list(CIRCLE0_ARCH_PATHS)
+	circle0_post_tiles = _load_texture_list(CIRCLE0_POST_PATHS)
+	circle0_column_tiles = _load_texture_list(CIRCLE0_COLUMN_PATHS)
+	circle0_stair_tiles = _load_texture_list(CIRCLE0_STAIR_PATHS)
+	circle0_rubble_tiles = _load_texture_list(CIRCLE0_RUBBLE_PATHS)
+	circle0_brazier_tiles = _load_texture_list(CIRCLE0_BRAZIER_PATHS)
+	circle0_hanging_fire_tiles = _load_texture_list(CIRCLE0_HANGING_FIRE_PATHS)
+	circle0_banner_tiles = _load_texture_list(CIRCLE0_BANNER_PATHS)
+	circle0_chain_post_tiles = _load_texture_list(CIRCLE0_CHAIN_POST_PATHS)
+	circle0_marker_tiles = _load_texture_list(CIRCLE0_MARKER_PATHS)
+	circle0_lectern_tiles = _load_texture_list(CIRCLE0_LECTERN_PATHS)
+	circle0_slab_tiles = _load_texture_list(CIRCLE0_SLAB_PATHS)
+	circle0_bench_tiles = _load_texture_list(CIRCLE0_BENCH_PATHS)
+	circle0_gate_tiles = _load_texture_list(CIRCLE0_GATE_PATHS)
+	circle0_large_setpiece_tiles = _load_texture_list(CIRCLE0_LARGE_SETPIECE_PATHS)
+	_apply_circle0_v2_art_overrides()
+
+
+func _load_texture_list(paths: Array) -> Array[Texture2D]:
+	var textures: Array[Texture2D] = []
+
+	for value in paths:
+		var path: String = str(value)
+		var texture: Texture2D = _load_texture(path)
+
+		if texture != null:
+			textures.append(texture)
+
+	return textures
+
+
+
+func _apply_circle0_v2_art_overrides() -> void:
+	# Cleanup pass: use the V2 atlas conservatively.
+	# The previous pass loaded whole folders, which caused floors to become noisy and some
+	# oversized setpieces to appear as normal decoration.
+	var floor_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/combat_tiles/floor",
+		6
+	)
+	if not floor_override.is_empty():
+		circle0_floor_tiles = floor_override
+
+	var sigil_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/combat_tiles/sigils",
+		5
+	)
+	if not sigil_override.is_empty():
+		circle0_sigil_tiles = sigil_override
+
+	var wall_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/combat_tiles/walls",
+		5
+	)
+	if not wall_override.is_empty():
+		circle0_wall_tiles = wall_override
+
+	var arch_override: Array[Texture2D] = _load_texture_folders([
+		"res://art/environment/circle0_v2/boss_arena/gates_statues_pillars",
+		"res://art/environment/circle0_v2/combat_props/large_setpieces"
+	])
+	if not arch_override.is_empty():
+		circle0_arch_tiles = arch_override
+
+	var post_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/combat_tiles/rails_columns",
+		10
+	)
+	if not post_override.is_empty():
+		circle0_post_tiles = post_override
+
+	var column_override: Array[Texture2D] = _load_texture_folders([
+		"res://art/environment/circle0_v2/combat_tiles/rails_columns",
+		"res://art/environment/circle0_v2/combat_props/pillars_slabs"
+	])
+	if not column_override.is_empty():
+		circle0_column_tiles = column_override
+
+	var stair_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/combat_tiles/stairs_platforms",
+		6
+	)
+	if not stair_override.is_empty():
+		circle0_stair_tiles = stair_override
+
+	var rubble_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/combat_tiles/rubble",
+		6
+	)
+	if not rubble_override.is_empty():
+		circle0_rubble_tiles = rubble_override
+
+	var brazier_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/combat_props/braziers_lights",
+		8
+	)
+	if not brazier_override.is_empty():
+		circle0_brazier_tiles = brazier_override
+		circle0_hanging_fire_tiles = brazier_override
+
+	var banner_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/combat_props/chains_banners_markers",
+		12
+	)
+	if not banner_override.is_empty():
+		circle0_banner_tiles = banner_override
+		circle0_chain_post_tiles = banner_override
+
+	var marker_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/combat_props/lecterns_markers",
+		8
+	)
+	if not marker_override.is_empty():
+		circle0_marker_tiles = marker_override
+
+	var lectern_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/combat_props/lecterns_markers",
+		6
+	)
+	if not lectern_override.is_empty():
+		circle0_lectern_tiles = lectern_override
+
+	var slab_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/combat_props/pillars_slabs",
+		8
+	)
+	if not slab_override.is_empty():
+		circle0_slab_tiles = slab_override
+
+	var bench_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/combat_props/benches_urns_chests_columns",
+		8
+	)
+	if not bench_override.is_empty():
+		circle0_bench_tiles = bench_override
+
+	var gate_override: Array[Texture2D] = _load_texture_folders([
+		"res://art/environment/circle0_v2/boss_arena/gates_statues_pillars"
+	])
+	if not gate_override.is_empty():
+		circle0_gate_tiles = gate_override
+
+	var setpiece_override: Array[Texture2D] = _load_texture_folders([
+		"res://art/environment/circle0_v2/boss_arena/arena_platforms_dais"
+	])
+	if not setpiece_override.is_empty():
+		circle0_large_setpiece_tiles = setpiece_override
+
+
+func _load_texture_folders(folder_paths: Array) -> Array[Texture2D]:
+	var textures: Array[Texture2D] = []
+
+	for value in folder_paths:
+		var folder_path: String = str(value)
+		var folder_textures: Array[Texture2D] = _load_texture_folder(folder_path)
+
+		for texture in folder_textures:
+			textures.append(texture)
+
+	return textures
+
+
+func _load_texture_folder(folder_path: String) -> Array[Texture2D]:
+	var textures: Array[Texture2D] = []
+	var files: Array = []
+	var dir := DirAccess.open(folder_path)
+
+	if dir == null:
+		return textures
+
+	dir.list_dir_begin()
+	var file_name := dir.get_next()
+
+	while file_name != "":
+		if not dir.current_is_dir() and file_name.to_lower().ends_with(".png"):
+			files.append(file_name)
+
+		file_name = dir.get_next()
+
+	dir.list_dir_end()
+	files.sort()
+
+	for value in files:
+		var texture_path: String = folder_path + "/" + str(value)
+		var texture: Texture2D = _load_texture(texture_path)
+
+		if texture != null:
+			textures.append(texture)
+
+	return textures
+
+
+func _load_first_textures(folder_path: String, max_count: int) -> Array[Texture2D]:
+	var all_textures: Array[Texture2D] = _load_texture_folder(folder_path)
+	var picked: Array[Texture2D] = []
+	var limit_count: int = mini(max_count, all_textures.size())
+
+	for i in range(limit_count):
+		picked.append(all_textures[i])
+
+	return picked
+
+func _load_texture(path: String) -> Texture2D:
+	if not ResourceLoader.exists(path):
+		return null
+
+	return load(path) as Texture2D
+
+
+
+func _choose_room_layout() -> void:
+	if room_type == RunState.ROOM_BOSS:
+		room_layout_type = "door_before_judgment"
+	elif room_type == RunState.ROOM_MINIBOSS:
+		room_layout_type = "judgment_antechamber"
+	elif room_type == RunState.ROOM_ELITE:
+		room_layout_type = "unchosen_court"
+	elif room_type == RunState.ROOM_FORGE:
+		room_layout_type = "sorting_slab"
+	elif room_type == RunState.ROOM_SHRINE:
+		room_layout_type = "hall_of_unclaimed_names"
+	elif room_type == RunState.ROOM_UPGRADE:
+		room_layout_type = "gate_ledger"
+	else:
+		var layouts: Array[String] = [
+			"ash_intake_hall",
+			"gate_ledger",
+			"cinder_procession",
+			"sorting_slab",
+			"hall_of_unclaimed_names",
+			"records_nave"
+		]
+
+		var seed_value: int = int(RunState.depth * 19 + room_type.length() * 37)
+		room_layout_type = layouts[abs(seed_value) % layouts.size()]
+
+	var template: Dictionary = _get_current_room_template()
+	arena_rect = template.get("room_rect", arena_rect)
+
+
+func _get_current_room_template() -> Dictionary:
+	return _get_room_template(room_layout_type)
+
+
+
+func _get_room_template(template_id: String) -> Dictionary:
+	match template_id:
+		"ash_intake_hall", "chapel_box":
+			return {
+				"id": "ash_intake_hall",
+				"display_name": "Ash Intake Hall",
+				"circle_name": "Circle 0 · The Cinder Vestibule",
+				"room_lore": "The dead are stripped of names before judgment.",
+				"room_rect": Rect2(Vector2(150, 78), Vector2(980, 556)),
+				"floor_rects": [
+					Rect2(Vector2(150, 78), Vector2(980, 556))
+				],
+				"player_spawn": Vector2(640, 526),
+				"enemy_spawns": [
+					Vector2(420, 218),
+					Vector2(860, 218),
+					Vector2(640, 296),
+					Vector2(430, 442),
+					Vector2(850, 442),
+					Vector2(640, 208)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 112), "orientation": "north"},
+					{"pos": Vector2(188, 356), "orientation": "west"},
+					{"pos": Vector2(1092, 356), "orientation": "east"}
+				],
+				"reward_positions": [
+					Vector2(400, 342),
+					Vector2(640, 300),
+					Vector2(880, 342)
+				],
+				"reward_position": Vector2(640, 342),
+				"blockers": [
+					Rect2(Vector2(270, 184), Vector2(54, 92)),
+					Rect2(Vector2(956, 184), Vector2(54, 92)),
+					Rect2(Vector2(270, 452), Vector2(54, 92)),
+					Rect2(Vector2(956, 452), Vector2(54, 92))
+				],
+				"decor": [
+					{"type": "intake_gate", "pos": Vector2(640, 110)},
+					{"type": "ash_brazier", "pos": Vector2(240, 138)},
+					{"type": "ash_brazier", "pos": Vector2(1040, 138)},
+					{"type": "chain_post", "pos": Vector2(316, 356)},
+					{"type": "chain_post", "pos": Vector2(964, 356)},
+					{"type": "crate", "pos": Vector2(232, 568)},
+					{"type": "crate", "pos": Vector2(1048, 568)}
+				],
+				"hazards": [
+					{"type": "ash_channel", "rect": Rect2(Vector2(388, 326), Vector2(504, 42))}
+				],
+				"tint": Color("#d27a3f"),
+				"fill": Color(0.16, 0.08, 0.035, 0.13)
+			}
+
+		"gate_ledger", "cross_hall":
+			return {
+				"id": "gate_ledger",
+				"display_name": "The Gate Ledger",
+				"circle_name": "Circle 0 · The Cinder Vestibule",
+				"room_lore": "Every trespass is written before it is punished.",
+				"room_rect": Rect2(Vector2(150, 74), Vector2(980, 562)),
+				"floor_rects": [
+					Rect2(Vector2(548, 92), Vector2(184, 512)),
+					Rect2(Vector2(236, 256), Vector2(808, 190)),
+					Rect2(Vector2(444, 178), Vector2(392, 356))
+				],
+				"player_spawn": Vector2(640, 526),
+				"enemy_spawns": [
+					Vector2(640, 190),
+					Vector2(374, 352),
+					Vector2(906, 352),
+					Vector2(532, 352),
+					Vector2(748, 352),
+					Vector2(640, 448)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 124), "orientation": "north"},
+					{"pos": Vector2(252, 352), "orientation": "west"},
+					{"pos": Vector2(1028, 352), "orientation": "east"}
+				],
+				"reward_positions": [
+					Vector2(410, 352),
+					Vector2(640, 304),
+					Vector2(870, 352)
+				],
+				"reward_position": Vector2(640, 352),
+				"blockers": [
+					Rect2(Vector2(438, 218), Vector2(58, 58)),
+					Rect2(Vector2(784, 218), Vector2(58, 58)),
+					Rect2(Vector2(438, 428), Vector2(58, 58)),
+					Rect2(Vector2(784, 428), Vector2(58, 58))
+				],
+				"decor": [
+					{"type": "cinder_register", "pos": Vector2(640, 352)},
+					{"type": "ledger_mark", "pos": Vector2(514, 352)},
+					{"type": "ledger_mark", "pos": Vector2(766, 352)},
+					{"type": "ash_brazier", "pos": Vector2(304, 284)},
+					{"type": "ash_brazier", "pos": Vector2(976, 284)}
+				],
+				"hazards": [
+					{"type": "cinder_seal", "center": Vector2(640, 352), "radius": 84.0}
+				],
+				"tint": Color("#d8b15f"),
+				"fill": Color(0.14, 0.10, 0.045, 0.13)
+			}
+
+		"cinder_procession", "pillar_hall":
+			return {
+				"id": "cinder_procession",
+				"display_name": "Cinder Procession",
+				"circle_name": "Circle 0 · The Cinder Vestibule",
+				"room_lore": "The uncounted march until a gate chooses them.",
+				"room_rect": Rect2(Vector2(138, 78), Vector2(1004, 556)),
+				"floor_rects": [
+					Rect2(Vector2(138, 78), Vector2(1004, 556))
+				],
+				"player_spawn": Vector2(640, 526),
+				"enemy_spawns": [
+					Vector2(412, 220),
+					Vector2(868, 220),
+					Vector2(512, 430),
+					Vector2(768, 430),
+					Vector2(640, 324),
+					Vector2(640, 206)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 112), "orientation": "north"},
+					{"pos": Vector2(190, 352), "orientation": "west"},
+					{"pos": Vector2(1090, 352), "orientation": "east"}
+				],
+				"reward_positions": [
+					Vector2(382, 326),
+					Vector2(640, 286),
+					Vector2(898, 326)
+				],
+				"reward_position": Vector2(640, 334),
+				"blockers": [
+					Rect2(Vector2(320, 190), Vector2(58, 100)),
+					Rect2(Vector2(494, 190), Vector2(58, 100)),
+					Rect2(Vector2(728, 190), Vector2(58, 100)),
+					Rect2(Vector2(902, 190), Vector2(58, 100)),
+					Rect2(Vector2(320, 436), Vector2(58, 100)),
+					Rect2(Vector2(494, 436), Vector2(58, 100)),
+					Rect2(Vector2(728, 436), Vector2(58, 100)),
+					Rect2(Vector2(902, 436), Vector2(58, 100))
+				],
+				"decor": [
+					{"type": "procession_line", "pos": Vector2(640, 352)},
+					{"type": "banner_ash", "pos": Vector2(250, 126)},
+					{"type": "banner_ash", "pos": Vector2(1030, 126)},
+					{"type": "ash_brazier", "pos": Vector2(640, 126)},
+					{"type": "ash_brazier", "pos": Vector2(640, 586)}
+				],
+				"hazards": [
+					{"type": "ash_channel", "rect": Rect2(Vector2(230, 330), Vector2(820, 44))}
+				],
+				"tint": Color("#b98a58"),
+				"fill": Color(0.13, 0.08, 0.05, 0.13)
+			}
+
+		"unchosen_court", "blood_pit":
+			return {
+				"id": "unchosen_court",
+				"display_name": "The Unchosen Court",
+				"circle_name": "Circle 0 · The Cinder Vestibule",
+				"room_lore": "The ones who refused all banners are driven in circles.",
+				"room_rect": Rect2(Vector2(158, 82), Vector2(964, 542)),
+				"floor_rects": [
+					Rect2(Vector2(158, 82), Vector2(964, 542))
+				],
+				"player_spawn": Vector2(640, 526),
+				"enemy_spawns": [
+					Vector2(640, 214),
+					Vector2(458, 350),
+					Vector2(822, 350),
+					Vector2(540, 470),
+					Vector2(740, 470),
+					Vector2(640, 330)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 116), "orientation": "north"},
+					{"pos": Vector2(206, 352), "orientation": "west"},
+					{"pos": Vector2(1074, 352), "orientation": "east"}
+				],
+				"reward_positions": [
+					Vector2(384, 326),
+					Vector2(640, 286),
+					Vector2(896, 326)
+				],
+				"reward_position": Vector2(640, 338),
+				"blockers": [
+					Rect2(Vector2(274, 202), Vector2(58, 58)),
+					Rect2(Vector2(948, 202), Vector2(58, 58)),
+					Rect2(Vector2(274, 476), Vector2(58, 58)),
+					Rect2(Vector2(948, 476), Vector2(58, 58))
+				],
+				"decor": [
+					{"type": "blank_standard", "pos": Vector2(236, 126)},
+					{"type": "blank_standard", "pos": Vector2(1044, 126)},
+					{"type": "ash_brazier", "pos": Vector2(380, 250)},
+					{"type": "ash_brazier", "pos": Vector2(900, 250)},
+					{"type": "ash_brazier", "pos": Vector2(380, 500)},
+					{"type": "ash_brazier", "pos": Vector2(900, 500)}
+				],
+				"hazards": [
+					{"type": "cinder_seal", "center": Vector2(640, 352), "radius": 122.0}
+				],
+				"tint": Color("#d24d38"),
+				"fill": Color(0.19, 0.045, 0.025, 0.15)
+			}
+
+		"sorting_slab", "reliquary_chamber":
+			return {
+				"id": "sorting_slab",
+				"display_name": "The Sorting Slab",
+				"circle_name": "Circle 0 · The Cinder Vestibule",
+				"room_lore": "Here the first mark is cut into the soul.",
+				"room_rect": Rect2(Vector2(154, 82), Vector2(972, 542)),
+				"floor_rects": [
+					Rect2(Vector2(226, 112), Vector2(828, 484)),
+					Rect2(Vector2(154, 252), Vector2(132, 192)),
+					Rect2(Vector2(994, 252), Vector2(132, 192))
+				],
+				"player_spawn": Vector2(640, 526),
+				"enemy_spawns": [
+					Vector2(452, 244),
+					Vector2(828, 244),
+					Vector2(424, 444),
+					Vector2(856, 444),
+					Vector2(640, 338),
+					Vector2(640, 232)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 140), "orientation": "north"},
+					{"pos": Vector2(184, 348), "orientation": "west"},
+					{"pos": Vector2(1096, 348), "orientation": "east"}
+				],
+				"reward_positions": [
+					Vector2(400, 340),
+					Vector2(640, 298),
+					Vector2(880, 340)
+				],
+				"reward_position": Vector2(640, 340),
+				"blockers": [
+					Rect2(Vector2(356, 304), Vector2(68, 102)),
+					Rect2(Vector2(856, 304), Vector2(68, 102)),
+					Rect2(Vector2(592, 228), Vector2(96, 58))
+				],
+				"decor": [
+					{"type": "cinder_register", "pos": Vector2(640, 338)},
+					{"type": "chest", "pos": Vector2(310, 350)},
+					{"type": "chest", "pos": Vector2(970, 350)},
+					{"type": "ash_brazier", "pos": Vector2(260, 148)},
+					{"type": "ash_brazier", "pos": Vector2(1020, 148)}
+				],
+				"hazards": [
+					{"type": "cinder_seal", "center": Vector2(640, 338), "radius": 88.0}
+				],
+				"tint": Color("#f0b866"),
+				"fill": Color(0.17, 0.11, 0.045, 0.13)
+			}
+
+		"hall_of_unclaimed_names":
+			return {
+				"id": "hall_of_unclaimed_names",
+				"display_name": "Hall of Unclaimed Names",
+				"circle_name": "Circle 0 · The Cinder Vestibule",
+				"room_lore": "Names hang here until judgment burns them away.",
+				"room_rect": Rect2(Vector2(168, 88), Vector2(944, 532)),
+				"floor_rects": [
+					Rect2(Vector2(168, 88), Vector2(944, 532)),
+					Rect2(Vector2(312, 156), Vector2(656, 396))
+				],
+				"player_spawn": Vector2(640, 526),
+				"enemy_spawns": [
+					Vector2(456, 232),
+					Vector2(824, 232),
+					Vector2(456, 440),
+					Vector2(824, 440),
+					Vector2(640, 336)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 120), "orientation": "north"},
+					{"pos": Vector2(208, 352), "orientation": "west"},
+					{"pos": Vector2(1072, 352), "orientation": "east"}
+				],
+				"reward_positions": [
+					Vector2(398, 338),
+					Vector2(640, 304),
+					Vector2(882, 338)
+				],
+				"reward_position": Vector2(640, 340),
+				"blockers": [
+					Rect2(Vector2(312, 204), Vector2(54, 78)),
+					Rect2(Vector2(914, 204), Vector2(54, 78)),
+					Rect2(Vector2(312, 454), Vector2(54, 78)),
+					Rect2(Vector2(914, 454), Vector2(54, 78))
+				],
+				"decor": [
+					{"type": "name_tags", "pos": Vector2(640, 150)},
+					{"type": "blank_standard", "pos": Vector2(264, 130)},
+					{"type": "blank_standard", "pos": Vector2(1016, 130)},
+					{"type": "ash_brazier", "pos": Vector2(260, 552)},
+					{"type": "ash_brazier", "pos": Vector2(1020, 552)}
+				],
+				"hazards": [
+					{"type": "ash_channel", "rect": Rect2(Vector2(368, 246), Vector2(544, 38))},
+					{"type": "ash_channel", "rect": Rect2(Vector2(368, 432), Vector2(544, 38))}
+				],
+				"tint": Color("#c9a06c"),
+				"fill": Color(0.12, 0.085, 0.065, 0.14)
+			}
+
+
+		"records_nave":
+			return {
+				"id": "records_nave",
+				"display_name": "The Records Nave",
+				"circle_name": "Circle 0 · The Cinder Vestibule",
+				"room_lore": "Ledgers, tablets, and tags preserve the memory of trespass.",
+				"room_rect": Rect2(Vector2(154, 84), Vector2(972, 548)),
+				"floor_rects": [
+					Rect2(Vector2(154, 84), Vector2(972, 548))
+				],
+				"player_spawn": Vector2(640, 530),
+				"enemy_spawns": [
+					Vector2(412, 214),
+					Vector2(868, 214),
+					Vector2(640, 250),
+					Vector2(460, 428),
+					Vector2(820, 428),
+					Vector2(640, 404)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 118), "orientation": "north"},
+					{"pos": Vector2(196, 356), "orientation": "west"},
+					{"pos": Vector2(1084, 356), "orientation": "east"}
+				],
+				"reward_positions": [
+					Vector2(396, 352),
+					Vector2(640, 318),
+					Vector2(884, 352)
+				],
+				"reward_position": Vector2(640, 352),
+				"blockers": [
+					Rect2(Vector2(286, 210), Vector2(64, 90)),
+					Rect2(Vector2(930, 210), Vector2(64, 90)),
+					Rect2(Vector2(286, 450), Vector2(64, 90)),
+					Rect2(Vector2(930, 450), Vector2(64, 90))
+				],
+				"decor": [
+					{"type": "cinder_register", "pos": Vector2(510, 210)},
+					{"type": "cinder_register", "pos": Vector2(770, 210)},
+					{"type": "name_tags", "pos": Vector2(640, 142)},
+					{"type": "ash_brazier", "pos": Vector2(236, 140)},
+					{"type": "ash_brazier", "pos": Vector2(1044, 140)}
+				],
+				"hazards": [
+					{"type": "cinder_seal", "center": Vector2(640, 352), "radius": 118.0}
+				],
+				"tint": Color("#d89a5f"),
+				"fill": Color(0.14, 0.07, 0.04, 0.15)
+			}
+
+		"judgment_antechamber":
+			return {
+				"id": "judgment_antechamber",
+				"display_name": "Judgment Antechamber",
+				"circle_name": "Circle 0 · The Cinder Vestibule",
+				"room_lore": "The condemned gather beneath the final threshold.",
+				"room_rect": Rect2(Vector2(146, 78), Vector2(988, 562)),
+				"floor_rects": [
+					Rect2(Vector2(146, 78), Vector2(988, 562))
+				],
+				"player_spawn": Vector2(640, 548),
+				"enemy_spawns": [
+					Vector2(640, 232),
+					Vector2(452, 314),
+					Vector2(828, 314),
+					Vector2(452, 448),
+					Vector2(828, 448)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 120), "orientation": "north"}
+				],
+				"reward_positions": [
+					Vector2(640, 338)
+				],
+				"reward_position": Vector2(640, 338),
+				"blockers": [
+					Rect2(Vector2(244, 214), Vector2(66, 96)),
+					Rect2(Vector2(970, 214), Vector2(66, 96)),
+					Rect2(Vector2(312, 504), Vector2(96, 52)),
+					Rect2(Vector2(872, 504), Vector2(96, 52))
+				],
+				"decor": [
+					{"type": "judgment_gate", "pos": Vector2(640, 136)},
+					{"type": "procession_line", "pos": Vector2(640, 368)},
+					{"type": "ash_brazier", "pos": Vector2(238, 140)},
+					{"type": "ash_brazier", "pos": Vector2(1042, 140)}
+				],
+				"hazards": [
+					{"type": "cinder_seal", "center": Vector2(640, 338), "radius": 142.0}
+				],
+				"tint": Color("#f06a39"),
+				"fill": Color(0.18, 0.045, 0.03, 0.16)
+			}
+
+		"door_before_judgment", "boss_sanctum":
+			return {
+				"id": "door_before_judgment",
+				"display_name": "The Door Before Judgment",
+				"circle_name": "Circle 0 · The Cinder Vestibule",
+				"room_lore": "The institution itself notices the trespass.",
+				"room_rect": Rect2(Vector2(132, 70), Vector2(1016, 572)),
+				"floor_rects": [
+					Rect2(Vector2(132, 70), Vector2(1016, 572))
+				],
+				"player_spawn": Vector2(640, 542),
+				"enemy_spawns": [
+					Vector2(640, 244)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 126), "orientation": "north"}
+				],
+				"reward_positions": [
+					Vector2(640, 350)
+				],
+				"reward_position": Vector2(640, 350),
+				"blockers": [
+					Rect2(Vector2(242, 172), Vector2(70, 104)),
+					Rect2(Vector2(968, 172), Vector2(70, 104)),
+					Rect2(Vector2(242, 488), Vector2(70, 104)),
+					Rect2(Vector2(968, 488), Vector2(70, 104))
+				],
+				"decor": [
+					{"type": "judgment_gate", "pos": Vector2(640, 136)},
+					{"type": "ash_brazier", "pos": Vector2(230, 126)},
+					{"type": "ash_brazier", "pos": Vector2(1050, 126)},
+					{"type": "chain_post", "pos": Vector2(356, 352)},
+					{"type": "chain_post", "pos": Vector2(924, 352)}
+				],
+				"hazards": [
+					{"type": "cinder_seal", "center": Vector2(640, 352), "radius": 168.0}
+				],
+				"tint": Color("#ff5b37"),
+				"fill": Color(0.24, 0.035, 0.02, 0.18)
+			}
+
+		_:
+			return _get_room_template("ash_intake_hall")
+
+
+
+func _try_load_authored_room_scene() -> void:
+	_clear_authored_room_scene()
+
+	if not USE_AUTHORED_ROOM_SCENES:
+		return
+
+	var scene_path: String = _get_authored_room_scene_path()
+
+	if scene_path == "":
+		return
+
+	if not ResourceLoader.exists(scene_path):
+		return
+
+	var packed_scene: PackedScene = load(scene_path) as PackedScene
+
+	if packed_scene == null:
+		push_warning("Authored room scene exists but could not load: %s" % scene_path)
+		return
+
+	authored_room = packed_scene.instantiate() as Node2D
+
+	if authored_room == null:
+		push_warning("Authored room scene root must be Node2D: %s" % scene_path)
+		return
+
+	authored_room.name = "AuthoredRoomInstance"
+	authored_room.z_index = -200
+	add_child(authored_room)
+	move_child(authored_room, 0)
+	authored_room_active = true
+	print("[AuthoredRoom] Combat loaded: %s" % scene_path)
+
+
+func _clear_authored_room_scene() -> void:
+	if authored_room != null and is_instance_valid(authored_room):
+		authored_room.queue_free()
+
+	authored_room = null
+	authored_room_active = false
+
+
+func _get_authored_room_scene_path() -> String:
+	var candidates: Array[String] = []
+
+	match room_type:
+		RunState.ROOM_BOSS:
+			candidates.append("boss_intake_magistrate_01")
+			candidates.append("boss_door_before_judgment_01")
+			candidates.append("combat_ash_intake_hall_01")
+		RunState.ROOM_MINIBOSS:
+			candidates.append("miniboss_judgment_antechamber_01")
+			candidates.append("combat_ash_intake_hall_01")
+		RunState.ROOM_ELITE:
+			candidates.append("elite_unchosen_court_01")
+			candidates.append("combat_ash_intake_hall_01")
+		_:
+			candidates.append("combat_%s_01" % room_layout_type)
+			candidates.append("combat_ash_intake_hall_01")
+
+	return _first_existing_authored_scene_path(candidates)
+
+
+func _first_existing_authored_scene_path(scene_keys: Array[String]) -> String:
+	for key in scene_keys:
+		var scene_path: String = AUTHORED_ROOM_SCENE_ROOT + key + ".tscn"
+		if ResourceLoader.exists(scene_path):
+			return scene_path
+
+	return ""
+
+
+func _draw_authored_room_overlay() -> void:
+	if room_clear_pulse_timer > 0.0:
+		_draw_room_clear_pulse()
+
+	if room_clear:
+		_draw_room_clear_banner()
+
+
+func _get_authored_player_spawn(fallback: Vector2) -> Vector2:
+	if authored_room != null and authored_room.has_method("get_player_spawn"):
+		var result: Variant = authored_room.call("get_player_spawn", fallback)
+		if result is Vector2:
+			return result
+
+	return _get_authored_marker_position("PlayerSpawn", fallback)
+
+
+func _get_authored_reward_socket(fallback: Vector2) -> Vector2:
+	if authored_room != null and authored_room.has_method("get_reward_socket"):
+		var result: Variant = authored_room.call("get_reward_socket", fallback)
+		if result is Vector2:
+			return result
+
+	return _get_authored_marker_position("RewardSocket", fallback)
+
+
+func _get_authored_enemy_spawns() -> Array[Vector2]:
+	if authored_room != null and authored_room.has_method("get_enemy_spawns"):
+		var result: Variant = authored_room.call("get_enemy_spawns")
+		if result is Array:
+			var positions: Array[Vector2] = []
+			for value in result:
+				if value is Vector2:
+					positions.append(value)
+			return positions
+
+	return _collect_authored_marker_positions("Markers/EnemySpawns")
+
+
+func _get_authored_reward_positions() -> Array[Vector2]:
+	if authored_room != null and authored_room.has_method("get_reward_sockets"):
+		var result: Variant = authored_room.call("get_reward_sockets")
+		if result is Array:
+			var positions: Array[Vector2] = []
+			for value in result:
+				if value is Vector2:
+					positions.append(value)
+			return positions
+
+	var reward_socket: Vector2 = _get_authored_reward_socket(Vector2.ZERO)
+	if reward_socket != Vector2.ZERO:
+		var positions: Array[Vector2] = []
+		positions.append(reward_socket)
+		return positions
+
+	return []
+
+
+func _get_authored_door_sockets() -> Array:
+	if authored_room != null and authored_room.has_method("get_door_sockets"):
+		var result: Variant = authored_room.call("get_door_sockets")
+		if result is Array:
+			return result
+
+	var sockets: Array = []
+	var positions: Array[Vector2] = _collect_authored_marker_positions("Markers/DoorSockets")
+	for pos in positions:
+		sockets.append({"pos": pos, "orientation": "north"})
+	return sockets
+
+
+func _get_authored_marker_position(marker_name: String, fallback: Vector2) -> Vector2:
+	if authored_room == null:
+		return fallback
+
+	if authored_room.has_method("get_marker_position"):
+		var result: Variant = authored_room.call("get_marker_position", marker_name, fallback)
+		if result is Vector2:
+			return result
+
+	var marker: Node = authored_room.get_node_or_null("Markers/%s" % marker_name)
+
+	if marker is Node2D:
+		return (marker as Node2D).global_position
+
+	return fallback
+
+
+func _collect_authored_marker_positions(path: String) -> Array[Vector2]:
+	var positions: Array[Vector2] = []
+
+	if authored_room == null:
+		return positions
+
+	var root: Node = authored_room.get_node_or_null(path)
+
+	if root == null:
+		return positions
+
+	for child in root.get_children():
+		if child is Node2D:
+			positions.append((child as Node2D).global_position)
+
+	return positions
+
+
+func _place_player_from_template() -> void:
+	var player_spawn: Vector2 = _get_template_vector("player_spawn", Vector2(640, 520))
+
+	if has_node("Player"):
+		$Player.global_position = player_spawn
+
+
+func _build_room_collision() -> void:
+	_clear_room_collision()
+
+	if authored_room_active:
+		# Authored scenes own their collision via their Collision node.
+		return
+
+	collision_root = Node2D.new()
+	collision_root.name = "GeneratedRoomCollision"
+	add_child(collision_root)
+
+	var template := _get_current_room_template()
+	var floor_rects: Array = template.get("floor_rects", [arena_rect])
+
+	for floor_rect in floor_rects:
+		if floor_rect is Rect2:
+			_add_floor_rect_edge_collision(floor_rect, floor_rects)
+
+	var blockers: Array = template.get("blockers", [])
+
+	for i in range(blockers.size()):
+		var blocker = blockers[i]
+
+		if blocker is Rect2:
+			_add_rect_collision(blocker, "Blocker_%d" % i)
+			
+func _add_floor_rect_edge_collision(rect: Rect2, all_floor_rects: Array) -> void:
+	var thickness := 14.0
+	var step := 32.0
+
+	var x := rect.position.x
+
+	while x < rect.position.x + rect.size.x:
+		var segment_width: float = minf(step, rect.position.x + rect.size.x - x)
+
+		var top_sample := Vector2(x + segment_width * 0.5, rect.position.y - thickness * 0.5)
+		var bottom_sample := Vector2(x + segment_width * 0.5, rect.position.y + rect.size.y + thickness * 0.5)
+
+		if not _point_inside_any_floor_rect(top_sample, all_floor_rects):
+			_add_rect_collision(
+				Rect2(Vector2(x, rect.position.y - thickness), Vector2(segment_width, thickness)),
+                "FloorEdge_Top"
+			)
+
+		if not _point_inside_any_floor_rect(bottom_sample, all_floor_rects):
+			_add_rect_collision(
+				Rect2(Vector2(x, rect.position.y + rect.size.y), Vector2(segment_width, thickness)),
+                "FloorEdge_Bottom"
+			)
+
+		x += step
+
+	var y := rect.position.y
+
+	while y < rect.position.y + rect.size.y:
+		var segment_height: float = minf(step, rect.position.y + rect.size.y - y)
+
+		var left_sample := Vector2(rect.position.x - thickness * 0.5, y + segment_height * 0.5)
+		var right_sample := Vector2(rect.position.x + rect.size.x + thickness * 0.5, y + segment_height * 0.5)
+
+		if not _point_inside_any_floor_rect(left_sample, all_floor_rects):
+			_add_rect_collision(
+				Rect2(Vector2(rect.position.x - thickness, y), Vector2(thickness, segment_height)),
+                "FloorEdge_Left"
+			)
+
+		if not _point_inside_any_floor_rect(right_sample, all_floor_rects):
+			_add_rect_collision(
+				Rect2(Vector2(rect.position.x + rect.size.x, y), Vector2(thickness, segment_height)),
+                "FloorEdge_Right"
+			)
+
+		y += step
+
+
+func _point_inside_any_floor_rect(point: Vector2, floor_rects: Array) -> bool:
+	for value in floor_rects:
+		if not (value is Rect2):
+			continue
+
+		var rect: Rect2 = value
+
+		if rect.has_point(point):
+			return true
+
+	return false
+
+
+func _clear_room_collision() -> void:
+	var existing := get_node_or_null("GeneratedRoomCollision")
+
+	if existing != null:
+		existing.queue_free()
+
+
+func _add_rect_collision(rect: Rect2, node_name: String) -> void:
+	if collision_root == null:
+		return
+
+	var body := StaticBody2D.new()
+	body.name = node_name
+	body.collision_layer = 1
+	body.collision_mask = 1
+	body.global_position = rect.position + rect.size * 0.5
+
+	var shape := CollisionShape2D.new()
+	var rectangle := RectangleShape2D.new()
+	rectangle.size = rect.size
+	shape.shape = rectangle
+	shape.debug_color = Color(1.0, 0.2, 0.1, 0.35)
+
+	body.add_child(shape)
+	collision_root.add_child(body)
+
+
+func _get_template_array(key: String) -> Array:
+	if authored_room_active:
+		match key:
+			"enemy_spawns":
+				return _get_authored_enemy_spawns()
+			"reward_positions":
+				return _get_authored_reward_positions()
+			"door_positions":
+				return _get_authored_door_sockets()
+			_:
+				pass
+
+	var template := _get_current_room_template()
+	var value = template.get(key, [])
+
+	if value is Array:
+		return value
+
+	return []
+
+
+func _get_template_vector(key: String, fallback: Vector2) -> Vector2:
+	if authored_room_active:
+		match key:
+			"player_spawn":
+				return _get_authored_player_spawn(fallback)
+			"reward_position":
+				return _get_authored_reward_socket(fallback)
+			_:
+				pass
+
+	var template := _get_current_room_template()
+	var value = template.get(key, fallback)
+
+	if value is Vector2:
+		return value
+
+	return fallback
+
+
+func _spawn_enemies() -> void:
+	if enemy_scene == null:
+		push_error("CombatRoom enemy_scene is not assigned.")
+		return
+
+	spawned_enemies.clear()
+
+	var enemy_count: int = RunState.get_enemy_count_for_room(room_type, RunState.depth)
+	var enemy_stats: Dictionary = RunState.get_enemy_stats_for_room(room_type, RunState.depth)
+	var spawn_positions: Array[Vector2] = _get_scaled_spawn_positions(enemy_count)
+	var role_plan: Array[String] = _get_circle0_enemy_role_plan(enemy_count, str(enemy_stats.get("rank", "normal")))
+
+	for i in range(enemy_count):
+		var spawn_position: Vector2 = spawn_positions[i]
+		var role: String = role_plan[i % role_plan.size()] if not role_plan.is_empty() else "ash_wretch"
+		_spawn_enemy_at(spawn_position, enemy_stats, role)
+
+
+func _get_circle0_enemy_role_plan(enemy_count: int, rank: String) -> Array[String]:
+	var roles: Array[String] = []
+
+	if enemy_count <= 0:
+		return roles
+
+	match rank:
+		"boss":
+			roles.append("intake_magistrate")
+
+		"miniboss":
+			roles.append("threshold_proctor")
+
+		"elite":
+			roles.append("vestibule_bailiff")
+
+		_:
+			pass
+
+	var template_id: String = str(_get_current_room_template().get("id", room_layout_type))
+	var pattern: Array[String] = _get_circle0_role_pattern_for_template(template_id)
+
+	var pattern_index: int = 0
+
+	while roles.size() < enemy_count:
+		if pattern.is_empty():
+			roles.append("ash_wretch")
+		else:
+			roles.append(pattern[pattern_index % pattern.size()])
+			pattern_index += 1
+
+	return roles
+
+
+func _get_circle0_role_pattern_for_template(template_id: String) -> Array[String]:
+	match template_id:
+		"ash_intake_hall":
+			return [
+				"ash_wretch",
+				"ash_wretch",
+				"gate_warden",
+				"bell_hound",
+				"ash_wretch",
+				"cinder_scribe"
+			]
+		"gate_ledger":
+			return [
+				"cinder_scribe",
+				"gate_warden",
+				"ash_wretch",
+				"cinder_scribe",
+				"bell_hound"
+			]
+		"cinder_procession":
+			return [
+				"bell_hound",
+				"ash_wretch",
+				"ash_wretch",
+				"gate_warden",
+				"bell_hound"
+			]
+		"sorting_slab":
+			return [
+				"gate_warden",
+				"cinder_scribe",
+				"ash_wretch",
+				"gate_warden"
+			]
+		"hall_of_unclaimed_names":
+			return [
+				"ash_wretch",
+				"cinder_scribe",
+				"ash_wretch",
+				"bell_hound",
+				"cinder_scribe"
+			]
+		"unchosen_court":
+			return [
+				"vestibule_bailiff",
+				"gate_warden",
+				"cinder_scribe",
+				"bell_hound"
+			]
+		"records_nave":
+			return [
+				"cinder_scribe",
+				"ash_wretch",
+				"gate_warden",
+				"cinder_scribe",
+				"bell_hound"
+			]
+		"judgment_antechamber":
+			return [
+				"gate_warden",
+				"bell_hound",
+				"cinder_scribe"
+			]
+		"door_before_judgment":
+			return [
+				"intake_magistrate",
+				"gate_warden",
+				"cinder_scribe",
+				"bell_hound",
+				"ash_wretch"
+			]
+		_:
+			return [
+				"ash_wretch",
+				"gate_warden",
+				"cinder_scribe",
+				"bell_hound"
+			]
+
+
+func _get_scaled_spawn_positions(enemy_count: int) -> Array[Vector2]:
+	var positions: Array[Vector2] = []
+	var spawn_values := _get_template_array("enemy_spawns")
+
+	if spawn_values.is_empty():
+		spawn_values = [
+			Vector2(440, 260),
+			Vector2(640, 220),
+			Vector2(840, 260)
+		]
+
+	for i in range(enemy_count):
+		var base_position: Vector2 = spawn_values[i % spawn_values.size()]
+		var wave_index := int(floor(float(i) / float(spawn_values.size())))
+		var jitter := Vector2.ZERO
+
+		if wave_index > 0:
+			var angle := (TAU / float(maxi(enemy_count, 1))) * float(i)
+			jitter = Vector2(cos(angle), sin(angle)) * (34.0 * float(wave_index))
+
+		positions.append(base_position + jitter)
+
+	return positions
+
+
+func _spawn_enemy_at(spawn_position: Vector2, stats: Dictionary, role: String = "ash_wretch") -> void:
+	var enemy := enemy_scene.instantiate() as Node2D
+
+	if enemy == null:
+		push_error("Enemy scene root must be Node2D or CharacterBody2D.")
+		return
+
+	add_child(enemy)
+	enemy.global_position = spawn_position
+
+	var rank: String = str(stats["rank"])
+
+	if role == "intake_magistrate":
+		enemy.scale = Vector2(1.82, 1.82)
+	elif role == "threshold_proctor":
+		enemy.scale = Vector2(1.46, 1.46)
+	elif rank == "elite":
+		enemy.scale = Vector2(1.25, 1.25)
+	elif rank == "miniboss":
+		enemy.scale = Vector2(1.55, 1.55)
+	elif rank == "boss":
+		enemy.scale = Vector2(2.00, 2.00)
+
+	if enemy.has_method("setup_enemy_stats"):
+		enemy.call(
+			"setup_enemy_stats",
+			float(stats["max_hp"]),
+			float(stats["damage"]),
+			float(stats["speed"]),
+			float(stats["contact_radius"]),
+			rank,
+			role
+		)
+	elif enemy.has_method("set_enemy_role"):
+		enemy.call("set_enemy_role", role)
+
+	if enemy.has_signal("died"):
+		enemy.connect("died", Callable(self, "_on_enemy_died"))
+
+	spawned_enemies.append(enemy)
+
+
+
+func _get_special_prop_id_for_room_type() -> String:
+	match room_type:
+		RunState.ROOM_FORGE:
+			return "forge"
+		RunState.ROOM_SHRINE:
+			return "shrine"
+		RunState.ROOM_SHOP:
+			return "shop"
+		RunState.ROOM_FOUNTAIN:
+			return "fountain"
+		RunState.ROOM_BOSS:
+			return "reward"
+		_:
+			return "reward"
+
+
+func _spawn_special_room_prop(prop_id: String) -> void:
+	if special_room_prop != null and is_instance_valid(special_room_prop):
+		return
+
+	special_room_prop = SpecialRoomPropScene.instantiate() as Node2D
+
+	if special_room_prop == null:
+		return
+
+	special_room_prop.global_position = reward_position
+	special_room_prop.z_index = 90
+	add_child(special_room_prop)
+
+	if special_room_prop.has_method("setup"):
+		var label_text := RunState.get_room_display_name(room_type)
+		special_room_prop.call("setup", prop_id, label_text)
+
+
+func _clear_special_room_prop() -> void:
+	if special_room_prop != null and is_instance_valid(special_room_prop):
+		special_room_prop.queue_free()
+
+	special_room_prop = null
+
+
+
+func _spawn_post_clear_reward() -> void:
+	if reward_taken:
+		return
+
+	reward_position = _get_template_vector("reward_position", Vector2(640, 330))
+
+	_clear_special_room_prop()
+
+	match room_type:
+		RunState.ROOM_UPGRADE:
+			_spawn_upgrade_cards()
+
+		RunState.ROOM_FORGE:
+			reward_available = true
+
+		RunState.ROOM_SHRINE:
+			reward_available = true
+
+		RunState.ROOM_BOSS:
+			reward_available = true
+
+		_:
+			_spawn_boon_offers()
+
+	if reward_available:
+		_spawn_special_room_prop(_get_special_prop_id_for_room_type())
+
+
+func _spawn_boon_offers() -> void:
+	if not boon_offers.is_empty():
+		return
+
+	boon_offers = RunState.generate_boon_offers(3)
+
+	if boon_offers.is_empty():
+		reward_taken = true
+		_spawn_choice_doors()
+		return
+
+	boon_positions.clear()
+	var reward_values := _get_template_array("reward_positions")
+
+	for value in reward_values:
+		if value is Vector2:
+			boon_positions.append(value)
+
+	while boon_positions.size() < 3:
+		var fallback_positions := [
+			Vector2(385, 315),
+			Vector2(640, 280),
+			Vector2(895, 315)
+		]
+		boon_positions.append(fallback_positions[boon_positions.size()])
+
+
+func _spawn_upgrade_cards() -> void:
+	if not upgrade_cards.is_empty():
+		return
+
+	var offers: Array[RunUpgradeData] = RunState.generate_upgrade_offers(3)
+
+	if offers.is_empty():
+		reward_taken = true
+		_spawn_choice_doors()
+		return
+
+	var positions: Array[Vector2] = []
+	var reward_values := _get_template_array("reward_positions")
+
+	for value in reward_values:
+		if value is Vector2:
+			positions.append(value)
+
+	while positions.size() < 3:
+		var fallback_positions := [
+			Vector2(385, 300),
+			Vector2(640, 270),
+			Vector2(895, 300)
+		]
+		positions.append(fallback_positions[positions.size()])
+
+	for i in range(offers.size()):
+		var card := UpgradeCardScene.instantiate() as Node2D
+		card.global_position = positions[i]
+		add_child(card)
+
+		if card.has_method("setup"):
+			card.setup(offers[i])
+
+		if card.has_signal("upgrade_selected"):
+			card.upgrade_selected.connect(_on_upgrade_card_selected)
+
+		upgrade_cards.append(card)
+
+
+func _on_upgrade_card_selected(upgrade_data: RunUpgradeData) -> void:
+	if reward_taken:
+		return
+
+	reward_taken = true
+	RunState.apply_upgrade(upgrade_data)
+
+	if $Player and $Player.has_method("apply_run_modifiers"):
+		$Player.apply_run_modifiers()
+
+	for card in upgrade_cards:
+		if card != null and is_instance_valid(card):
+			card.queue_free()
+
+	upgrade_cards.clear()
+	_spawn_choice_doors()
+	queue_redraw()
+
+
+func _update_reward_interaction() -> void:
+	if not room_clear:
+		return
+
+	if reward_taken:
+		hint = "Reward claimed — choose your next door"
+		return
+
+	if not boon_offers.is_empty():
+		_update_boon_choice_interaction()
+		return
+
+	if reward_available:
+		_update_object_reward_interaction()
+		return
+
+	if not upgrade_cards.is_empty():
+		hint = "Choose one reward card"
+		return
+
+
+func _update_boon_choice_interaction() -> void:
+	hint = "Choose a Witness or Sinner boon"
+
+	var nearest_index: int = -1
+	var nearest_distance: float = 99999.0
+
+	for i in range(boon_positions.size()):
+		var distance: float = $Player.global_position.distance_to(boon_positions[i])
+
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest_index = i
+
+	if nearest_index >= 0 and nearest_distance <= 92.0:
+		var boon: Dictionary = boon_offers[nearest_index]
+		hint = "Press E — Accept %s" % str(boon.get("display_name", "Boon"))
+
+		if Input.is_action_just_pressed("interact"):
+			_accept_boon(nearest_index)
+
+
+func _accept_boon(index: int) -> void:
+	if index < 0 or index >= boon_offers.size():
+		return
+
+	var boon: Dictionary = boon_offers[index]
+	RunState.apply_boon(boon)
+
+	reward_taken = true
+	boon_offers.clear()
+	boon_positions.clear()
+
+	if $Player and $Player.has_method("apply_run_modifiers"):
+		$Player.apply_run_modifiers()
+
+	_spawn_choice_doors()
+	queue_redraw()
+
+
+func _update_object_reward_interaction() -> void:
+	var near_reward: bool = $Player.global_position.distance_to(reward_position) <= reward_radius
+
+	match room_type:
+		RunState.ROOM_FORGE:
+			hint = "Forge cleared — approach the anvil"
+		RunState.ROOM_SHRINE:
+			hint = "Shrine cleared — approach the offering"
+		RunState.ROOM_BOSS:
+			hint = "Boss defeated — claim the remnant"
+		_:
+			hint = "Approach the reward"
+
+	if near_reward:
+		hint = "Press E — Claim %s Reward" % RunState.get_room_display_name(room_type)
+
+		if Input.is_action_just_pressed("interact"):
+			_claim_object_reward()
+
+
+func _claim_object_reward() -> void:
+	if reward_taken:
+		return
+
+	reward_taken = true
+	reward_available = false
+	_clear_special_room_prop()
+
+	match room_type:
+		RunState.ROOM_FORGE:
+			if $Player:
+				$Player.armor = minf($Player.armor + 12.0, $Player.max_armor)
+
+		RunState.ROOM_SHRINE:
+			if $Player:
+				$Player.hp = minf($Player.hp + 18.0, $Player.max_hp)
+
+			if $Player and $Player.has_method("gain_ultimate"):
+				$Player.gain_ultimate(18.0)
+
+		RunState.ROOM_BOSS:
+			if $Player and $Player.has_method("gain_ultimate"):
+				$Player.gain_ultimate(100.0)
+
+		_:
+			pass
+
+	_spawn_choice_doors()
+	queue_redraw()
+
+
+
+func _get_choice_door_sockets(offer_count: int) -> Array[Dictionary]:
+	var template := _get_current_room_template()
+	var room_rect: Rect2 = template.get("room_rect", arena_rect)
+	var center := room_rect.get_center()
+
+	if offer_count <= 1:
+		return [
+			{"position": Vector2(center.x, room_rect.position.y + room_rect.size.y - 70.0), "orientation": "south"}
+		]
+
+	match room_layout_type:
+		"cross_hall":
+			return [
+				{"position": Vector2(640, 166), "orientation": "north"},
+				{"position": Vector2(316, 350), "orientation": "west"},
+				{"position": Vector2(964, 350), "orientation": "east"}
+			]
+
+		"reliquary_chamber":
+			return [
+				{"position": Vector2(640, 180), "orientation": "north"},
+				{"position": Vector2(240, 345), "orientation": "west"},
+				{"position": Vector2(1040, 345), "orientation": "east"}
+			]
+
+		"chapel_box":
+			return [
+				{"position": Vector2(640, 154), "orientation": "north"},
+				{"position": Vector2(250, 352), "orientation": "west"},
+				{"position": Vector2(1030, 352), "orientation": "east"}
+			]
+
+		"pillar_hall":
+			return [
+				{"position": Vector2(640, 154), "orientation": "north"},
+				{"position": Vector2(228, 352), "orientation": "west"},
+				{"position": Vector2(1052, 352), "orientation": "east"}
+			]
+
+		"blood_pit":
+			return [
+				{"position": Vector2(640, 158), "orientation": "north"},
+				{"position": Vector2(244, 352), "orientation": "west"},
+				{"position": Vector2(1036, 352), "orientation": "east"}
+			]
+
+		"boss_sanctum":
+			return [
+				{"position": Vector2(640, 166), "orientation": "north"},
+				{"position": Vector2(232, 356), "orientation": "west"},
+				{"position": Vector2(1048, 356), "orientation": "east"}
+			]
+
+		_:
+			return [
+				{"position": Vector2(center.x, room_rect.position.y + 72.0), "orientation": "north"},
+				{"position": Vector2(room_rect.position.x + 72.0, center.y), "orientation": "west"},
+				{"position": Vector2(room_rect.position.x + room_rect.size.x - 72.0, center.y), "orientation": "east"}
+			]
+
+
+func _spawn_choice_doors() -> void:
+	if not choice_doors.is_empty():
+		return
+
+	var offers: Array[String] = RunState.generate_offers_after_clear()
+
+	if offers.is_empty():
+		return
+
+	var socket_values := _get_template_array("door_positions")
+	var sockets: Array[Dictionary] = []
+
+	for value in socket_values:
+		if value is Dictionary:
+			sockets.append(value)
+		elif value is Vector2:
+			sockets.append({
+				"pos": value,
+				"orientation": "north"
+			})
+
+	if offers.size() == 1:
+		var chosen_socket: Dictionary = {
+			"pos": Vector2(640, 120),
+			"orientation": "north"
+		}
+
+		if not sockets.is_empty():
+			chosen_socket = sockets[0]
+
+		var door := ChoiceDoorScene.instantiate() as Node2D
+		door.global_position = chosen_socket.get("pos", Vector2(640, 120))
+		add_child(door)
+
+		if door.has_method("setup"):
+			door.setup(str(offers[0]), str(chosen_socket.get("orientation", "north")))
+
+		if door.has_signal("room_choice_requested"):
+			door.room_choice_requested.connect(_on_choice_door_selected)
+
+		choice_doors.append(door)
+		return
+
+	while sockets.size() < offers.size():
+		var fallback_index := sockets.size()
+
+		if fallback_index == 0:
+			sockets.append({"pos": Vector2(640, 120), "orientation": "north"})
+		elif fallback_index == 1:
+			sockets.append({"pos": Vector2(210, 352), "orientation": "west"})
+		else:
+			sockets.append({"pos": Vector2(1070, 352), "orientation": "east"})
+
+	for i in range(offers.size()):
+		var offered_room_type: String = str(offers[i])
+		var socket: Dictionary = sockets[i]
+
+		var door := ChoiceDoorScene.instantiate() as Node2D
+		door.global_position = socket.get("pos", Vector2(640, 120))
+		add_child(door)
+
+		if door.has_method("setup"):
+			door.setup(offered_room_type, str(socket.get("orientation", "north")))
+
+		if door.has_signal("room_choice_requested"):
+			door.room_choice_requested.connect(_on_choice_door_selected)
+
+		choice_doors.append(door)
+
+
+func _on_choice_door_selected(selected_room_type: String) -> void:
+	room_choice_requested.emit(selected_room_type)
+
+
+func _get_alive_enemy_count() -> int:
+	var alive_enemies: Array[Node2D] = []
+
+	for enemy in spawned_enemies:
+		if enemy == null:
+			continue
+
+		if not is_instance_valid(enemy):
+			continue
+
+		if enemy.is_queued_for_deletion():
+			continue
+
+		if _object_has_property(enemy, "dead") and bool(enemy.get("dead")):
+			continue
+
+		alive_enemies.append(enemy)
+
+	spawned_enemies = alive_enemies
+	return spawned_enemies.size()
+
+
+func _on_player_attack(kind: String, origin: Vector2, direction: Vector2, radius: float, damage: float) -> void:
+	var safe_direction: Vector2 = direction
+
+	if safe_direction.length() <= 0.01:
+		safe_direction = Vector2.RIGHT
+
+	safe_direction = safe_direction.normalized()
+
+	var fx = AttackEffectScene.instantiate()
+	fx.global_position = origin
+	fx.setup(kind, radius, safe_direction)
+	add_child(fx)
+
+	attack_fx.append({
+		"kind": kind,
+		"origin": origin,
+		"direction": safe_direction,
+		"radius": radius,
+		"time": 0.18
+	})
+
+	var hit_any_enemy: bool = false
+
+	for enemy_node in spawned_enemies:
+		if enemy_node == null:
+			continue
+
+		if not is_instance_valid(enemy_node):
+			continue
+
+		if enemy_node.is_queued_for_deletion():
+			continue
+
+		var to_enemy: Vector2 = enemy_node.global_position - origin
+		var distance: float = to_enemy.length()
+
+		if distance > radius:
+			continue
+
+		var can_hit: bool = false
+
+		if kind in ["light", "light_1", "light_2", "light_3"]:
+			can_hit = _is_in_front(to_enemy, safe_direction, 0.10)
+		elif kind == "heavy":
+			can_hit = _is_in_front(to_enemy, safe_direction, -0.20)
+		elif kind == "q":
+			can_hit = true
+		elif kind == "ultimate":
+			can_hit = true
+
+		if can_hit:
+			hit_any_enemy = true
+
+			var final_damage: float = damage
+
+			if RunState.has_method("get_attack_damage_multiplier"):
+				final_damage *= RunState.get_attack_damage_multiplier(kind)
+
+			if RunState.has_method("get_bonus_damage_multiplier_for_target"):
+				final_damage *= RunState.get_bonus_damage_multiplier_for_target(kind, enemy_node)
+
+			if enemy_node.has_method("take_damage"):
+				enemy_node.call("take_damage", final_damage, origin, kind)
+
+			_apply_on_hit_boon_effects(kind, enemy_node)
+			_apply_on_hit_status_detonations(kind, enemy_node)
+			_apply_on_hit_spread_status_synergies(kind, enemy_node)
+			_apply_on_hit_execute_synergies(kind, enemy_node)
+			_apply_on_hit_heal_synergies(kind, enemy_node)
+
+			_spawn_damage_number(enemy_node.global_position, final_damage, kind)
+
+			match kind:
+				"light", "light_1":
+					add_screen_shake(0.06, 8.0)
+				"light_2":
+					add_screen_shake(0.06, 9.0)
+				"light_3":
+					add_screen_shake(0.08, 13.0)
+				"heavy":
+					add_screen_shake(0.10, 16.0)
+				"q":
+					add_screen_shake(0.09, 14.0)
+				"ultimate":
+					add_screen_shake(0.18, 28.0)
+
+			if $Player.has_method("gain_ultimate"):
+				$Player.gain_ultimate(6.0)
+
+	if hit_any_enemy:
+		match kind:
+			"light", "light_1":
+				add_hit_stop(0.035, 0.12)
+			"light_2":
+				add_hit_stop(0.04, 0.10)
+			"light_3":
+				add_hit_stop(0.055, 0.08)
+			"heavy":
+				add_hit_stop(0.075, 0.06)
+			"q":
+				add_hit_stop(0.06, 0.08)
+			"ultimate":
+				add_hit_stop(0.11, 0.04)
+
+
+func _spawn_damage_number(pos: Vector2, amount: float, kind: String) -> void:
+	var number = DamageNumberScene.instantiate()
+	number.global_position = pos + Vector2(randf_range(-10.0, 10.0), randf_range(-20.0, -8.0))
+
+	var number_color := Color("#f7e8d4")
+	var is_big := false
+
+	match kind:
+		"light", "light_1":
+			number_color = Color("#f7e8d4")
+		"light_2":
+			number_color = Color("#ffe2a8")
+		"light_3":
+			number_color = Color("#dfaa46")
+			is_big = true
+		"heavy":
+			number_color = Color("#ff684a")
+			is_big = true
+		"q":
+			number_color = Color("#9ed8cd")
+			is_big = true
+		"ultimate":
+			number_color = Color("#ffd36a")
+			is_big = true
+
+	number.setup(amount, number_color, is_big)
+	add_child(number)
+
+
+func _apply_on_hit_boon_effects(kind: String, enemy_node: Node2D) -> void:
+	if enemy_node == null:
+		return
+
+	if not is_instance_valid(enemy_node):
+		return
+
+	if not RunState.has_method("get_on_hit_status_effects"):
+		return
+
+	var effects: Array[Dictionary] = RunState.get_on_hit_status_effects(kind)
+
+	for effect in effects:
+		var status_id: String = str(effect.get("status_id", ""))
+		var stacks: int = int(effect.get("stacks", 1))
+		var duration: float = float(effect.get("duration", 4.0))
+
+		if status_id == "":
+			continue
+
+		if enemy_node.has_method("apply_status"):
+			enemy_node.call("apply_status", status_id, stacks, duration)
+
+
+func _apply_on_hit_status_detonations(kind: String, enemy_node: Node2D) -> void:
+	if enemy_node == null:
+		return
+
+	if not is_instance_valid(enemy_node):
+		return
+
+	if not RunState.has_method("get_on_hit_status_detonations"):
+		return
+
+	var detonations: Array[Dictionary] = RunState.get_on_hit_status_detonations(kind)
+
+	for detonation in detonations:
+		var status_id: String = str(detonation.get("status_id", ""))
+		var damage_per_stack: float = float(detonation.get("flat_value", 0.0))
+
+		if status_id == "":
+			continue
+
+		if damage_per_stack <= 0.0:
+			continue
+
+		if not enemy_node.has_method("consume_status"):
+			continue
+
+		var stacks: int = int(enemy_node.call("consume_status", status_id))
+
+		if stacks <= 0:
+			continue
+
+		var burst_damage: float = damage_per_stack * float(stacks)
+		var number_kind := "ultimate"
+
+		if status_id == "bleed":
+			number_kind = "heavy"
+		elif status_id == "judgment":
+			number_kind = "ultimate"
+		elif status_id == "poison":
+			number_kind = "q"
+
+		if enemy_node.has_method("take_damage"):
+			enemy_node.call("take_damage", burst_damage, $Player.global_position, number_kind)
+
+		_spawn_damage_number(
+			enemy_node.global_position + Vector2(randf_range(-8.0, 8.0), randf_range(-32.0, -18.0)),
+			burst_damage,
+			number_kind
+		)
+
+		add_screen_shake(0.08, 14.0)
+
+
+func _apply_on_hit_spread_status_synergies(kind: String, enemy_node: Node2D) -> void:
+	if enemy_node == null:
+		return
+
+	if not is_instance_valid(enemy_node):
+		return
+
+	if not RunState.has_method("get_on_hit_effects_by_type"):
+		return
+
+	var effects: Array[Dictionary] = RunState.get_on_hit_effects_by_type(kind, "spread_status_on_hit")
+
+	for effect in effects:
+		var required_status_id: String = str(effect.get("required_status_id", ""))
+		var spread_status_id: String = str(effect.get("status_id", ""))
+		var stacks: int = int(effect.get("stacks", 1))
+		var duration: float = float(effect.get("duration", 4.0))
+		var spread_radius: float = float(effect.get("spread_radius", 140.0))
+
+		if required_status_id == "":
+			continue
+
+		if spread_status_id == "":
+			continue
+
+		if not enemy_node.has_method("has_status"):
+			continue
+
+		if not bool(enemy_node.call("has_status", required_status_id)):
+			continue
+
+		_apply_status_to_nearby_enemies(enemy_node, enemy_node.global_position, spread_radius, spread_status_id, stacks, duration)
+
+		var fx = AttackEffectScene.instantiate()
+		fx.global_position = enemy_node.global_position
+		fx.setup("q", spread_radius, Vector2.RIGHT)
+		add_child(fx)
+
+		add_screen_shake(0.045, 7.0)
+
+
+func _apply_status_to_nearby_enemies(excluded_enemy: Node2D, center: Vector2, radius: float, status_id: String, stacks: int, duration: float) -> void:
+	for other_enemy in spawned_enemies:
+		if other_enemy == null:
+			continue
+
+		if not is_instance_valid(other_enemy):
+			continue
+
+		if other_enemy == excluded_enemy:
+			continue
+
+		if other_enemy.is_queued_for_deletion():
+			continue
+
+		if _object_has_property(other_enemy, "dead") and bool(other_enemy.get("dead")):
+			continue
+
+		if other_enemy.global_position.distance_to(center) > radius:
+			continue
+
+		if other_enemy.has_method("apply_status"):
+			other_enemy.call("apply_status", status_id, stacks, duration)
+
+
+func _apply_on_hit_execute_synergies(kind: String, enemy_node: Node2D) -> void:
+	if enemy_node == null:
+		return
+
+	if not is_instance_valid(enemy_node):
+		return
+
+	if not RunState.has_method("get_on_hit_effects_by_type"):
+		return
+
+	var effects: Array[Dictionary] = RunState.get_on_hit_effects_by_type(kind, "execute_status_below_ratio")
+
+	for effect in effects:
+		var status_id: String = str(effect.get("status_id", ""))
+		var threshold: float = float(effect.get("execute_threshold_ratio", 0.20))
+
+		if status_id == "":
+			continue
+
+		if not enemy_node.has_method("has_status"):
+			continue
+
+		if not bool(enemy_node.call("has_status", status_id)):
+			continue
+
+		var hp_ratio: float = _get_enemy_hp_ratio(enemy_node)
+
+		if hp_ratio > threshold:
+			continue
+
+		var current_hp: float = _safe_get_float(enemy_node, "hp", 1.0)
+		var execute_damage: float = maxf(999.0, current_hp + 999.0)
+
+		if enemy_node.has_method("take_damage"):
+			enemy_node.call("take_damage", execute_damage, $Player.global_position, "ultimate")
+
+		_spawn_damage_number(
+			enemy_node.global_position + Vector2(0, -34),
+			execute_damage,
+            "ultimate"
+		)
+
+		var fx = AttackEffectScene.instantiate()
+		fx.global_position = enemy_node.global_position
+		fx.setup("ultimate", 78.0, Vector2.RIGHT)
+		add_child(fx)
+
+		add_screen_shake(0.12, 24.0)
+
+
+func _apply_on_hit_heal_synergies(kind: String, enemy_node: Node2D) -> void:
+	if enemy_node == null:
+		return
+
+	if not is_instance_valid(enemy_node):
+		return
+
+	if $Player == null:
+		return
+
+	if not RunState.has_method("get_on_hit_effects_by_type"):
+		return
+
+	var effects: Array[Dictionary] = RunState.get_on_hit_effects_by_type(kind, "heal_on_hit_vs_status")
+
+	for effect in effects:
+		var status_id: String = str(effect.get("status_id", ""))
+		var heal_amount: float = float(effect.get("flat_value", 0.0))
+
+		if status_id == "":
+			continue
+
+		if heal_amount <= 0.0:
+			continue
+
+		if not enemy_node.has_method("has_status"):
+			continue
+
+		if not bool(enemy_node.call("has_status", status_id)):
+			continue
+
+		$Player.hp = minf($Player.hp + heal_amount, $Player.max_hp)
+
+		if $Player.has_method("_save_run_vitals"):
+			$Player._save_run_vitals()
+
+
+func _get_enemy_hp_ratio(enemy_node: Node2D) -> float:
+	var hp: float = _safe_get_float(enemy_node, "hp", 1.0)
+	var max_hp: float = maxf(1.0, _safe_get_float(enemy_node, "max_hp", 1.0))
+
+	return clampf(hp / max_hp, 0.0, 1.0)
+
+
+func _safe_get_float(object: Object, property_name: String, fallback: float) -> float:
+	if object == null:
+		return fallback
+
+	if not _object_has_property(object, property_name):
+		return fallback
+
+	var value = object.get(property_name)
+
+	if value == null:
+		return fallback
+
+	return float(value)
+
+
+func _on_enemy_died(enemy_position: Vector2) -> void:
+	add_screen_shake(0.08, 10.0)
+	add_hit_stop(0.045, 0.08)
+
+	var heal_bonus: float = 0.0
+
+	if RunState.has_method("get_on_kill_heal_bonus"):
+		heal_bonus = RunState.get_on_kill_heal_bonus()
+
+	if heal_bonus > 0.0 and $Player:
+		$Player.hp = minf($Player.hp + heal_bonus, $Player.max_hp)
+
+	var fx = AttackEffectScene.instantiate()
+	fx.global_position = enemy_position
+	fx.setup("death", 48.0, Vector2.RIGHT)
+	add_child(fx)
+
+
+func _is_in_front(to_target: Vector2, direction: Vector2, threshold: float) -> bool:
+	if to_target.length() <= 1.0:
+		return true
+
+	var safe_direction := direction
+
+	if safe_direction.length() <= 0.01:
+		safe_direction = Vector2.RIGHT
+
+	var dot: float = safe_direction.normalized().dot(to_target.normalized())
+	return dot >= threshold
+
+
+func _on_perfect_dodge() -> void:
+	var fx = AttackEffectScene.instantiate()
+	fx.global_position = $Player.global_position
+	fx.setup("perfect", 72.0, Vector2.RIGHT)
+	add_child(fx)
+
+	attack_fx.append({
+		"kind": "perfect",
+		"origin": $Player.global_position,
+		"direction": Vector2.RIGHT,
+		"radius": 72.0,
+		"time": 0.24
+	})
+
+	var bonus_ultimate: float = 0.0
+
+	if RunState.has_method("get_perfect_dodge_ultimate_bonus"):
+		bonus_ultimate = RunState.get_perfect_dodge_ultimate_bonus()
+
+	if bonus_ultimate > 0.0 and $Player.has_method("gain_ultimate"):
+		$Player.gain_ultimate(bonus_ultimate)
+
+	add_screen_shake(0.06, 8.0)
+	add_hit_stop(0.045, 0.10)
+
+
+func _update_screen_shake(delta: float) -> void:
+	var camera := $Player.get_node_or_null("Camera2D") as Camera2D
+
+	if camera == null:
+		return
+
+	if shake_timer > 0.0:
+		shake_timer -= delta
+
+		camera.offset = Vector2(
+			randf_range(-shake_strength, shake_strength),
+			randf_range(-shake_strength, shake_strength)
+		)
+
+		if shake_timer <= 0.0:
+			camera.offset = Vector2.ZERO
+			shake_strength = 0.0
+	else:
+		camera.offset = Vector2.ZERO
+
+
+func add_screen_shake(duration: float, strength: float) -> void:
+	shake_timer = maxf(shake_timer, duration)
+	shake_strength = maxf(shake_strength, strength)
+
+
+func add_hit_stop(duration: float, time_scale: float) -> void:
+	if hit_stop_active:
+		return
+
+	hit_stop_active = true
+	Engine.time_scale = time_scale
+
+	await get_tree().create_timer(duration, true, false, true).timeout
+
+	Engine.time_scale = 1.0
+	hit_stop_active = false
+
+
+func _object_has_property(object: Object, property_name: String) -> bool:
+	if object == null:
+		return false
+
+	for property in object.get_property_list():
+		if str(property["name"]) == property_name:
+			return true
+
+	return false
+
+
+func _draw() -> void:
+	if not authored_room_active:
+		_draw_room()
+	else:
+		_draw_authored_room_overlay()
+
+	_draw_attack_fx()
+	_draw_reward_layer()
+	_draw_hint()
+
+
+func _draw_room() -> void:
+	var template: Dictionary = _get_current_room_template()
+
+	_draw_template_background(template)
+	_draw_template_floor(template)
+	_draw_vestibule_hazards(template)
+	_draw_template_identity(template)
+	_draw_template_walls(template)
+	_draw_template_blockers(template)
+	_draw_template_decor(template)
+	_draw_room_header()
+
+	if room_clear_pulse_timer > 0.0:
+		_draw_room_clear_pulse()
+
+	if room_clear:
+		_draw_room_clear_banner()
+
+
+func _draw_template_background(template: Dictionary) -> void:
+	var bg_color: Color = Color("#050303")
+
+	if room_type == RunState.ROOM_ELITE:
+		bg_color = Color("#070205")
+	elif room_type == RunState.ROOM_BOSS:
+		bg_color = Color("#090101")
+
+	draw_rect(Rect2(Vector2.ZERO, Vector2(1280, 720)), bg_color)
+
+	var room_rect: Rect2 = template.get("room_rect", arena_rect)
+	var outer_rect: Rect2 = room_rect.grow(36.0)
+	draw_rect(outer_rect, Color(0, 0, 0, 0.72))
+	draw_rect(room_rect.grow(18.0), Color("#0b0504"))
+	draw_rect(room_rect, Color("#170b0a"))
+
+	# Heavy masks keep the chamber visually sealed and stop the player from seeing
+	# loose setpieces floating outside the room.
+	draw_rect(Rect2(Vector2.ZERO, Vector2(1280, maxf(0.0, outer_rect.position.y))), bg_color)
+	draw_rect(Rect2(Vector2.ZERO, Vector2(maxf(0.0, outer_rect.position.x), 720)), bg_color)
+	draw_rect(Rect2(Vector2(outer_rect.position.x + outer_rect.size.x, 0), Vector2(1280 - outer_rect.position.x - outer_rect.size.x, 720)), bg_color)
+	draw_rect(Rect2(Vector2(0, outer_rect.position.y + outer_rect.size.y), Vector2(1280, 720 - outer_rect.position.y - outer_rect.size.y)), bg_color)
+
+
+func _draw_template_floor(template: Dictionary) -> void:
+	var floor_rects: Array = template.get("floor_rects", [arena_rect])
+	var tint: Color = template.get("tint", _get_room_tint())
+	var fill: Color = template.get("fill", Color(tint.r, tint.g, tint.b, 0.08))
+
+	for floor_rect in floor_rects:
+		if floor_rect is Rect2:
+			var rect: Rect2 = floor_rect
+			_draw_tiled_rect(rect)
+			draw_rect(rect, fill)
+
+
+func _draw_ash_noise_in_rect(rect: Rect2, tint: Color) -> void:
+	for i in range(18):
+		var local_x: float = fmod(float(i * 97 + RunState.depth * 31), rect.size.x)
+		var local_y: float = fmod(float(i * 53 + RunState.depth * 17), rect.size.y)
+		var start: Vector2 = rect.position + Vector2(local_x, local_y)
+		var end: Vector2 = start + Vector2(28.0 + float(i % 5) * 9.0, -8.0 + float(i % 3) * 6.0)
+		draw_line(start, end, Color(tint.r, tint.g, tint.b, 0.055), 1.0)
+
+
+func _draw_vestibule_hazards(template: Dictionary) -> void:
+	var hazards: Array = template.get("hazards", [])
+	var accent: Color = template.get("tint", Color("#d27a3f"))
+	var pulse: float = 0.55 + 0.20 * sin(float(Time.get_ticks_msec()) / 1000.0 * 2.0)
+
+	for hazard in hazards:
+		if not (hazard is Dictionary):
+			continue
+
+		var hazard_dict: Dictionary = hazard
+		var hazard_type: String = str(hazard_dict.get("type", ""))
+
+		match hazard_type:
+			"ash_channel":
+				var rect_value: Variant = hazard_dict.get("rect", Rect2())
+
+				if rect_value is Rect2:
+					var rect: Rect2 = rect_value
+					draw_rect(rect, Color(0.06, 0.018, 0.01, 0.34))
+					draw_rect(rect.grow(-5), Color(accent.r, accent.g * 0.55, accent.b * 0.35, 0.12 + 0.06 * pulse))
+					draw_rect(rect, Color(accent.r, accent.g, accent.b, 0.34 + 0.12 * pulse), false, 2.0)
+
+			"cinder_seal":
+				var center_value: Variant = hazard_dict.get("center", Vector2.ZERO)
+				var radius_value: Variant = hazard_dict.get("radius", 72.0)
+
+				if center_value is Vector2:
+					var center: Vector2 = center_value
+					var radius: float = float(radius_value)
+					draw_circle(center, radius, Color(accent.r, accent.g * 0.42, accent.b * 0.24, 0.055 + 0.025 * pulse))
+					draw_arc(center, radius, 0.0, TAU, 84, Color(accent.r, accent.g, accent.b, 0.38 + 0.12 * pulse), 2.0)
+					draw_arc(center, radius * 0.62, 0.0, TAU, 72, Color(0.95, 0.62, 0.34, 0.18 + 0.08 * pulse), 1.5)
+
+
+func _draw_tiled_rect(rect: Rect2) -> void:
+	var textures: Array[Texture2D] = []
+	var tile_draw_size: int = 64
+
+	if not circle0_floor_tiles.is_empty():
+		textures = circle0_floor_tiles
+		tile_draw_size = 64
+	else:
+		textures = floor_textures
+		tile_draw_size = 32
+
+	draw_rect(rect, Color("#19100f"))
+
+	if textures.is_empty():
+		return
+
+	var start_x: int = int(rect.position.x)
+	var start_y: int = int(rect.position.y)
+	var end_x: int = int(rect.position.x + rect.size.x)
+	var end_y: int = int(rect.position.y + rect.size.y)
+	var safe_count: int = mini(textures.size(), 4)
+
+	for y in range(start_y, end_y, tile_draw_size):
+		for x in range(start_x, end_x, tile_draw_size):
+			var index_seed: int = abs(int((x / tile_draw_size) * 7 + (y / tile_draw_size) * 11 + RunState.depth * 3))
+			var texture: Texture2D = textures[index_seed % safe_count]
+			var modulate_color: Color = Color(0.88, 0.82, 0.76, 0.78)
+			draw_texture_rect(texture, Rect2(Vector2(x, y), Vector2(tile_draw_size, tile_draw_size)), false, modulate_color)
+
+
+func _get_room_tint() -> Color:
+	var template: Dictionary = _get_current_room_template()
+	return template.get("tint", Color("#dfaa46"))
+
+
+func _draw_template_walls(template: Dictionary) -> void:
+	var room_rect: Rect2 = template.get("room_rect", arena_rect)
+	var accent: Color = template.get("tint", Color("#dfaa46"))
+	var door_positions: Array = template.get("door_positions", [])
+
+	draw_rect(room_rect.grow(18), Color("#040202"), false, 18.0)
+	draw_rect(room_rect.grow(8), Color("#1e0d0c"), false, 8.0)
+	draw_rect(room_rect.grow(2), Color(accent.r, accent.g, accent.b, 0.40), false, 2.0)
+
+	_draw_room_wall_band(room_rect)
+	_draw_room_corner_posts(room_rect)
+
+	for door_data in door_positions:
+		if not (door_data is Dictionary):
+			continue
+
+		var pos: Vector2 = door_data.get("pos", room_rect.get_center())
+		var orientation: String = str(door_data.get("orientation", "north"))
+		_draw_circle0_door_frame(pos, orientation)
+
+
+func _draw_room_wall_band(room_rect: Rect2) -> void:
+	if circle0_wall_tiles.is_empty():
+		return
+
+	var top_positions: Array[Vector2] = [
+		room_rect.position + Vector2(room_rect.size.x * 0.25, 28),
+		room_rect.position + Vector2(room_rect.size.x * 0.50, 28),
+		room_rect.position + Vector2(room_rect.size.x * 0.75, 28)
+	]
+
+	for i in range(top_positions.size()):
+		var texture: Texture2D = _pick_texture(circle0_wall_tiles, i)
+		_draw_scaled_texture(texture, top_positions[i], 0.58, "top_center")
+
+	var bottom_positions: Array[Vector2] = [
+		room_rect.position + Vector2(room_rect.size.x * 0.25, room_rect.size.y - 8),
+		room_rect.position + Vector2(room_rect.size.x * 0.50, room_rect.size.y - 8),
+		room_rect.position + Vector2(room_rect.size.x * 0.75, room_rect.size.y - 8)
+	]
+
+	for i in range(bottom_positions.size()):
+		var bottom_texture: Texture2D = _pick_texture(circle0_wall_tiles, i + 3)
+		_draw_scaled_texture(bottom_texture, bottom_positions[i], 0.46, "bottom_center")
+
+
+func _draw_room_corner_posts(room_rect: Rect2) -> void:
+	var corners: Array[Vector2] = [
+		room_rect.position,
+		room_rect.position + Vector2(room_rect.size.x, 0),
+		room_rect.position + Vector2(0, room_rect.size.y),
+		room_rect.position + Vector2(room_rect.size.x, room_rect.size.y)
+	]
+
+	for i in range(corners.size()):
+		var post_texture: Texture2D = _pick_texture(circle0_post_tiles, i)
+		if post_texture != null:
+			_draw_scaled_texture(post_texture, corners[i], 1.0, "center")
+		else:
+			_draw_column(corners[i])
+
+
+func _draw_circle0_door_frame(pos: Vector2, orientation: String) -> void:
+	var texture_index: int = 0
+	var anchor: String = "center"
+	var scale: float = 0.92
+
+	match orientation:
+		"north":
+			texture_index = 0
+			anchor = "bottom_center"
+			scale = 0.90
+		"south":
+			texture_index = 1
+			anchor = "top_center"
+			scale = 0.88
+		"west", "east":
+			texture_index = 2
+			anchor = "center"
+			scale = 0.82
+		_:
+			texture_index = 0
+
+	var texture: Texture2D = _pick_texture(circle0_arch_tiles, texture_index)
+	if texture != null:
+		_draw_scaled_texture(texture, pos, scale, anchor)
+
+
+func _draw_template_identity(template: Dictionary) -> void:
+	var template_id: String = str(template.get("id", "ash_intake_hall"))
+	var room_rect: Rect2 = template.get("room_rect", arena_rect)
+	var center: Vector2 = room_rect.get_center()
+	var accent: Color = template.get("tint", Color("#d27a3f"))
+
+	match template_id:
+		"ash_intake_hall":
+			_draw_scaled_texture(_pick_texture(circle0_sigil_tiles, 0), center, 0.54, "center", Color(1, 1, 1, 0.72))
+			_draw_procession_line(center + Vector2(0, 2))
+		"gate_ledger":
+			_draw_scaled_texture(_pick_texture(circle0_sigil_tiles, 1), center, 0.50, "center", Color(1, 1, 1, 0.70))
+			_draw_scaled_texture(_pick_texture(circle0_lectern_tiles, 0), center + Vector2(0, -18), 0.52, "bottom_center")
+		"cinder_procession":
+			_draw_procession_line(center)
+			_draw_scaled_texture(_pick_texture(circle0_stair_tiles, 0), center + Vector2(0, 74), 0.48, "center")
+		"sorting_slab":
+			_draw_scaled_texture(_pick_texture(circle0_slab_tiles, 0), center + Vector2(0, 10), 0.58, "center")
+		"hall_of_unclaimed_names":
+			_draw_name_tags(Vector2(center.x, room_rect.position.y + 96.0))
+			_draw_scaled_texture(_pick_texture(circle0_sigil_tiles, 2), center, 0.50, "center", Color(1, 1, 1, 0.70))
+		"records_nave":
+			_draw_scaled_texture(_pick_texture(circle0_sigil_tiles, 3), center, 0.54, "center", Color(1, 1, 1, 0.70))
+			_draw_scaled_texture(_pick_texture(circle0_lectern_tiles, 1), center + Vector2(-132, 22), 0.48, "bottom_center")
+			_draw_scaled_texture(_pick_texture(circle0_lectern_tiles, 2), center + Vector2(132, 22), 0.48, "bottom_center")
+		"unchosen_court":
+			_draw_scaled_texture(_pick_texture(circle0_large_setpiece_tiles, 0), center + Vector2(0, 64), 0.56, "bottom_center")
+		"judgment_antechamber":
+			_draw_scaled_texture(_pick_texture(circle0_sigil_tiles, 4), center + Vector2(0, 64), 0.62, "center", Color(1, 1, 1, 0.72))
+			_draw_boss_authority_ring(center, 116.0, Color("#f0a15f"))
+		"door_before_judgment":
+			_draw_scaled_texture(_pick_texture(circle0_large_setpiece_tiles, 1), Vector2(center.x, room_rect.position.y + 110.0), 0.62, "bottom_center")
+			_draw_boss_authority_ring(center, 176.0, Color("#ff5b37"))
+		_:
+			_draw_scaled_texture(_pick_texture(circle0_sigil_tiles, 0), center, 0.50, "center", Color(1, 1, 1, 0.70))
+
+	draw_rect(Rect2(center - Vector2(84, 84), Vector2(168, 168)), Color(accent.r, accent.g, accent.b, 0.025))
+
+
+func _draw_template_blockers(template: Dictionary) -> void:
+	var blockers: Array = template.get("blockers", [])
+	var template_id: String = str(template.get("id", room_layout_type))
+
+	for i in range(blockers.size()):
+		var blocker = blockers[i]
+
+		if not (blocker is Rect2):
+			continue
+
+		var rect: Rect2 = blocker
+		var center: Vector2 = rect.get_center() + Vector2(0, 10)
+		var shadow_rect: Rect2 = Rect2(rect.position + Vector2(-8, 6), rect.size + Vector2(16, 10))
+
+		draw_rect(shadow_rect, Color(0, 0, 0, 0.20))
+
+		if rect.size.x <= 72 and rect.size.y <= 112:
+			var column_seed: int = i + int(center.x + center.y)
+			_draw_scaled_texture(_pick_texture(circle0_column_tiles, column_seed), center + Vector2(0, 20), 0.78, "bottom_center")
+		elif rect.size.x > rect.size.y:
+			_draw_scaled_texture(_pick_texture(circle0_slab_tiles, i), center + Vector2(0, 18), 0.78, "bottom_center")
+		else:
+			_draw_scaled_texture(_pick_texture(circle0_gate_tiles, i), center + Vector2(0, 20), 0.62, "bottom_center")
+
+		if template_id == "door_before_judgment" or template_id == "judgment_antechamber":
+			draw_rect(rect.grow(3.0), Color(0.85, 0.30, 0.12, 0.08), false, 2.0)
+
+
+func _draw_name_tag(pos: Vector2, accent: Color) -> void:
+	var rect: Rect2 = Rect2(pos - Vector2(22, 8), Vector2(44, 16))
+	draw_rect(rect, Color(0.04, 0.02, 0.012, 0.55))
+	draw_rect(rect, accent, false, 1.0)
+	draw_line(pos + Vector2(-10, 0), pos + Vector2(10, 0), Color(1, 1, 1, 0.18), 1.0)
+
+
+func _draw_cinder_register(pos: Vector2) -> void:
+	_draw_scaled_texture(_pick_texture(circle0_lectern_tiles, 0), pos + Vector2(0, 8), 0.74, "bottom_center")
+
+
+func _draw_intake_gate(pos: Vector2, large: bool = false) -> void:
+	var texture: Texture2D = null
+	var scale: float = 0.94 if large else 0.78
+
+	if large:
+		texture = _pick_texture(circle0_large_setpiece_tiles, 0)
+	else:
+		texture = _pick_texture(circle0_gate_tiles, 2)
+
+	if texture != null:
+		_draw_scaled_texture(texture, pos + Vector2(0, 6), scale, "bottom_center")
+		return
+
+	var width: float = 150.0 if large else 112.0
+	var height: float = 70.0 if large else 48.0
+	var rect: Rect2 = Rect2(pos - Vector2(width * 0.5, height * 0.5), Vector2(width, height))
+	draw_rect(rect, Color(0.02, 0.006, 0.004, 0.90))
+	draw_rect(rect, Color("#5a1f17"), false, 4.0)
+
+
+func _draw_ash_brazier(pos: Vector2) -> void:
+	var texture: Texture2D = _pick_texture(circle0_brazier_tiles, int(pos.x + pos.y))
+	if texture != null:
+		_draw_scaled_texture(texture, pos + Vector2(0, 8), 0.64, "bottom_center")
+		return
+
+	draw_circle(pos + Vector2(0, 8), 13.0, Color(0, 0, 0, 0.36))
+
+
+func _draw_chain_post(pos: Vector2) -> void:
+	var texture: Texture2D = _pick_texture(circle0_chain_post_tiles, int(pos.x + pos.y))
+	if texture != null:
+		_draw_scaled_texture(texture, pos + Vector2(0, 12), 0.72, "bottom_center")
+		return
+
+	draw_circle(pos, 9.0, Color("#291513"))
+
+
+func _draw_procession_line(pos: Vector2) -> void:
+	for i in range(7):
+		var x: float = pos.x - 246.0 + float(i) * 82.0
+		_draw_chain_post(Vector2(x, pos.y + 28.0))
+
+
+func _draw_blank_standard(pos: Vector2) -> void:
+	var texture: Texture2D = _pick_texture(circle0_banner_tiles, 2)
+	if texture != null:
+		_draw_scaled_texture(texture, pos + Vector2(0, 10), 0.58, "bottom_center", Color(0.78, 0.74, 0.72, 0.82))
+		return
+
+	draw_line(pos + Vector2(0, -28), pos + Vector2(0, 34), Color("#5a3828"), 2.0)
+
+
+func _draw_name_tags(pos: Vector2) -> void:
+	for i in range(7):
+		var tag_pos: Vector2 = pos + Vector2(-186.0 + float(i) * 62.0, 0)
+		_draw_scaled_texture(_pick_texture(circle0_marker_tiles, i), tag_pos + Vector2(0, 18), 0.50, "bottom_center")
+
+
+func _draw_ledger_mark(pos: Vector2) -> void:
+	_draw_scaled_texture(_pick_texture(circle0_sigil_tiles, 4), pos, 0.42, "center")
+
+
+func _draw_template_decor(template: Dictionary) -> void:
+	var decor: Array = template.get("decor", [])
+
+	for entry in decor:
+		if not (entry is Dictionary):
+			continue
+
+		var entry_dict: Dictionary = entry
+		var decor_type: String = str(entry_dict.get("type", ""))
+		var pos: Vector2 = entry_dict.get("pos", Vector2.ZERO)
+
+		match decor_type:
+			"banner_red", "banner_blue", "banner_green", "banner_yellow":
+				_draw_banner(_pick_texture(circle0_banner_tiles, int(pos.x + pos.y)), pos)
+			"banner_ash", "blank_standard":
+				_draw_blank_standard(pos)
+			"crate":
+				_draw_object(crate_texture, pos, Vector2(32, 32))
+			"chest":
+				_draw_object(chest_texture, pos, Vector2(32, 32))
+			"spikes":
+				_draw_object(spikes_texture, pos, Vector2(32, 32))
+			"ash_brazier":
+				_draw_ash_brazier(pos)
+			"intake_gate":
+				_draw_intake_gate(pos)
+			"judgment_gate":
+				_draw_intake_gate(pos, true)
+			"cinder_register":
+				_draw_cinder_register(pos)
+			"chain_post":
+				_draw_chain_post(pos)
+			"procession_line":
+				_draw_procession_line(pos)
+			"name_tags":
+				_draw_name_tags(pos)
+			"ledger_mark":
+				_draw_ledger_mark(pos)
+
+	_draw_template_flavor_scatter(template)
+
+
+func _draw_template_flavor_scatter(template: Dictionary) -> void:
+	var room_rect: Rect2 = template.get("room_rect", arena_rect)
+	var template_id: String = str(template.get("id", room_layout_type))
+	var center: Vector2 = room_rect.get_center()
+	var accent: Color = template.get("tint", Color("#d27a3f"))
+
+	_draw_v2_perimeter_dressing(room_rect, accent)
+	_draw_v2_procession_lanes(room_rect, accent)
+
+	match template_id:
+		"ash_intake_hall":
+			_draw_scaled_texture(_pick_texture(circle0_bench_tiles, 0), center + Vector2(-230, 162), 0.54, "bottom_center")
+			_draw_scaled_texture(_pick_texture(circle0_bench_tiles, 1), center + Vector2(230, 162), 0.54, "bottom_center")
+		"gate_ledger":
+			_draw_scaled_texture(_pick_texture(circle0_marker_tiles, 0), center + Vector2(-250, 18), 0.34, "bottom_center")
+			_draw_scaled_texture(_pick_texture(circle0_marker_tiles, 1), center + Vector2(250, 18), 0.34, "bottom_center")
+		"sorting_slab":
+			_draw_scaled_texture(_pick_texture(circle0_hanging_fire_tiles, 0), center + Vector2(-238, -18), 0.46, "bottom_center")
+			_draw_scaled_texture(_pick_texture(circle0_hanging_fire_tiles, 1), center + Vector2(238, -18), 0.46, "bottom_center")
+		"records_nave":
+			_draw_v2_marker_row(room_rect.position.y + 116.0, room_rect.position.x + 160.0, 4, 190.0, 0.34)
+		"unchosen_court":
+			_draw_scaled_texture(_pick_texture(circle0_gate_tiles, 0), center + Vector2(-286, 10), 0.48, "bottom_center")
+			_draw_scaled_texture(_pick_texture(circle0_gate_tiles, 1), center + Vector2(286, 10), 0.48, "bottom_center")
+		"judgment_antechamber":
+			_draw_scaled_texture(_pick_texture(circle0_banner_tiles, 0), center + Vector2(-318, -62), 0.42, "top_center")
+			_draw_scaled_texture(_pick_texture(circle0_banner_tiles, 1), center + Vector2(318, -62), 0.42, "top_center")
+		"door_before_judgment":
+			_draw_scaled_texture(_pick_texture(circle0_gate_tiles, 0), center + Vector2(-304, 40), 0.54, "bottom_center")
+			_draw_scaled_texture(_pick_texture(circle0_gate_tiles, 1), center + Vector2(304, 40), 0.54, "bottom_center")
+		_:
+			pass
+
+
+func _draw_v2_perimeter_dressing(room_rect: Rect2, accent: Color) -> void:
+	var center: Vector2 = room_rect.get_center()
+
+	for i in range(2):
+		var side: float = -1.0 if i == 0 else 1.0
+		_draw_scaled_texture(_pick_texture(circle0_brazier_tiles, i), Vector2(center.x + 306.0 * side, room_rect.position.y + 118.0), 0.48, "bottom_center")
+		_draw_scaled_texture(_pick_texture(circle0_brazier_tiles, i + 2), Vector2(center.x + 268.0 * side, room_rect.position.y + room_rect.size.y - 54.0), 0.44, "bottom_center")
+
+	for i in range(2):
+		var banner_x: float = room_rect.position.x + room_rect.size.x * (0.34 + float(i) * 0.32)
+		_draw_scaled_texture(_pick_texture(circle0_banner_tiles, i), Vector2(banner_x, room_rect.position.y + 36.0), 0.38, "top_center")
+
+	draw_rect(Rect2(Vector2(room_rect.position.x + 64.0, center.y - 14.0), Vector2(room_rect.size.x - 128.0, 28.0)), Color(accent.r, accent.g, accent.b, 0.025))
+
+
+func _draw_v2_procession_lanes(room_rect: Rect2, accent: Color) -> void:
+	var center: Vector2 = room_rect.get_center()
+	draw_line(Vector2(center.x, room_rect.position.y + 92.0), Vector2(center.x, room_rect.position.y + room_rect.size.y - 54.0), Color(accent.r, accent.g, accent.b, 0.18), 3.0)
+	draw_line(Vector2(room_rect.position.x + 96.0, center.y), Vector2(room_rect.position.x + room_rect.size.x - 96.0, center.y), Color(accent.r, accent.g, accent.b, 0.12), 2.0)
+
+
+func _draw_v2_medallion(pos: Vector2, seed: int, scale: float) -> void:
+	var texture: Texture2D = _pick_texture(circle0_sigil_tiles, seed)
+	if texture == null:
+		return
+
+	_draw_scaled_texture(texture, pos, scale, "center", Color(1.0, 1.0, 1.0, 0.92))
+
+
+func _draw_v2_marker_row(y: float, start_x: float, count: int, spacing: float, scale: float) -> void:
+	for i in range(count):
+		_draw_scaled_texture(_pick_texture(circle0_marker_tiles, i), Vector2(start_x + float(i) * spacing, y), scale, "bottom_center")
+
+
+func _draw_v2_prop_pair(textures: Array[Texture2D], center: Vector2, distance: float, scale: float) -> void:
+	for i in range(2):
+		var side: float = -1.0 if i == 0 else 1.0
+		_draw_scaled_texture(_pick_texture(textures, i), center + Vector2(distance * side, 0.0), scale, "bottom_center")
+
+
+func _draw_column(pos: Vector2) -> void:
+	var texture: Texture2D = _pick_texture(circle0_column_tiles, int(pos.x * 0.5 + pos.y))
+	if texture != null:
+		_draw_scaled_texture(texture, pos + Vector2(0, 14), 0.68, "bottom_center")
+		return
+
+	if column_texture == null:
+		draw_circle(pos, 12.0, Color("#4a2320"))
+		return
+
+	draw_texture_rect(column_texture, Rect2(pos - Vector2(16, 28), Vector2(32, 32)), false)
+
+
+func _draw_banner(texture: Texture2D, pos: Vector2) -> void:
+	var chosen_texture: Texture2D = texture
+
+	if chosen_texture == null:
+		chosen_texture = _pick_texture(circle0_banner_tiles, int(pos.x + pos.y))
+
+	if chosen_texture != null:
+		_draw_scaled_texture(chosen_texture, pos + Vector2(0, 8), 0.56, "bottom_center")
+		return
+
+	_draw_object(texture, pos, Vector2(32, 32))
+
+
+func _draw_object(texture: Texture2D, pos: Vector2, size: Vector2) -> void:
+	if texture == null:
+		return
+
+	draw_texture_rect(texture, Rect2(pos - size * 0.5, size), false)
+
+
+func _pick_texture(textures: Array[Texture2D], seed: int) -> Texture2D:
+	if textures.is_empty():
+		return null
+
+	return textures[abs(seed) % textures.size()]
+
+
+func _draw_scaled_texture(texture: Texture2D, pos: Vector2, scale: float = 1.0, anchor: String = "center", modulate_color: Color = Color.WHITE) -> void:
+	if texture == null:
+		return
+
+	var size: Vector2 = texture.get_size() * scale
+	var top_left: Vector2 = pos - size * 0.5
+
+	match anchor:
+		"bottom_center":
+			top_left = pos + Vector2(-size.x * 0.5, -size.y)
+		"top_center":
+			top_left = pos + Vector2(-size.x * 0.5, 0.0)
+		"center_left":
+			top_left = pos + Vector2(0.0, -size.y * 0.5)
+		"center_right":
+			top_left = pos + Vector2(-size.x, -size.y * 0.5)
+		"bottom_left":
+			top_left = pos + Vector2(0.0, -size.y)
+		"top_left":
+			top_left = pos
+		_:
+			pass
+
+	draw_texture_rect(texture, Rect2(top_left, size), false, modulate_color)
+
+
+func _draw_room_header() -> void:
+	var template: Dictionary = _get_current_room_template()
+	var room_title: String = "%s Room" % RunState.get_room_display_name(room_type)
+	var accent: Color = template.get("tint", Color("#dfaa46"))
+	var template_name: String = str(template.get("display_name", room_layout_type.capitalize()))
+	var circle_name: String = str(template.get("circle_name", "Circle 0 · The Cinder Vestibule"))
+
+	var panel: Rect2 = Rect2(Vector2(28, 26), Vector2(420, 52))
+	draw_rect(panel, Color(0, 0, 0, 0.64))
+	draw_rect(panel, Color(accent.r, accent.g, accent.b, 0.72), false, 1.0)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(42, 47),
+		"%s — Depth %d" % [circle_name, RunState.depth],
+		HORIZONTAL_ALIGNMENT_LEFT,
+		384,
+		13,
+		accent.lightened(0.18)
+	)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(42, 67),
+		"%s · %s" % [template_name, room_title],
+		HORIZONTAL_ALIGNMENT_LEFT,
+		384,
+		15,
+		Color("#f7e8d4")
+	)
+
+
+func _draw_room_clear_pulse() -> void:
+	var template := _get_current_room_template()
+	var room_rect: Rect2 = template.get("room_rect", arena_rect)
+	var center := room_rect.get_center()
+	var progress := 1.0 - clampf(room_clear_pulse_timer / 0.90, 0.0, 1.0)
+	var alpha := 1.0 - progress
+	var accent: Color = template.get("tint", Color("#dfaa46"))
+
+	draw_rect(room_rect, Color(accent.r, accent.g, accent.b, 0.12 * alpha))
+	draw_rect(room_rect.grow(10.0 + progress * 28.0), Color(accent.r, accent.g, accent.b, 0.62 * alpha), false, 4.0)
+	draw_arc(center, 70.0 + progress * 120.0, 0.0, TAU, 96, Color(accent.r, accent.g, accent.b, 0.72 * alpha), 4.0)
+	draw_arc(center, 38.0 + progress * 74.0, 0.0, TAU, 72, Color(1.0, 0.92, 0.70, 0.56 * alpha), 2.0)
+
+	for i in range(8):
+		var angle := TAU * float(i) / 8.0
+		var start := center + Vector2.RIGHT.rotated(angle) * (34.0 + progress * 52.0)
+		var end := center + Vector2.RIGHT.rotated(angle) * (86.0 + progress * 150.0)
+		draw_line(start, end, Color(accent.r, accent.g, accent.b, 0.48 * alpha), 2.0)
+
+
+func _draw_room_clear_banner() -> void:
+	var template: Dictionary = _get_current_room_template()
+	var accent: Color = template.get("tint", Color("#dfaa46"))
+	var panel: Rect2 = Rect2(Vector2(430, 590), Vector2(420, 38))
+	var line_one: String = "Intake cleared — choose the next door"
+
+	if room_type == RunState.ROOM_BOSS:
+		line_one = "Magistrate defeated — the gate yields"
+	elif room_type == RunState.ROOM_MINIBOSS:
+		line_one = "Threshold officer defeated"
+
+	draw_rect(panel, Color(0, 0, 0, 0.70))
+	draw_rect(panel, Color(accent.r, accent.g, accent.b, 0.72), false, 1.0)
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(452, 615),
+		line_one,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		376,
+		15,
+		accent.lightened(0.12)
+	)
+
+
+
+func _draw_boss_authority_ring(center: Vector2, radius: float, color: Color) -> void:
+	draw_circle(center, radius, Color(color.r, color.g, color.b, 0.08))
+	draw_arc(center, radius, 0.0, TAU, 96, Color(color.r, color.g, color.b, 0.64), 4.0)
+	draw_arc(center, radius * 0.62, 0.0, TAU, 84, Color(1.0, 0.78, 0.36, 0.32), 2.0)
+
+	for i in range(12):
+		var angle: float = TAU * float(i) / 12.0
+		var inner: Vector2 = center + Vector2.RIGHT.rotated(angle) * (radius - 14.0)
+		var outer: Vector2 = center + Vector2.RIGHT.rotated(angle) * (radius + 12.0)
+		draw_line(inner, outer, Color(color.r, color.g, color.b, 0.52), 2.0)
+
+
+func _draw_reward_layer() -> void:
+	if not room_clear or reward_taken:
+		return
+
+	if not boon_offers.is_empty():
+		_draw_boon_offers()
+
+	if reward_available:
+		_draw_object_reward()
+
+
+func _draw_boon_offers() -> void:
+	for i in range(boon_offers.size()):
+		if i >= boon_positions.size():
+			continue
+
+		var boon: Dictionary = boon_offers[i]
+		var pos: Vector2 = boon_positions[i]
+		var witness_name: String = str(boon.get("witness_name", "Witness"))
+		var display_name: String = str(boon.get("display_name", "Boon"))
+		var description: String = str(boon.get("description", ""))
+		var target_action: String = str(boon.get("target_action", "Power"))
+		var rarity: String = str(boon.get("rarity", "Common"))
+		var effect_type: String = str(boon.get("effect_type", ""))
+
+		var color: Color = _get_boon_color(witness_name, rarity)
+		var rect: Rect2 = Rect2(pos - Vector2(112, 88), Vector2(224, 176))
+
+		draw_rect(rect, Color(0.035, 0.018, 0.014, 0.94))
+		draw_rect(rect, color, false, 3.0)
+		draw_rect(Rect2(rect.position + Vector2(8, 8), rect.size - Vector2(16, 16)), Color(1, 1, 1, 0.08), false, 1.0)
+
+		draw_string(ThemeDB.fallback_font, pos + Vector2(-96, -62), "%s · %s" % [witness_name, rarity], HORIZONTAL_ALIGNMENT_CENTER, 192, 15, color)
+		draw_string(ThemeDB.fallback_font, pos + Vector2(-96, -34), display_name, HORIZONTAL_ALIGNMENT_CENTER, 192, 20, Color("#f7e8d4"))
+		draw_string(ThemeDB.fallback_font, pos + Vector2(-96, -6), "Affects: %s" % target_action, HORIZONTAL_ALIGNMENT_CENTER, 192, 13, Color("#c4a98f"))
+		draw_string(ThemeDB.fallback_font, pos + Vector2(-96, 16), _format_effect_label(effect_type), HORIZONTAL_ALIGNMENT_CENTER, 192, 12, color.lightened(0.18))
+		draw_string(ThemeDB.fallback_font, pos + Vector2(-96, 42), description, HORIZONTAL_ALIGNMENT_CENTER, 192, 12, Color("#d8c1a1"))
+
+
+func _draw_object_reward() -> void:
+	if not reward_available:
+		return
+
+	var color: Color = Color("#dfaa46")
+	match room_type:
+		RunState.ROOM_FORGE:
+			color = Color("#ff6e42")
+		RunState.ROOM_SHRINE:
+			color = Color("#ae95ea")
+		RunState.ROOM_BOSS:
+			color = Color("#ff5b37")
+		_:
+			color = Color("#dfaa46")
+
+	draw_circle(reward_position, reward_radius, Color(color.r, color.g, color.b, 0.10))
+	draw_arc(reward_position, reward_radius, 0.0, TAU, 64, Color(color.r, color.g, color.b, 0.68), 3.0)
+	draw_circle(reward_position, 18.0, Color("#f7e8d4"))
+	draw_circle(reward_position, 8.0, color)
+
+
+func _draw_hint() -> void:
+	if hint == "":
+		return
+
+	draw_rect(Rect2(Vector2(370, 662), Vector2(540, 36)), Color(0, 0, 0, 0.72))
+	draw_rect(Rect2(Vector2(370, 662), Vector2(540, 36)), Color("#6c4533"), false, 1.0)
+	draw_string(ThemeDB.fallback_font, Vector2(395, 687), hint, HORIZONTAL_ALIGNMENT_CENTER, 490, 16, Color("#f7e8d4"))
+
+
+func _draw_attack_fx() -> void:
+	for fx in attack_fx:
+		var kind: String = str(fx.get("kind", ""))
+		var origin: Vector2 = fx.get("origin", Vector2.ZERO)
+		var direction: Vector2 = fx.get("direction", Vector2.RIGHT)
+		var radius: float = float(fx.get("radius", 32.0))
+		var time: float = float(fx.get("time", 0.0))
+		var alpha: float = clampf(time / 0.18, 0.0, 1.0)
+
+		if kind in ["light", "light_1"]:
+			_draw_cone(origin, direction, radius, 0.55, Color(1.0, 0.75, 0.28, alpha))
+		elif kind == "light_2":
+			_draw_cone(origin, direction, radius, 0.55, Color(1.0, 0.82, 0.36, alpha))
+		elif kind == "light_3":
+			_draw_cone(origin, direction, radius, 0.95, Color(1.0, 0.88, 0.42, alpha))
+		elif kind == "heavy":
+			_draw_cone(origin, direction, radius, 1.1, Color(1.0, 0.28, 0.18, alpha))
+		elif kind == "q":
+			draw_circle(origin, radius, Color(0.50, 0.80, 1.0, 0.10 * alpha))
+			draw_arc(origin, radius, 0.0, TAU, 64, Color(0.50, 0.80, 1.0, alpha), 4.0)
+		elif kind == "ultimate":
+			draw_circle(origin, radius, Color(1.0, 0.72, 0.16, 0.14 * alpha))
+			draw_arc(origin, radius, 0.0, TAU, 96, Color(1.0, 0.72, 0.16, alpha), 6.0)
+		elif kind == "perfect":
+			draw_circle(origin, radius, Color(0.90, 0.95, 1.0, 0.12 * alpha))
+			draw_arc(origin, radius, 0.0, TAU, 64, Color(0.90, 0.95, 1.0, alpha), 5.0)
+
+
+func _draw_cone(origin: Vector2, direction: Vector2, radius: float, angle_width: float, color: Color) -> void:
+	var safe_direction: Vector2 = direction
+
+	if safe_direction.length() <= 0.01:
+		safe_direction = Vector2.RIGHT
+
+	safe_direction = safe_direction.normalized()
+
+	var angle: float = safe_direction.angle()
+	var start_angle: float = angle - angle_width
+	var end_angle: float = angle + angle_width
+
+	draw_arc(origin, radius, start_angle, end_angle, 32, color, 6.0)
+
+	var left: Vector2 = origin + Vector2.RIGHT.rotated(start_angle) * radius
+	var right: Vector2 = origin + Vector2.RIGHT.rotated(end_angle) * radius
+
+	draw_line(origin, left, color, 3.0)
+	draw_line(origin, right, color, 3.0)
+
+
+func _get_boon_color(witness_name: String, rarity: String) -> Color:
+	var base: Color = Color("#dfaa46")
+
+	match witness_name:
+		"Virgil":
+			base = Color("#dfaa46")
+		"Francesca":
+			base = Color("#d85c8a")
+		"Minos":
+			base = Color("#ff684a")
+		"Ugolino":
+			base = Color("#9ed8cd")
+		"Geryon":
+			base = Color("#7fdc54")
+		"Beatrice":
+			base = Color("#f7e8d4")
+
+	if rarity == "Rare":
+		base = base.lightened(0.30)
+	elif rarity == "Uncommon":
+		base = base.lightened(0.12)
+
+	return base
+
+
+func _format_effect_label(effect_type: String) -> String:
+	match effect_type:
+		"apply_status":
+			return "Status Effect"
+		"bonus_damage_vs_status":
+			return "Conditional Damage"
+		"detonate_status_damage":
+			return "Status Detonation"
+		"spread_status_on_hit":
+			return "Status Spread"
+		"execute_status_below_ratio":
+			return "Execute"
+		"heal_on_hit_vs_status":
+			return "Sustain"
+		"on_kill_heal_flat":
+			return "On Kill"
+		"perfect_dodge_ultimate_flat":
+			return "Perfect Dodge"
+		_:
+			return "Power"

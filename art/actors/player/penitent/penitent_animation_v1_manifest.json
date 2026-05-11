@@ -1,0 +1,642 @@
+[
+  {
+    "family": "idle",
+    "direction": "down",
+    "frame": 1,
+    "file": "idle_down_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "down",
+    "frame": 2,
+    "file": "idle_down_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "down",
+    "frame": 3,
+    "file": "idle_down_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "down",
+    "frame": 4,
+    "file": "idle_down_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "left",
+    "frame": 1,
+    "file": "idle_left_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "left",
+    "frame": 2,
+    "file": "idle_left_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "left",
+    "frame": 3,
+    "file": "idle_left_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "left",
+    "frame": 4,
+    "file": "idle_left_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "right",
+    "frame": 1,
+    "file": "idle_right_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "right",
+    "frame": 2,
+    "file": "idle_right_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "right",
+    "frame": 3,
+    "file": "idle_right_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "right",
+    "frame": 4,
+    "file": "idle_right_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "up",
+    "frame": 1,
+    "file": "idle_up_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "up",
+    "frame": 2,
+    "file": "idle_up_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "up",
+    "frame": 3,
+    "file": "idle_up_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "idle",
+    "direction": "up",
+    "frame": 4,
+    "file": "idle_up_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "down",
+    "frame": 1,
+    "file": "walk_down_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "down",
+    "frame": 2,
+    "file": "walk_down_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "down",
+    "frame": 3,
+    "file": "walk_down_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "down",
+    "frame": 4,
+    "file": "walk_down_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "left",
+    "frame": 1,
+    "file": "walk_left_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "left",
+    "frame": 2,
+    "file": "walk_left_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "left",
+    "frame": 3,
+    "file": "walk_left_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "left",
+    "frame": 4,
+    "file": "walk_left_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "right",
+    "frame": 1,
+    "file": "walk_right_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "right",
+    "frame": 2,
+    "file": "walk_right_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "right",
+    "frame": 3,
+    "file": "walk_right_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "right",
+    "frame": 4,
+    "file": "walk_right_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "up",
+    "frame": 1,
+    "file": "walk_up_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "up",
+    "frame": 2,
+    "file": "walk_up_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "up",
+    "frame": 3,
+    "file": "walk_up_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "walk",
+    "direction": "up",
+    "frame": 4,
+    "file": "walk_up_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "down",
+    "frame": 1,
+    "file": "dash_down_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "down",
+    "frame": 2,
+    "file": "dash_down_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "down",
+    "frame": 3,
+    "file": "dash_down_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "down",
+    "frame": 4,
+    "file": "dash_down_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "left",
+    "frame": 1,
+    "file": "dash_left_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "left",
+    "frame": 2,
+    "file": "dash_left_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "left",
+    "frame": 3,
+    "file": "dash_left_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "left",
+    "frame": 4,
+    "file": "dash_left_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "right",
+    "frame": 1,
+    "file": "dash_right_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "right",
+    "frame": 2,
+    "file": "dash_right_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "right",
+    "frame": 3,
+    "file": "dash_right_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "right",
+    "frame": 4,
+    "file": "dash_right_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "up",
+    "frame": 1,
+    "file": "dash_up_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "up",
+    "frame": 2,
+    "file": "dash_up_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "up",
+    "frame": 3,
+    "file": "dash_up_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "dash",
+    "direction": "up",
+    "frame": 4,
+    "file": "dash_up_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "down",
+    "frame": 1,
+    "file": "hurt_down_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "down",
+    "frame": 2,
+    "file": "hurt_down_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "down",
+    "frame": 3,
+    "file": "hurt_down_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "down",
+    "frame": 4,
+    "file": "hurt_down_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "left",
+    "frame": 1,
+    "file": "hurt_left_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "left",
+    "frame": 2,
+    "file": "hurt_left_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "left",
+    "frame": 3,
+    "file": "hurt_left_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "left",
+    "frame": 4,
+    "file": "hurt_left_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "right",
+    "frame": 1,
+    "file": "hurt_right_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "right",
+    "frame": 2,
+    "file": "hurt_right_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "right",
+    "frame": 3,
+    "file": "hurt_right_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "right",
+    "frame": 4,
+    "file": "hurt_right_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "up",
+    "frame": 1,
+    "file": "hurt_up_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "up",
+    "frame": 2,
+    "file": "hurt_up_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "up",
+    "frame": 3,
+    "file": "hurt_up_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "hurt",
+    "direction": "up",
+    "frame": 4,
+    "file": "hurt_up_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "down",
+    "frame": 1,
+    "file": "attack_down_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "down",
+    "frame": 2,
+    "file": "attack_down_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "down",
+    "frame": 3,
+    "file": "attack_down_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "down",
+    "frame": 4,
+    "file": "attack_down_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "left",
+    "frame": 1,
+    "file": "attack_left_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "left",
+    "frame": 2,
+    "file": "attack_left_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "left",
+    "frame": 3,
+    "file": "attack_left_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "left",
+    "frame": 4,
+    "file": "attack_left_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "right",
+    "frame": 1,
+    "file": "attack_right_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "right",
+    "frame": 2,
+    "file": "attack_right_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "right",
+    "frame": 3,
+    "file": "attack_right_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "right",
+    "frame": 4,
+    "file": "attack_right_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "up",
+    "frame": 1,
+    "file": "attack_up_01.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "up",
+    "frame": 2,
+    "file": "attack_up_02.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "up",
+    "frame": 3,
+    "file": "attack_up_03.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  },
+  {
+    "family": "attack",
+    "direction": "up",
+    "frame": 4,
+    "file": "attack_up_04.png",
+    "canvas_width": 384,
+    "canvas_height": 320
+  }
+]

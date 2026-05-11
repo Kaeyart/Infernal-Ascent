@@ -1,0 +1,4518 @@
+{
+  "version": 1,
+  "notes": "Auto-sliced from the two Infernal Ascent hub sheets. Review contact sheets before using assets in scenes.",
+  "assets": [
+    {
+      "name": "structural_structural_floors_001.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_001.png",
+      "bbox": [
+        19,
+        19,
+        123,
+        122
+      ],
+      "width": 104,
+      "height": 103,
+      "area_pixels": 9187
+    },
+    {
+      "name": "structural_structural_floors_002.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_002.png",
+      "bbox": [
+        133,
+        19,
+        236,
+        122
+      ],
+      "width": 103,
+      "height": 103,
+      "area_pixels": 9187
+    },
+    {
+      "name": "structural_structural_floors_003.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_003.png",
+      "bbox": [
+        246,
+        19,
+        349,
+        122
+      ],
+      "width": 103,
+      "height": 103,
+      "area_pixels": 9189
+    },
+    {
+      "name": "structural_structural_floors_004.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_004.png",
+      "bbox": [
+        362,
+        19,
+        465,
+        122
+      ],
+      "width": 103,
+      "height": 103,
+      "area_pixels": 9114
+    },
+    {
+      "name": "structural_structural_floors_005.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_005.png",
+      "bbox": [
+        478,
+        19,
+        582,
+        123
+      ],
+      "width": 104,
+      "height": 104,
+      "area_pixels": 9272
+    },
+    {
+      "name": "structural_structural_floors_006.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_006.png",
+      "bbox": [
+        597,
+        19,
+        702,
+        123
+      ],
+      "width": 105,
+      "height": 104,
+      "area_pixels": 9395
+    },
+    {
+      "name": "structural_structural_floors_007.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_007.png",
+      "bbox": [
+        721,
+        19,
+        825,
+        123
+      ],
+      "width": 104,
+      "height": 104,
+      "area_pixels": 9304
+    },
+    {
+      "name": "structural_structural_floors_008.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_008.png",
+      "bbox": [
+        842,
+        19,
+        946,
+        123
+      ],
+      "width": 104,
+      "height": 104,
+      "area_pixels": 9324
+    },
+    {
+      "name": "structural_structural_floors_009.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_009.png",
+      "bbox": [
+        966,
+        19,
+        1071,
+        123
+      ],
+      "width": 105,
+      "height": 104,
+      "area_pixels": 9441
+    },
+    {
+      "name": "structural_structural_floors_010.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_010.png",
+      "bbox": [
+        1087,
+        20,
+        1191,
+        124
+      ],
+      "width": 104,
+      "height": 104,
+      "area_pixels": 9278
+    },
+    {
+      "name": "structural_structural_floors_011.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_011.png",
+      "bbox": [
+        1206,
+        20,
+        1311,
+        124
+      ],
+      "width": 105,
+      "height": 104,
+      "area_pixels": 9416
+    },
+    {
+      "name": "structural_structural_floors_012.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_012.png",
+      "bbox": [
+        1331,
+        20,
+        1434,
+        124
+      ],
+      "width": 103,
+      "height": 104,
+      "area_pixels": 9291
+    },
+    {
+      "name": "structural_structural_floors_013.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_013.png",
+      "bbox": [
+        19,
+        138,
+        122,
+        241
+      ],
+      "width": 103,
+      "height": 103,
+      "area_pixels": 9075
+    },
+    {
+      "name": "structural_structural_floors_014.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_014.png",
+      "bbox": [
+        133,
+        138,
+        235,
+        241
+      ],
+      "width": 102,
+      "height": 103,
+      "area_pixels": 8960
+    },
+    {
+      "name": "structural_structural_floors_015.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_015.png",
+      "bbox": [
+        248,
+        138,
+        351,
+        240
+      ],
+      "width": 103,
+      "height": 102,
+      "area_pixels": 8907
+    },
+    {
+      "name": "structural_structural_floors_016.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_016.png",
+      "bbox": [
+        362,
+        138,
+        464,
+        240
+      ],
+      "width": 102,
+      "height": 102,
+      "area_pixels": 8974
+    },
+    {
+      "name": "structural_structural_floors_017.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_017.png",
+      "bbox": [
+        479,
+        138,
+        582,
+        241
+      ],
+      "width": 103,
+      "height": 103,
+      "area_pixels": 9185
+    },
+    {
+      "name": "structural_structural_floors_018.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_018.png",
+      "bbox": [
+        597,
+        138,
+        702,
+        241
+      ],
+      "width": 105,
+      "height": 103,
+      "area_pixels": 9351
+    },
+    {
+      "name": "structural_structural_floors_019.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_019.png",
+      "bbox": [
+        721,
+        138,
+        825,
+        241
+      ],
+      "width": 104,
+      "height": 103,
+      "area_pixels": 9290
+    },
+    {
+      "name": "structural_structural_floors_020.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_020.png",
+      "bbox": [
+        842,
+        138,
+        946,
+        242
+      ],
+      "width": 104,
+      "height": 104,
+      "area_pixels": 9267
+    },
+    {
+      "name": "structural_structural_floors_021.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_021.png",
+      "bbox": [
+        966,
+        138,
+        1071,
+        242
+      ],
+      "width": 105,
+      "height": 104,
+      "area_pixels": 9383
+    },
+    {
+      "name": "structural_structural_floors_022.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_022.png",
+      "bbox": [
+        1087,
+        138,
+        1191,
+        242
+      ],
+      "width": 104,
+      "height": 104,
+      "area_pixels": 9286
+    },
+    {
+      "name": "structural_structural_floors_023.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_023.png",
+      "bbox": [
+        1207,
+        138,
+        1312,
+        242
+      ],
+      "width": 105,
+      "height": 104,
+      "area_pixels": 9427
+    },
+    {
+      "name": "structural_structural_floors_024.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/floors",
+      "path": "art/hub_generated/sliced/structural/floors/structural_structural_floors_024.png",
+      "bbox": [
+        1331,
+        138,
+        1434,
+        242
+      ],
+      "width": 103,
+      "height": 104,
+      "area_pixels": 9263
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_001.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_001.png",
+      "bbox": [
+        222,
+        263,
+        284,
+        341
+      ],
+      "width": 62,
+      "height": 78,
+      "area_pixels": 3979
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_002.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_002.png",
+      "bbox": [
+        300,
+        263,
+        457,
+        341
+      ],
+      "width": 157,
+      "height": 78,
+      "area_pixels": 10868
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_003.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_003.png",
+      "bbox": [
+        472,
+        263,
+        530,
+        341
+      ],
+      "width": 58,
+      "height": 78,
+      "area_pixels": 3728
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_004.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_004.png",
+      "bbox": [
+        545,
+        263,
+        605,
+        341
+      ],
+      "width": 60,
+      "height": 78,
+      "area_pixels": 3856
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_005.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_005.png",
+      "bbox": [
+        621,
+        263,
+        685,
+        341
+      ],
+      "width": 64,
+      "height": 78,
+      "area_pixels": 4169
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_006.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_006.png",
+      "bbox": [
+        700,
+        263,
+        770,
+        341
+      ],
+      "width": 70,
+      "height": 78,
+      "area_pixels": 4588
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_007.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_007.png",
+      "bbox": [
+        785,
+        263,
+        849,
+        341
+      ],
+      "width": 64,
+      "height": 78,
+      "area_pixels": 4168
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_008.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_008.png",
+      "bbox": [
+        864,
+        263,
+        929,
+        341
+      ],
+      "width": 65,
+      "height": 78,
+      "area_pixels": 4241
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_009.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_009.png",
+      "bbox": [
+        19,
+        265,
+        74,
+        341
+      ],
+      "width": 55,
+      "height": 76,
+      "area_pixels": 3412
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_010.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_010.png",
+      "bbox": [
+        89,
+        265,
+        132,
+        341
+      ],
+      "width": 43,
+      "height": 76,
+      "area_pixels": 2567
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_011.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_011.png",
+      "bbox": [
+        147,
+        265,
+        207,
+        341
+      ],
+      "width": 60,
+      "height": 76,
+      "area_pixels": 3771
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_012.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_012.png",
+      "bbox": [
+        961,
+        266,
+        1013,
+        364
+      ],
+      "width": 52,
+      "height": 98,
+      "area_pixels": 3738
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_013.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_013.png",
+      "bbox": [
+        1034,
+        266,
+        1086,
+        364
+      ],
+      "width": 52,
+      "height": 98,
+      "area_pixels": 3725
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_014.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_014.png",
+      "bbox": [
+        1106,
+        266,
+        1158,
+        364
+      ],
+      "width": 52,
+      "height": 98,
+      "area_pixels": 3720
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_015.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_015.png",
+      "bbox": [
+        1181,
+        266,
+        1219,
+        359
+      ],
+      "width": 38,
+      "height": 93,
+      "area_pixels": 2342
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_016.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_016.png",
+      "bbox": [
+        1240,
+        266,
+        1278,
+        359
+      ],
+      "width": 38,
+      "height": 93,
+      "area_pixels": 2323
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_017.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_017.png",
+      "bbox": [
+        1297,
+        266,
+        1333,
+        359
+      ],
+      "width": 36,
+      "height": 93,
+      "area_pixels": 2265
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_018.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_018.png",
+      "bbox": [
+        1350,
+        266,
+        1384,
+        359
+      ],
+      "width": 34,
+      "height": 93,
+      "area_pixels": 2081
+    },
+    {
+      "name": "structural_structural_walls_corners_banners_019.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/walls_corners_banners",
+      "path": "art/hub_generated/sliced/structural/walls_corners_banners/structural_structural_walls_corners_banners_019.png",
+      "bbox": [
+        1396,
+        266,
+        1430,
+        359
+      ],
+      "width": 34,
+      "height": 93,
+      "area_pixels": 2161
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_001.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_001.png",
+      "bbox": [
+        19,
+        361,
+        129,
+        421
+      ],
+      "width": 110,
+      "height": 60,
+      "area_pixels": 4736
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_002.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_002.png",
+      "bbox": [
+        149,
+        361,
+        214,
+        427
+      ],
+      "width": 65,
+      "height": 66,
+      "area_pixels": 2815
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_003.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_003.png",
+      "bbox": [
+        230,
+        361,
+        297,
+        427
+      ],
+      "width": 67,
+      "height": 66,
+      "area_pixels": 2928
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_004.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_004.png",
+      "bbox": [
+        321,
+        361,
+        413,
+        425
+      ],
+      "width": 92,
+      "height": 64,
+      "area_pixels": 3705
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_005.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_005.png",
+      "bbox": [
+        436,
+        361,
+        520,
+        425
+      ],
+      "width": 84,
+      "height": 64,
+      "area_pixels": 3516
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_006.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_006.png",
+      "bbox": [
+        543,
+        362,
+        605,
+        427
+      ],
+      "width": 62,
+      "height": 65,
+      "area_pixels": 2720
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_007.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_007.png",
+      "bbox": [
+        623,
+        362,
+        677,
+        427
+      ],
+      "width": 54,
+      "height": 65,
+      "area_pixels": 2440
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_008.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_008.png",
+      "bbox": [
+        694,
+        362,
+        773,
+        427
+      ],
+      "width": 79,
+      "height": 65,
+      "area_pixels": 3316
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_009.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_009.png",
+      "bbox": [
+        792,
+        362,
+        849,
+        427
+      ],
+      "width": 57,
+      "height": 65,
+      "area_pixels": 2433
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_010.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_010.png",
+      "bbox": [
+        867,
+        362,
+        929,
+        427
+      ],
+      "width": 62,
+      "height": 65,
+      "area_pixels": 3012
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_011.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_011.png",
+      "bbox": [
+        963,
+        393,
+        1009,
+        434
+      ],
+      "width": 46,
+      "height": 41,
+      "area_pixels": 1294
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_012.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_012.png",
+      "bbox": [
+        1163,
+        393,
+        1206,
+        434
+      ],
+      "width": 43,
+      "height": 41,
+      "area_pixels": 1251
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_013.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_013.png",
+      "bbox": [
+        1226,
+        393,
+        1267,
+        435
+      ],
+      "width": 41,
+      "height": 42,
+      "area_pixels": 1196
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_014.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_014.png",
+      "bbox": [
+        1291,
+        393,
+        1326,
+        438
+      ],
+      "width": 35,
+      "height": 45,
+      "area_pixels": 963
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_015.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_015.png",
+      "bbox": [
+        1100,
+        395,
+        1143,
+        434
+      ],
+      "width": 43,
+      "height": 39,
+      "area_pixels": 1190
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_016.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_016.png",
+      "bbox": [
+        1033,
+        396,
+        1079,
+        434
+      ],
+      "width": 46,
+      "height": 38,
+      "area_pixels": 1230
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_017.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_017.png",
+      "bbox": [
+        1343,
+        397,
+        1375,
+        436
+      ],
+      "width": 32,
+      "height": 39,
+      "area_pixels": 787
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_018.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_018.png",
+      "bbox": [
+        1396,
+        397,
+        1429,
+        436
+      ],
+      "width": 33,
+      "height": 39,
+      "area_pixels": 795
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_019.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_019.png",
+      "bbox": [
+        228,
+        438,
+        318,
+        556
+      ],
+      "width": 90,
+      "height": 118,
+      "area_pixels": 7515
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_020.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_020.png",
+      "bbox": [
+        426,
+        444,
+        533,
+        550
+      ],
+      "width": 107,
+      "height": 106,
+      "area_pixels": 7467
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_021.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_021.png",
+      "bbox": [
+        665,
+        445,
+        710,
+        558
+      ],
+      "width": 45,
+      "height": 113,
+      "area_pixels": 2305
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_022.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_022.png",
+      "bbox": [
+        562,
+        452,
+        638,
+        561
+      ],
+      "width": 76,
+      "height": 109,
+      "area_pixels": 4104
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_023.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_023.png",
+      "bbox": [
+        140,
+        453,
+        198,
+        556
+      ],
+      "width": 58,
+      "height": 103,
+      "area_pixels": 4046
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_024.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_024.png",
+      "bbox": [
+        738,
+        453,
+        767,
+        556
+      ],
+      "width": 29,
+      "height": 103,
+      "area_pixels": 1784
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_025.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_025.png",
+      "bbox": [
+        792,
+        453,
+        820,
+        513
+      ],
+      "width": 28,
+      "height": 60,
+      "area_pixels": 969
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_026.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_026.png",
+      "bbox": [
+        344,
+        459,
+        406,
+        550
+      ],
+      "width": 62,
+      "height": 91,
+      "area_pixels": 2496
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_027.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_027.png",
+      "bbox": [
+        848,
+        465,
+        874,
+        513
+      ],
+      "width": 26,
+      "height": 48,
+      "area_pixels": 748
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_028.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_028.png",
+      "bbox": [
+        890,
+        465,
+        908,
+        513
+      ],
+      "width": 18,
+      "height": 48,
+      "area_pixels": 417
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_029.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_029.png",
+      "bbox": [
+        925,
+        465,
+        948,
+        513
+      ],
+      "width": 23,
+      "height": 48,
+      "area_pixels": 565
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_030.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_030.png",
+      "bbox": [
+        966,
+        465,
+        984,
+        513
+      ],
+      "width": 18,
+      "height": 48,
+      "area_pixels": 434
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_031.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_031.png",
+      "bbox": [
+        1008,
+        467,
+        1053,
+        513
+      ],
+      "width": 45,
+      "height": 46,
+      "area_pixels": 1167
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_032.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_032.png",
+      "bbox": [
+        1073,
+        468,
+        1160,
+        514
+      ],
+      "width": 87,
+      "height": 46,
+      "area_pixels": 2437
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_033.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_033.png",
+      "bbox": [
+        1181,
+        468,
+        1316,
+        516
+      ],
+      "width": 135,
+      "height": 48,
+      "area_pixels": 4175
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_034.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_034.png",
+      "bbox": [
+        1343,
+        470,
+        1373,
+        516
+      ],
+      "width": 30,
+      "height": 46,
+      "area_pixels": 649
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_035.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_035.png",
+      "bbox": [
+        1400,
+        470,
+        1427,
+        517
+      ],
+      "width": 27,
+      "height": 47,
+      "area_pixels": 545
+    },
+    {
+      "name": "structural_structural_doors_arches_pillars_036.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/doors_arches_pillars",
+      "path": "art/hub_generated/sliced/structural/doors_arches_pillars/structural_structural_doors_arches_pillars_036.png",
+      "bbox": [
+        23,
+        473,
+        116,
+        556
+      ],
+      "width": 93,
+      "height": 83,
+      "area_pixels": 6290
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_001.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_001.png",
+      "bbox": [
+        792,
+        542,
+        866,
+        611
+      ],
+      "width": 74,
+      "height": 69,
+      "area_pixels": 3798
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_002.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_002.png",
+      "bbox": [
+        1079,
+        542,
+        1160,
+        617
+      ],
+      "width": 81,
+      "height": 75,
+      "area_pixels": 2832
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_003.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_003.png",
+      "bbox": [
+        1179,
+        550,
+        1251,
+        625
+      ],
+      "width": 72,
+      "height": 75,
+      "area_pixels": 2793
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_004.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_004.png",
+      "bbox": [
+        1269,
+        550,
+        1346,
+        620
+      ],
+      "width": 77,
+      "height": 70,
+      "area_pixels": 3313
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_005.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_005.png",
+      "bbox": [
+        1367,
+        550,
+        1426,
+        625
+      ],
+      "width": 59,
+      "height": 75,
+      "area_pixels": 2446
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_006.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_006.png",
+      "bbox": [
+        887,
+        553,
+        975,
+        592
+      ],
+      "width": 88,
+      "height": 39,
+      "area_pixels": 2609
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_007.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_007.png",
+      "bbox": [
+        995,
+        553,
+        1063,
+        601
+      ],
+      "width": 68,
+      "height": 48,
+      "area_pixels": 2115
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_008.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_008.png",
+      "bbox": [
+        726,
+        575,
+        763,
+        615
+      ],
+      "width": 37,
+      "height": 40,
+      "area_pixels": 944
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_009.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_009.png",
+      "bbox": [
+        25,
+        580,
+        116,
+        618
+      ],
+      "width": 91,
+      "height": 38,
+      "area_pixels": 2569
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_010.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_010.png",
+      "bbox": [
+        135,
+        580,
+        205,
+        617
+      ],
+      "width": 70,
+      "height": 37,
+      "area_pixels": 1706
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_011.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_011.png",
+      "bbox": [
+        224,
+        580,
+        309,
+        621
+      ],
+      "width": 85,
+      "height": 41,
+      "area_pixels": 2242
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_012.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_012.png",
+      "bbox": [
+        327,
+        580,
+        373,
+        617
+      ],
+      "width": 46,
+      "height": 37,
+      "area_pixels": 1135
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_013.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_013.png",
+      "bbox": [
+        393,
+        580,
+        464,
+        617
+      ],
+      "width": 71,
+      "height": 37,
+      "area_pixels": 1794
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_014.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_014.png",
+      "bbox": [
+        483,
+        580,
+        591,
+        615
+      ],
+      "width": 108,
+      "height": 35,
+      "area_pixels": 2656
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_015.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_015.png",
+      "bbox": [
+        610,
+        580,
+        705,
+        615
+      ],
+      "width": 95,
+      "height": 35,
+      "area_pixels": 2560
+    },
+    {
+      "name": "structural_structural_trims_stairs_railings_016.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/trims_stairs_railings",
+      "path": "art/hub_generated/sliced/structural/trims_stairs_railings/structural_structural_trims_stairs_railings_016.png",
+      "bbox": [
+        1228,
+        585,
+        1238,
+        604
+      ],
+      "width": 10,
+      "height": 19,
+      "area_pixels": 41
+    },
+    {
+      "name": "structural_structural_carpets_platforms_001.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_001.png",
+      "bbox": [
+        25,
+        647,
+        97,
+        735
+      ],
+      "width": 72,
+      "height": 88,
+      "area_pixels": 4970
+    },
+    {
+      "name": "structural_structural_carpets_platforms_002.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_002.png",
+      "bbox": [
+        393,
+        647,
+        424,
+        735
+      ],
+      "width": 31,
+      "height": 88,
+      "area_pixels": 1838
+    },
+    {
+      "name": "structural_structural_carpets_platforms_003.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_003.png",
+      "bbox": [
+        683,
+        647,
+        743,
+        747
+      ],
+      "width": 60,
+      "height": 100,
+      "area_pixels": 5068
+    },
+    {
+      "name": "structural_structural_carpets_platforms_004.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_004.png",
+      "bbox": [
+        768,
+        647,
+        809,
+        747
+      ],
+      "width": 41,
+      "height": 100,
+      "area_pixels": 3231
+    },
+    {
+      "name": "structural_structural_carpets_platforms_005.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_005.png",
+      "bbox": [
+        829,
+        647,
+        892,
+        747
+      ],
+      "width": 63,
+      "height": 100,
+      "area_pixels": 5307
+    },
+    {
+      "name": "structural_structural_carpets_platforms_006.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_006.png",
+      "bbox": [
+        911,
+        647,
+        974,
+        746
+      ],
+      "width": 63,
+      "height": 99,
+      "area_pixels": 5298
+    },
+    {
+      "name": "structural_structural_carpets_platforms_007.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_007.png",
+      "bbox": [
+        991,
+        647,
+        1067,
+        746
+      ],
+      "width": 76,
+      "height": 99,
+      "area_pixels": 6506
+    },
+    {
+      "name": "structural_structural_carpets_platforms_008.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_008.png",
+      "bbox": [
+        1083,
+        647,
+        1146,
+        746
+      ],
+      "width": 63,
+      "height": 99,
+      "area_pixels": 5294
+    },
+    {
+      "name": "structural_structural_carpets_platforms_009.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_009.png",
+      "bbox": [
+        1162,
+        647,
+        1227,
+        746
+      ],
+      "width": 65,
+      "height": 99,
+      "area_pixels": 5476
+    },
+    {
+      "name": "structural_structural_carpets_platforms_010.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_010.png",
+      "bbox": [
+        1245,
+        647,
+        1328,
+        746
+      ],
+      "width": 83,
+      "height": 99,
+      "area_pixels": 7157
+    },
+    {
+      "name": "structural_structural_carpets_platforms_011.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_011.png",
+      "bbox": [
+        1343,
+        647,
+        1426,
+        746
+      ],
+      "width": 83,
+      "height": 99,
+      "area_pixels": 7160
+    },
+    {
+      "name": "structural_structural_carpets_platforms_012.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_012.png",
+      "bbox": [
+        626,
+        649,
+        648,
+        732
+      ],
+      "width": 22,
+      "height": 83,
+      "area_pixels": 1110
+    },
+    {
+      "name": "structural_structural_carpets_platforms_013.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_013.png",
+      "bbox": [
+        141,
+        650,
+        230,
+        726
+      ],
+      "width": 89,
+      "height": 76,
+      "area_pixels": 5540
+    },
+    {
+      "name": "structural_structural_carpets_platforms_014.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_014.png",
+      "bbox": [
+        545,
+        651,
+        567,
+        732
+      ],
+      "width": 22,
+      "height": 81,
+      "area_pixels": 1085
+    },
+    {
+      "name": "structural_structural_carpets_platforms_015.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_015.png",
+      "bbox": [
+        583,
+        651,
+        606,
+        729
+      ],
+      "width": 23,
+      "height": 78,
+      "area_pixels": 1025
+    },
+    {
+      "name": "structural_structural_carpets_platforms_016.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_016.png",
+      "bbox": [
+        450,
+        654,
+        516,
+        735
+      ],
+      "width": 66,
+      "height": 81,
+      "area_pixels": 4496
+    },
+    {
+      "name": "structural_structural_carpets_platforms_017.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_017.png",
+      "bbox": [
+        124,
+        655,
+        139,
+        726
+      ],
+      "width": 15,
+      "height": 71,
+      "area_pixels": 501
+    },
+    {
+      "name": "structural_structural_carpets_platforms_018.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_018.png",
+      "bbox": [
+        233,
+        655,
+        248,
+        725
+      ],
+      "width": 15,
+      "height": 70,
+      "area_pixels": 548
+    },
+    {
+      "name": "structural_structural_carpets_platforms_019.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/carpets_platforms",
+      "path": "art/hub_generated/sliced/structural/carpets_platforms/structural_structural_carpets_platforms_019.png",
+      "bbox": [
+        276,
+        655,
+        365,
+        730
+      ],
+      "width": 89,
+      "height": 75,
+      "area_pixels": 5342
+    },
+    {
+      "name": "structural_structural_lava_ember_channels_001.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lava_ember_channels",
+      "path": "art/hub_generated/sliced/structural/lava_ember_channels/structural_structural_lava_ember_channels_001.png",
+      "bbox": [
+        23,
+        772,
+        322,
+        849
+      ],
+      "width": 299,
+      "height": 77,
+      "area_pixels": 20770
+    },
+    {
+      "name": "structural_structural_lava_ember_channels_002.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lava_ember_channels",
+      "path": "art/hub_generated/sliced/structural/lava_ember_channels/structural_structural_lava_ember_channels_002.png",
+      "bbox": [
+        338,
+        772,
+        424,
+        849
+      ],
+      "width": 86,
+      "height": 77,
+      "area_pixels": 5668
+    },
+    {
+      "name": "structural_structural_lava_ember_channels_003.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lava_ember_channels",
+      "path": "art/hub_generated/sliced/structural/lava_ember_channels/structural_structural_lava_ember_channels_003.png",
+      "bbox": [
+        441,
+        772,
+        535,
+        869
+      ],
+      "width": 94,
+      "height": 97,
+      "area_pixels": 7493
+    },
+    {
+      "name": "structural_structural_lava_ember_channels_004.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lava_ember_channels",
+      "path": "art/hub_generated/sliced/structural/lava_ember_channels/structural_structural_lava_ember_channels_004.png",
+      "bbox": [
+        553,
+        772,
+        651,
+        869
+      ],
+      "width": 98,
+      "height": 97,
+      "area_pixels": 8365
+    },
+    {
+      "name": "structural_structural_lava_ember_channels_005.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lava_ember_channels",
+      "path": "art/hub_generated/sliced/structural/lava_ember_channels/structural_structural_lava_ember_channels_005.png",
+      "bbox": [
+        671,
+        772,
+        747,
+        871
+      ],
+      "width": 76,
+      "height": 99,
+      "area_pixels": 6443
+    },
+    {
+      "name": "structural_structural_lava_ember_channels_006.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lava_ember_channels",
+      "path": "art/hub_generated/sliced/structural/lava_ember_channels/structural_structural_lava_ember_channels_006.png",
+      "bbox": [
+        1320,
+        776,
+        1416,
+        862
+      ],
+      "width": 96,
+      "height": 86,
+      "area_pixels": 7170
+    },
+    {
+      "name": "structural_structural_lava_ember_channels_007.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lava_ember_channels",
+      "path": "art/hub_generated/sliced/structural/lava_ember_channels/structural_structural_lava_ember_channels_007.png",
+      "bbox": [
+        923,
+        783,
+        999,
+        862
+      ],
+      "width": 76,
+      "height": 79,
+      "area_pixels": 4995
+    },
+    {
+      "name": "structural_structural_lava_ember_channels_008.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lava_ember_channels",
+      "path": "art/hub_generated/sliced/structural/lava_ember_channels/structural_structural_lava_ember_channels_008.png",
+      "bbox": [
+        1124,
+        784,
+        1198,
+        862
+      ],
+      "width": 74,
+      "height": 78,
+      "area_pixels": 4888
+    },
+    {
+      "name": "structural_structural_lava_ember_channels_009.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lava_ember_channels",
+      "path": "art/hub_generated/sliced/structural/lava_ember_channels/structural_structural_lava_ember_channels_009.png",
+      "bbox": [
+        1217,
+        784,
+        1299,
+        862
+      ],
+      "width": 82,
+      "height": 78,
+      "area_pixels": 5383
+    },
+    {
+      "name": "structural_structural_lava_ember_channels_010.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lava_ember_channels",
+      "path": "art/hub_generated/sliced/structural/lava_ember_channels/structural_structural_lava_ember_channels_010.png",
+      "bbox": [
+        1019,
+        787,
+        1106,
+        862
+      ],
+      "width": 87,
+      "height": 75,
+      "area_pixels": 5173
+    },
+    {
+      "name": "structural_structural_lava_ember_channels_011.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lava_ember_channels",
+      "path": "art/hub_generated/sliced/structural/lava_ember_channels/structural_structural_lava_ember_channels_011.png",
+      "bbox": [
+        768,
+        793,
+        905,
+        857
+      ],
+      "width": 137,
+      "height": 64,
+      "area_pixels": 6944
+    },
+    {
+      "name": "structural_structural_lights_small_props_001.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_001.png",
+      "bbox": [
+        1246,
+        897,
+        1296,
+        994
+      ],
+      "width": 50,
+      "height": 97,
+      "area_pixels": 3237
+    },
+    {
+      "name": "structural_structural_lights_small_props_002.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_002.png",
+      "bbox": [
+        27,
+        898,
+        67,
+        991
+      ],
+      "width": 40,
+      "height": 93,
+      "area_pixels": 1539
+    },
+    {
+      "name": "structural_structural_lights_small_props_003.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_003.png",
+      "bbox": [
+        465,
+        900,
+        503,
+        982
+      ],
+      "width": 38,
+      "height": 82,
+      "area_pixels": 1024
+    },
+    {
+      "name": "structural_structural_lights_small_props_004.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_004.png",
+      "bbox": [
+        393,
+        901,
+        430,
+        979
+      ],
+      "width": 37,
+      "height": 78,
+      "area_pixels": 1272
+    },
+    {
+      "name": "structural_structural_lights_small_props_005.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_005.png",
+      "bbox": [
+        250,
+        902,
+        275,
+        987
+      ],
+      "width": 25,
+      "height": 85,
+      "area_pixels": 846
+    },
+    {
+      "name": "structural_structural_lights_small_props_006.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_006.png",
+      "bbox": [
+        309,
+        902,
+        355,
+        977
+      ],
+      "width": 46,
+      "height": 75,
+      "area_pixels": 1628
+    },
+    {
+      "name": "structural_structural_lights_small_props_007.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_007.png",
+      "bbox": [
+        800,
+        902,
+        839,
+        994
+      ],
+      "width": 39,
+      "height": 92,
+      "area_pixels": 2284
+    },
+    {
+      "name": "structural_structural_lights_small_props_008.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_008.png",
+      "bbox": [
+        103,
+        903,
+        147,
+        969
+      ],
+      "width": 44,
+      "height": 66,
+      "area_pixels": 1570
+    },
+    {
+      "name": "structural_structural_lights_small_props_009.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_009.png",
+      "bbox": [
+        877,
+        903,
+        929,
+        991
+      ],
+      "width": 52,
+      "height": 88,
+      "area_pixels": 2457
+    },
+    {
+      "name": "structural_structural_lights_small_props_010.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_010.png",
+      "bbox": [
+        1050,
+        903,
+        1094,
+        991
+      ],
+      "width": 44,
+      "height": 88,
+      "area_pixels": 2160
+    },
+    {
+      "name": "structural_structural_lights_small_props_011.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_011.png",
+      "bbox": [
+        1344,
+        903,
+        1408,
+        991
+      ],
+      "width": 64,
+      "height": 88,
+      "area_pixels": 4237
+    },
+    {
+      "name": "structural_structural_lights_small_props_012.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_012.png",
+      "bbox": [
+        715,
+        904,
+        764,
+        991
+      ],
+      "width": 49,
+      "height": 87,
+      "area_pixels": 3246
+    },
+    {
+      "name": "structural_structural_lights_small_props_013.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_013.png",
+      "bbox": [
+        1139,
+        904,
+        1210,
+        991
+      ],
+      "width": 71,
+      "height": 87,
+      "area_pixels": 3226
+    },
+    {
+      "name": "structural_structural_lights_small_props_014.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_014.png",
+      "bbox": [
+        966,
+        905,
+        1013,
+        991
+      ],
+      "width": 47,
+      "height": 86,
+      "area_pixels": 2285
+    },
+    {
+      "name": "structural_structural_lights_small_props_015.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_015.png",
+      "bbox": [
+        180,
+        906,
+        224,
+        971
+      ],
+      "width": 44,
+      "height": 65,
+      "area_pixels": 1406
+    },
+    {
+      "name": "structural_structural_lights_small_props_016.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_016.png",
+      "bbox": [
+        634,
+        907,
+        669,
+        982
+      ],
+      "width": 35,
+      "height": 75,
+      "area_pixels": 1227
+    },
+    {
+      "name": "structural_structural_lights_small_props_017.png",
+      "source_label": "structural",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (1)-Photoroom.png",
+      "category": "structural/lights_small_props",
+      "path": "art/hub_generated/sliced/structural/lights_small_props/structural_structural_lights_small_props_017.png",
+      "bbox": [
+        545,
+        912,
+        595,
+        989
+      ],
+      "width": 50,
+      "height": 77,
+      "area_pixels": 1384
+    },
+    {
+      "name": "props_props_archive_bookcases_codex_001.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/archive_bookcases_codex",
+      "path": "art/hub_generated/sliced/props/archive_bookcases_codex/props_props_archive_bookcases_codex_001.png",
+      "bbox": [
+        127,
+        19,
+        219,
+        152
+      ],
+      "width": 92,
+      "height": 133,
+      "area_pixels": 9595
+    },
+    {
+      "name": "props_props_archive_bookcases_codex_002.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/archive_bookcases_codex",
+      "path": "art/hub_generated/sliced/props/archive_bookcases_codex/props_props_archive_bookcases_codex_002.png",
+      "bbox": [
+        347,
+        19,
+        437,
+        152
+      ],
+      "width": 90,
+      "height": 133,
+      "area_pixels": 9335
+    },
+    {
+      "name": "props_props_archive_bookcases_codex_003.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/archive_bookcases_codex",
+      "path": "art/hub_generated/sliced/props/archive_bookcases_codex/props_props_archive_bookcases_codex_003.png",
+      "bbox": [
+        583,
+        19,
+        679,
+        152
+      ],
+      "width": 96,
+      "height": 133,
+      "area_pixels": 9691
+    },
+    {
+      "name": "props_props_archive_bookcases_codex_004.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/archive_bookcases_codex",
+      "path": "art/hub_generated/sliced/props/archive_bookcases_codex/props_props_archive_bookcases_codex_004.png",
+      "bbox": [
+        460,
+        21,
+        550,
+        152
+      ],
+      "width": 90,
+      "height": 131,
+      "area_pixels": 9115
+    },
+    {
+      "name": "props_props_archive_bookcases_codex_005.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/archive_bookcases_codex",
+      "path": "art/hub_generated/sliced/props/archive_bookcases_codex/props_props_archive_bookcases_codex_005.png",
+      "bbox": [
+        20,
+        23,
+        109,
+        152
+      ],
+      "width": 89,
+      "height": 129,
+      "area_pixels": 9131
+    },
+    {
+      "name": "props_props_archive_bookcases_codex_006.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/archive_bookcases_codex",
+      "path": "art/hub_generated/sliced/props/archive_bookcases_codex/props_props_archive_bookcases_codex_006.png",
+      "bbox": [
+        713,
+        24,
+        790,
+        152
+      ],
+      "width": 77,
+      "height": 128,
+      "area_pixels": 5771
+    },
+    {
+      "name": "props_props_archive_bookcases_codex_007.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/archive_bookcases_codex",
+      "path": "art/hub_generated/sliced/props/archive_bookcases_codex/props_props_archive_bookcases_codex_007.png",
+      "bbox": [
+        239,
+        27,
+        327,
+        152
+      ],
+      "width": 88,
+      "height": 125,
+      "area_pixels": 8794
+    },
+    {
+      "name": "props_props_archive_bookcases_codex_008.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/archive_bookcases_codex",
+      "path": "art/hub_generated/sliced/props/archive_bookcases_codex/props_props_archive_bookcases_codex_008.png",
+      "bbox": [
+        935,
+        56,
+        1017,
+        152
+      ],
+      "width": 82,
+      "height": 96,
+      "area_pixels": 5903
+    },
+    {
+      "name": "props_props_archive_bookcases_codex_009.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/archive_bookcases_codex",
+      "path": "art/hub_generated/sliced/props/archive_bookcases_codex/props_props_archive_bookcases_codex_009.png",
+      "bbox": [
+        1371,
+        59,
+        1424,
+        152
+      ],
+      "width": 53,
+      "height": 93,
+      "area_pixels": 3166
+    },
+    {
+      "name": "props_props_archive_bookcases_codex_010.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/archive_bookcases_codex",
+      "path": "art/hub_generated/sliced/props/archive_bookcases_codex/props_props_archive_bookcases_codex_010.png",
+      "bbox": [
+        1252,
+        61,
+        1331,
+        152
+      ],
+      "width": 79,
+      "height": 91,
+      "area_pixels": 4816
+    },
+    {
+      "name": "props_props_archive_bookcases_codex_011.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/archive_bookcases_codex",
+      "path": "art/hub_generated/sliced/props/archive_bookcases_codex/props_props_archive_bookcases_codex_011.png",
+      "bbox": [
+        1158,
+        65,
+        1216,
+        152
+      ],
+      "width": 58,
+      "height": 87,
+      "area_pixels": 3286
+    },
+    {
+      "name": "props_props_archive_bookcases_codex_012.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/archive_bookcases_codex",
+      "path": "art/hub_generated/sliced/props/archive_bookcases_codex/props_props_archive_bookcases_codex_012.png",
+      "bbox": [
+        1049,
+        66,
+        1124,
+        152
+      ],
+      "width": 75,
+      "height": 86,
+      "area_pixels": 4739
+    },
+    {
+      "name": "props_props_archive_bookcases_codex_013.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/archive_bookcases_codex",
+      "path": "art/hub_generated/sliced/props/archive_bookcases_codex/props_props_archive_bookcases_codex_013.png",
+      "bbox": [
+        830,
+        67,
+        898,
+        152
+      ],
+      "width": 68,
+      "height": 85,
+      "area_pixels": 3820
+    },
+    {
+      "name": "props_props_forge_smithing_001.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_001.png",
+      "bbox": [
+        120,
+        177,
+        223,
+        293
+      ],
+      "width": 103,
+      "height": 116,
+      "area_pixels": 6843
+    },
+    {
+      "name": "props_props_forge_smithing_002.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_002.png",
+      "bbox": [
+        240,
+        194,
+        331,
+        290
+      ],
+      "width": 91,
+      "height": 96,
+      "area_pixels": 6342
+    },
+    {
+      "name": "props_props_forge_smithing_003.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_003.png",
+      "bbox": [
+        20,
+        197,
+        112,
+        293
+      ],
+      "width": 92,
+      "height": 96,
+      "area_pixels": 5769
+    },
+    {
+      "name": "props_props_forge_smithing_004.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_004.png",
+      "bbox": [
+        448,
+        204,
+        545,
+        290
+      ],
+      "width": 97,
+      "height": 86,
+      "area_pixels": 5355
+    },
+    {
+      "name": "props_props_forge_smithing_005.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_005.png",
+      "bbox": [
+        564,
+        206,
+        673,
+        289
+      ],
+      "width": 109,
+      "height": 83,
+      "area_pixels": 6038
+    },
+    {
+      "name": "props_props_forge_smithing_006.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_006.png",
+      "bbox": [
+        1348,
+        220,
+        1428,
+        284
+      ],
+      "width": 80,
+      "height": 64,
+      "area_pixels": 3476
+    },
+    {
+      "name": "props_props_forge_smithing_007.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_007.png",
+      "bbox": [
+        1293,
+        221,
+        1332,
+        286
+      ],
+      "width": 39,
+      "height": 65,
+      "area_pixels": 1379
+    },
+    {
+      "name": "props_props_forge_smithing_008.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_008.png",
+      "bbox": [
+        348,
+        224,
+        430,
+        284
+      ],
+      "width": 82,
+      "height": 60,
+      "area_pixels": 3540
+    },
+    {
+      "name": "props_props_forge_smithing_009.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_009.png",
+      "bbox": [
+        1203,
+        225,
+        1270,
+        290
+      ],
+      "width": 67,
+      "height": 65,
+      "area_pixels": 2564
+    },
+    {
+      "name": "props_props_forge_smithing_010.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_010.png",
+      "bbox": [
+        1262,
+        225,
+        1274,
+        248
+      ],
+      "width": 12,
+      "height": 23,
+      "area_pixels": 82
+    },
+    {
+      "name": "props_props_forge_smithing_011.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_011.png",
+      "bbox": [
+        690,
+        227,
+        773,
+        283
+      ],
+      "width": 83,
+      "height": 56,
+      "area_pixels": 2601
+    },
+    {
+      "name": "props_props_forge_smithing_012.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_012.png",
+      "bbox": [
+        1140,
+        233,
+        1180,
+        278
+      ],
+      "width": 40,
+      "height": 45,
+      "area_pixels": 721
+    },
+    {
+      "name": "props_props_forge_smithing_013.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_013.png",
+      "bbox": [
+        947,
+        234,
+        980,
+        277
+      ],
+      "width": 33,
+      "height": 43,
+      "area_pixels": 368
+    },
+    {
+      "name": "props_props_forge_smithing_014.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_014.png",
+      "bbox": [
+        997,
+        234,
+        1056,
+        278
+      ],
+      "width": 59,
+      "height": 44,
+      "area_pixels": 1177
+    },
+    {
+      "name": "props_props_forge_smithing_015.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_015.png",
+      "bbox": [
+        1072,
+        234,
+        1120,
+        278
+      ],
+      "width": 48,
+      "height": 44,
+      "area_pixels": 964
+    },
+    {
+      "name": "props_props_forge_smithing_016.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_016.png",
+      "bbox": [
+        845,
+        236,
+        876,
+        278
+      ],
+      "width": 31,
+      "height": 42,
+      "area_pixels": 417
+    },
+    {
+      "name": "props_props_forge_smithing_017.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_017.png",
+      "bbox": [
+        792,
+        237,
+        828,
+        278
+      ],
+      "width": 36,
+      "height": 41,
+      "area_pixels": 712
+    },
+    {
+      "name": "props_props_forge_smithing_018.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_018.png",
+      "bbox": [
+        907,
+        238,
+        927,
+        277
+      ],
+      "width": 20,
+      "height": 39,
+      "area_pixels": 299
+    },
+    {
+      "name": "props_props_forge_smithing_019.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/forge_smithing",
+      "path": "art/hub_generated/sliced/props/forge_smithing/props_props_forge_smithing_019.png",
+      "bbox": [
+        893,
+        239,
+        911,
+        278
+      ],
+      "width": 18,
+      "height": 39,
+      "area_pixels": 278
+    },
+    {
+      "name": "props_props_training_weapons_chests_001.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_001.png",
+      "bbox": [
+        1095,
+        312,
+        1140,
+        407
+      ],
+      "width": 45,
+      "height": 95,
+      "area_pixels": 2380
+    },
+    {
+      "name": "props_props_training_weapons_chests_002.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_002.png",
+      "bbox": [
+        638,
+        314,
+        680,
+        409
+      ],
+      "width": 42,
+      "height": 95,
+      "area_pixels": 1808
+    },
+    {
+      "name": "props_props_training_weapons_chests_003.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_003.png",
+      "bbox": [
+        964,
+        314,
+        1007,
+        409
+      ],
+      "width": 43,
+      "height": 95,
+      "area_pixels": 1949
+    },
+    {
+      "name": "props_props_training_weapons_chests_004.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_004.png",
+      "bbox": [
+        702,
+        315,
+        746,
+        409
+      ],
+      "width": 44,
+      "height": 94,
+      "area_pixels": 2239
+    },
+    {
+      "name": "props_props_training_weapons_chests_005.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_005.png",
+      "bbox": [
+        833,
+        315,
+        876,
+        409
+      ],
+      "width": 43,
+      "height": 94,
+      "area_pixels": 1948
+    },
+    {
+      "name": "props_props_training_weapons_chests_006.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_006.png",
+      "bbox": [
+        899,
+        315,
+        941,
+        409
+      ],
+      "width": 42,
+      "height": 94,
+      "area_pixels": 2027
+    },
+    {
+      "name": "props_props_training_weapons_chests_007.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_007.png",
+      "bbox": [
+        1029,
+        316,
+        1072,
+        409
+      ],
+      "width": 43,
+      "height": 93,
+      "area_pixels": 2032
+    },
+    {
+      "name": "props_props_training_weapons_chests_008.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_008.png",
+      "bbox": [
+        768,
+        317,
+        811,
+        409
+      ],
+      "width": 43,
+      "height": 92,
+      "area_pixels": 2193
+    },
+    {
+      "name": "props_props_training_weapons_chests_009.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_009.png",
+      "bbox": [
+        21,
+        323,
+        83,
+        410
+      ],
+      "width": 62,
+      "height": 87,
+      "area_pixels": 1912
+    },
+    {
+      "name": "props_props_training_weapons_chests_010.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_010.png",
+      "bbox": [
+        169,
+        323,
+        242,
+        410
+      ],
+      "width": 73,
+      "height": 87,
+      "area_pixels": 2088
+    },
+    {
+      "name": "props_props_training_weapons_chests_011.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_011.png",
+      "bbox": [
+        520,
+        325,
+        617,
+        409
+      ],
+      "width": 97,
+      "height": 84,
+      "area_pixels": 5899
+    },
+    {
+      "name": "props_props_training_weapons_chests_012.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_012.png",
+      "bbox": [
+        103,
+        326,
+        161,
+        410
+      ],
+      "width": 58,
+      "height": 84,
+      "area_pixels": 1938
+    },
+    {
+      "name": "props_props_training_weapons_chests_013.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_013.png",
+      "bbox": [
+        263,
+        329,
+        310,
+        410
+      ],
+      "width": 47,
+      "height": 81,
+      "area_pixels": 2283
+    },
+    {
+      "name": "props_props_training_weapons_chests_014.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_014.png",
+      "bbox": [
+        332,
+        329,
+        376,
+        410
+      ],
+      "width": 44,
+      "height": 81,
+      "area_pixels": 2168
+    },
+    {
+      "name": "props_props_training_weapons_chests_015.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_015.png",
+      "bbox": [
+        398,
+        329,
+        443,
+        410
+      ],
+      "width": 45,
+      "height": 81,
+      "area_pixels": 2266
+    },
+    {
+      "name": "props_props_training_weapons_chests_016.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_016.png",
+      "bbox": [
+        463,
+        329,
+        485,
+        408
+      ],
+      "width": 22,
+      "height": 79,
+      "area_pixels": 958
+    },
+    {
+      "name": "props_props_training_weapons_chests_017.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_017.png",
+      "bbox": [
+        1168,
+        339,
+        1242,
+        408
+      ],
+      "width": 74,
+      "height": 69,
+      "area_pixels": 3918
+    },
+    {
+      "name": "props_props_training_weapons_chests_018.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_018.png",
+      "bbox": [
+        1260,
+        342,
+        1338,
+        408
+      ],
+      "width": 78,
+      "height": 66,
+      "area_pixels": 3913
+    },
+    {
+      "name": "props_props_training_weapons_chests_019.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/training_weapons_chests",
+      "path": "art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_019.png",
+      "bbox": [
+        1358,
+        350,
+        1429,
+        408
+      ],
+      "width": 71,
+      "height": 58,
+      "area_pixels": 3196
+    },
+    {
+      "name": "props_props_storage_furniture_001.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_001.png",
+      "bbox": [
+        1378,
+        432,
+        1427,
+        516
+      ],
+      "width": 49,
+      "height": 84,
+      "area_pixels": 2589
+    },
+    {
+      "name": "props_props_storage_furniture_002.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_002.png",
+      "bbox": [
+        624,
+        433,
+        668,
+        516
+      ],
+      "width": 44,
+      "height": 83,
+      "area_pixels": 2392
+    },
+    {
+      "name": "props_props_storage_furniture_003.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_003.png",
+      "bbox": [
+        932,
+        436,
+        983,
+        516
+      ],
+      "width": 51,
+      "height": 80,
+      "area_pixels": 2691
+    },
+    {
+      "name": "props_props_storage_furniture_004.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_004.png",
+      "bbox": [
+        1000,
+        436,
+        1046,
+        516
+      ],
+      "width": 46,
+      "height": 80,
+      "area_pixels": 2234
+    },
+    {
+      "name": "props_props_storage_furniture_005.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_005.png",
+      "bbox": [
+        1065,
+        436,
+        1108,
+        516
+      ],
+      "width": 43,
+      "height": 80,
+      "area_pixels": 2307
+    },
+    {
+      "name": "props_props_storage_furniture_006.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_006.png",
+      "bbox": [
+        677,
+        438,
+        770,
+        516
+      ],
+      "width": 93,
+      "height": 78,
+      "area_pixels": 4594
+    },
+    {
+      "name": "props_props_storage_furniture_007.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_007.png",
+      "bbox": [
+        1324,
+        440,
+        1366,
+        516
+      ],
+      "width": 42,
+      "height": 76,
+      "area_pixels": 1984
+    },
+    {
+      "name": "props_props_storage_furniture_008.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_008.png",
+      "bbox": [
+        1126,
+        445,
+        1203,
+        514
+      ],
+      "width": 77,
+      "height": 69,
+      "area_pixels": 3906
+    },
+    {
+      "name": "props_props_storage_furniture_009.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_009.png",
+      "bbox": [
+        794,
+        447,
+        912,
+        516
+      ],
+      "width": 118,
+      "height": 69,
+      "area_pixels": 6314
+    },
+    {
+      "name": "props_props_storage_furniture_010.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_010.png",
+      "bbox": [
+        1218,
+        450,
+        1307,
+        515
+      ],
+      "width": 89,
+      "height": 65,
+      "area_pixels": 3808
+    },
+    {
+      "name": "props_props_storage_furniture_011.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_011.png",
+      "bbox": [
+        183,
+        453,
+        262,
+        516
+      ],
+      "width": 79,
+      "height": 63,
+      "area_pixels": 4113
+    },
+    {
+      "name": "props_props_storage_furniture_012.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_012.png",
+      "bbox": [
+        278,
+        454,
+        345,
+        516
+      ],
+      "width": 67,
+      "height": 62,
+      "area_pixels": 3306
+    },
+    {
+      "name": "props_props_storage_furniture_013.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_013.png",
+      "bbox": [
+        361,
+        455,
+        411,
+        516
+      ],
+      "width": 50,
+      "height": 61,
+      "area_pixels": 2418
+    },
+    {
+      "name": "props_props_storage_furniture_014.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_014.png",
+      "bbox": [
+        507,
+        455,
+        552,
+        516
+      ],
+      "width": 45,
+      "height": 61,
+      "area_pixels": 1869
+    },
+    {
+      "name": "props_props_storage_furniture_015.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_015.png",
+      "bbox": [
+        103,
+        456,
+        168,
+        516
+      ],
+      "width": 65,
+      "height": 60,
+      "area_pixels": 3125
+    },
+    {
+      "name": "props_props_storage_furniture_016.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_016.png",
+      "bbox": [
+        22,
+        457,
+        87,
+        516
+      ],
+      "width": 65,
+      "height": 59,
+      "area_pixels": 3058
+    },
+    {
+      "name": "props_props_storage_furniture_017.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_017.png",
+      "bbox": [
+        428,
+        457,
+        490,
+        516
+      ],
+      "width": 62,
+      "height": 59,
+      "area_pixels": 2754
+    },
+    {
+      "name": "props_props_storage_furniture_018.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/storage_furniture",
+      "path": "art/hub_generated/sliced/props/storage_furniture/props_props_storage_furniture_018.png",
+      "bbox": [
+        566,
+        459,
+        608,
+        516
+      ],
+      "width": 42,
+      "height": 57,
+      "area_pixels": 1573
+    },
+    {
+      "name": "props_props_banners_chains_lights_001.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_001.png",
+      "bbox": [
+        885,
+        542,
+        941,
+        649
+      ],
+      "width": 56,
+      "height": 107,
+      "area_pixels": 2491
+    },
+    {
+      "name": "props_props_banners_chains_lights_002.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_002.png",
+      "bbox": [
+        87,
+        550,
+        140,
+        655
+      ],
+      "width": 53,
+      "height": 105,
+      "area_pixels": 2391
+    },
+    {
+      "name": "props_props_banners_chains_lights_003.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_003.png",
+      "bbox": [
+        147,
+        550,
+        200,
+        655
+      ],
+      "width": 53,
+      "height": 105,
+      "area_pixels": 2417
+    },
+    {
+      "name": "props_props_banners_chains_lights_004.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_004.png",
+      "bbox": [
+        208,
+        550,
+        261,
+        655
+      ],
+      "width": 53,
+      "height": 105,
+      "area_pixels": 2345
+    },
+    {
+      "name": "props_props_banners_chains_lights_005.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_005.png",
+      "bbox": [
+        21,
+        551,
+        80,
+        655
+      ],
+      "width": 59,
+      "height": 104,
+      "area_pixels": 3151
+    },
+    {
+      "name": "props_props_banners_chains_lights_006.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_006.png",
+      "bbox": [
+        845,
+        551,
+        862,
+        649
+      ],
+      "width": 17,
+      "height": 98,
+      "area_pixels": 695
+    },
+    {
+      "name": "props_props_banners_chains_lights_007.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_007.png",
+      "bbox": [
+        272,
+        553,
+        344,
+        654
+      ],
+      "width": 72,
+      "height": 101,
+      "area_pixels": 3587
+    },
+    {
+      "name": "props_props_banners_chains_lights_008.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_008.png",
+      "bbox": [
+        671,
+        555,
+        712,
+        650
+      ],
+      "width": 41,
+      "height": 95,
+      "area_pixels": 1514
+    },
+    {
+      "name": "props_props_banners_chains_lights_009.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_009.png",
+      "bbox": [
+        739,
+        555,
+        754,
+        650
+      ],
+      "width": 15,
+      "height": 95,
+      "area_pixels": 653
+    },
+    {
+      "name": "props_props_banners_chains_lights_010.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_010.png",
+      "bbox": [
+        796,
+        557,
+        811,
+        650
+      ],
+      "width": 15,
+      "height": 93,
+      "area_pixels": 671
+    },
+    {
+      "name": "props_props_banners_chains_lights_011.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_011.png",
+      "bbox": [
+        355,
+        561,
+        416,
+        649
+      ],
+      "width": 61,
+      "height": 88,
+      "area_pixels": 2732
+    },
+    {
+      "name": "props_props_banners_chains_lights_012.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_012.png",
+      "bbox": [
+        503,
+        561,
+        551,
+        649
+      ],
+      "width": 48,
+      "height": 88,
+      "area_pixels": 1904
+    },
+    {
+      "name": "props_props_banners_chains_lights_013.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_013.png",
+      "bbox": [
+        579,
+        561,
+        643,
+        649
+      ],
+      "width": 64,
+      "height": 88,
+      "area_pixels": 1404
+    },
+    {
+      "name": "props_props_banners_chains_lights_014.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_014.png",
+      "bbox": [
+        426,
+        562,
+        489,
+        650
+      ],
+      "width": 63,
+      "height": 88,
+      "area_pixels": 2899
+    },
+    {
+      "name": "props_props_banners_chains_lights_015.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_015.png",
+      "bbox": [
+        1073,
+        568,
+        1108,
+        649
+      ],
+      "width": 35,
+      "height": 81,
+      "area_pixels": 1422
+    },
+    {
+      "name": "props_props_banners_chains_lights_016.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_016.png",
+      "bbox": [
+        1283,
+        568,
+        1328,
+        649
+      ],
+      "width": 45,
+      "height": 81,
+      "area_pixels": 2281
+    },
+    {
+      "name": "props_props_banners_chains_lights_017.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_017.png",
+      "bbox": [
+        1351,
+        571,
+        1423,
+        649
+      ],
+      "width": 72,
+      "height": 78,
+      "area_pixels": 3046
+    },
+    {
+      "name": "props_props_banners_chains_lights_018.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_018.png",
+      "bbox": [
+        1135,
+        572,
+        1177,
+        649
+      ],
+      "width": 42,
+      "height": 77,
+      "area_pixels": 1978
+    },
+    {
+      "name": "props_props_banners_chains_lights_019.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_019.png",
+      "bbox": [
+        1210,
+        578,
+        1257,
+        649
+      ],
+      "width": 47,
+      "height": 71,
+      "area_pixels": 1646
+    },
+    {
+      "name": "props_props_banners_chains_lights_020.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_020.png",
+      "bbox": [
+        1033,
+        579,
+        1052,
+        649
+      ],
+      "width": 19,
+      "height": 70,
+      "area_pixels": 537
+    },
+    {
+      "name": "props_props_banners_chains_lights_021.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/banners_chains_lights",
+      "path": "art/hub_generated/sliced/props/banners_chains_lights/props_props_banners_chains_lights_021.png",
+      "bbox": [
+        971,
+        592,
+        1010,
+        650
+      ],
+      "width": 39,
+      "height": 58,
+      "area_pixels": 984
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_001.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_001.png",
+      "bbox": [
+        660,
+        673,
+        788,
+        790
+      ],
+      "width": 128,
+      "height": 117,
+      "area_pixels": 7498
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_002.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_002.png",
+      "bbox": [
+        460,
+        674,
+        507,
+        790
+      ],
+      "width": 47,
+      "height": 116,
+      "area_pixels": 2629
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_003.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_003.png",
+      "bbox": [
+        808,
+        674,
+        858,
+        790
+      ],
+      "width": 50,
+      "height": 116,
+      "area_pixels": 2631
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_004.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_004.png",
+      "bbox": [
+        531,
+        682,
+        576,
+        790
+      ],
+      "width": 45,
+      "height": 108,
+      "area_pixels": 2410
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_005.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_005.png",
+      "bbox": [
+        24,
+        684,
+        74,
+        790
+      ],
+      "width": 50,
+      "height": 106,
+      "area_pixels": 3767
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_006.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_006.png",
+      "bbox": [
+        1055,
+        684,
+        1151,
+        791
+      ],
+      "width": 96,
+      "height": 107,
+      "area_pixels": 6868
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_007.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_007.png",
+      "bbox": [
+        966,
+        686,
+        1035,
+        790
+      ],
+      "width": 69,
+      "height": 104,
+      "area_pixels": 4536
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_008.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_008.png",
+      "bbox": [
+        877,
+        687,
+        962,
+        790
+      ],
+      "width": 85,
+      "height": 103,
+      "area_pixels": 4577
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_009.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_009.png",
+      "bbox": [
+        170,
+        690,
+        219,
+        789
+      ],
+      "width": 49,
+      "height": 99,
+      "area_pixels": 3373
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_010.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_010.png",
+      "bbox": [
+        383,
+        691,
+        429,
+        790
+      ],
+      "width": 46,
+      "height": 99,
+      "area_pixels": 2731
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_011.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_011.png",
+      "bbox": [
+        98,
+        692,
+        147,
+        789
+      ],
+      "width": 49,
+      "height": 97,
+      "area_pixels": 3285
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_012.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_012.png",
+      "bbox": [
+        599,
+        706,
+        640,
+        790
+      ],
+      "width": 41,
+      "height": 84,
+      "area_pixels": 1823
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_013.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_013.png",
+      "bbox": [
+        1377,
+        709,
+        1419,
+        790
+      ],
+      "width": 42,
+      "height": 81,
+      "area_pixels": 1797
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_014.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_014.png",
+      "bbox": [
+        1237,
+        710,
+        1284,
+        790
+      ],
+      "width": 47,
+      "height": 80,
+      "area_pixels": 2103
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_015.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_015.png",
+      "bbox": [
+        1172,
+        713,
+        1214,
+        791
+      ],
+      "width": 42,
+      "height": 78,
+      "area_pixels": 1808
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_016.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_016.png",
+      "bbox": [
+        250,
+        714,
+        355,
+        789
+      ],
+      "width": 105,
+      "height": 75,
+      "area_pixels": 5651
+    },
+    {
+      "name": "props_props_ritual_statues_pillars_017.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/ritual_statues_pillars",
+      "path": "art/hub_generated/sliced/props/ritual_statues_pillars/props_props_ritual_statues_pillars_017.png",
+      "bbox": [
+        1310,
+        716,
+        1354,
+        790
+      ],
+      "width": 44,
+      "height": 74,
+      "area_pixels": 1852
+    },
+    {
+      "name": "props_props_doors_wall_modules_001.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_001.png",
+      "bbox": [
+        437,
+        814,
+        545,
+        913
+      ],
+      "width": 108,
+      "height": 99,
+      "area_pixels": 7997
+    },
+    {
+      "name": "props_props_doors_wall_modules_002.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_002.png",
+      "bbox": [
+        330,
+        827,
+        412,
+        913
+      ],
+      "width": 82,
+      "height": 86,
+      "area_pixels": 5439
+    },
+    {
+      "name": "props_props_doors_wall_modules_003.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_003.png",
+      "bbox": [
+        229,
+        828,
+        309,
+        913
+      ],
+      "width": 80,
+      "height": 85,
+      "area_pixels": 5038
+    },
+    {
+      "name": "props_props_doors_wall_modules_004.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_004.png",
+      "bbox": [
+        568,
+        835,
+        634,
+        914
+      ],
+      "width": 66,
+      "height": 79,
+      "area_pixels": 3927
+    },
+    {
+      "name": "props_props_doors_wall_modules_005.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_005.png",
+      "bbox": [
+        157,
+        836,
+        206,
+        913
+      ],
+      "width": 49,
+      "height": 77,
+      "area_pixels": 2732
+    },
+    {
+      "name": "props_props_doors_wall_modules_006.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_006.png",
+      "bbox": [
+        659,
+        836,
+        752,
+        914
+      ],
+      "width": 93,
+      "height": 78,
+      "area_pixels": 5308
+    },
+    {
+      "name": "props_props_doors_wall_modules_007.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_007.png",
+      "bbox": [
+        846,
+        837,
+        892,
+        913
+      ],
+      "width": 46,
+      "height": 76,
+      "area_pixels": 2233
+    },
+    {
+      "name": "props_props_doors_wall_modules_008.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_008.png",
+      "bbox": [
+        902,
+        838,
+        945,
+        913
+      ],
+      "width": 43,
+      "height": 75,
+      "area_pixels": 2465
+    },
+    {
+      "name": "props_props_doors_wall_modules_009.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_009.png",
+      "bbox": [
+        966,
+        838,
+        1006,
+        913
+      ],
+      "width": 40,
+      "height": 75,
+      "area_pixels": 2283
+    },
+    {
+      "name": "props_props_doors_wall_modules_010.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_010.png",
+      "bbox": [
+        1029,
+        838,
+        1073,
+        913
+      ],
+      "width": 44,
+      "height": 75,
+      "area_pixels": 2528
+    },
+    {
+      "name": "props_props_doors_wall_modules_011.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_011.png",
+      "bbox": [
+        1104,
+        838,
+        1164,
+        912
+      ],
+      "width": 60,
+      "height": 74,
+      "area_pixels": 3447
+    },
+    {
+      "name": "props_props_doors_wall_modules_012.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_012.png",
+      "bbox": [
+        1192,
+        838,
+        1272,
+        913
+      ],
+      "width": 80,
+      "height": 75,
+      "area_pixels": 4985
+    },
+    {
+      "name": "props_props_doors_wall_modules_013.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_013.png",
+      "bbox": [
+        1302,
+        838,
+        1341,
+        913
+      ],
+      "width": 39,
+      "height": 75,
+      "area_pixels": 2226
+    },
+    {
+      "name": "props_props_doors_wall_modules_014.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_014.png",
+      "bbox": [
+        1367,
+        838,
+        1428,
+        913
+      ],
+      "width": 61,
+      "height": 75,
+      "area_pixels": 3729
+    },
+    {
+      "name": "props_props_doors_wall_modules_015.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_015.png",
+      "bbox": [
+        92,
+        844,
+        137,
+        913
+      ],
+      "width": 45,
+      "height": 69,
+      "area_pixels": 2162
+    },
+    {
+      "name": "props_props_doors_wall_modules_016.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_016.png",
+      "bbox": [
+        20,
+        846,
+        78,
+        913
+      ],
+      "width": 58,
+      "height": 67,
+      "area_pixels": 2932
+    },
+    {
+      "name": "props_props_doors_wall_modules_017.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "props/doors_wall_modules",
+      "path": "art/hub_generated/sliced/props/doors_wall_modules/props_props_doors_wall_modules_017.png",
+      "bbox": [
+        775,
+        848,
+        822,
+        913
+      ],
+      "width": 47,
+      "height": 65,
+      "area_pixels": 2308
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_001.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_001.png",
+      "bbox": [
+        587,
+        936,
+        718,
+        1058
+      ],
+      "width": 131,
+      "height": 122,
+      "area_pixels": 11769
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_002.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_002.png",
+      "bbox": [
+        740,
+        942,
+        804,
+        1057
+      ],
+      "width": 64,
+      "height": 115,
+      "area_pixels": 4782
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_003.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_003.png",
+      "bbox": [
+        469,
+        951,
+        559,
+        1058
+      ],
+      "width": 90,
+      "height": 107,
+      "area_pixels": 7204
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_004.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_004.png",
+      "bbox": [
+        833,
+        954,
+        914,
+        1057
+      ],
+      "width": 81,
+      "height": 103,
+      "area_pixels": 7121
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_005.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_005.png",
+      "bbox": [
+        1372,
+        954,
+        1427,
+        1055
+      ],
+      "width": 55,
+      "height": 101,
+      "area_pixels": 3112
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_006.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_006.png",
+      "bbox": [
+        108,
+        955,
+        165,
+        1057
+      ],
+      "width": 57,
+      "height": 102,
+      "area_pixels": 4797
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_007.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_007.png",
+      "bbox": [
+        187,
+        955,
+        251,
+        1057
+      ],
+      "width": 64,
+      "height": 102,
+      "area_pixels": 5388
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_008.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_008.png",
+      "bbox": [
+        271,
+        955,
+        348,
+        1057
+      ],
+      "width": 77,
+      "height": 102,
+      "area_pixels": 6642
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_009.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_009.png",
+      "bbox": [
+        933,
+        955,
+        999,
+        1056
+      ],
+      "width": 66,
+      "height": 101,
+      "area_pixels": 5623
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_010.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_010.png",
+      "bbox": [
+        1014,
+        955,
+        1093,
+        1056
+      ],
+      "width": 79,
+      "height": 101,
+      "area_pixels": 5557
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_011.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_011.png",
+      "bbox": [
+        1108,
+        955,
+        1164,
+        1056
+      ],
+      "width": 56,
+      "height": 101,
+      "area_pixels": 4576
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_012.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_012.png",
+      "bbox": [
+        1181,
+        955,
+        1235,
+        1056
+      ],
+      "width": 54,
+      "height": 101,
+      "area_pixels": 3001
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_013.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_013.png",
+      "bbox": [
+        1248,
+        955,
+        1290,
+        992
+      ],
+      "width": 42,
+      "height": 37,
+      "area_pixels": 955
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_014.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_014.png",
+      "bbox": [
+        1306,
+        955,
+        1354,
+        1032
+      ],
+      "width": 48,
+      "height": 77,
+      "area_pixels": 1851
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_015.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_015.png",
+      "bbox": [
+        21,
+        956,
+        86,
+        1058
+      ],
+      "width": 65,
+      "height": 102,
+      "area_pixels": 5512
+    },
+    {
+      "name": "props_landmarks_gates_large_doors_016.png",
+      "source_label": "props",
+      "source_sheet": "ChatGPT Image May 10, 2026, 12_56_02 AM (2)-Photoroom.png",
+      "category": "landmarks/gates_large_doors",
+      "path": "art/hub_generated/sliced/landmarks/gates_large_doors/props_landmarks_gates_large_doors_016.png",
+      "bbox": [
+        368,
+        957,
+        450,
+        1057
+      ],
+      "width": 82,
+      "height": 100,
+      "area_pixels": 6574
+    }
+  ]
+}

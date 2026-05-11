@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://da54haw1uta8s"]
+
+[ext_resource type="Script" uid="uid://bv4txnbbb36n3" path="res://scripts/ui/UpgradeCard.gd" id="1_yeejx"]
+
+[node name="UpgradeCard" type="Node2D" unique_id=1122092188]
+script = ExtResource("1_yeejx")

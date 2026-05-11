@@ -1,0 +1,569 @@
+extends Node2D
+
+signal enter_run_requested()
+
+const TILE_SIZE := 32.0
+
+const FLOOR_TEXTURE_PATHS := [
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_1.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_2.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_3.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_4.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_5.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_6.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_7.png",
+    "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_8.png"
+]
+
+const COLUMN_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/column.png"
+const COLUMN_WALL_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/column_wall.png"
+const DOOR_TOP_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/doors_frame_top.png"
+const DOOR_LEFT_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/doors_frame_left.png"
+const DOOR_RIGHT_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/doors_frame_right.png"
+const DOOR_CLOSED_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/doors_leaf_closed.png"
+
+const CHEST_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/chest_full_open_anim_f0.png"
+const CRATE_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/crate.png"
+const BANNER_RED_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_red.png"
+const BANNER_BLUE_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_blue.png"
+const BANNER_GREEN_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_green.png"
+const BANNER_YELLOW_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_yellow.png"
+const SPIKES_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_spikes_anim_f0.png"
+
+const HELL_GATE_OPEN_TEXTURE_PATH := "res://art/props/hell_gate/hell_gate_extract_00_626x525.png"
+const HellGateScene := preload("res://scenes/props/HellGate.tscn")
+
+var hell_gate_sprite: Sprite2D = null
+var hell_gate_instance: Node2D = null
+
+var floor_textures: Array[Texture2D] = []
+
+var column_texture: Texture2D = null
+var column_wall_texture: Texture2D = null
+var door_top_texture: Texture2D = null
+var door_left_texture: Texture2D = null
+var door_right_texture: Texture2D = null
+var door_closed_texture: Texture2D = null
+var chest_texture: Texture2D = null
+var crate_texture: Texture2D = null
+var banner_red_texture: Texture2D = null
+var banner_blue_texture: Texture2D = null
+var banner_green_texture: Texture2D = null
+var banner_yellow_texture: Texture2D = null
+var spikes_texture: Texture2D = null
+
+var hub_collision_root: Node2D = null
+
+var player: Node2D = null
+var hell_gate_position := Vector2(1038, 648)
+var hell_gate_radius := 78.0
+var is_near_hell_gate := false
+var pulse_time := 0.0
+
+var rooms := {
+	"archive": {
+		"rect": Rect2(Vector2(842, 48), Vector2(384, 164)),
+		"label": "ARCHIVE",
+		"color": Color("#6d8ed8"),
+		"fill": Color(0.08, 0.11, 0.16, 0.20)
+	},
+	"training": {
+		"rect": Rect2(Vector2(472, 250), Vector2(322, 244)),
+		"label": "TRAINING CHAMBER",
+		"color": Color("#9ed8cd"),
+		"fill": Color(0.05, 0.13, 0.13, 0.18)
+	},
+	"central": {
+		"rect": Rect2(Vector2(842, 250), Vector2(384, 204)),
+		"label": "CENTRAL SLAB HALL",
+		"color": Color("#dfaa46"),
+		"fill": Color(0.13, 0.09, 0.05, 0.16)
+	},
+	"reliquary": {
+		"rect": Rect2(Vector2(874, 478), Vector2(320, 112)),
+		"label": "WEAPON RELIQUARY",
+		"color": Color("#f4d49a"),
+		"fill": Color(0.17, 0.12, 0.04, 0.18)
+	},
+	"hell_gate": {
+		"rect": Rect2(Vector2(874, 610), Vector2(320, 82)),
+		"label": "HELL DOORS",
+		"color": Color("#ff684a"),
+		"fill": Color(0.22, 0.03, 0.02, 0.22)
+	}
+}
+
+var corridors := [
+	Rect2(Vector2(970, 212), Vector2(128, 38)),
+	Rect2(Vector2(794, 322), Vector2(48, 70)),
+	Rect2(Vector2(970, 454), Vector2(128, 24)),
+	Rect2(Vector2(1018, 590), Vector2(40, 20))
+]
+
+var foundation_rect := Rect2(Vector2(448, 28), Vector2(804, 684))
+
+
+func _ready() -> void:
+	_load_textures()
+	_cache_player()
+	_position_existing_nodes()
+	_setup_hell_gate_scene()
+	_build_hub_collision()
+	set_process(true)
+	queue_redraw()
+
+func _process(delta: float) -> void:
+	pulse_time += delta
+
+	if player == null or not is_instance_valid(player):
+		_cache_player()
+
+	_update_hell_gate_interaction()
+	queue_redraw()
+
+func _setup_hell_gate_scene() -> void:
+	if hell_gate_instance != null and is_instance_valid(hell_gate_instance):
+		return
+
+	hell_gate_instance = HellGateScene.instantiate() as Node2D
+	hell_gate_instance.name = "HellGate"
+	hell_gate_instance.global_position = hell_gate_position
+	hell_gate_instance.z_index = 200
+	add_child(hell_gate_instance)
+
+	if hell_gate_instance.has_signal("enter_requested"):
+		hell_gate_instance.enter_requested.connect(_on_hell_gate_enter_requested)
+
+
+func _on_hell_gate_enter_requested() -> void:
+	enter_run_requested.emit()
+
+func _setup_asset_hell_gate() -> void:
+	if hell_gate_sprite != null and is_instance_valid(hell_gate_sprite):
+		return
+
+	if not ResourceLoader.exists(HELL_GATE_OPEN_TEXTURE_PATH):
+		push_warning("Missing Hell Gate asset: %s" % HELL_GATE_OPEN_TEXTURE_PATH)
+		return
+
+	var texture := load(HELL_GATE_OPEN_TEXTURE_PATH) as Texture2D
+
+	if texture == null:
+		push_warning("Hell Gate texture loaded as null.")
+		return
+
+	hell_gate_sprite = Sprite2D.new()
+	hell_gate_sprite.name = "HellGateAsset"
+	hell_gate_sprite.texture = texture
+	hell_gate_sprite.centered = true
+	hell_gate_sprite.global_position = hell_gate_position
+	hell_gate_sprite.z_index = 200
+	hell_gate_sprite.scale = Vector2(0.16, 0.16)
+
+	add_child(hell_gate_sprite)
+
+func _cache_player() -> void:
+	player = get_node_or_null("Player") as Node2D
+
+	if player == null:
+		player = get_tree().get_first_node_in_group("player") as Node2D
+
+
+func _load_textures() -> void:
+	floor_textures.clear()
+
+	for path in FLOOR_TEXTURE_PATHS:
+		if ResourceLoader.exists(path):
+			var texture := load(path) as Texture2D
+
+			if texture != null:
+				floor_textures.append(texture)
+
+	column_texture = _load_texture(COLUMN_TEXTURE_PATH)
+	column_wall_texture = _load_texture(COLUMN_WALL_TEXTURE_PATH)
+	door_top_texture = _load_texture(DOOR_TOP_TEXTURE_PATH)
+	door_left_texture = _load_texture(DOOR_LEFT_TEXTURE_PATH)
+	door_right_texture = _load_texture(DOOR_RIGHT_TEXTURE_PATH)
+	door_closed_texture = _load_texture(DOOR_CLOSED_TEXTURE_PATH)
+	chest_texture = _load_texture(CHEST_TEXTURE_PATH)
+	crate_texture = _load_texture(CRATE_TEXTURE_PATH)
+	banner_red_texture = _load_texture(BANNER_RED_TEXTURE_PATH)
+	banner_blue_texture = _load_texture(BANNER_BLUE_TEXTURE_PATH)
+	banner_green_texture = _load_texture(BANNER_GREEN_TEXTURE_PATH)
+	banner_yellow_texture = _load_texture(BANNER_YELLOW_TEXTURE_PATH)
+	spikes_texture = _load_texture(SPIKES_TEXTURE_PATH)
+
+
+func _load_texture(path: String) -> Texture2D:
+	if not ResourceLoader.exists(path):
+		return null
+
+	return load(path) as Texture2D
+
+
+func _position_existing_nodes() -> void:
+	_set_any_node_position(["Player"], Vector2(1034, 340))
+	_set_any_node_position(["SpawnPoint"], Vector2(1034, 340))
+
+	_set_any_node_position(["VirgilEcho", "HubNpc", "HubNpc1"], Vector2(1034, 292))
+	_set_any_node_position(["CodexKeeper", "HubNpc2"], Vector2(1034, 136))
+	_set_any_node_position(["SilentSmith", "HubNpc3"], Vector2(1180, 340))
+	_set_any_node_position(["WeaponPedestal"], Vector2(1034, 534))
+	_set_any_node_position(["TrainingDummy"], Vector2(640, 380))
+
+	_set_any_node_z(["Player"], 30)
+	_set_any_node_z(["VirgilEcho", "HubNpc", "HubNpc1"], 24)
+	_set_any_node_z(["CodexKeeper", "HubNpc2"], 24)
+	_set_any_node_z(["SilentSmith", "HubNpc3"], 24)
+	_set_any_node_z(["WeaponPedestal"], 18)
+	_set_any_node_z(["TrainingDummy"], 18)
+
+
+func _set_any_node_position(names: Array[String], pos: Vector2) -> void:
+	for node_name in names:
+		var node := get_node_or_null(NodePath(node_name)) as Node2D
+
+		if node != null:
+			node.global_position = pos
+			return
+
+
+func _set_any_node_z(names: Array[String], z: int) -> void:
+	for node_name in names:
+		var node := get_node_or_null(NodePath(node_name)) as Node2D
+
+		if node != null:
+			node.z_index = z
+			return
+
+
+func _update_hell_gate_interaction() -> void:
+	is_near_hell_gate = false
+
+	if player == null:
+		return
+
+	is_near_hell_gate = player.global_position.distance_to(hell_gate_position) <= hell_gate_radius
+
+
+func _draw() -> void:
+	_draw_background()
+	_draw_foundation()
+	_draw_tiled_rooms()
+	_draw_room_identity_overlays()
+	_draw_room_walls()
+	_draw_room_labels()
+	_draw_decorations()
+	_draw_central_slab()
+	_draw_hell_gate()
+	_draw_interaction_hint()
+
+func _build_hub_collision() -> void:
+	_clear_hub_collision()
+
+	hub_collision_root = Node2D.new()
+	hub_collision_root.name = "GeneratedHubCollision"
+	add_child(hub_collision_root)
+
+	_add_hub_outer_boundary()
+	_add_training_room_collision()
+	_add_archive_room_collision()
+	_add_central_room_collision()
+	_add_reliquary_room_collision()
+	_add_hell_gate_collision()
+
+
+func _clear_hub_collision() -> void:
+	var existing := get_node_or_null("GeneratedHubCollision")
+
+	if existing != null:
+		existing.queue_free()
+
+
+func _add_hub_collision_rect(rect: Rect2, node_name: String) -> void:
+	if hub_collision_root == null:
+		return
+
+	var body := StaticBody2D.new()
+	body.name = node_name
+	body.collision_layer = 1
+	body.collision_mask = 1
+	body.position = rect.position + rect.size * 0.5
+
+	var shape := CollisionShape2D.new()
+	var rectangle := RectangleShape2D.new()
+	rectangle.size = rect.size
+	shape.shape = rectangle
+
+	body.add_child(shape)
+	hub_collision_root.add_child(body)
+
+
+func _add_hub_outer_boundary() -> void:
+	_add_hub_collision_rect(Rect2(Vector2(420, 0), Vector2(28, 720)), "Outer_Left")
+	_add_hub_collision_rect(Rect2(Vector2(1252, 0), Vector2(28, 720)), "Outer_Right")
+	_add_hub_collision_rect(Rect2(Vector2(420, 0), Vector2(860, 28)), "Outer_Top")
+	_add_hub_collision_rect(Rect2(Vector2(420, 708), Vector2(860, 28)), "Outer_Bottom")
+
+
+func _add_training_room_collision() -> void:
+	# Training room: Rect2(Vector2(472, 250), Vector2(322, 244))
+	# Leave right-side doorway open toward central hall.
+	_add_hub_collision_rect(Rect2(Vector2(452, 230), Vector2(362, 20)), "Training_Top")
+	_add_hub_collision_rect(Rect2(Vector2(452, 494), Vector2(362, 20)), "Training_Bottom")
+	_add_hub_collision_rect(Rect2(Vector2(452, 250), Vector2(20, 244)), "Training_Left")
+
+	# Partial right wall, with middle doorway gap.
+	_add_hub_collision_rect(Rect2(Vector2(794, 250), Vector2(20, 72)), "Training_Right_Top")
+	_add_hub_collision_rect(Rect2(Vector2(794, 392), Vector2(20, 102)), "Training_Right_Bottom")
+
+
+func _add_archive_room_collision() -> void:
+	# Archive: Rect2(Vector2(842, 48), Vector2(384, 164))
+	# Leave bottom doorway open toward central hall.
+	_add_hub_collision_rect(Rect2(Vector2(822, 28), Vector2(424, 20)), "Archive_Top")
+	_add_hub_collision_rect(Rect2(Vector2(822, 48), Vector2(20, 164)), "Archive_Left")
+	_add_hub_collision_rect(Rect2(Vector2(1226, 48), Vector2(20, 164)), "Archive_Right")
+
+	# Partial bottom wall with center gap.
+	_add_hub_collision_rect(Rect2(Vector2(842, 212), Vector2(130, 20)), "Archive_Bottom_Left")
+	_add_hub_collision_rect(Rect2(Vector2(1098, 212), Vector2(128, 20)), "Archive_Bottom_Right")
+
+
+func _add_central_room_collision() -> void:
+	# Central: Rect2(Vector2(842, 250), Vector2(384, 204))
+	# Gaps: top to archive, left to training, bottom to reliquary/hell.
+	_add_hub_collision_rect(Rect2(Vector2(822, 250), Vector2(20, 72)), "Central_Left_Top")
+	_add_hub_collision_rect(Rect2(Vector2(822, 392), Vector2(20, 62)), "Central_Left_Bottom")
+
+	_add_hub_collision_rect(Rect2(Vector2(1226, 250), Vector2(20, 204)), "Central_Right")
+
+	_add_hub_collision_rect(Rect2(Vector2(842, 230), Vector2(130, 20)), "Central_Top_Left")
+	_add_hub_collision_rect(Rect2(Vector2(1098, 230), Vector2(128, 20)), "Central_Top_Right")
+
+	_add_hub_collision_rect(Rect2(Vector2(842, 454), Vector2(130, 20)), "Central_Bottom_Left")
+	_add_hub_collision_rect(Rect2(Vector2(1098, 454), Vector2(128, 20)), "Central_Bottom_Right")
+
+
+func _add_reliquary_room_collision() -> void:
+	# Reliquary: Rect2(Vector2(874, 478), Vector2(320, 112))
+	# Gaps top/bottom centered.
+	_add_hub_collision_rect(Rect2(Vector2(854, 478), Vector2(20, 112)), "Reliquary_Left")
+	_add_hub_collision_rect(Rect2(Vector2(1194, 478), Vector2(20, 112)), "Reliquary_Right")
+
+	_add_hub_collision_rect(Rect2(Vector2(874, 458), Vector2(106, 20)), "Reliquary_Top_Left")
+	_add_hub_collision_rect(Rect2(Vector2(1088, 458), Vector2(106, 20)), "Reliquary_Top_Right")
+
+	_add_hub_collision_rect(Rect2(Vector2(874, 590), Vector2(106, 20)), "Reliquary_Bottom_Left")
+	_add_hub_collision_rect(Rect2(Vector2(1088, 590), Vector2(106, 20)), "Reliquary_Bottom_Right")
+
+
+func _add_hell_gate_collision() -> void:
+	# Hell gate room: Rect2(Vector2(874, 610), Vector2(320, 82))
+	# Keep center accessible; block outer sides only.
+	_add_hub_collision_rect(Rect2(Vector2(854, 610), Vector2(20, 82)), "Hell_Left")
+	_add_hub_collision_rect(Rect2(Vector2(1194, 610), Vector2(20, 82)), "Hell_Right")
+	_add_hub_collision_rect(Rect2(Vector2(874, 692), Vector2(320, 20)), "Hell_Bottom")
+
+func _draw_background() -> void:
+	draw_rect(Rect2(Vector2.ZERO, Vector2(1280, 720)), Color("#060304"))
+
+	for y in range(0, 720, 32):
+		for x in range(0, 1280, 32):
+			var checker := int(float(x) / 32.0 + float(y) / 32.0)
+
+			if checker % 2 == 0:
+				draw_rect(Rect2(Vector2(x, y), Vector2(32, 32)), Color(1, 1, 1, 0.010))
+
+
+func _draw_foundation() -> void:
+	draw_rect(foundation_rect.grow(24), Color(0, 0, 0, 0.32))
+	draw_rect(foundation_rect.grow(8), Color("#100708"))
+	draw_rect(foundation_rect, Color("#140b0c"))
+
+	for corridor in corridors:
+		draw_rect(corridor.grow(20), Color("#100708"))
+		draw_rect(corridor.grow(8), Color("#1a0d0e"))
+
+
+func _draw_tiled_rooms() -> void:
+	for key in rooms.keys():
+		var room: Dictionary = rooms[key]
+		var rect: Rect2 = room.get("rect", Rect2())
+		_draw_floor_rect(rect)
+
+	for corridor in corridors:
+		_draw_floor_rect(corridor)
+
+
+func _draw_floor_rect(rect: Rect2) -> void:
+	if floor_textures.is_empty():
+		draw_rect(rect, Color("#181012"))
+		return
+
+	var start_x := int(rect.position.x)
+	var start_y := int(rect.position.y)
+	var end_x := int(rect.position.x + rect.size.x)
+	var end_y := int(rect.position.y + rect.size.y)
+
+	for y in range(start_y, end_y, int(TILE_SIZE)):
+		for x in range(start_x, end_x, int(TILE_SIZE)):
+			var index_seed := int((x / TILE_SIZE) * 7 + (y / TILE_SIZE) * 11)
+			var texture := floor_textures[index_seed % floor_textures.size()]
+			var dest := Rect2(Vector2(x, y), Vector2(TILE_SIZE, TILE_SIZE))
+			draw_texture_rect(texture, dest, false)
+
+
+func _draw_room_identity_overlays() -> void:
+	for key in rooms.keys():
+		var room: Dictionary = rooms[key]
+		var rect: Rect2 = room.get("rect", Rect2())
+		var fill: Color = room.get("fill", Color(1, 1, 1, 0.0))
+		draw_rect(rect, fill)
+
+	var training_rect: Rect2 = rooms["training"]["rect"]
+	_draw_floor_scars(training_rect, Color("#9ed8cd"))
+
+	var smith_rect := Rect2(Vector2(1116, 286), Vector2(94, 128))
+	draw_rect(smith_rect, Color(0.28, 0.05, 0.02, 0.18))
+
+	var archive_rect: Rect2 = rooms["archive"]["rect"]
+	draw_rect(Rect2(archive_rect.position + Vector2(24, 126), Vector2(archive_rect.size.x - 48, 4)), Color("#6d8ed8"))
+
+	var reliquary_rect: Rect2 = rooms["reliquary"]["rect"]
+	draw_arc(reliquary_rect.get_center(), 54.0, 0.0, TAU, 64, Color("#f4d49a"), 2.0)
+
+
+func _draw_floor_scars(rect: Rect2, color: Color) -> void:
+	for i in range(8):
+		var x := rect.position.x + 42.0 + float(i % 4) * 62.0
+		var y := rect.position.y + 72.0 + float(i / 4) * 86.0
+		draw_line(Vector2(x - 16, y), Vector2(x + 18, y + 7), Color(color.r, color.g, color.b, 0.20), 1.0)
+
+
+func _draw_room_walls() -> void:
+	for key in rooms.keys():
+		var room: Dictionary = rooms[key]
+		var rect: Rect2 = room.get("rect", Rect2())
+		var color: Color = room.get("color", Color("#dfaa46"))
+		_draw_wall_frame(rect, color)
+
+	for corridor in corridors:
+		_draw_corridor_edge(corridor)
+
+
+func _draw_wall_frame(rect: Rect2, accent: Color) -> void:
+	draw_rect(rect.grow(14), Color("#070303"), false, 14.0)
+	draw_rect(rect.grow(7), Color("#1a0708"), false, 7.0)
+	draw_rect(rect.grow(3), Color("#3a1512"), false, 3.0)
+	draw_rect(rect, Color(accent.r, accent.g, accent.b, 0.68), false, 1.0)
+
+	_draw_column_at(rect.position)
+	_draw_column_at(rect.position + Vector2(rect.size.x, 0))
+	_draw_column_at(rect.position + Vector2(0, rect.size.y))
+	_draw_column_at(rect.position + Vector2(rect.size.x, rect.size.y))
+
+
+func _draw_corridor_edge(rect: Rect2) -> void:
+	draw_rect(rect.grow(8), Color("#090404"), false, 8.0)
+	draw_rect(rect.grow(3), Color("#3a1512"), false, 3.0)
+	draw_rect(rect, Color("#6b2a1f"), false, 1.0)
+
+
+func _draw_column_at(pos: Vector2) -> void:
+	if column_texture == null:
+		draw_circle(pos, 8.0, Color("#4a2320"))
+		return
+
+	draw_texture_rect(
+		column_texture,
+		Rect2(pos - Vector2(16, 28), Vector2(32, 32)),
+		false
+	)
+
+
+func _draw_room_labels() -> void:
+	for key in rooms.keys():
+		var room: Dictionary = rooms[key]
+		var rect: Rect2 = room.get("rect", Rect2())
+		var label := str(room.get("label", key.to_upper()))
+		var color: Color = room.get("color", Color("#dfaa46"))
+
+		var label_pos := rect.position + Vector2(rect.size.x - 158, 22)
+
+		draw_string(
+			ThemeDB.fallback_font,
+			label_pos,
+			label,
+			HORIZONTAL_ALIGNMENT_RIGHT,
+			145,
+			13,
+			color
+		)
+
+
+func _draw_decorations() -> void:
+	_draw_banner(banner_blue_texture, Vector2(914, 100))
+	_draw_banner(banner_blue_texture, Vector2(1154, 100))
+	_draw_banner(banner_green_texture, Vector2(514, 294))
+	_draw_banner(banner_green_texture, Vector2(752, 294))
+	_draw_banner(banner_red_texture, Vector2(1148, 294))
+	_draw_banner(banner_yellow_texture, Vector2(918, 504))
+	_draw_banner(banner_yellow_texture, Vector2(1150, 504))
+
+	_draw_object(crate_texture, Vector2(526, 440), Vector2(32, 32))
+	_draw_object(crate_texture, Vector2(758, 440), Vector2(32, 32))
+	_draw_object(crate_texture, Vector2(1166, 412), Vector2(32, 32))
+
+	_draw_object(chest_texture, Vector2(940, 532), Vector2(32, 32))
+	_draw_object(chest_texture, Vector2(1130, 532), Vector2(32, 32))
+
+	_draw_object(spikes_texture, Vector2(990, 650), Vector2(32, 32))
+	_draw_object(spikes_texture, Vector2(1086, 650), Vector2(32, 32))
+
+	_draw_small_relic_marker(Vector2(988, 534))
+	_draw_small_relic_marker(Vector2(1080, 534))
+
+
+func _draw_small_relic_marker(pos: Vector2) -> void:
+	draw_arc(pos, 12.0, 0.0, TAU, 24, Color("#dfaa46"), 1.0)
+	draw_line(pos + Vector2(-6, 0), pos + Vector2(6, 0), Color("#f4d49a"), 1.0)
+	draw_line(pos + Vector2(0, -6), pos + Vector2(0, 6), Color("#f4d49a"), 1.0)
+
+
+func _draw_banner(texture: Texture2D, pos: Vector2) -> void:
+	_draw_object(texture, pos, Vector2(32, 32))
+
+
+func _draw_object(texture: Texture2D, pos: Vector2, size: Vector2) -> void:
+	if texture == null:
+		return
+
+	draw_texture_rect(texture, Rect2(pos - size * 0.5, size), false)
+
+
+func _draw_central_slab() -> void:
+	var center := Vector2(1034, 340)
+	var slab_rect := Rect2(center - Vector2(52, 30), Vector2(104, 60))
+
+	draw_rect(slab_rect, Color(0, 0, 0, 0.24))
+	draw_rect(slab_rect.grow(-4), Color("#21100e"))
+	draw_rect(slab_rect.grow(-4), Color("#6b2a1f"), false, 2.0)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		center + Vector2(-58, 6),
+		"RETURN SLAB",
+		HORIZONTAL_ALIGNMENT_CENTER,
+		116,
+		11,
+		Color("#8f7a64")
+	)
+
+
+func _draw_hell_gate() -> void:
+	pass
+
+
+func _draw_interaction_hint() -> void:
+	pass

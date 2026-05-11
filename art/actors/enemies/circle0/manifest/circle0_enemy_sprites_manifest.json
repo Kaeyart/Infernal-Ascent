@@ -1,0 +1,1042 @@
+[
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "down",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_down_01.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      0,
+      0,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "down",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_down_02.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      314,
+      0,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "down",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_down_03.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      627,
+      0,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "down",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_down_04.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      940,
+      0,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "left",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_left_01.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      0,
+      314,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "left",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_left_02.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      314,
+      314,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "left",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_left_03.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      627,
+      314,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "left",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_left_04.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      940,
+      314,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "right",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_right_01.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      0,
+      627,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "right",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_right_02.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      314,
+      627,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "right",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_right_03.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      627,
+      627,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "right",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_right_04.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      940,
+      627,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "up",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_up_01.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      0,
+      940,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "up",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_up_02.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      314,
+      940,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "up",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_up_03.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      627,
+      940,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "ash_wretch",
+    "direction": "up",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/ash_wretch/ash_wretch_up_04.png",
+    "source": "ash_wretch_source_sheet.png",
+    "cell": [
+      940,
+      940,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "down",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_down_01.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      0,
+      0,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "down",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_down_02.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      314,
+      0,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "down",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_down_03.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      627,
+      0,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "down",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_down_04.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      940,
+      0,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "left",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_left_01.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      0,
+      314,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "left",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_left_02.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      314,
+      314,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "left",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_left_03.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      627,
+      314,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "left",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_left_04.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      940,
+      314,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "right",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_right_01.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      0,
+      627,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "right",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_right_02.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      314,
+      627,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "right",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_right_03.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      627,
+      627,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "right",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_right_04.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      940,
+      627,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "up",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_up_01.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      0,
+      940,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "up",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_up_02.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      314,
+      940,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "up",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_up_03.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      627,
+      940,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "gate_warden",
+    "direction": "up",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/gate_warden/gate_warden_up_04.png",
+    "source": "gate_warden_source_sheet.png",
+    "cell": [
+      940,
+      940,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "down",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_down_01.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      0,
+      0,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "down",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_down_02.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      314,
+      0,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "down",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_down_03.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      627,
+      0,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "down",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_down_04.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      940,
+      0,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "left",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_left_01.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      0,
+      314,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "left",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_left_02.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      314,
+      314,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "left",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_left_03.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      627,
+      314,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "left",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_left_04.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      940,
+      314,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "right",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_right_01.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      0,
+      627,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "right",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_right_02.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      314,
+      627,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "right",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_right_03.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      627,
+      627,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "right",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_right_04.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      940,
+      627,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "up",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_up_01.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      0,
+      940,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "up",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_up_02.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      314,
+      940,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "up",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_up_03.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      627,
+      940,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "cinder_scribe",
+    "direction": "up",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_up_04.png",
+    "source": "cinder_scribe_source_sheet.png",
+    "cell": [
+      940,
+      940,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "down",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_down_01.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      0,
+      0,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "down",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_down_02.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      314,
+      0,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "down",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_down_03.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      627,
+      0,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "down",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_down_04.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      940,
+      0,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "left",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_left_01.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      0,
+      314,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "left",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_left_02.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      314,
+      314,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "left",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_left_03.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      627,
+      314,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "left",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_left_04.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      940,
+      314,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "right",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_right_01.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      0,
+      627,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "right",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_right_02.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      314,
+      627,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "right",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_right_03.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      627,
+      627,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "right",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_right_04.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      940,
+      627,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "up",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_up_01.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      0,
+      940,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "up",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_up_02.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      314,
+      940,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "up",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_up_03.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      627,
+      940,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "bell_hound",
+    "direction": "up",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/bell_hound/bell_hound_up_04.png",
+    "source": "bell_hound_source_sheet.png",
+    "cell": [
+      940,
+      940,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "down",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_down_01.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      0,
+      0,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "down",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_down_02.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      314,
+      0,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "down",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_down_03.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      627,
+      0,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "down",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_down_04.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      940,
+      0,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "left",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_left_01.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      0,
+      314,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "left",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_left_02.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      314,
+      314,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "left",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_left_03.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      627,
+      314,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "left",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_left_04.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      940,
+      314,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "right",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_right_01.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      0,
+      627,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "right",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_right_02.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      314,
+      627,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "right",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_right_03.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      627,
+      627,
+      313,
+      313
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "right",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_right_04.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      940,
+      627,
+      314,
+      313
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "up",
+    "frame": 1,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_up_01.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      0,
+      940,
+      314,
+      314
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "up",
+    "frame": 2,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_up_02.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      314,
+      940,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "up",
+    "frame": 3,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_up_03.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      627,
+      940,
+      313,
+      314
+    ]
+  },
+  {
+    "enemy_key": "vestibule_bailiff",
+    "direction": "up",
+    "frame": 4,
+    "file": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_up_04.png",
+    "source": "vestibule_bailiff_source_sheet.png",
+    "cell": [
+      940,
+      940,
+      314,
+      314
+    ]
+  }
+]

@@ -1,0 +1,424 @@
+extends CharacterBody2D
+
+signal attack_performed(kind: String, origin: Vector2, direction: Vector2, radius: float, damage: float)
+signal perfect_dodge_triggered()
+signal died()
+
+@export var max_hp := 100.0
+@export var max_armor := 20.0
+@export var move_speed := 260.0
+@export var dash_speed := 820.0
+@export var dash_time := 0.14
+@export var dash_cooldown := 0.62
+
+@onready var weapon_controller = $WeaponController
+@onready var visuals = $Visuals
+
+var hp := max_hp
+var armor := max_armor
+var ultimate := 0.0
+
+var facing := Vector2.RIGHT
+
+var dash_timer := 0.0
+var dash_cd_timer := 0.0
+var invuln_timer := 0.0
+var perfect_window_timer := 0.0
+
+var q_dash_timer := 0.0
+var q_dash_duration := 0.12
+var q_dash_speed := 720.0
+
+var heavy_windup_timer := 0.0
+var heavy_windup_active := false
+var heavy_release_ready := false
+
+var visual_state := "idle"
+var visual_pulse := 0.0
+var hit_flash := 0.0
+var action_visual_timer: float = 0.0
+
+var dead: bool = false
+var death_timer: float = 0.0
+var death_return_started: bool = false
+var death_duration: float = 1.35
+
+
+func _ready() -> void:
+	add_to_group("player")
+
+	weapon_controller.attack_requested.connect(_on_weapon_attack_requested)
+
+	if weapon_controller.has_signal("weapon_action_started"):
+		weapon_controller.weapon_action_started.connect(_on_weapon_action_started)
+
+	if GameState.selected_weapon != null:
+		weapon_controller.set_weapon(GameState.selected_weapon)
+
+	if RunState.in_run:
+		apply_run_modifiers()
+		_load_or_initialize_run_vitals()
+	else:
+		hp = max_hp
+		armor = max_armor
+
+	queue_redraw()
+
+
+func apply_run_modifiers() -> void:
+	if not RunState.in_run:
+		return
+
+	var hp_bonus := RunState.get_modifier_value("max_hp_flat", 0.0)
+	var armor_bonus := RunState.get_modifier_value("max_armor_flat", 0.0)
+	var move_mult := RunState.get_modifier_value("move_speed_mult", 1.0)
+	var dash_cd_mult := RunState.get_modifier_value("dash_cooldown_mult", 1.0)
+
+	var permanent_hp_bonus: float = 0.0
+	var permanent_armor_bonus: float = 0.0
+	var permanent_move_mult: float = 1.0
+
+	if has_node("/root/GameState"):
+		var game_state := get_node("/root/GameState")
+
+		if game_state != null:
+			if game_state.has_method("get_permanent_max_hp_bonus"):
+				permanent_hp_bonus = float(game_state.call("get_permanent_max_hp_bonus"))
+
+			if game_state.has_method("get_permanent_max_armor_bonus"):
+				permanent_armor_bonus = float(game_state.call("get_permanent_max_armor_bonus"))
+
+			if game_state.has_method("get_permanent_move_speed_mult"):
+				permanent_move_mult = float(game_state.call("get_permanent_move_speed_mult"))
+
+	var previous_max_hp := max_hp
+	var previous_max_armor := max_armor
+
+	max_hp = 100.0 + hp_bonus + permanent_hp_bonus
+	max_armor = 20.0 + armor_bonus + permanent_armor_bonus
+	move_speed = 260.0 * move_mult * permanent_move_mult
+	dash_cooldown = 0.62 * dash_cd_mult
+
+	hp = minf(max_hp, hp + maxf(0.0, max_hp - previous_max_hp))
+	armor = minf(max_armor, armor + maxf(0.0, max_armor - previous_max_armor))
+
+	if weapon_controller and weapon_controller.has_method("apply_run_modifiers"):
+		weapon_controller.apply_run_modifiers()
+
+
+func _physics_process(delta: float) -> void:
+	_tick_timers(delta)
+
+	if dead:
+		_update_death(delta)
+
+		if visuals and visuals.has_method("set_visual_state"):
+			visuals.set_visual_state("death", facing, hit_flash, dash_timer)
+
+		queue_redraw()
+		return
+
+	if _is_interface_blocking_gameplay():
+		velocity = Vector2.ZERO
+		move_and_slide()
+
+		ultimate = weapon_controller.ultimate_charge
+
+		if not visual_state in ["hit", "death"]:
+			visual_state = "idle"
+			action_visual_timer = 0.0
+
+		if visuals and visuals.has_method("set_visual_state"):
+			visuals.set_visual_state(visual_state, facing, hit_flash, dash_timer)
+
+		visual_pulse += delta
+		queue_redraw()
+		return
+
+	ultimate = weapon_controller.ultimate_charge
+
+	_read_facing()
+	_handle_actions()
+	_update_heavy_windup(delta)
+	_move(delta)
+
+	if visuals and visuals.has_method("set_visual_state"):
+		visuals.set_visual_state(visual_state, facing, hit_flash, dash_timer)
+
+	_save_run_vitals()
+
+	visual_pulse += delta
+	queue_redraw()
+
+
+func _tick_timers(delta: float) -> void:
+	dash_timer = maxf(0.0, dash_timer - delta)
+	dash_cd_timer = maxf(0.0, dash_cd_timer - delta)
+	q_dash_timer = maxf(0.0, q_dash_timer - delta)
+	action_visual_timer = maxf(0.0, action_visual_timer - delta)
+
+	invuln_timer = maxf(0.0, invuln_timer - delta)
+	perfect_window_timer = maxf(0.0, perfect_window_timer - delta)
+	hit_flash = maxf(0.0, hit_flash - delta)
+
+	weapon_controller.tick(delta)
+
+
+func _read_facing() -> void:
+	var mouse_dir := get_global_mouse_position() - global_position
+
+	if mouse_dir.length() > 8.0:
+		facing = mouse_dir.normalized()
+
+
+func _handle_actions() -> void:
+	if dead:
+		return
+
+	if Input.is_action_just_pressed("dash") and dash_cd_timer <= 0.0 and not heavy_windup_active:
+		dash_timer = dash_time
+		dash_cd_timer = dash_cooldown
+		invuln_timer = dash_time + 0.08
+		perfect_window_timer = 0.18
+		visual_state = "dash"
+		action_visual_timer = dash_time
+
+	if Input.is_action_just_pressed("light_attack") and not heavy_windup_active:
+		weapon_controller.try_light(global_position, facing)
+
+	if Input.is_action_just_pressed("heavy_attack") and not heavy_windup_active:
+		if weapon_controller.try_begin_heavy():
+			heavy_windup_active = true
+			heavy_windup_timer = weapon_controller.get_heavy_windup_time()
+			heavy_release_ready = false
+			visual_state = "heavy_windup"
+			action_visual_timer = heavy_windup_timer
+
+	if Input.is_action_just_pressed("skill_q") and not heavy_windup_active:
+		if weapon_controller.try_q(global_position, facing):
+			q_dash_timer = q_dash_duration
+			invuln_timer = maxf(invuln_timer, q_dash_duration)
+			visual_state = "q"
+			action_visual_timer = maxf(action_visual_timer, q_dash_duration + 0.18)
+
+	if Input.is_action_just_pressed("ultimate") and not heavy_windup_active:
+		weapon_controller.try_ultimate(global_position, facing)
+
+
+func _update_heavy_windup(delta: float) -> void:
+	if not heavy_windup_active:
+		return
+
+	heavy_windup_timer -= delta
+	visual_state = "heavy_windup"
+
+	if heavy_windup_timer <= 0.0:
+		heavy_windup_active = false
+		heavy_release_ready = true
+		weapon_controller.release_heavy(global_position, facing)
+
+
+func _move(_delta: float) -> void:
+	if dead:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
+
+	var input_vec := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+
+	if heavy_windup_active:
+		velocity = input_vec * move_speed * 0.25
+		visual_state = "heavy_windup"
+
+	elif q_dash_timer > 0.0:
+		velocity = facing * q_dash_speed
+		visual_state = "q"
+
+	elif dash_timer > 0.0:
+		velocity = facing * dash_speed
+		visual_state = "dash"
+
+	else:
+		velocity = input_vec * move_speed
+
+		if action_visual_timer > 0.0 and visual_state in ["light", "light_1", "light_2", "light_3", "heavy", "q", "ultimate"]:
+			pass
+		elif input_vec.length() > 0.1:
+			visual_state = "move"
+		elif not visual_state in ["hit", "death"]:
+			visual_state = "idle"
+
+	move_and_slide()
+
+
+func _on_weapon_action_started(kind: String, visual_duration: float) -> void:
+	visual_state = kind
+	action_visual_timer = maxf(visual_duration, 0.08)
+
+
+func _on_weapon_attack_requested(kind: String, origin: Vector2, direction: Vector2, radius: float, damage: float) -> void:
+	attack_performed.emit(kind, origin, direction, radius, damage)
+
+
+func take_damage(amount: float, _source_position: Vector2 = Vector2.ZERO) -> void:
+	if dead:
+		return
+
+	if invuln_timer > 0.0:
+		if perfect_window_timer > 0.0:
+			perfect_window_timer = 0.0
+			gain_ultimate(18.0)
+			perfect_dodge_triggered.emit()
+
+		return
+
+	var remaining := amount
+
+	if armor > 0.0:
+		var absorbed := minf(armor, remaining * 0.7)
+		armor -= absorbed
+		remaining -= absorbed
+
+	hp -= remaining
+	hp = maxf(0.0, hp)
+
+	hit_flash = 0.15
+	visual_state = "hit"
+	action_visual_timer = 0.12
+
+	_save_run_vitals()
+
+	if hp <= 0.0:
+		_start_death()
+
+
+func gain_ultimate(amount: float) -> void:
+	weapon_controller.gain_ultimate(amount)
+	ultimate = weapon_controller.ultimate_charge
+
+
+func _start_death() -> void:
+	if dead:
+		return
+
+	dead = true
+	death_timer = death_duration
+	death_return_started = false
+
+	velocity = Vector2.ZERO
+	visual_state = "death"
+	action_visual_timer = 0.0
+
+	dash_timer = 0.0
+	q_dash_timer = 0.0
+	heavy_windup_active = false
+	heavy_windup_timer = 0.0
+	heavy_release_ready = false
+
+	invuln_timer = 999.0
+	perfect_window_timer = 0.0
+
+	_disable_player_collision()
+
+	if weapon_controller:
+		weapon_controller.ultimate_charge = 0.0
+
+	if visuals and visuals.has_method("set_visual_state"):
+		visuals.set_visual_state("death", facing, hit_flash, dash_timer)
+
+
+func _is_interface_blocking_gameplay() -> bool:
+	for dialogue_box in get_tree().get_nodes_in_group("dialogue_box"):
+		if dialogue_box != null and dialogue_box.has_method("is_dialogue_active"):
+			if bool(dialogue_box.call("is_dialogue_active")):
+				return true
+
+	for menu in get_tree().get_nodes_in_group("smith_menu"):
+		if menu != null and menu.has_method("is_menu_active"):
+			if bool(menu.call("is_menu_active")):
+				return true
+
+	for menu in get_tree().get_nodes_in_group("codex_menu"):
+		if menu != null and menu.has_method("is_menu_active"):
+			if bool(menu.call("is_menu_active")):
+				return true
+
+	for menu in get_tree().get_nodes_in_group("training_dummy_menu"):
+		if menu != null and menu.has_method("is_menu_active"):
+			if bool(menu.call("is_menu_active")):
+				return true
+
+	return false
+
+
+func _update_death(delta: float) -> void:
+	death_timer = maxf(0.0, death_timer - delta)
+	velocity = Vector2.ZERO
+	move_and_slide()
+
+	if death_timer <= 0.0 and not death_return_started:
+		death_return_started = true
+		died.emit()
+		_request_death_return_to_hub()
+
+
+func _disable_player_collision() -> void:
+	for child in get_children():
+		if child is CollisionShape2D:
+			var shape := child as CollisionShape2D
+			shape.disabled = true
+		elif child is CollisionPolygon2D:
+			var polygon := child as CollisionPolygon2D
+			polygon.disabled = true
+
+
+func _request_death_return_to_hub() -> void:
+	if Engine.has_singleton("RunState"):
+		pass
+
+	if has_node("/root/RunState"):
+		var run_state := get_node("/root/RunState")
+
+		if run_state != null and run_state.has_method("end_run"):
+			run_state.call("end_run")
+
+	var room := get_parent()
+
+	if room != null and room.has_signal("return_to_hub_requested"):
+		room.emit_signal("return_to_hub_requested")
+		return
+
+	if room != null and room.has_method("return_to_hub"):
+		room.call("return_to_hub")
+		return
+
+	push_warning("Player died, but current room has no return-to-hub signal or method.")
+
+
+func _load_or_initialize_run_vitals() -> void:
+	if not RunState.in_run:
+		return
+
+	if not RunState.has_method("get_saved_player_vitals"):
+		return
+
+	var vitals: Dictionary = RunState.get_saved_player_vitals(max_hp, max_armor)
+
+	hp = clampf(float(vitals.get("hp", max_hp)), 0.0, max_hp)
+	armor = clampf(float(vitals.get("armor", max_armor)), 0.0, max_armor)
+
+	_save_run_vitals()
+
+
+func _save_run_vitals() -> void:
+	if not RunState.in_run:
+		return
+
+	if not RunState.has_method("save_player_vitals"):
+		return
+
+	RunState.save_player_vitals(hp, armor)
+
+
+func _draw() -> void:
+	pass

@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/props/SpecialRoomProp.gd" id="1_script"]
+
+[node name="SpecialRoomProp" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="Label" type="Label" parent="."]
+offset_left = -92.0
+offset_top = 74.0
+offset_right = 92.0
+offset_bottom = 100.0
+text = "Reward"
+horizontal_alignment = 1
+vertical_alignment = 1

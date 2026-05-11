@@ -1,0 +1,696 @@
+extends Node
+
+const ROOM_COMBAT := "combat"
+const ROOM_UPGRADE := "upgrade"
+const ROOM_SHOP := "shop"
+const ROOM_FORGE := "forge"
+const ROOM_SHRINE := "shrine"
+const ROOM_ELITE := "elite"
+const ROOM_MINIBOSS := "miniboss"
+const ROOM_BOSS := "boss"
+const ROOM_FOUNTAIN := "fountain"
+
+const UPGRADE_IRON_LUNG = preload("res://data/upgrades/iron_lung.tres")
+const UPGRADE_ASHEN_PLATE = preload("res://data/upgrades/ashen_plate.tres")
+const UPGRADE_PILGRIM_STRIDE = preload("res://data/upgrades/pilgrim_stride.tres")
+const UPGRADE_QUICKENED_STEP = preload("res://data/upgrades/quickened_step.tres")
+const UPGRADE_BURNING_CONFESSION = preload("res://data/upgrades/burning_confession.tres")
+const UPGRADE_PENANCE_ENGINE = preload("res://data/upgrades/penance_engine.tres")
+const UPGRADE_HEAVY_ABSOLUTION = preload("res://data/upgrades/heavy_absolution.tres")
+const UPGRADE_JUDGMENT_DASH = preload("res://data/upgrades/judgment_dash.tres")
+const UPGRADE_CHEAP_RAPTURE = preload("res://data/upgrades/cheap_rapture.tres")
+
+const WEIGHTED_ROOM_TABLE := [
+	{"type": ROOM_COMBAT, "weight": 45},
+	{"type": ROOM_UPGRADE, "weight": 30},
+	{"type": ROOM_SHOP, "weight": 12},
+	{"type": ROOM_SHRINE, "weight": 8},
+	{"type": ROOM_FORGE, "weight": 5}
+]
+
+@export var boss_depth := 6
+
+var in_run := false
+var depth := 0
+var current_room_type := ""
+var boss_defeated := false
+var room_history: Array = []
+var last_offers: Array[String] = []
+
+var rng := RandomNumberGenerator.new()
+
+var upgrade_pool: Array[RunUpgradeData] = []
+var chosen_upgrade_ids: Array[String] = []
+var chosen_upgrade_names: Array[String] = []
+
+var chosen_boon_ids: Array[String] = []
+var chosen_boon_names: Array[String] = []
+
+var boon_modifiers := {
+	"light_damage_mult": 1.0,
+	"heavy_damage_mult": 1.0,
+	"q_damage_mult": 1.0,
+	"ultimate_damage_mult": 1.0,
+	"perfect_dodge_ultimate_flat": 0.0,
+	"on_kill_heal_flat": 0.0
+}
+
+const BOON_POOL := [
+	{
+		"boon_id": "virgil_guided_cut",
+		"witness_id": "virgil",
+		"witness_name": "Virgil",
+		"display_name": "Guided Cut",
+		"description": "Light attacks deal +20% damage. Reason sharpens repetition.",
+		"rarity": "Common",
+		"target_action": "Light",
+		"effect_type": "light_damage_mult",
+		"flat_value": 0.0,
+		"multiplier_value": 1.20
+	},
+	{
+		"boon_id": "virgil_measured_escape",
+		"witness_id": "virgil",
+		"witness_name": "Virgil",
+		"display_name": "Measured Escape",
+		"description": "Perfect dodges grant +10 ultimate charge.",
+		"rarity": "Common",
+		"target_action": "Dodge",
+		"effect_type": "perfect_dodge_ultimate_flat",
+		"flat_value": 10.0,
+		"multiplier_value": 1.0
+	},
+	{
+		"boon_id": "francesca_open_wound",
+		"witness_id": "francesca",
+		"witness_name": "Francesca",
+		"display_name": "Open Wound",
+		"description": "Light attacks deal +35% damage. Placeholder for future Bleed.",
+		"rarity": "Common",
+		"target_action": "Light",
+		"effect_type": "light_damage_mult",
+		"flat_value": 0.0,
+		"multiplier_value": 1.35
+	},
+	{
+		"boon_id": "francesca_longing_dash",
+		"witness_id": "francesca",
+		"witness_name": "Francesca",
+		"display_name": "Longing Dash",
+		"description": "Q attacks deal +30% damage. Placeholder for future pull/bleed dash.",
+		"rarity": "Uncommon",
+		"target_action": "Q",
+		"effect_type": "q_damage_mult",
+		"flat_value": 0.0,
+		"multiplier_value": 1.30
+	},
+	{
+		"boon_id": "minos_sentence",
+		"witness_id": "minos",
+		"witness_name": "Minos",
+		"display_name": "Sentence",
+		"description": "Heavy attacks deal +50% damage. Judgment favors commitment.",
+		"rarity": "Uncommon",
+		"target_action": "Heavy",
+		"effect_type": "heavy_damage_mult",
+		"flat_value": 0.0,
+		"multiplier_value": 1.50
+	},
+	{
+		"boon_id": "ugolino_hunger",
+		"witness_id": "ugolino",
+		"witness_name": "Ugolino",
+		"display_name": "Hunger",
+		"description": "Kills restore 2 HP. Placeholder for future corpse-consumption builds.",
+		"rarity": "Rare",
+		"target_action": "On Kill",
+		"effect_type": "on_kill_heal_flat",
+		"flat_value": 2.0,
+		"multiplier_value": 1.0
+	},
+	{
+		"boon_id": "beatrice_radiant_verdict",
+		"witness_id": "beatrice",
+		"witness_name": "Beatrice",
+		"display_name": "Radiant Verdict",
+		"description": "Ultimate deals +40% damage. Rare Paradiso-aligned power.",
+		"rarity": "Rare",
+		"target_action": "Ultimate",
+		"effect_type": "ultimate_damage_mult",
+		"flat_value": 0.0,
+		"multiplier_value": 1.40
+	}
+]
+
+var has_saved_player_vitals: bool = false
+var saved_player_hp: float = 0.0
+var saved_player_armor: float = 0.0
+
+var modifiers := {
+	"max_hp_flat": 0.0,
+	"max_armor_flat": 0.0,
+	"move_speed_mult": 1.0,
+	"dash_cooldown_mult": 1.0,
+	"ultimate_gain_mult": 1.0,
+	"light_damage_flat": 0.0,
+	"heavy_radius_mult": 1.0,
+	"q_damage_mult": 1.0,
+	"ultimate_cost_mult": 1.0
+}
+
+func _ready() -> void:
+	rng.randomize()
+	_ensure_upgrade_pool_loaded()
+
+func start_run() -> void:
+	in_run = true
+	depth = 1
+	current_room_type = ROOM_COMBAT
+	boss_defeated = false
+	room_history.clear()
+	last_offers.clear()
+	reset_player_vitals()
+	_reset_run_upgrades()
+
+	room_history.append({
+		"event": "start",
+		"depth": depth,
+		"room_type": current_room_type
+	})
+
+func end_run() -> void:
+	in_run = false
+	depth = 0
+	current_room_type = ""
+	boss_defeated = false
+	last_offers.clear()
+	_reset_run_upgrades()
+	reset_player_vitals()
+
+func choose_room(room_type: String) -> void:
+	if room_type == "":
+		return
+
+	if not in_run:
+		start_run()
+
+	depth += 1
+	current_room_type = room_type
+
+	room_history.append({
+		"event": "enter",
+		"depth": depth,
+		"room_type": current_room_type
+	})
+
+
+
+func generate_offers_after_clear() -> Array[String]:
+	last_offers.clear()
+
+	if not in_run:
+		return last_offers.duplicate()
+
+	room_history.append({
+		"event": "clear",
+		"depth": depth,
+		"room_type": current_room_type
+	})
+
+	if current_room_type == ROOM_BOSS:
+		boss_defeated = true
+		last_offers.append(ROOM_FOUNTAIN)
+		return last_offers.duplicate()
+
+	if current_room_type == ROOM_FOUNTAIN:
+		return last_offers.duplicate()
+
+	var next_depth := depth + 1
+
+	if not boss_defeated and next_depth >= boss_depth:
+		last_offers.append(ROOM_BOSS)
+		return last_offers.duplicate()
+
+	last_offers = _generate_weighted_offers(3)
+	return last_offers.duplicate()
+
+func _generate_weighted_offers(count: int) -> Array[String]:
+	var offers: Array[String] = []
+	var excluded: Array[String] = []
+
+	while offers.size() < count:
+		var picked := _pick_weighted_room(excluded)
+
+		if picked == "":
+			break
+
+		offers.append(picked)
+		excluded.append(picked)
+
+	while offers.size() < count:
+		offers.append(ROOM_COMBAT)
+
+	return offers
+
+func _pick_weighted_room(excluded: Array[String]) -> String:
+	var total_weight := 0
+
+	for entry in WEIGHTED_ROOM_TABLE:
+		var room_type := str(entry["type"])
+		var weight := int(entry["weight"])
+
+		if not excluded.has(room_type):
+			total_weight += weight
+
+	if total_weight <= 0:
+		return ""
+
+	var roll := rng.randi_range(1, total_weight)
+	var cursor := 0
+
+	for entry in WEIGHTED_ROOM_TABLE:
+		var room_type := str(entry["type"])
+		var weight := int(entry["weight"])
+
+		if excluded.has(room_type):
+			continue
+
+		cursor += weight
+
+		if roll <= cursor:
+			return room_type
+
+	return ROOM_COMBAT
+
+func generate_upgrade_offers(count: int = 3) -> Array[RunUpgradeData]:
+	_ensure_upgrade_pool_loaded()
+
+	var available: Array[RunUpgradeData] = []
+
+	for upgrade in upgrade_pool:
+		if upgrade == null:
+			continue
+
+		if chosen_upgrade_ids.has(upgrade.upgrade_id):
+			continue
+
+		available.append(upgrade)
+
+	var offers: Array[RunUpgradeData] = []
+
+	while offers.size() < count and not available.is_empty():
+		var picked_index := _pick_weighted_upgrade_index(available)
+		var picked_upgrade := available[picked_index]
+		offers.append(picked_upgrade)
+		available.remove_at(picked_index)
+
+	return offers
+
+func apply_upgrade(upgrade: RunUpgradeData) -> void:
+	if upgrade == null:
+		return
+
+	if upgrade.upgrade_id == "":
+		return
+
+	if chosen_upgrade_ids.has(upgrade.upgrade_id):
+		return
+
+	chosen_upgrade_ids.append(upgrade.upgrade_id)
+	chosen_upgrade_names.append(upgrade.display_name)
+
+	match upgrade.effect_type:
+		"max_hp_flat":
+			modifiers["max_hp_flat"] = float(modifiers["max_hp_flat"]) + upgrade.flat_value
+		"max_armor_flat":
+			modifiers["max_armor_flat"] = float(modifiers["max_armor_flat"]) + upgrade.flat_value
+		"move_speed_mult":
+			modifiers["move_speed_mult"] = float(modifiers["move_speed_mult"]) * upgrade.multiplier_value
+		"dash_cooldown_mult":
+			modifiers["dash_cooldown_mult"] = float(modifiers["dash_cooldown_mult"]) * upgrade.multiplier_value
+		"ultimate_gain_mult":
+			modifiers["ultimate_gain_mult"] = float(modifiers["ultimate_gain_mult"]) * upgrade.multiplier_value
+		"light_damage_flat":
+			modifiers["light_damage_flat"] = float(modifiers["light_damage_flat"]) + upgrade.flat_value
+		"heavy_radius_mult":
+			modifiers["heavy_radius_mult"] = float(modifiers["heavy_radius_mult"]) * upgrade.multiplier_value
+		"q_damage_mult":
+			modifiers["q_damage_mult"] = float(modifiers["q_damage_mult"]) * upgrade.multiplier_value
+		"ultimate_cost_mult":
+			modifiers["ultimate_cost_mult"] = float(modifiers["ultimate_cost_mult"]) * upgrade.multiplier_value
+		_:
+			push_warning("Unknown upgrade effect_type '%s' on upgrade '%s'." % [upgrade.effect_type, upgrade.upgrade_id])
+
+func get_modifier_value(modifier_name: String, fallback: float = 0.0) -> float:
+	if not modifiers.has(modifier_name):
+		return fallback
+
+	return float(modifiers[modifier_name])
+
+func reset_player_vitals() -> void:
+	has_saved_player_vitals = false
+	saved_player_hp = 0.0
+	saved_player_armor = 0.0
+
+
+func save_player_vitals(new_hp: float, new_armor: float) -> void:
+	has_saved_player_vitals = true
+	saved_player_hp = maxf(0.0, new_hp)
+	saved_player_armor = maxf(0.0, new_armor)
+
+
+func get_saved_player_vitals(default_hp: float, default_armor: float) -> Dictionary:
+	if not has_saved_player_vitals:
+		return {
+			"hp": default_hp,
+			"armor": default_armor
+		}
+
+	return {
+		"hp": saved_player_hp,
+		"armor": saved_player_armor
+	}
+
+func get_upgrade_summary_text() -> String:
+	if chosen_upgrade_names.is_empty():
+		return "None"
+
+	var text := ""
+
+	for i in range(chosen_upgrade_names.size()):
+		if i > 0:
+			text += ", "
+
+		text += chosen_upgrade_names[i]
+
+	return text
+
+func get_enemy_count_for_room(room_type: String, room_depth: int) -> int:
+	var safe_depth: int = maxi(room_depth, 1)
+
+	match room_type:
+		ROOM_BOSS:
+			return 1
+		ROOM_ELITE:
+			if safe_depth >= 5:
+				return 3
+			return 2
+		ROOM_MINIBOSS:
+			return 2
+		_:
+			var count: int = 3 + int(floor(float(safe_depth - 1) / 2.0))
+			return mini(count, 5)
+
+
+func get_enemy_stats_for_room(room_type: String, room_depth: int) -> Dictionary:
+	var safe_depth: int = maxi(room_depth, 1)
+	var depth_bonus: float = float(safe_depth - 1)
+
+	var hp: float = 30.0 + depth_bonus * 7.0
+	var damage: float = 5.0 + depth_bonus * 1.35
+	var speed: float = 90.0 + minf(depth_bonus * 4.0, 24.0)
+	var contact_radius: float = 28.0
+	var rank: String = "normal"
+
+	match room_type:
+		ROOM_ELITE:
+			hp = 55.0 + depth_bonus * 11.0
+			damage = 7.0 + depth_bonus * 1.8
+			speed = 95.0 + minf(depth_bonus * 4.0, 26.0)
+			contact_radius = 30.0
+			rank = "elite"
+
+		ROOM_MINIBOSS:
+			hp = 110.0 + depth_bonus * 16.0
+			damage = 9.0 + depth_bonus * 2.0
+			speed = 80.0 + minf(depth_bonus * 2.0, 14.0)
+			contact_radius = 34.0
+			rank = "miniboss"
+
+		ROOM_BOSS:
+			hp = 260.0 + depth_bonus * 28.0
+			damage = 12.0 + depth_bonus * 2.2
+			speed = 72.0 + minf(depth_bonus * 1.5, 10.0)
+			contact_radius = 42.0
+			rank = "boss"
+
+	return {
+		"max_hp": hp,
+		"damage": damage,
+		"speed": speed,
+		"contact_radius": contact_radius,
+		"rank": rank
+	}
+
+
+func get_combat_debug_text(room_type: String, room_depth: int) -> String:
+	var stats: Dictionary = get_enemy_stats_for_room(room_type, room_depth)
+	var count: int = get_enemy_count_for_room(room_type, room_depth)
+
+	return "%d enemies | HP %d | DMG %d" % [
+		count,
+		ceil(float(stats["max_hp"])),
+		ceil(float(stats["damage"]))
+	]
+
+func generate_boon_offers(count: int = 3) -> Array[Dictionary]:
+	var available: Array[Dictionary] = []
+
+	for boon in BOON_POOL:
+		var boon_id: String = str(boon.get("boon_id", ""))
+
+		if boon_id == "":
+			continue
+
+		if chosen_boon_ids.has(boon_id):
+			continue
+
+		available.append(boon)
+
+	var offers: Array[Dictionary] = []
+
+	while offers.size() < count and not available.is_empty():
+		var picked_index: int = _pick_weighted_boon_index(available)
+		var picked_boon: Dictionary = available[picked_index]
+		offers.append(picked_boon)
+		available.remove_at(picked_index)
+
+	return offers
+
+
+func apply_boon(boon: Dictionary) -> void:
+	var boon_id: String = str(boon.get("boon_id", ""))
+
+	if boon_id == "":
+		return
+
+	if chosen_boon_ids.has(boon_id):
+		return
+
+	chosen_boon_ids.append(boon_id)
+	chosen_boon_names.append(str(boon.get("display_name", "Unknown Boon")))
+
+	var effect_type: String = str(boon.get("effect_type", ""))
+	var flat_value: float = float(boon.get("flat_value", 0.0))
+	var multiplier_value: float = float(boon.get("multiplier_value", 1.0))
+
+	match effect_type:
+		"light_damage_mult":
+			boon_modifiers["light_damage_mult"] = float(boon_modifiers["light_damage_mult"]) * multiplier_value
+
+		"heavy_damage_mult":
+			boon_modifiers["heavy_damage_mult"] = float(boon_modifiers["heavy_damage_mult"]) * multiplier_value
+
+		"q_damage_mult":
+			boon_modifiers["q_damage_mult"] = float(boon_modifiers["q_damage_mult"]) * multiplier_value
+
+		"ultimate_damage_mult":
+			boon_modifiers["ultimate_damage_mult"] = float(boon_modifiers["ultimate_damage_mult"]) * multiplier_value
+
+		"perfect_dodge_ultimate_flat":
+			boon_modifiers["perfect_dodge_ultimate_flat"] = float(boon_modifiers["perfect_dodge_ultimate_flat"]) + flat_value
+
+		"on_kill_heal_flat":
+			boon_modifiers["on_kill_heal_flat"] = float(boon_modifiers["on_kill_heal_flat"]) + flat_value
+
+		_:
+			push_warning("Unknown boon effect_type: %s" % effect_type)
+
+
+func get_attack_damage_multiplier(kind: String) -> float:
+	if kind in ["light", "light_1", "light_2", "light_3"]:
+		return float(boon_modifiers["light_damage_mult"])
+
+	if kind == "heavy":
+		return float(boon_modifiers["heavy_damage_mult"])
+
+	if kind == "q":
+		return float(boon_modifiers["q_damage_mult"])
+
+	if kind == "ultimate":
+		return float(boon_modifiers["ultimate_damage_mult"])
+
+	return 1.0
+
+
+func get_perfect_dodge_ultimate_bonus() -> float:
+	return float(boon_modifiers["perfect_dodge_ultimate_flat"])
+
+
+func get_on_kill_heal_bonus() -> float:
+	return float(boon_modifiers["on_kill_heal_flat"])
+
+
+func get_boon_summary_text() -> String:
+	if chosen_boon_names.is_empty():
+		return "None"
+
+	var text := ""
+
+	for i in range(chosen_boon_names.size()):
+		if i > 0:
+			text += ", "
+
+		text += chosen_boon_names[i]
+
+	return text
+
+
+func _pick_weighted_boon_index(boons: Array[Dictionary]) -> int:
+	var total_weight := 0
+
+	for boon in boons:
+		total_weight += _get_boon_rarity_weight(str(boon.get("rarity", "Common")))
+
+	if total_weight <= 0:
+		return rng.randi_range(0, boons.size() - 1)
+
+	var roll := rng.randi_range(1, total_weight)
+	var cursor := 0
+
+	for i in range(boons.size()):
+		cursor += _get_boon_rarity_weight(str(boons[i].get("rarity", "Common")))
+
+		if roll <= cursor:
+			return i
+
+	return 0
+
+
+func _get_boon_rarity_weight(rarity: String) -> int:
+	match rarity:
+		"Common":
+			return 70
+		"Uncommon":
+			return 24
+		"Rare":
+			return 6
+		_:
+			return 50
+
+func _ensure_upgrade_pool_loaded() -> void:
+	if not upgrade_pool.is_empty():
+		return
+
+	upgrade_pool.append(UPGRADE_IRON_LUNG)
+	upgrade_pool.append(UPGRADE_ASHEN_PLATE)
+	upgrade_pool.append(UPGRADE_PILGRIM_STRIDE)
+	upgrade_pool.append(UPGRADE_QUICKENED_STEP)
+	upgrade_pool.append(UPGRADE_BURNING_CONFESSION)
+	upgrade_pool.append(UPGRADE_PENANCE_ENGINE)
+	upgrade_pool.append(UPGRADE_HEAVY_ABSOLUTION)
+	upgrade_pool.append(UPGRADE_JUDGMENT_DASH)
+	upgrade_pool.append(UPGRADE_CHEAP_RAPTURE)
+
+func _pick_weighted_upgrade_index(upgrades: Array[RunUpgradeData]) -> int:
+	var total_weight := 0
+
+	for upgrade in upgrades:
+		total_weight += _get_upgrade_rarity_weight(upgrade.rarity)
+
+	if total_weight <= 0:
+		return rng.randi_range(0, upgrades.size() - 1)
+
+	var roll := rng.randi_range(1, total_weight)
+	var cursor := 0
+
+	for i in range(upgrades.size()):
+		cursor += _get_upgrade_rarity_weight(upgrades[i].rarity)
+
+		if roll <= cursor:
+			return i
+
+	return 0
+
+func _get_upgrade_rarity_weight(rarity: String) -> int:
+	match rarity:
+		"Common":
+			return 70
+		"Uncommon":
+			return 24
+		"Rare":
+			return 6
+		_:
+			return 50
+
+func _reset_run_upgrades() -> void:
+	chosen_upgrade_ids.clear()
+	chosen_upgrade_names.clear()
+	chosen_boon_ids.clear()
+	chosen_boon_names.clear()
+
+	modifiers["max_hp_flat"] = 0.0
+	modifiers["max_armor_flat"] = 0.0
+	modifiers["move_speed_mult"] = 1.0
+	modifiers["dash_cooldown_mult"] = 1.0
+	modifiers["ultimate_gain_mult"] = 1.0
+	modifiers["light_damage_flat"] = 0.0
+	modifiers["heavy_radius_mult"] = 1.0
+	modifiers["q_damage_mult"] = 1.0
+	modifiers["ultimate_cost_mult"] = 1.0
+
+	boon_modifiers["light_damage_mult"] = 1.0
+	boon_modifiers["heavy_damage_mult"] = 1.0
+	boon_modifiers["q_damage_mult"] = 1.0
+	boon_modifiers["ultimate_damage_mult"] = 1.0
+	boon_modifiers["perfect_dodge_ultimate_flat"] = 0.0
+	boon_modifiers["on_kill_heal_flat"] = 0.0
+
+func is_combat_room_type(room_type: String) -> bool:
+	return room_type == ROOM_COMBAT \
+		or room_type == ROOM_ELITE \
+		or room_type == ROOM_MINIBOSS \
+		or room_type == ROOM_BOSS \
+		or room_type == ROOM_UPGRADE \
+		or room_type == ROOM_FORGE \
+		or room_type == ROOM_SHRINE
+		
+func is_reward_room_type(room_type: String) -> bool:
+	return room_type == ROOM_UPGRADE \
+		or room_type == ROOM_SHOP \
+		or room_type == ROOM_FORGE \
+		or room_type == ROOM_SHRINE \
+		or room_type == ROOM_FOUNTAIN
+
+func get_room_display_name(room_type: String) -> String:
+	match room_type:
+		ROOM_COMBAT:
+			return "Combat"
+		ROOM_UPGRADE:
+			return "Upgrade"
+		ROOM_SHOP:
+			return "Shop"
+		ROOM_FORGE:
+			return "Forge"
+		ROOM_SHRINE:
+			return "Shrine"
+		ROOM_ELITE:
+			return "Elite"
+		ROOM_MINIBOSS:
+			return "Miniboss"
+		ROOM_BOSS:
+			return "Boss"
+		ROOM_FOUNTAIN:
+			return "Fountain"
+		_:
+			return "Unknown"

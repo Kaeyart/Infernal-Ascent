@@ -1,0 +1,937 @@
+extends Node2D
+
+signal reward_taken()
+signal return_to_hub_requested()
+signal room_choice_requested(room_type: String)
+
+const ChoiceDoorScene := preload("res://scenes/props/ChoiceDoor.tscn")
+const UpgradeCardScene := preload("res://scenes/ui/UpgradeCard.tscn")
+
+const ROOM_RECT := Rect2(Vector2(118, 84), Vector2(1044, 548))
+const FLOOR_DRAW_SIZE := 64
+const FLOOR_TILE_SCALE := 0.56
+const PROP_SCALE := 0.60
+const BIG_PROP_SCALE := 0.82
+
+const FLOOR_TILE_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row00_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row00_col01.png",
+	"res://art/environment/circle0/tiles/tiles_row00_col02.png",
+	"res://art/environment/circle0/tiles/tiles_row00_col03.png",
+	"res://art/environment/circle0/tiles/tiles_row00_col04.png",
+	"res://art/environment/circle0/tiles/tiles_row00_col05.png",
+	"res://art/environment/circle0/tiles/tiles_row01_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row01_col01.png",
+	"res://art/environment/circle0/tiles/tiles_row01_col02.png",
+	"res://art/environment/circle0/tiles/tiles_row01_col03.png"
+]
+
+const SIGIL_TILE_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row01_col04.png",
+	"res://art/environment/circle0/tiles/tiles_row01_col05.png",
+	"res://art/environment/circle0/tiles/tiles_row02_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row02_col01.png",
+	"res://art/environment/circle0/tiles/tiles_row02_col02.png",
+	"res://art/environment/circle0/tiles/tiles_row02_col03.png",
+	"res://art/environment/circle0/tiles/tiles_row02_col04.png"
+]
+
+const WALL_TILE_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row03_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row03_col01.png",
+	"res://art/environment/circle0/tiles/tiles_row03_col02.png"
+]
+
+const ARCH_TILE_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row03_col03.png",
+	"res://art/environment/circle0/tiles/tiles_row03_col04.png",
+	"res://art/environment/circle0/tiles/tiles_row03_col05.png"
+]
+
+const POST_TILE_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row05_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row05_col01.png",
+	"res://art/environment/circle0/tiles/tiles_row05_col02.png",
+	"res://art/environment/circle0/tiles/tiles_row05_col03.png"
+]
+
+const COLUMN_TILE_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row05_col09.png",
+	"res://art/environment/circle0/tiles/tiles_row05_col10.png",
+	"res://art/environment/circle0/tiles/tiles_row05_col11.png",
+	"res://art/environment/circle0/tiles/tiles_row05_col12.png"
+]
+
+const STAIR_TILE_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row06_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row06_col01.png",
+	"res://art/environment/circle0/tiles/tiles_row06_col02.png",
+	"res://art/environment/circle0/tiles/tiles_row06_col03.png",
+	"res://art/environment/circle0/tiles/tiles_row06_col04.png"
+]
+
+const BRAZIER_TILE_PATHS := [
+	"res://art/environment/circle0/props/props_row00_col00.png",
+	"res://art/environment/circle0/props/props_row00_col01.png",
+	"res://art/environment/circle0/props/props_row00_col02.png",
+	"res://art/environment/circle0/props/props_row00_col03.png"
+]
+
+const BANNER_TILE_PATHS := [
+	"res://art/environment/circle0/props/props_row01_col00.png",
+	"res://art/environment/circle0/props/props_row01_col01.png",
+	"res://art/environment/circle0/props/props_row01_col02.png",
+	"res://art/environment/circle0/props/props_row01_col03.png",
+	"res://art/environment/circle0/props/props_row01_col04.png",
+	"res://art/environment/circle0/props/props_row01_col05.png",
+	"res://art/environment/circle0/props/props_row01_col06.png"
+]
+
+const MARKER_TILE_PATHS := [
+	"res://art/environment/circle0/props/props_row02_col00.png",
+	"res://art/environment/circle0/props/props_row02_col01.png",
+	"res://art/environment/circle0/props/props_row02_col02.png",
+	"res://art/environment/circle0/props/props_row02_col04.png",
+	"res://art/environment/circle0/props/props_row02_col05.png",
+	"res://art/environment/circle0/props/props_row02_col06.png"
+]
+
+const LECTERN_TILE_PATHS := [
+	"res://art/environment/circle0/props/props_row02_col03.png",
+	"res://art/environment/circle0/props/props_row02_col07.png",
+	"res://art/environment/circle0/props/props_row02_col08.png"
+]
+
+const SLAB_TILE_PATHS := [
+	"res://art/environment/circle0/props/props_row03_col00.png",
+	"res://art/environment/circle0/props/props_row03_col01.png",
+	"res://art/environment/circle0/props/props_row03_col02.png"
+]
+
+const HANGING_FIRE_TILE_PATHS := [
+	"res://art/environment/circle0/props/props_row03_col03.png",
+	"res://art/environment/circle0/props/props_row03_col04.png",
+	"res://art/environment/circle0/props/props_row03_col05.png"
+]
+
+const BENCH_TILE_PATHS := [
+	"res://art/environment/circle0/props/props_row04_col00.png",
+	"res://art/environment/circle0/props/props_row04_col01.png",
+	"res://art/environment/circle0/props/props_row04_col02.png",
+	"res://art/environment/circle0/props/props_row04_col03.png"
+]
+
+const RUBBLE_TILE_PATHS := [
+	"res://art/environment/circle0/tiles/tiles_row08_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row08_col01.png",
+	"res://art/environment/circle0/tiles/tiles_row08_col02.png",
+	"res://art/environment/circle0/tiles/tiles_row09_col00.png",
+	"res://art/environment/circle0/tiles/tiles_row09_col01.png"
+]
+
+const LARGE_SETPIECE_TILE_PATHS := [
+	"res://art/environment/circle0/props/props_row05_col00.png",
+	"res://art/environment/circle0/props/props_row05_col01.png",
+	"res://art/environment/circle0/props/props_row05_col02.png"
+]
+
+@onready var player: Node2D = $Player
+
+var room_type := "upgrade"
+var reward_position := Vector2(640, 340)
+var reward_taken_flag := false
+var interact_radius := 86.0
+var hint := ""
+var choice_doors: Array[Node2D] = []
+var upgrade_cards: Array[Node2D] = []
+
+var floor_tiles: Array[Texture2D] = []
+var sigil_tiles: Array[Texture2D] = []
+var wall_tiles: Array[Texture2D] = []
+var arch_tiles: Array[Texture2D] = []
+var post_tiles: Array[Texture2D] = []
+var column_tiles: Array[Texture2D] = []
+var stair_tiles: Array[Texture2D] = []
+var brazier_tiles: Array[Texture2D] = []
+var banner_tiles: Array[Texture2D] = []
+var marker_tiles: Array[Texture2D] = []
+var lectern_tiles: Array[Texture2D] = []
+var slab_tiles: Array[Texture2D] = []
+var hanging_fire_tiles: Array[Texture2D] = []
+var bench_tiles: Array[Texture2D] = []
+var rubble_tiles: Array[Texture2D] = []
+var large_setpiece_tiles: Array[Texture2D] = []
+var fountain_tiles: Array[Texture2D] = []
+var fountain_setpieces: Array[Texture2D] = []
+var collision_root: Node2D = null
+
+
+func set_room_type(new_room_type: String) -> void:
+	room_type = new_room_type
+
+
+func _ready() -> void:
+	_load_art()
+
+	if player:
+		player.global_position = Vector2(640, 540)
+
+	reward_position = _get_reward_position_for_room_type()
+	_build_reward_room_collision()
+
+	if room_type == RunState.ROOM_UPGRADE:
+		_spawn_upgrade_cards()
+
+	queue_redraw()
+
+
+func _process(_delta: float) -> void:
+	hint = ""
+
+	if player == null:
+		return
+
+	if room_type == RunState.ROOM_UPGRADE:
+		if reward_taken_flag:
+			hint = "Upgrade chosen — choose your next door"
+		else:
+			hint = "Choose one upgrade card"
+
+		queue_redraw()
+		return
+
+	var near_reward: bool = player.global_position.distance_to(reward_position) <= interact_radius
+
+	if not reward_taken_flag:
+		if near_reward:
+			hint = _get_take_reward_hint()
+
+			if Input.is_action_just_pressed("interact"):
+				_take_reward()
+	else:
+		if room_type == RunState.ROOM_FOUNTAIN:
+			hint = "Fountain used — Press E to return to Hub"
+
+			if near_reward and Input.is_action_just_pressed("interact"):
+				return_to_hub_requested.emit()
+		else:
+			hint = "Reward taken — choose your next door"
+
+	queue_redraw()
+
+
+func _load_art() -> void:
+	floor_tiles = _load_textures(FLOOR_TILE_PATHS)
+	sigil_tiles = _load_textures(SIGIL_TILE_PATHS)
+	wall_tiles = _load_textures(WALL_TILE_PATHS)
+	arch_tiles = _load_textures(ARCH_TILE_PATHS)
+	post_tiles = _load_textures(POST_TILE_PATHS)
+	column_tiles = _load_textures(COLUMN_TILE_PATHS)
+	stair_tiles = _load_textures(STAIR_TILE_PATHS)
+	brazier_tiles = _load_textures(BRAZIER_TILE_PATHS)
+	banner_tiles = _load_textures(BANNER_TILE_PATHS)
+	marker_tiles = _load_textures(MARKER_TILE_PATHS)
+	lectern_tiles = _load_textures(LECTERN_TILE_PATHS)
+	slab_tiles = _load_textures(SLAB_TILE_PATHS)
+	hanging_fire_tiles = _load_textures(HANGING_FIRE_TILE_PATHS)
+	bench_tiles = _load_textures(BENCH_TILE_PATHS)
+	rubble_tiles = _load_textures(RUBBLE_TILE_PATHS)
+	large_setpiece_tiles = _load_textures(LARGE_SETPIECE_TILE_PATHS)
+	_apply_circle0_v2_reward_art_overrides()
+
+
+func _load_textures(paths: Array) -> Array[Texture2D]:
+	var textures: Array[Texture2D] = []
+
+	for value in paths:
+		var path: String = str(value)
+
+		if ResourceLoader.exists(path):
+			var texture := load(path) as Texture2D
+
+			if texture != null:
+				textures.append(texture)
+
+	return textures
+
+
+
+
+func _apply_circle0_v2_reward_art_overrides() -> void:
+	var floor_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/reward_tiles/floor",
+		4
+	)
+	if not floor_override.is_empty():
+		floor_tiles = floor_override
+
+	var sigil_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/reward_tiles/channels_pads",
+		6
+	)
+	if not sigil_override.is_empty():
+		sigil_tiles = sigil_override
+
+	var wall_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/reward_tiles/walls_arches",
+		6
+	)
+	if not wall_override.is_empty():
+		wall_tiles = wall_override
+		arch_tiles = wall_override
+
+	var post_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/reward_tiles/columns_posts",
+		8
+	)
+	if not post_override.is_empty():
+		post_tiles = post_override
+		column_tiles = post_override
+
+	var stair_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/reward_tiles/stairs_platforms",
+		5
+	)
+	if not stair_override.is_empty():
+		stair_tiles = stair_override
+
+	var brazier_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/reward_props/lights_banners",
+		10
+	)
+	if not brazier_override.is_empty():
+		brazier_tiles = brazier_override
+		hanging_fire_tiles = brazier_override
+
+	var banner_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/reward_props/lights_banners",
+		8
+	)
+	if not banner_override.is_empty():
+		banner_tiles = banner_override
+
+	var marker_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/reward_props/markers_statues",
+		8
+	)
+	if not marker_override.is_empty():
+		marker_tiles = marker_override
+
+	var lectern_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/reward_props/altars_counters_books",
+		8
+	)
+	if not lectern_override.is_empty():
+		lectern_tiles = lectern_override
+
+	var forge_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/reward_props/forge_shrines",
+		6
+	)
+	if not forge_override.is_empty():
+		slab_tiles = forge_override
+
+	var bench_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/reward_props/altars_counters_books",
+		8
+	)
+	if not bench_override.is_empty():
+		bench_tiles = bench_override
+
+	var setpiece_override: Array[Texture2D] = _load_first_textures(
+		"res://art/environment/circle0_v2/reward_props/large_setpieces",
+		4
+	)
+	if not setpiece_override.is_empty():
+		large_setpiece_tiles = setpiece_override
+
+	fountain_tiles = _load_first_textures(
+		"res://art/environment/circle0_v2/fountain/floor_tiles",
+		4
+	)
+	fountain_setpieces = _load_first_textures(
+		"res://art/environment/circle0_v2/fountain/fountains_platforms",
+		6
+	)
+
+	# Important: do NOT set fountain_tiles as the room floor. They are centerpiece
+	# assets, not tileable floors, and made the room look broken.
+	if room_type == RunState.ROOM_FOUNTAIN and not fountain_setpieces.is_empty():
+		large_setpiece_tiles = fountain_setpieces
+
+
+func _load_texture_folders(folder_paths: Array) -> Array[Texture2D]:
+	var textures: Array[Texture2D] = []
+
+	for value in folder_paths:
+		var folder_path: String = str(value)
+		var folder_textures: Array[Texture2D] = _load_texture_folder(folder_path)
+
+		for texture in folder_textures:
+			textures.append(texture)
+
+	return textures
+
+
+func _load_texture_folder(folder_path: String) -> Array[Texture2D]:
+	var textures: Array[Texture2D] = []
+	var files: Array = []
+	var dir := DirAccess.open(folder_path)
+
+	if dir == null:
+		return textures
+
+	dir.list_dir_begin()
+	var file_name := dir.get_next()
+
+	while file_name != "":
+		if not dir.current_is_dir() and file_name.to_lower().ends_with(".png"):
+			files.append(file_name)
+
+		file_name = dir.get_next()
+
+	dir.list_dir_end()
+	files.sort()
+
+	for value in files:
+		var texture_path: String = folder_path + "/" + str(value)
+
+		if ResourceLoader.exists(texture_path):
+			var texture := load(texture_path) as Texture2D
+
+			if texture != null:
+				textures.append(texture)
+
+	return textures
+
+
+func _load_first_textures(folder_path: String, max_count: int) -> Array[Texture2D]:
+	var all_textures: Array[Texture2D] = _load_texture_folder(folder_path)
+	var picked: Array[Texture2D] = []
+	var limit_count: int = mini(max_count, all_textures.size())
+
+	for i in range(limit_count):
+		picked.append(all_textures[i])
+
+	return picked
+
+func _take_reward() -> void:
+	reward_taken_flag = true
+
+	match room_type:
+		RunState.ROOM_SHOP:
+			_apply_shop_reward()
+		RunState.ROOM_FORGE:
+			_apply_forge_reward()
+		RunState.ROOM_SHRINE:
+			_apply_shrine_reward()
+		RunState.ROOM_FOUNTAIN:
+			_apply_fountain_reward()
+		_:
+			_apply_shop_reward()
+
+	reward_taken.emit()
+
+	if room_type != RunState.ROOM_FOUNTAIN:
+		_spawn_choice_doors()
+
+	queue_redraw()
+
+
+func _apply_shop_reward() -> void:
+	if player and player.has_method("gain_ultimate"):
+		player.gain_ultimate(30.0)
+
+
+func _apply_forge_reward() -> void:
+	if player:
+		player.armor = minf(player.armor + 10.0, player.max_armor)
+
+
+func _apply_shrine_reward() -> void:
+	if player:
+		player.hp = minf(player.hp + 25.0, player.max_hp)
+
+	if player and player.has_method("gain_ultimate"):
+		player.gain_ultimate(15.0)
+
+
+func _apply_fountain_reward() -> void:
+	if player:
+		player.hp = minf(player.hp + 35.0, player.max_hp)
+		player.armor = minf(player.armor + 35.0, player.max_armor)
+
+	if player and player.has_method("gain_ultimate"):
+		player.gain_ultimate(100.0)
+
+
+func _spawn_upgrade_cards() -> void:
+	if not upgrade_cards.is_empty():
+		return
+
+	var offers: Array[RunUpgradeData] = RunState.generate_upgrade_offers(3)
+
+	if offers.is_empty():
+		hint = "No upgrades left — choose your next door"
+		reward_taken_flag = true
+		_spawn_choice_doors()
+		return
+
+	var positions: Array[Vector2] = [
+		Vector2(386, 332),
+		Vector2(640, 300),
+		Vector2(894, 332)
+	]
+
+	for i in range(offers.size()):
+		var card := UpgradeCardScene.instantiate() as Node2D
+		card.global_position = positions[i]
+		add_child(card)
+
+		if card.has_method("setup"):
+			card.setup(offers[i])
+
+		if card.has_signal("upgrade_selected"):
+			card.upgrade_selected.connect(_on_upgrade_card_selected)
+
+		upgrade_cards.append(card)
+
+
+func _on_upgrade_card_selected(upgrade_data: RunUpgradeData) -> void:
+	if reward_taken_flag:
+		return
+
+	reward_taken_flag = true
+	RunState.apply_upgrade(upgrade_data)
+
+	if player and player.has_method("apply_run_modifiers"):
+		player.apply_run_modifiers()
+
+	for card in upgrade_cards:
+		if card != null and is_instance_valid(card):
+			card.queue_free()
+
+	upgrade_cards.clear()
+	reward_taken.emit()
+	_spawn_choice_doors()
+	queue_redraw()
+
+
+func _spawn_choice_doors() -> void:
+	if not choice_doors.is_empty():
+		return
+
+	var offers: Array[String] = RunState.generate_offers_after_clear()
+
+	if offers.is_empty():
+		return
+
+	var positions: Array[Vector2] = []
+
+	if offers.size() == 1:
+		positions = [Vector2(640, 144)]
+	else:
+		positions = [
+			Vector2(412, 160),
+			Vector2(640, 144),
+			Vector2(868, 160)
+		]
+
+	for i in range(offers.size()):
+		var offered_room_type: String = str(offers[i])
+		var door := ChoiceDoorScene.instantiate() as Node2D
+		door.global_position = positions[i]
+		add_child(door)
+
+		if door.has_method("setup"):
+			door.setup(offered_room_type)
+
+		if door.has_signal("room_choice_requested"):
+			door.room_choice_requested.connect(_on_choice_door_selected)
+
+		choice_doors.append(door)
+
+
+func _on_choice_door_selected(selected_room_type: String) -> void:
+	room_choice_requested.emit(selected_room_type)
+
+
+
+
+func _build_reward_room_collision() -> void:
+	_clear_reward_room_collision()
+	collision_root = Node2D.new()
+	collision_root.name = "RewardRoomCollision"
+	add_child(collision_root)
+
+	var thickness := 14.0
+	_add_reward_collision(Rect2(Vector2(ROOM_RECT.position.x, ROOM_RECT.position.y - thickness), Vector2(ROOM_RECT.size.x, thickness)), "RewardWallTop")
+	_add_reward_collision(Rect2(Vector2(ROOM_RECT.position.x, ROOM_RECT.position.y + ROOM_RECT.size.y), Vector2(ROOM_RECT.size.x, thickness)), "RewardWallBottom")
+	_add_reward_collision(Rect2(Vector2(ROOM_RECT.position.x - thickness, ROOM_RECT.position.y), Vector2(thickness, ROOM_RECT.size.y)), "RewardWallLeft")
+	_add_reward_collision(Rect2(Vector2(ROOM_RECT.position.x + ROOM_RECT.size.x, ROOM_RECT.position.y), Vector2(thickness, ROOM_RECT.size.y)), "RewardWallRight")
+
+	for solid_rect in _get_reward_room_solid_rects():
+		_add_reward_collision(solid_rect, "RewardSolid")
+
+
+func _clear_reward_room_collision() -> void:
+	if collision_root != null and is_instance_valid(collision_root):
+		collision_root.queue_free()
+
+	collision_root = null
+
+
+func _get_reward_room_solid_rects() -> Array[Rect2]:
+	var rects: Array[Rect2] = []
+	var center: Vector2 = ROOM_RECT.get_center()
+
+	match room_type:
+		RunState.ROOM_FORGE:
+			rects.append(Rect2(center + Vector2(-250, 70), Vector2(84, 72)))
+			rects.append(Rect2(center + Vector2(166, 70), Vector2(84, 72)))
+		RunState.ROOM_SHOP:
+			rects.append(Rect2(center + Vector2(-284, 92), Vector2(96, 58)))
+			rects.append(Rect2(center + Vector2(188, 92), Vector2(96, 58)))
+		RunState.ROOM_SHRINE:
+			rects.append(Rect2(center + Vector2(-326, -38), Vector2(76, 88)))
+			rects.append(Rect2(center + Vector2(250, -38), Vector2(76, 88)))
+		RunState.ROOM_FOUNTAIN:
+			rects.append(Rect2(center + Vector2(-346, -30), Vector2(78, 98)))
+			rects.append(Rect2(center + Vector2(268, -30), Vector2(78, 98)))
+		_:
+			pass
+
+	return rects
+
+
+func _add_reward_collision(rect: Rect2, collision_name: String) -> void:
+	if collision_root == null:
+		return
+
+	var body := StaticBody2D.new()
+	body.name = collision_name
+	body.position = rect.position + rect.size * 0.5
+
+	var shape := CollisionShape2D.new()
+	var rect_shape := RectangleShape2D.new()
+	rect_shape.size = rect.size
+	shape.shape = rect_shape
+
+	body.add_child(shape)
+	collision_root.add_child(body)
+
+func _draw() -> void:
+	_draw_room()
+
+	if room_type != RunState.ROOM_UPGRADE:
+		_draw_reward()
+
+	_draw_hint()
+
+
+func _draw_room() -> void:
+	draw_rect(Rect2(Vector2.ZERO, Vector2(1280, 720)), Color("#050303"))
+	_draw_room_rect(ROOM_RECT)
+	_draw_top_threshold()
+	_draw_room_identity()
+	_draw_room_flavor_scatter()
+	_draw_room_header()
+
+
+func _draw_room_rect(rect: Rect2) -> void:
+	draw_rect(rect.grow(26.0), Color(0, 0, 0, 0.72))
+	draw_rect(rect.grow(12.0), Color("#100606"))
+	draw_rect(rect, Color("#17100f"))
+	_draw_tiled_floor(rect)
+	draw_rect(rect, Color("#5e3a2f"), false, 4.0)
+
+	for i in range(4):
+		var corner_pos: Vector2 = rect.position + Vector2(
+			0.0 if i % 2 == 0 else rect.size.x,
+			0.0 if i < 2 else rect.size.y
+		)
+		_draw_scaled_texture(_pick_texture(post_tiles, i), corner_pos, 0.54, "center")
+
+	for i in range(3):
+		var wall_x: float = rect.position.x + rect.size.x * (0.25 + float(i) * 0.25)
+		_draw_scaled_texture(_pick_texture(wall_tiles, i), Vector2(wall_x, rect.position.y + 24.0), 0.46, "top_center")
+
+
+func _draw_top_threshold() -> void:
+	var center_x: float = ROOM_RECT.get_center().x
+	_draw_scaled_texture(_pick_texture(large_setpiece_tiles, 0), Vector2(center_x, ROOM_RECT.position.y + 42.0), 0.48, "bottom_center")
+	_draw_scaled_texture(_pick_texture(stair_tiles, 0), Vector2(center_x, ROOM_RECT.position.y + ROOM_RECT.size.y - 14.0), 0.46, "bottom_center")
+
+
+func _draw_room_header() -> void:
+	var title: String = RunState.get_room_display_name(room_type)
+	var subtitle: String = _get_room_subtitle()
+	var circle_text := "Circle 0 · The Cinder Vestibule"
+	var panel: Rect2 = Rect2(Vector2(34, 28), Vector2(430, 56))
+
+	draw_rect(panel, Color(0, 0, 0, 0.62))
+	draw_rect(panel, Color("#8f6746"), false, 1.0)
+	draw_string(ThemeDB.fallback_font, Vector2(50, 49), "%s — %s" % [circle_text, title], HORIZONTAL_ALIGNMENT_LEFT, 394, 14, Color("#e5c09a"))
+	draw_string(ThemeDB.fallback_font, Vector2(50, 70), subtitle, HORIZONTAL_ALIGNMENT_LEFT, 394, 12, Color("#c6aa92"))
+
+
+func _draw_room_identity() -> void:
+	var center: Vector2 = ROOM_RECT.get_center()
+	var accent: Color = _get_reward_color()
+
+	_draw_reward_room_floor_centerpiece(center, accent)
+
+	match room_type:
+		RunState.ROOM_UPGRADE:
+			_draw_scaled_texture(_pick_texture(sigil_tiles, 1), center + Vector2(0, 34), 0.54, "center", Color(1, 1, 1, 0.80))
+			_draw_scaled_texture(_pick_texture(lectern_tiles, 0), center + Vector2(0, -24), 0.58, "bottom_center")
+		RunState.ROOM_SHOP:
+			_draw_scaled_texture(_pick_texture(bench_tiles, 1), center + Vector2(0, 28), 0.58, "bottom_center")
+			_draw_scaled_texture(_pick_texture(sigil_tiles, 2), center + Vector2(0, 86), 0.42, "center", Color(1, 1, 1, 0.70))
+		RunState.ROOM_FORGE:
+			_draw_scaled_texture(_pick_texture(slab_tiles, 0), center + Vector2(0, 28), 0.64, "center")
+			_draw_scaled_texture(_pick_texture(sigil_tiles, 4), center + Vector2(0, 24), 0.44, "center", Color(1, 1, 1, 0.70))
+		RunState.ROOM_SHRINE:
+			_draw_scaled_texture(_pick_texture(large_setpiece_tiles, 1), center + Vector2(0, 72), 0.56, "bottom_center")
+			_draw_scaled_texture(_pick_texture(sigil_tiles, 3), center + Vector2(0, 128), 0.46, "center", Color(1, 1, 1, 0.70))
+		RunState.ROOM_FOUNTAIN:
+			_draw_scaled_texture(_pick_texture(fountain_setpieces, 0), center + Vector2(0, 104), 0.74, "bottom_center")
+			draw_arc(center + Vector2(0, 22), 92.0, 0.0, TAU, 96, Color(0.70, 1.0, 0.82, 0.16), 6.0)
+		_:
+			_draw_scaled_texture(_pick_texture(sigil_tiles, 0), center + Vector2(0, 42), 0.50, "center", Color(1, 1, 1, 0.72))
+
+	draw_rect(Rect2(center - Vector2(98, 28), Vector2(196, 56)), Color(accent.r, accent.g, accent.b, 0.035))
+
+
+func _draw_room_flavor_scatter() -> void:
+	var rect: Rect2 = ROOM_RECT
+	var center: Vector2 = rect.get_center()
+	var color: Color = _get_reward_color()
+
+	_draw_reward_room_perimeter(rect, color)
+	draw_arc(center, 150.0, 0.0, TAU, 96, Color(color.r, color.g, color.b, 0.08), 2.0)
+
+	match room_type:
+		RunState.ROOM_UPGRADE:
+			_draw_scaled_texture(_pick_texture(marker_tiles, 0), center + Vector2(-260, -24), 0.34, "bottom_center")
+			_draw_scaled_texture(_pick_texture(marker_tiles, 1), center + Vector2(260, -24), 0.34, "bottom_center")
+		RunState.ROOM_SHOP:
+			_draw_scaled_texture(_pick_texture(lectern_tiles, 2), center + Vector2(-190, 0), 0.48, "bottom_center")
+			_draw_scaled_texture(_pick_texture(lectern_tiles, 1), center + Vector2(190, 0), 0.48, "bottom_center")
+		RunState.ROOM_FORGE:
+			_draw_scaled_texture(_pick_texture(hanging_fire_tiles, 0), center + Vector2(-210, -24), 0.48, "bottom_center")
+			_draw_scaled_texture(_pick_texture(hanging_fire_tiles, 1), center + Vector2(210, -24), 0.48, "bottom_center")
+		RunState.ROOM_SHRINE:
+			_draw_scaled_texture(_pick_texture(marker_tiles, 3), center + Vector2(-250, 24), 0.36, "bottom_center")
+			_draw_scaled_texture(_pick_texture(marker_tiles, 4), center + Vector2(250, 24), 0.36, "bottom_center")
+		RunState.ROOM_FOUNTAIN:
+			_draw_scaled_texture(_pick_texture(fountain_setpieces, 1), center + Vector2(-250, 20), 0.46, "bottom_center")
+			_draw_scaled_texture(_pick_texture(fountain_setpieces, 2), center + Vector2(250, 20), 0.46, "bottom_center")
+		_:
+			pass
+
+
+func _draw_reward_room_perimeter(rect: Rect2, color: Color) -> void:
+	var center: Vector2 = rect.get_center()
+
+	for i in range(2):
+		var side: float = -1.0 if i == 0 else 1.0
+		_draw_scaled_texture(_pick_texture(brazier_tiles, i), Vector2(center.x + 312.0 * side, rect.position.y + 126.0), 0.46, "bottom_center")
+		_draw_scaled_texture(_pick_texture(banner_tiles, i + 2), Vector2(center.x + 326.0 * side, rect.position.y + 40.0), 0.36, "top_center")
+
+	draw_rect(Rect2(Vector2(rect.position.x + 96.0, center.y - 14.0), Vector2(rect.size.x - 192.0, 28.0)), Color(color.r, color.g, color.b, 0.028))
+
+
+func _draw_reward_room_floor_centerpiece(center: Vector2, color: Color) -> void:
+	draw_arc(center, 142.0, 0.0, TAU, 96, Color(color.r, color.g, color.b, 0.10), 8.0)
+	draw_arc(center, 88.0, 0.0, TAU, 80, Color(1.0, 0.95, 0.80, 0.08), 2.0)
+
+
+func _draw_reward_marker_row(y: float, start_x: float, count: int, spacing: float, scale: float) -> void:
+	for i in range(count):
+		_draw_scaled_texture(_pick_texture(marker_tiles, i), Vector2(start_x + float(i) * spacing, y), scale, "bottom_center")
+
+
+func _draw_reward_procession_line(center: Vector2, color: Color) -> void:
+	var line_rect := Rect2(center - Vector2(190, 14), Vector2(380, 28))
+	draw_rect(line_rect, Color(color.r, color.g, color.b, 0.05))
+	draw_line(center + Vector2(-186, 0), center + Vector2(186, 0), Color(color.r, color.g, color.b, 0.42), 3.0)
+	draw_line(center + Vector2(-186, 9), center + Vector2(186, 9), Color(1, 1, 1, 0.08), 1.0)
+
+
+func _draw_reward() -> void:
+	var reward_color: Color = _get_reward_color()
+	var pedestal_rect := Rect2(reward_position - Vector2(62, 30), Vector2(124, 60))
+	var center := reward_position
+
+	draw_rect(pedestal_rect.grow(8), Color(0, 0, 0, 0.34))
+	draw_rect(pedestal_rect, Color("#211816"))
+	draw_rect(pedestal_rect, reward_color.darkened(0.55), false, 2.0)
+	draw_arc(center, 56, 0.0, TAU, 64, Color(reward_color.r, reward_color.g, reward_color.b, 0.18), 7.0)
+
+	match room_type:
+		RunState.ROOM_FORGE:
+			_draw_scaled_texture(_pick_texture(slab_tiles, 0), center + Vector2(0, 18), 0.42, "bottom_center")
+		RunState.ROOM_SHRINE:
+			_draw_scaled_texture(_pick_texture(marker_tiles, 4), center + Vector2(0, 14), 0.36, "bottom_center")
+		RunState.ROOM_FOUNTAIN:
+			draw_arc(center, 72, 0.0, TAU, 84, Color(0.72, 1.0, 0.86, 0.20), 5.0)
+		_:
+			_draw_scaled_texture(_pick_texture(sigil_tiles, 0), center + Vector2(0, 14), 0.28, "center", Color(1, 1, 1, 0.78))
+
+	if reward_taken_flag:
+		draw_circle(center, 27, Color("#251d1a"))
+		draw_arc(center, 36, 0.0, TAU, 64, reward_color.darkened(0.35), 2.0)
+		draw_string(ThemeDB.fallback_font, center + Vector2(-84, 74), "CLAIMED", HORIZONTAL_ALIGNMENT_CENTER, 168, 15, Color("#9b7d67"))
+		return
+
+	draw_circle(center, 46, Color(reward_color.r, reward_color.g, reward_color.b, 0.14))
+	draw_arc(center, 46, 0.0, TAU, 64, reward_color, 3.0)
+	draw_circle(center, 16, Color("#f7e8d4"))
+	draw_circle(center, 7, reward_color)
+	draw_string(ThemeDB.fallback_font, center + Vector2(-88, 80), _get_reward_label(), HORIZONTAL_ALIGNMENT_CENTER, 176, 15, reward_color)
+
+
+func _draw_hint() -> void:
+	if hint == "":
+		return
+
+	draw_rect(Rect2(Vector2(392, 640), Vector2(496, 42)), Color(0, 0, 0, 0.74))
+	draw_rect(Rect2(Vector2(392, 640), Vector2(496, 42)), Color("#6c4533"), false, 2.0)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(418, 666),
+		hint,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		444,
+		18,
+		Color("#f7e8d4")
+	)
+
+
+func _draw_tiled_floor(rect: Rect2) -> void:
+	if floor_tiles.is_empty():
+		draw_rect(rect, Color("#221417"))
+		return
+
+	draw_rect(rect, Color("#18100f"))
+
+	var start_x: int = int(rect.position.x)
+	var start_y: int = int(rect.position.y)
+	var end_x: int = int(rect.position.x + rect.size.x)
+	var end_y: int = int(rect.position.y + rect.size.y)
+	var safe_count: int = mini(floor_tiles.size(), 4)
+
+	for y in range(start_y, end_y, FLOOR_DRAW_SIZE):
+		for x in range(start_x, end_x, FLOOR_DRAW_SIZE):
+			var seed: int = abs(int(float(x) / float(FLOOR_DRAW_SIZE) * 17.0 + float(y) / float(FLOOR_DRAW_SIZE) * 29.0))
+			var texture: Texture2D = floor_tiles[seed % safe_count]
+			var dest := Rect2(Vector2(x, y), Vector2(FLOOR_DRAW_SIZE, FLOOR_DRAW_SIZE))
+			draw_texture_rect(texture, dest, false, Color(0.88, 0.82, 0.76, 0.78))
+
+
+func _draw_procession_line(center: Vector2) -> void:
+	var line_rect := Rect2(center - Vector2(170, 12), Vector2(340, 24))
+	draw_rect(line_rect, Color(0, 0, 0, 0.16))
+	draw_line(center + Vector2(-168, 0), center + Vector2(168, 0), Color("#cf8047"), 3.0)
+	draw_line(center + Vector2(-168, 8), center + Vector2(168, 8), Color(1, 1, 1, 0.08), 1.0)
+
+
+func _get_reward_position_for_room_type() -> Vector2:
+	match room_type:
+		RunState.ROOM_UPGRADE:
+			return Vector2(640, 346)
+		RunState.ROOM_FORGE:
+			return Vector2(640, 374)
+		RunState.ROOM_SHRINE:
+			return Vector2(640, 382)
+		RunState.ROOM_FOUNTAIN:
+			return Vector2(640, 402)
+		_:
+			return Vector2(640, 358)
+
+
+func _get_take_reward_hint() -> String:
+	match room_type:
+		RunState.ROOM_SHOP:
+			return "Press E — Receive requisition"
+		RunState.ROOM_FORGE:
+			return "Press E — Temper your arms"
+		RunState.ROOM_SHRINE:
+			return "Press E — Accept the blessing"
+		RunState.ROOM_FOUNTAIN:
+			return "Press E — Drink and recover"
+		_:
+			return "Press E — Take reward"
+
+
+func _get_room_subtitle() -> String:
+	match room_type:
+		RunState.ROOM_UPGRADE:
+			return "Ledger of boons — choose one instrument of the descent."
+		RunState.ROOM_SHOP:
+			return "Reliquary exchange — a quiet chamber for sanctioned provisions."
+		RunState.ROOM_FORGE:
+			return "Tempering slab — harden the weapon before the next circle."
+		RunState.ROOM_SHRINE:
+			return "Witness alcove — the dead offer a measured grace."
+		RunState.ROOM_FOUNTAIN:
+			return "Fountain of respite — recover before the next threshold."
+		_:
+			return "A chamber between punishments."
+
+
+func _get_reward_label() -> String:
+	match room_type:
+		RunState.ROOM_SHOP:
+			return "+30 Ultimate"
+		RunState.ROOM_FORGE:
+			return "+10 Armor"
+		RunState.ROOM_SHRINE:
+			return "Blessing"
+		RunState.ROOM_FOUNTAIN:
+			return "Restored"
+		_:
+			return "Reward"
+
+
+func _get_reward_color() -> Color:
+	match room_type:
+		RunState.ROOM_UPGRADE:
+			return Color("#e0a84b")
+		RunState.ROOM_SHOP:
+			return Color("#7fd0bf")
+		RunState.ROOM_FORGE:
+			return Color("#ff6e42")
+		RunState.ROOM_SHRINE:
+			return Color("#ae95ea")
+		RunState.ROOM_FOUNTAIN:
+			return Color("#76d99b")
+		_:
+			return Color("#dfaa46")
+
+
+func _pick_texture(textures: Array[Texture2D], seed: int) -> Texture2D:
+	if textures.is_empty():
+		return null
+
+	return textures[abs(seed) % textures.size()]
+
+
+func _draw_scaled_texture(texture: Texture2D, pos: Vector2, scale: float = 1.0, anchor: String = "center", modulate_color: Color = Color.WHITE) -> void:
+	if texture == null:
+		return
+
+	var size: Vector2 = texture.get_size() * scale
+	var top_left: Vector2 = pos - size * 0.5
+
+	match anchor:
+		"bottom_center":
+			top_left = pos + Vector2(-size.x * 0.5, -size.y)
+		"top_center":
+			top_left = pos + Vector2(-size.x * 0.5, 0.0)
+		_:
+			pass
+
+	draw_texture_rect(texture, Rect2(top_left, size), false, modulate_color)

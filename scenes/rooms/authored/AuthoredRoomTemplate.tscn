@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://dh0yumtipuesq"]
+
+[ext_resource type="Script" uid="uid://bt3uh1ywj3ovd" path="res://scripts/rooms/AuthoredRoomTemplate.gd" id="1_room_template"]
+
+[node name="AuthoredRoomTemplate" type="Node2D" unique_id=360639997]
+script = ExtResource("1_room_template")
+
+[node name="Art" type="Node2D" parent="." unique_id=1045753749]
+
+[node name="Floor" type="Node2D" parent="Art" unique_id=1382387373]
+
+[node name="Collision" type="Node2D" parent="." unique_id=650203664]
+
+[node name="Markers" type="Node2D" parent="." unique_id=1521182380]
+
+[node name="PlayerSpawn" type="Marker2D" parent="Markers" unique_id=332821249]
+position = Vector2(640, 520)
+
+[node name="RewardSocket" type="Marker2D" parent="Markers" unique_id=850475052]
+position = Vector2(640, 360)
+
+[node name="UpgradeSockets" type="Node2D" parent="Markers" unique_id=221586428]
+
+[node name="UpgradeSocket_01" type="Marker2D" parent="Markers/UpgradeSockets" unique_id=900866476]
+position = Vector2(394, 352)
+
+[node name="UpgradeSocket_02" type="Marker2D" parent="Markers/UpgradeSockets" unique_id=1697481580]
+position = Vector2(640, 330)
+
+[node name="UpgradeSocket_03" type="Marker2D" parent="Markers/UpgradeSockets" unique_id=624995797]
+position = Vector2(886, 352)
+
+[node name="EnemySpawns" type="Node2D" parent="Markers" unique_id=1058314866]
+
+[node name="EnemySpawn_01" type="Marker2D" parent="Markers/EnemySpawns" unique_id=1332902338]
+position = Vector2(480, 280)
+
+[node name="EnemySpawn_02" type="Marker2D" parent="Markers/EnemySpawns" unique_id=1767486965]
+position = Vector2(800, 280)
+
+[node name="EnemySpawn_03" type="Marker2D" parent="Markers/EnemySpawns" unique_id=2059584360]
+position = Vector2(640, 360)
+
+[node name="DoorSockets" type="Node2D" parent="Markers" unique_id=2147481897]
+
+[node name="DoorSocket_Left" type="Marker2D" parent="Markers/DoorSockets" unique_id=33901715]
+position = Vector2(430, 168)
+
+[node name="DoorSocket_Center" type="Marker2D" parent="Markers/DoorSockets" unique_id=1058572203]
+position = Vector2(640, 154)
+
+[node name="DoorSocket_Right" type="Marker2D" parent="Markers/DoorSockets" unique_id=424485652]
+position = Vector2(850, 168)

@@ -1,0 +1,335 @@
+extends Node2D
+
+@export var npc_id: String = "npc"
+@export var speaker_name: String = "Unknown"
+@export var interaction_radius: float = 58.0
+@export var body_color: Color = Color("#6b5a79")
+@export var accent_color: Color = Color("#dfaa46")
+@export var dialogue_lines: Array[String] = [
+	"..."
+]
+
+var player: Node2D = null
+var is_player_near: bool = false
+var interact_cooldown: float = 0.0
+var bob_time: float = 0.0
+var talk_count: int = 0
+
+
+func _ready() -> void:
+	_apply_default_identity_if_needed()
+	add_to_group("hub_npc")
+	set_process(true)
+	queue_redraw()
+
+
+func _process(delta: float) -> void:
+	bob_time += delta
+	interact_cooldown = maxf(0.0, interact_cooldown - delta)
+
+	if player == null or not is_instance_valid(player):
+		player = get_tree().get_first_node_in_group("player") as Node2D
+
+	_update_player_near_state()
+
+	if is_player_near and interact_cooldown <= 0.0 and _is_interact_pressed():
+		interact_cooldown = 0.35
+		_open_interaction()
+
+	queue_redraw()
+
+
+func _update_player_near_state() -> void:
+	is_player_near = false
+
+	if player == null:
+		return
+
+	var distance: float = global_position.distance_to(player.global_position)
+	is_player_near = distance <= interaction_radius
+
+
+func _is_interact_pressed() -> bool:
+	if InputMap.has_action("interact") and Input.is_action_just_pressed("interact"):
+		return true
+
+	return false
+
+
+func _open_interaction() -> void:
+	if _is_any_interface_active():
+		return
+
+	match npc_id:
+		"silent_smith":
+			_open_smith_menu()
+		"codex_keeper":
+			_open_codex_menu()
+		_:
+			_open_dialogue()
+
+
+func _open_smith_menu() -> void:
+	var menus := get_tree().get_nodes_in_group("smith_menu")
+
+	if menus.is_empty():
+		push_warning("No SmithMenu found. Add scenes/ui/SmithMenu.tscn to Hub.tscn.")
+		_open_dialogue()
+		return
+
+	var menu := menus[0]
+
+	if menu != null and menu.has_method("open_menu"):
+		menu.call("open_menu", self)
+
+
+func _open_codex_menu() -> void:
+	var menus := get_tree().get_nodes_in_group("codex_menu")
+
+	if menus.is_empty():
+		push_warning("No CodexMenu found. Add scenes/ui/CodexMenu.tscn to Hub.tscn.")
+		_open_dialogue()
+		return
+
+	var menu := menus[0]
+
+	if menu != null and menu.has_method("open_menu"):
+		menu.call("open_menu", self)
+
+
+func _open_dialogue() -> void:
+	var dialogue_boxes := get_tree().get_nodes_in_group("dialogue_box")
+
+	if dialogue_boxes.is_empty():
+		push_warning("No DialogueBox found. Add scenes/ui/DialogueBox.tscn to Hub.tscn.")
+		return
+
+	var dialogue_box := dialogue_boxes[0]
+
+	if dialogue_box != null and dialogue_box.has_method("is_dialogue_active"):
+		if bool(dialogue_box.call("is_dialogue_active")):
+			return
+
+	var lines_to_use: Array[String] = _get_dialogue_for_current_talk_count()
+
+	if dialogue_box != null and dialogue_box.has_method("start_dialogue"):
+		dialogue_box.call("start_dialogue", speaker_name, lines_to_use, self)
+
+	talk_count += 1
+
+
+func _is_any_interface_active() -> bool:
+	for dialogue_box in get_tree().get_nodes_in_group("dialogue_box"):
+		if dialogue_box != null and dialogue_box.has_method("is_dialogue_active"):
+			if bool(dialogue_box.call("is_dialogue_active")):
+				return true
+
+	for menu in get_tree().get_nodes_in_group("smith_menu"):
+		if menu != null and menu.has_method("is_menu_active"):
+			if bool(menu.call("is_menu_active")):
+				return true
+
+	for menu in get_tree().get_nodes_in_group("codex_menu"):
+		if menu != null and menu.has_method("is_menu_active"):
+			if bool(menu.call("is_menu_active")):
+				return true
+
+	return false
+
+
+func _get_dialogue_for_current_talk_count() -> Array[String]:
+	match npc_id:
+		"virgil_echo":
+			return _get_virgil_dialogue()
+		_:
+			return _get_generic_dialogue()
+
+
+func _get_virgil_dialogue() -> Array[String]:
+	match talk_count:
+		0:
+			return [
+				"You are not the first soul to climb.",
+				"You are merely the first one Hell failed to keep still.",
+				"Below, you will find more than enemies. You will find witnesses.",
+				"Some will guide you. Some will use you. Some will call it mercy.",
+				"If you want guidance, earn it in the rooms below."
+			]
+		1:
+			return [
+				"You returned quickly.",
+				"That can mean discipline.",
+				"Or fear.",
+				"Hell will teach you which."
+			]
+		2:
+			return [
+				"Again?",
+				"Guidance is not a rope around your waist.",
+				"Walk. Fall. Learn the shape of the wound."
+			]
+		3:
+			return [
+				"You mistake repetition for wisdom.",
+				"I have told you enough for now.",
+				"Go below."
+			]
+		_:
+			return [
+				"No.",
+				"Even echoes grow tired."
+			]
+
+
+func _get_generic_dialogue() -> Array[String]:
+	match talk_count:
+		0:
+			return [
+				"...",
+				"Not every soul remembers its name.",
+				"Perhaps that is mercy."
+			]
+		1:
+			return [
+				"You again.",
+				"I have nothing useful."
+			]
+		2:
+			return [
+				"Still nothing."
+			]
+		3:
+			return [
+				"Leave."
+			]
+		_:
+			return [
+				"..."
+			]
+
+
+func _apply_default_identity_if_needed() -> void:
+	var normalized_name := name.to_lower()
+
+	if npc_id == "npc" or npc_id.strip_edges() == "":
+		if normalized_name.contains("virgil"):
+			npc_id = "virgil_echo"
+		elif normalized_name.contains("codex"):
+			npc_id = "codex_keeper"
+		elif normalized_name.contains("smith"):
+			npc_id = "silent_smith"
+
+	match npc_id:
+		"virgil_echo":
+			speaker_name = "Virgil's Echo"
+			body_color = Color("#43516a")
+			accent_color = Color("#dfaa46")
+
+		"codex_keeper":
+			speaker_name = "Codex Keeper"
+			body_color = Color("#4a355f")
+			accent_color = Color("#c4a98f")
+
+		"silent_smith":
+			speaker_name = "Silent Smith"
+			body_color = Color("#3a3130")
+			accent_color = Color("#ff684a")
+
+		_:
+			if speaker_name == "Unknown":
+				speaker_name = "Unknown Soul"
+
+
+func _draw() -> void:
+	_draw_shadow()
+	_draw_npc_body()
+	_draw_label()
+
+	if is_player_near:
+		_draw_prompt()
+
+
+func _draw_shadow() -> void:
+	var points := PackedVector2Array()
+	var center := Vector2(0, 22)
+	var width := 48.0
+	var height := 12.0
+	var steps := 24
+
+	for i in range(steps):
+		var angle := TAU * float(i) / float(steps)
+		points.append(center + Vector2(cos(angle) * width * 0.5, sin(angle) * height * 0.5))
+
+	draw_colored_polygon(points, Color(0.0, 0.0, 0.0, 0.35))
+
+
+func _draw_npc_body() -> void:
+	var bob := sin(bob_time * 2.1) * 1.8
+	var base := Vector2(0, bob)
+
+	draw_circle(base + Vector2(0, -20), 17.0, body_color)
+	draw_circle(base + Vector2(0, -24), 11.0, body_color.lerp(Color.WHITE, 0.12))
+
+	draw_rect(
+		Rect2(base + Vector2(-14, -18), Vector2(28, 34)),
+		body_color.darkened(0.22)
+	)
+
+	draw_line(base + Vector2(-11, -4), base + Vector2(11, -4), accent_color, 3.0)
+	draw_line(base + Vector2(0, -16), base + Vector2(0, 10), accent_color.darkened(0.2), 2.0)
+
+	draw_circle(base + Vector2(-5, -24), 2.0, accent_color)
+	draw_circle(base + Vector2(5, -24), 2.0, accent_color)
+
+	if is_player_near:
+		draw_arc(base + Vector2(0, -10), 34.0, 0.0, TAU, 48, Color(accent_color.r, accent_color.g, accent_color.b, 0.42), 2.0)
+
+
+func _draw_label() -> void:
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(-70, 44),
+		speaker_name,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		140,
+		14,
+		Color("#f7e8d4")
+	)
+
+
+func _draw_prompt() -> void:
+	var prompt := "[E] Talk"
+	var rect_width := 84.0
+
+	match npc_id:
+		"silent_smith":
+			prompt = "[E] Forge"
+			rect_width = 98.0
+		"codex_keeper":
+			prompt = "[E] Codex"
+			rect_width = 98.0
+		_:
+			if talk_count >= 4:
+				prompt = "[E] Bother"
+
+	draw_rect(
+		Rect2(Vector2(-rect_width * 0.5, -72), Vector2(rect_width, 24)),
+		Color(0.0, 0.0, 0.0, 0.72)
+	)
+
+	draw_rect(
+		Rect2(Vector2(-rect_width * 0.5, -72), Vector2(rect_width, 24)),
+		accent_color,
+		false,
+		1.0
+	)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(-rect_width * 0.5 + 5.0, -55),
+		prompt,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		rect_width - 10.0,
+		14,
+		Color("#f7e8d4")
+	)

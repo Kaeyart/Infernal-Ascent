@@ -1,0 +1,677 @@
+[
+  {
+    "name": "tile_floor_plain_01",
+    "category": "tiles",
+    "source_bbox_manual": [
+      52,
+      51,
+      302,
+      196
+    ],
+    "trimmed_bbox_absolute": [
+      52,
+      51,
+      302,
+      196
+    ],
+    "trimmed_size": [
+      250,
+      145
+    ],
+    "padded_32_size": [
+      256,
+      160
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/tiles/tile_floor_plain_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/tiles/tile_floor_plain_01.png",
+    "notes": "Plain isometric dark stone floor tile. Source-res tile; optional 64x32 preview included."
+  },
+  {
+    "name": "tile_floor_cracked_01",
+    "category": "tiles",
+    "source_bbox_manual": [
+      326,
+      47,
+      580,
+      196
+    ],
+    "trimmed_bbox_absolute": [
+      326,
+      47,
+      580,
+      196
+    ],
+    "trimmed_size": [
+      254,
+      149
+    ],
+    "padded_32_size": [
+      256,
+      160
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/tiles/tile_floor_cracked_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/tiles/tile_floor_cracked_01.png",
+    "notes": "Cracked/worn isometric stone floor tile."
+  },
+  {
+    "name": "tile_floor_sigil_judgment_01",
+    "category": "tiles",
+    "source_bbox_manual": [
+      603,
+      43,
+      857,
+      195
+    ],
+    "trimmed_bbox_absolute": [
+      603,
+      43,
+      857,
+      195
+    ],
+    "trimmed_size": [
+      254,
+      152
+    ],
+    "padded_32_size": [
+      256,
+      160
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/tiles/tile_floor_sigil_judgment_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/tiles/tile_floor_sigil_judgment_01.png",
+    "notes": "Engraved judgment sigil floor tile."
+  },
+  {
+    "name": "tile_floor_grate_ash_vent_01",
+    "category": "tiles",
+    "source_bbox_manual": [
+      877,
+      49,
+      1121,
+      194
+    ],
+    "trimmed_bbox_absolute": [
+      877,
+      49,
+      1121,
+      194
+    ],
+    "trimmed_size": [
+      244,
+      145
+    ],
+    "padded_32_size": [
+      256,
+      160
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/tiles/tile_floor_grate_ash_vent_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/tiles/tile_floor_grate_ash_vent_01.png",
+    "notes": "Iron grate / ash vent floor tile."
+  },
+  {
+    "name": "tile_floor_border_lane_01",
+    "category": "tiles",
+    "source_bbox_manual": [
+      1139,
+      52,
+      1387,
+      197
+    ],
+    "trimmed_bbox_absolute": [
+      1139,
+      52,
+      1387,
+      197
+    ],
+    "trimmed_size": [
+      248,
+      145
+    ],
+    "padded_32_size": [
+      256,
+      160
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/tiles/tile_floor_border_lane_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/tiles/tile_floor_border_lane_01.png",
+    "notes": "Border / lane marker isometric floor tile."
+  },
+  {
+    "name": "wall_north_segment_01",
+    "category": "walls",
+    "source_bbox_manual": [
+      39,
+      205,
+      295,
+      454
+    ],
+    "trimmed_bbox_absolute": [
+      39,
+      205,
+      295,
+      454
+    ],
+    "trimmed_size": [
+      256,
+      249
+    ],
+    "padded_32_size": [
+      256,
+      256
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/walls/wall_north_segment_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/wall_north_segment_01.png",
+    "notes": "North/rear wall segment with banners and judicial emblem."
+  },
+  {
+    "name": "wall_west_segment_01",
+    "category": "walls",
+    "source_bbox_manual": [
+      339,
+      216,
+      506,
+      420
+    ],
+    "trimmed_bbox_absolute": [
+      339,
+      216,
+      506,
+      420
+    ],
+    "trimmed_size": [
+      167,
+      204
+    ],
+    "padded_32_size": [
+      192,
+      224
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/walls/wall_west_segment_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/wall_west_segment_01.png",
+    "notes": "West/side wall segment / return piece."
+  },
+  {
+    "name": "corner_inner_back_01",
+    "category": "walls",
+    "source_bbox_manual": [
+      584,
+      223,
+      782,
+      418
+    ],
+    "trimmed_bbox_absolute": [
+      584,
+      223,
+      782,
+      418
+    ],
+    "trimmed_size": [
+      198,
+      195
+    ],
+    "padded_32_size": [
+      224,
+      224
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/walls/corner_inner_back_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/corner_inner_back_01.png",
+    "notes": "Inner corner wall piece with chain/lamp."
+  },
+  {
+    "name": "corner_niche_left_01",
+    "category": "walls",
+    "source_bbox_manual": [
+      836,
+      228,
+      951,
+      403
+    ],
+    "trimmed_bbox_absolute": [
+      836,
+      228,
+      951,
+      403
+    ],
+    "trimmed_size": [
+      115,
+      175
+    ],
+    "padded_32_size": [
+      128,
+      192
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/walls/corner_niche_left_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/corner_niche_left_01.png",
+    "notes": "Side niche / corner piece with ember recess."
+  },
+  {
+    "name": "corner_niche_right_01",
+    "category": "walls",
+    "source_bbox_manual": [
+      988,
+      227,
+      1104,
+      399
+    ],
+    "trimmed_bbox_absolute": [
+      988,
+      227,
+      1104,
+      399
+    ],
+    "trimmed_size": [
+      116,
+      172
+    ],
+    "padded_32_size": [
+      128,
+      192
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/walls/corner_niche_right_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/corner_niche_right_01.png",
+    "notes": "Mirrored side niche / corner piece with ember recess."
+  },
+  {
+    "name": "parapet_side_long_01",
+    "category": "walls",
+    "source_bbox_manual": [
+      1166,
+      282,
+      1399,
+      458
+    ],
+    "trimmed_bbox_absolute": [
+      1166,
+      282,
+      1399,
+      458
+    ],
+    "trimmed_size": [
+      233,
+      176
+    ],
+    "padded_32_size": [
+      256,
+      192
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/walls/parapet_side_long_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/parapet_side_long_01.png",
+    "notes": "Long low wall/parapet segment."
+  },
+  {
+    "name": "parapet_front_low_01",
+    "category": "walls",
+    "source_bbox_manual": [
+      148,
+      450,
+      383,
+      526
+    ],
+    "trimmed_bbox_absolute": [
+      148,
+      450,
+      383,
+      526
+    ],
+    "trimmed_size": [
+      235,
+      76
+    ],
+    "padded_32_size": [
+      256,
+      96
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/walls/parapet_front_low_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/parapet_front_low_01.png",
+    "notes": "Front low parapet / trim segment."
+  },
+  {
+    "name": "platform_edge_banner_01",
+    "category": "walls",
+    "source_bbox_manual": [
+      470,
+      461,
+      770,
+      536
+    ],
+    "trimmed_bbox_absolute": [
+      470,
+      461,
+      770,
+      536
+    ],
+    "trimmed_size": [
+      300,
+      75
+    ],
+    "padded_32_size": [
+      320,
+      96
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/walls/platform_edge_banner_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/platform_edge_banner_01.png",
+    "notes": "Raised edge / ledge segment with banner."
+  },
+  {
+    "name": "dais_raised_rear_01",
+    "category": "walls",
+    "source_bbox_manual": [
+      852,
+      447,
+      1182,
+      553
+    ],
+    "trimmed_bbox_absolute": [
+      852,
+      447,
+      1182,
+      553
+    ],
+    "trimmed_size": [
+      330,
+      106
+    ],
+    "padded_32_size": [
+      352,
+      128
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/walls/dais_raised_rear_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/dais_raised_rear_01.png",
+    "notes": "Raised rear dais / platform segment."
+  },
+  {
+    "name": "gate_intake_main_01",
+    "category": "setpieces",
+    "source_bbox_manual": [
+      50,
+      546,
+      431,
+      828
+    ],
+    "trimmed_bbox_absolute": [
+      50,
+      546,
+      431,
+      828
+    ],
+    "trimmed_size": [
+      381,
+      282
+    ],
+    "padded_32_size": [
+      384,
+      288
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/setpieces/gate_intake_main_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/setpieces/gate_intake_main_01.png",
+    "notes": "Main infernal intake gate centerpiece."
+  },
+  {
+    "name": "gate_arch_frame_01",
+    "category": "setpieces",
+    "source_bbox_manual": [
+      507,
+      552,
+      698,
+      819
+    ],
+    "trimmed_bbox_absolute": [
+      507,
+      552,
+      698,
+      819
+    ],
+    "trimmed_size": [
+      191,
+      267
+    ],
+    "padded_32_size": [
+      192,
+      288
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/setpieces/gate_arch_frame_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/setpieces/gate_arch_frame_01.png",
+    "notes": "Separate gate frame / arch."
+  },
+  {
+    "name": "lectern_record_stand_01",
+    "category": "props",
+    "source_bbox_manual": [
+      782,
+      606,
+      901,
+      786
+    ],
+    "trimmed_bbox_absolute": [
+      782,
+      606,
+      901,
+      786
+    ],
+    "trimmed_size": [
+      119,
+      180
+    ],
+    "padded_32_size": [
+      128,
+      192
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/props/lectern_record_stand_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/props/lectern_record_stand_01.png",
+    "notes": "Ledger lectern / record stand."
+  },
+  {
+    "name": "brazier_fire_01",
+    "category": "props",
+    "source_bbox_manual": [
+      952,
+      605,
+      1054,
+      786
+    ],
+    "trimmed_bbox_absolute": [
+      952,
+      605,
+      1054,
+      786
+    ],
+    "trimmed_size": [
+      102,
+      181
+    ],
+    "padded_32_size": [
+      128,
+      192
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/props/brazier_fire_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/props/brazier_fire_01.png",
+    "notes": "Brazier with fire."
+  },
+  {
+    "name": "chain_barrier_queue_01",
+    "category": "props",
+    "source_bbox_manual": [
+      1102,
+      636,
+      1360,
+      766
+    ],
+    "trimmed_bbox_absolute": [
+      1102,
+      636,
+      1360,
+      766
+    ],
+    "trimmed_size": [
+      258,
+      130
+    ],
+    "padded_32_size": [
+      288,
+      160
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/props/chain_barrier_queue_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/props/chain_barrier_queue_01.png",
+    "notes": "Queue divider / chain barrier."
+  },
+  {
+    "name": "plaque_judgment_tablet_01",
+    "category": "props",
+    "source_bbox_manual": [
+      64,
+      849,
+      188,
+      1044
+    ],
+    "trimmed_bbox_absolute": [
+      64,
+      849,
+      188,
+      1044
+    ],
+    "trimmed_size": [
+      124,
+      195
+    ],
+    "padded_32_size": [
+      128,
+      224
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/props/plaque_judgment_tablet_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/props/plaque_judgment_tablet_01.png",
+    "notes": "Judgment plaque / stone tablet."
+  },
+  {
+    "name": "urn_ash_cluster_01",
+    "category": "props",
+    "source_bbox_manual": [
+      262,
+      883,
+      452,
+      1040
+    ],
+    "trimmed_bbox_absolute": [
+      262,
+      883,
+      452,
+      1040
+    ],
+    "trimmed_size": [
+      190,
+      157
+    ],
+    "padded_32_size": [
+      192,
+      160
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/props/urn_ash_cluster_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/props/urn_ash_cluster_01.png",
+    "notes": "Urn and ash cluster."
+  },
+  {
+    "name": "statue_clerk_marker_01",
+    "category": "props",
+    "source_bbox_manual": [
+      521,
+      854,
+      661,
+      1046
+    ],
+    "trimmed_bbox_absolute": [
+      521,
+      854,
+      661,
+      1046
+    ],
+    "trimmed_size": [
+      140,
+      192
+    ],
+    "padded_32_size": [
+      160,
+      192
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/props/statue_clerk_marker_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/props/statue_clerk_marker_01.png",
+    "notes": "Small judgment clerk statue / writing marker."
+  },
+  {
+    "name": "foreground_hanging_chain_01",
+    "category": "effects",
+    "source_bbox_manual": [
+      800,
+      813,
+      904,
+      1049
+    ],
+    "trimmed_bbox_absolute": [
+      800,
+      813,
+      904,
+      1049
+    ],
+    "trimmed_size": [
+      104,
+      236
+    ],
+    "padded_32_size": [
+      128,
+      256
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/effects/foreground_hanging_chain_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/effects/foreground_hanging_chain_01.png",
+    "notes": "Foreground hanging chain silhouette."
+  },
+  {
+    "name": "effect_smoke_wisp_01",
+    "category": "effects",
+    "source_bbox_manual": [
+      946,
+      815,
+      1090,
+      1048
+    ],
+    "trimmed_bbox_absolute": [
+      976,
+      838,
+      1071,
+      1044
+    ],
+    "trimmed_size": [
+      95,
+      206
+    ],
+    "padded_32_size": [
+      96,
+      224
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/effects/effect_smoke_wisp_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/effects/effect_smoke_wisp_01.png",
+    "notes": "Smoke / heat wisp group crop."
+  },
+  {
+    "name": "effect_ember_particles_01",
+    "category": "effects",
+    "source_bbox_manual": [
+      1160,
+      815,
+      1395,
+      1048
+    ],
+    "trimmed_bbox_absolute": [
+      1173,
+      841,
+      1366,
+      1035
+    ],
+    "trimmed_size": [
+      193,
+      194
+    ],
+    "padded_32_size": [
+      224,
+      224
+    ],
+    "trimmed_path": "art/iso/circle0/ash_intake_hall_01/sliced_trimmed/effects/effect_ember_particles_01.png",
+    "padded_32_path": "art/iso/circle0/ash_intake_hall_01/sliced_padded_32/effects/effect_ember_particles_01.png",
+    "notes": "Ember particles group crop."
+  }
+]

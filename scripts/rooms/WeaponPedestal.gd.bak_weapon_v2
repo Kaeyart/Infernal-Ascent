@@ -1,0 +1,64 @@
+extends Node2D
+
+signal weapon_selected(weapon: WeaponData)
+
+@export var weapon: WeaponData
+@export var interact_radius := 75.0
+@export var display_name := "Weapon"
+
+var player: Node2D = null
+var is_player_near := false
+
+func _ready() -> void:
+	queue_redraw()
+
+func _process(_delta: float) -> void:
+	player = get_tree().get_first_node_in_group("player") as Node2D
+	is_player_near = false
+
+	if player:
+		is_player_near = global_position.distance_to(player.global_position) <= interact_radius
+
+		if is_player_near and Input.is_action_just_pressed("interact"):
+			if weapon:
+				weapon_selected.emit(weapon)
+
+	queue_redraw()
+
+func _draw() -> void:
+	var base_color := Color("#21151a")
+	var ring_color := Color("#dfaa46")
+
+	if is_player_near:
+		base_color = Color("#33201a")
+		ring_color = Color("#f0b24f")
+
+	draw_circle(Vector2.ZERO, 46, base_color)
+	draw_circle(Vector2.ZERO, 34, ring_color.darkened(0.45), false, 4.0)
+
+	# Temporary weapon marker.
+	draw_line(Vector2(-16, 12), Vector2(18, -24), ring_color, 5.0)
+	draw_line(Vector2(-18, 10), Vector2(8, 22), ring_color, 4.0)
+
+	if weapon:
+		draw_string(
+			ThemeDB.fallback_font,
+			Vector2(-58, 72),
+			weapon.display_name,
+			HORIZONTAL_ALIGNMENT_LEFT,
+			120,
+			14,
+			Color("#f7e8d4")
+		)
+
+	if is_player_near:
+		draw_rect(Rect2(Vector2(-120, -96), Vector2(240, 34)), Color(0, 0, 0, 0.72))
+		draw_string(
+			ThemeDB.fallback_font,
+			Vector2(-94, -73),
+			"Press E — Equip",
+			HORIZONTAL_ALIGNMENT_LEFT,
+			190,
+			16,
+			Color("#f7e8d4")
+		)

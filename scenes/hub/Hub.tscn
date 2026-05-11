@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://c1n31es3c7igy"]
+
+[ext_resource type="Script" uid="uid://das6w0opsk5qv" path="res://scripts/rooms/Hub.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://258o6hja7d81" path="res://scenes/actors/Player.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://dlgpgiw623356" path="res://scenes/ui/DialogueBox.tscn" id="2_3eo6u"]
+[ext_resource type="PackedScene" uid="uid://dudugm3wjbq71" path="res://scenes/hub/WeaponPedestal.tscn" id="3_w7jgr"]
+[ext_resource type="PackedScene" uid="uid://0rgwigkjifyv" path="res://scenes/ui/SmithMenu.tscn" id="5_6423h"]
+[ext_resource type="PackedScene" uid="uid://dcl80jpgg3e0h" path="res://scenes/hub/HubNPC.tscn" id="5_le482"]
+[ext_resource type="PackedScene" uid="uid://n82gcjujedw" path="res://scenes/hub/TrainingDummy.tscn" id="5_mo1wo"]
+[ext_resource type="PackedScene" uid="uid://dghct11olx328" path="res://scenes/ui/CodexMenu.tscn" id="6_mo1wo"]
+[ext_resource type="PackedScene" uid="uid://b40s0jsv7dhe5" path="res://scenes/ui/TrainingDummyMenu.tscn" id="9_y54b8"]
+
+[node name="Hub" type="Node2D" unique_id=925749580]
+script = ExtResource("1")
+
+[node name="Player" parent="." unique_id=785569125 instance=ExtResource("2")]
+position = Vector2(640, 500)
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=657523728]
+position = Vector2(640, 500)
+
+[node name="WeaponPedestal" parent="." unique_id=1710569456 instance=ExtResource("3_w7jgr")]
+
+[node name="VirgilEcho" parent="." unique_id=1326312213 instance=ExtResource("5_le482")]
+position = Vector2(640, 300)
+speaker_name = "Echo of Virgil"
+
+[node name="CodexKeeper" parent="." unique_id=1795087964 instance=ExtResource("5_le482")]
+position = Vector2(930, 350)
+speaker_name = "Codex Keeper"
+
+[node name="TrainingDummy" parent="." unique_id=1346701212 instance=ExtResource("5_mo1wo")]
+position = Vector2(640, 535)
+
+[node name="SilentSmith" parent="." unique_id=1640384728 instance=ExtResource("5_le482")]
+position = Vector2(350, 350)
+speaker_name = "Silent Smith"
+
+[node name="SmithMenu" parent="." unique_id=908221440 instance=ExtResource("5_6423h")]
+
+[node name="CodexMenu" parent="." unique_id=2034168190 instance=ExtResource("6_mo1wo")]
+
+[node name="DialogueBox" parent="." unique_id=510633707 instance=ExtResource("2_3eo6u")]
+
+[node name="TrainingDummyMenu" parent="." unique_id=815651052 instance=ExtResource("9_y54b8")]

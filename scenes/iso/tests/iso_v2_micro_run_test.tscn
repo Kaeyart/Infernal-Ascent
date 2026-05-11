@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/iso/IsoV2MicroRunTest.gd" id="1_micro"]
+[ext_resource type="Script" path="res://scripts/iso/IsoTestPlayer.gd" id="2_player"]
+[ext_resource type="Script" path="res://scripts/iso/IsoPatronFlowController.gd" id="3_flow"]
+
+[node name="IsoV2MicroRunTest" type="Node2D"]
+script = ExtResource("1_micro")
+
+[node name="PatronFlow" type="Node2D" parent="."]
+script = ExtResource("3_flow")
+debug_input_enabled = true
+auto_show_help = true
+altar_position = Vector2(640, 390)
+gate_left_position = Vector2(410, 235)
+gate_center_position = Vector2(640, 165)
+gate_right_position = Vector2(870, 235)
+
+[node name="IsoTestPlayer" type="Node2D" parent="." groups=["player"]]
+z_index = 10
+script = ExtResource("2_player")
+position = Vector2(640, 560)

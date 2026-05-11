@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://4mxwqqg001rj"
+
+[deps]
+
+files=["res://art/hub_generated/manifest/ia_hub_assets_manifest.source.translation", "res://art/hub_generated/manifest/ia_hub_assets_manifest.category.translation", "res://art/hub_generated/manifest/ia_hub_assets_manifest.path.translation", "res://art/hub_generated/manifest/ia_hub_assets_manifest.width.translation", "res://art/hub_generated/manifest/ia_hub_assets_manifest.height.translation", "res://art/hub_generated/manifest/ia_hub_assets_manifest.bbox.translation", "res://art/hub_generated/manifest/ia_hub_assets_manifest.area.translation"]
+
+source_file="res://art/hub_generated/manifest/ia_hub_assets_manifest.csv"
+dest_files=["res://art/hub_generated/manifest/ia_hub_assets_manifest.source.translation", "res://art/hub_generated/manifest/ia_hub_assets_manifest.category.translation", "res://art/hub_generated/manifest/ia_hub_assets_manifest.path.translation", "res://art/hub_generated/manifest/ia_hub_assets_manifest.width.translation", "res://art/hub_generated/manifest/ia_hub_assets_manifest.height.translation", "res://art/hub_generated/manifest/ia_hub_assets_manifest.bbox.translation", "res://art/hub_generated/manifest/ia_hub_assets_manifest.area.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

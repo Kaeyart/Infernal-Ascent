@@ -1,0 +1,166 @@
+extends Node
+class_name PatronRunManager
+
+signal patron_added(patron_id: String)
+signal patron_lock_changed(is_locked: bool, patrons: Array)
+signal boon_claimed(patron_id: String, boon: Dictionary)
+signal relationship_changed(patron_id: String, value: int)
+signal gate_choice_committed(choice_data: Dictionary)
+
+const MAX_RUN_PATRONS: int = 2
+
+var selected_patrons: Array[String] = []
+var patron_locked: bool = false
+var pending_reward_patron_id: String = ""
+var claimed_boons: Array[Dictionary] = []
+var relationships: Dictionary = {}
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+
+func _ready() -> void:
+	rng.randomize()
+
+func reset_run() -> void:
+	selected_patrons.clear()
+	patron_locked = false
+	pending_reward_patron_id = ""
+	claimed_boons.clear()
+	emit_signal("patron_lock_changed", patron_locked, selected_patrons.duplicate())
+
+func get_selected_patrons() -> Array[String]:
+	return selected_patrons.duplicate()
+
+func choose_reward_patron_after_clear() -> String:
+	if pending_reward_patron_id != "":
+		return pending_reward_patron_id
+	if selected_patrons.is_empty():
+		return _get_random_unselected_patron("")
+	var index: int = rng.randi_range(0, selected_patrons.size() - 1)
+	return selected_patrons[index]
+
+func create_current_boon_offer() -> Dictionary:
+	var patron_id: String = choose_reward_patron_after_clear()
+	return PatronRegistry.make_boon_offer(patron_id, rng)
+
+func claim_boon(patron_id: String, boon: Dictionary) -> void:
+	if patron_id != "" and not selected_patrons.has(patron_id):
+		_add_patron_to_run(patron_id)
+	claimed_boons.append(boon.duplicate(true))
+	pending_reward_patron_id = ""
+	_increase_relationship(patron_id, 1)
+	emit_signal("boon_claimed", patron_id, boon.duplicate(true))
+
+func commit_gate_choice(choice_data: Dictionary) -> void:
+	var choice_type: String = str(choice_data.get("type", "patron"))
+	if choice_type == "patron":
+		var patron_id: String = str(choice_data.get("patron_id", ""))
+		if patron_id != "":
+			pending_reward_patron_id = patron_id
+			if not selected_patrons.has(patron_id) and selected_patrons.size() < MAX_RUN_PATRONS:
+				_add_patron_to_run(patron_id)
+	else:
+		pending_reward_patron_id = ""
+	emit_signal("gate_choice_committed", choice_data.duplicate(true))
+
+func build_exit_choices() -> Array[Dictionary]:
+	if patron_locked:
+		return _build_locked_exit_choices()
+	return _build_unlocked_exit_choices()
+
+func describe_run_lock() -> String:
+	if selected_patrons.is_empty():
+		return "No patrons selected. First clear will call a random witness."
+	if patron_locked:
+		return "Run locked to %s and %s." % [PatronRegistry.get_patron_name(selected_patrons[0]), PatronRegistry.get_patron_name(selected_patrons[1])]
+	return "First patron: %s. Choose one more patron to lock the run." % PatronRegistry.get_patron_name(selected_patrons[0])
+
+func _build_unlocked_exit_choices() -> Array[Dictionary]:
+	var choices: Array[Dictionary] = []
+	var patrons: Dictionary = PatronRegistry.get_patrons()
+	var candidate_ids: Array[String] = []
+	for key: Variant in patrons.keys():
+		var patron_id: String = str(key)
+		if not selected_patrons.has(patron_id):
+			candidate_ids.append(patron_id)
+	_shuffle_strings(candidate_ids)
+
+	for patron_id: String in candidate_ids:
+		if choices.size() >= 3:
+			break
+		choices.append(_make_patron_gate_data(patron_id, not selected_patrons.has(patron_id)))
+
+	if choices.size() < 3 and not selected_patrons.is_empty():
+		for patron_id: String in selected_patrons:
+			if choices.size() >= 3:
+				break
+			choices.append(_make_patron_gate_data(patron_id, false))
+
+	while choices.size() < 3:
+		var utility: Dictionary = _get_random_utility_choice()
+		choices.append(utility)
+	return choices
+
+func _build_locked_exit_choices() -> Array[Dictionary]:
+	var choices: Array[Dictionary] = []
+	for patron_id: String in selected_patrons:
+		choices.append(_make_patron_gate_data(patron_id, false))
+	while choices.size() < 3:
+		choices.append(_get_random_utility_choice())
+	return choices
+
+func _make_patron_gate_data(patron_id: String, is_new: bool) -> Dictionary:
+	var patron: Dictionary = PatronRegistry.get_patron(patron_id)
+	return {
+		"id": patron_id,
+		"type": "patron",
+		"patron_id": patron_id,
+		"display_name": str(patron.get("display_name", patron_id.capitalize())),
+		"subtitle": str(patron.get("subtitle", "Patron boon")),
+		"is_new_patron": is_new,
+		"color": PatronRegistry.get_patron_color(patron_id)
+	}
+
+func _add_patron_to_run(patron_id: String) -> void:
+	if selected_patrons.has(patron_id):
+		return
+	if selected_patrons.size() >= MAX_RUN_PATRONS:
+		return
+	selected_patrons.append(patron_id)
+	emit_signal("patron_added", patron_id)
+	if selected_patrons.size() >= MAX_RUN_PATRONS:
+		patron_locked = true
+	emit_signal("patron_lock_changed", patron_locked, selected_patrons.duplicate())
+
+func _increase_relationship(patron_id: String, amount: int) -> void:
+	if patron_id == "":
+		return
+	var current_value: int = int(relationships.get(patron_id, 0))
+	var new_value: int = current_value + amount
+	relationships[patron_id] = new_value
+	emit_signal("relationship_changed", patron_id, new_value)
+
+func _get_random_unselected_patron(fallback_patron_id: String) -> String:
+	var patrons: Dictionary = PatronRegistry.get_patrons()
+	var candidate_ids: Array[String] = []
+	for key: Variant in patrons.keys():
+		var patron_id: String = str(key)
+		if not selected_patrons.has(patron_id):
+			candidate_ids.append(patron_id)
+	if candidate_ids.is_empty():
+		if selected_patrons.is_empty():
+			return fallback_patron_id
+		var index: int = rng.randi_range(0, selected_patrons.size() - 1)
+		return selected_patrons[index]
+	var candidate_index: int = rng.randi_range(0, candidate_ids.size() - 1)
+	return candidate_ids[candidate_index]
+
+func _get_random_utility_choice() -> Dictionary:
+	var utilities: Array[Dictionary] = PatronRegistry.get_utility_choices()
+	var index: int = rng.randi_range(0, utilities.size() - 1)
+	return utilities[index].duplicate(true)
+
+func _shuffle_strings(items: Array[String]) -> void:
+	for i: int in range(items.size() - 1, 0, -1):
+		var j: int = rng.randi_range(0, i)
+		var temp: String = items[i]
+		items[i] = items[j]
+		items[j] = temp

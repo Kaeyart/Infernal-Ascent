@@ -1,0 +1,207 @@
+extends CanvasLayer
+
+signal dialogue_finished()
+
+var root: Control = null
+var panel: Control = null
+var speaker_label: Label = null
+var body_label: Label = null
+var prompt_label: Label = null
+var counter_label: Label = null
+
+var active: bool = false
+var speaker_name: String = ""
+var lines: Array[String] = []
+var line_index: int = 0
+var input_guard_timer: float = 0.0
+
+var source_npc: Node2D = null
+var player: Node2D = null
+var auto_close_distance: float = 95.0
+
+
+func _ready() -> void:
+	add_to_group("dialogue_box")
+	_build_ui()
+	_hide_dialogue()
+	set_process(true)
+
+
+func _process(delta: float) -> void:
+	input_guard_timer = maxf(0.0, input_guard_timer - delta)
+
+	if not active:
+		return
+
+	if player == null or not is_instance_valid(player):
+		player = get_tree().get_first_node_in_group("player") as Node2D
+
+	if source_npc != null and is_instance_valid(source_npc) and player != null:
+		if source_npc.global_position.distance_to(player.global_position) > auto_close_distance:
+			close_dialogue()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not active:
+		return
+
+	if input_guard_timer > 0.0:
+		return
+
+	if event is InputEventKey:
+		var key_event := event as InputEventKey
+
+		if not key_event.pressed or key_event.echo:
+			return
+
+		if key_event.keycode in [KEY_SPACE, KEY_ESCAPE]:
+			get_viewport().set_input_as_handled()
+			close_dialogue()
+			return
+
+		if key_event.keycode in [KEY_E, KEY_ENTER, KEY_KP_ENTER]:
+			get_viewport().set_input_as_handled()
+			_advance_dialogue()
+			return
+
+	if InputMap.has_action("interact") and event.is_action_pressed("interact"):
+		get_viewport().set_input_as_handled()
+		_advance_dialogue()
+
+
+func start_dialogue(new_speaker_name: String, new_lines: Array, new_source_npc: Node2D = null) -> void:
+	speaker_name = new_speaker_name
+	source_npc = new_source_npc
+	player = get_tree().get_first_node_in_group("player") as Node2D
+
+	lines.clear()
+
+	for line in new_lines:
+		lines.append(str(line))
+
+	if lines.is_empty():
+		return
+
+	active = true
+	line_index = 0
+	input_guard_timer = 0.18
+
+	_show_dialogue()
+	_refresh_text()
+
+
+func close_dialogue() -> void:
+	_hide_dialogue()
+	dialogue_finished.emit()
+
+
+func is_dialogue_active() -> bool:
+	return active
+
+
+func _advance_dialogue() -> void:
+	line_index += 1
+
+	if line_index >= lines.size():
+		close_dialogue()
+		return
+
+	_refresh_text()
+
+
+func _build_ui() -> void:
+	root = Control.new()
+	root.name = "DialogueRoot"
+	root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(root)
+
+	panel = DialoguePanel.new()
+	panel.name = "DialoguePanel"
+	panel.position = Vector2(230, 500)
+	panel.size = Vector2(820, 170)
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(panel)
+
+	speaker_label = Label.new()
+	speaker_label.name = "SpeakerLabel"
+	speaker_label.position = Vector2(260, 515)
+	speaker_label.size = Vector2(360, 30)
+	speaker_label.add_theme_font_size_override("font_size", 23)
+	speaker_label.add_theme_color_override("font_color", Color("#f4d49a"))
+	speaker_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
+	speaker_label.add_theme_constant_override("shadow_offset_x", 2)
+	speaker_label.add_theme_constant_override("shadow_offset_y", 2)
+	root.add_child(speaker_label)
+
+	body_label = Label.new()
+	body_label.name = "BodyLabel"
+	body_label.position = Vector2(260, 552)
+	body_label.size = Vector2(760, 72)
+	body_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body_label.add_theme_font_size_override("font_size", 19)
+	body_label.add_theme_color_override("font_color", Color("#f7e8d4"))
+	body_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
+	body_label.add_theme_constant_override("shadow_offset_x", 2)
+	body_label.add_theme_constant_override("shadow_offset_y", 2)
+	root.add_child(body_label)
+
+	prompt_label = Label.new()
+	prompt_label.name = "PromptLabel"
+	prompt_label.position = Vector2(755, 632)
+	prompt_label.size = Vector2(255, 24)
+	prompt_label.text = "E/Enter: Next   Space: Close"
+	prompt_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	prompt_label.add_theme_font_size_override("font_size", 15)
+	prompt_label.add_theme_color_override("font_color", Color("#c4a98f"))
+	root.add_child(prompt_label)
+
+	counter_label = Label.new()
+	counter_label.name = "CounterLabel"
+	counter_label.position = Vector2(260, 632)
+	counter_label.size = Vector2(120, 24)
+	counter_label.add_theme_font_size_override("font_size", 14)
+	counter_label.add_theme_color_override("font_color", Color("#8f7a64"))
+	root.add_child(counter_label)
+
+
+func _show_dialogue() -> void:
+	active = true
+	root.visible = true
+
+
+func _hide_dialogue() -> void:
+	active = false
+	source_npc = null
+
+	if root != null:
+		root.visible = false
+
+
+func _refresh_text() -> void:
+	speaker_label.text = speaker_name
+	body_label.text = lines[line_index]
+	counter_label.text = "%d / %d" % [line_index + 1, lines.size()]
+
+
+class DialoguePanel:
+	extends Control
+
+	func _draw() -> void:
+		var rect := Rect2(Vector2.ZERO, size)
+
+		draw_rect(rect, Color(0.03, 0.015, 0.012, 0.92))
+		draw_rect(Rect2(Vector2(8, 8), size - Vector2(16, 16)), Color(0.09, 0.035, 0.028, 0.82))
+		draw_rect(rect, Color("#6b2a1f"), false, 3.0)
+		draw_rect(Rect2(Vector2(7, 7), size - Vector2(14, 14)), Color("#d49a4a"), false, 1.0)
+
+		draw_line(Vector2(24, 20), Vector2(size.x - 24, 20), Color(1.0, 0.58, 0.18, 0.35), 1.0)
+		draw_line(Vector2(24, size.y - 20), Vector2(size.x - 24, size.y - 20), Color(1.0, 0.58, 0.18, 0.25), 1.0)
+
+		for corner in [
+			Vector2(12, 12),
+			Vector2(size.x - 12, 12),
+			Vector2(12, size.y - 12),
+			Vector2(size.x - 12, size.y - 12)
+		]:
+			draw_circle(corner, 4.0, Color("#d49a4a"))

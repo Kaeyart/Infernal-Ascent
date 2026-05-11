@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://wusa472ugtw0"]
+
+[ext_resource type="Script" uid="uid://kg3m6k42cwr4" path="res://scripts/props/ChoiceDoor.gd" id="1_y1vdv"]
+
+[node name="ChoiceDoor" type="Node2D" unique_id=1317170872]
+script = ExtResource("1_y1vdv")

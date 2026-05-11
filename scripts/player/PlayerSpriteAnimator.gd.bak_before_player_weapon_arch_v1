@@ -1,0 +1,430 @@
+extends Node2D
+
+@export var sprite_scale: Vector2 = Vector2(0.42, 0.42)
+@export var idle_frame_duration: float = 0.24
+@export var movement_deadzone: float = 8.0
+@export var y_sort_offset: float = -10.0
+@export var combat_recoil_distance: float = 4.0
+@export var dash_lean_distance: float = 8.0
+@export var draw_action_shadow: bool = true
+
+var player: Node = null
+var sprite: Sprite2D = null
+
+var current_direction: String = "down"
+var current_frame: int = 1
+var frame_timer: float = 0.0
+var state_age: float = 0.0
+var previous_visual_state: String = "idle"
+var visual_state: String = "idle"
+var facing_vector: Vector2 = Vector2.DOWN
+
+var texture_cache: Dictionary = {}
+
+
+func _ready() -> void:
+	player = get_parent()
+	_ensure_sprite()
+	set_process(true)
+	_apply_frame()
+	_apply_state_visuals()
+
+
+func _process(delta: float) -> void:
+	if player == null:
+		return
+
+	_update_visual_state(delta)
+
+	var input_vector := _get_movement_input_vector()
+	var velocity := _get_player_velocity()
+	var parent_facing := _get_player_facing()
+
+	if _is_action_state(visual_state) and parent_facing.length() > 0.05:
+		_update_direction_from_vector(parent_facing)
+	elif input_vector.length() > 0.05:
+		_update_direction_from_vector(input_vector)
+	elif velocity.length() > movement_deadzone:
+		_update_direction_from_vector(velocity.normalized())
+
+	frame_timer += delta
+
+	if frame_timer >= idle_frame_duration:
+		frame_timer = 0.0
+		current_frame += 1
+
+		if current_frame > 4:
+			current_frame = 1
+
+		_apply_frame()
+
+	_apply_state_visuals()
+	queue_redraw()
+
+
+func _ensure_sprite() -> void:
+	sprite = get_node_or_null("Sprite2D") as Sprite2D
+
+	if sprite == null:
+		sprite = Sprite2D.new()
+		sprite.name = "Sprite2D"
+		add_child(sprite)
+
+	sprite.centered = true
+	sprite.scale = sprite_scale
+	sprite.position = Vector2(0.0, y_sort_offset)
+	sprite.z_index = 80
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+
+
+func _update_visual_state(delta: float) -> void:
+	visual_state = _get_player_string_property("visual_state", "idle")
+
+	if visual_state != previous_visual_state:
+		previous_visual_state = visual_state
+		state_age = 0.0
+	else:
+		state_age += delta
+
+	facing_vector = _get_player_facing()
+
+	if facing_vector.length() <= 0.05:
+		facing_vector = _direction_name_to_vector(current_direction)
+
+
+func _get_movement_input_vector() -> Vector2:
+	var x := 0.0
+	var y := 0.0
+
+	if _is_action_pressed_safe("move_left") or _is_action_pressed_safe("ui_left"):
+		x -= 1.0
+
+	if _is_action_pressed_safe("move_right") or _is_action_pressed_safe("ui_right"):
+		x += 1.0
+
+	if _is_action_pressed_safe("move_up") or _is_action_pressed_safe("ui_up"):
+		y -= 1.0
+
+	if _is_action_pressed_safe("move_down") or _is_action_pressed_safe("ui_down"):
+		y += 1.0
+
+	var input_vector := Vector2(x, y)
+
+	if input_vector.length() > 1.0:
+		input_vector = input_vector.normalized()
+
+	return input_vector
+
+
+func _is_action_pressed_safe(action_name: String) -> bool:
+	if not InputMap.has_action(action_name):
+		return false
+
+	return Input.is_action_pressed(action_name)
+
+
+func _get_player_velocity() -> Vector2:
+	if player == null:
+		return Vector2.ZERO
+
+	if not _object_has_property(player, "velocity"):
+		return Vector2.ZERO
+
+	var value = player.get("velocity")
+
+	if value is Vector2:
+		return value
+
+	return Vector2.ZERO
+
+
+func _get_player_facing() -> Vector2:
+	if player == null:
+		return _direction_name_to_vector(current_direction)
+
+	if not _object_has_property(player, "facing"):
+		return _direction_name_to_vector(current_direction)
+
+	var value = player.get("facing")
+
+	if value is Vector2 and value.length() > 0.05:
+		return value.normalized()
+
+	return _direction_name_to_vector(current_direction)
+
+
+func _update_direction_from_vector(direction: Vector2) -> void:
+	if direction.length() <= 0.05:
+		return
+
+	var facing := direction.normalized()
+
+	if absf(facing.x) > absf(facing.y):
+		if facing.x >= 0.0:
+			current_direction = "right"
+		else:
+			current_direction = "left"
+	else:
+		if facing.y >= 0.0:
+			current_direction = "down"
+		else:
+			current_direction = "up"
+
+
+func _apply_frame() -> void:
+	if sprite == null:
+		return
+
+	var texture := _get_texture(current_direction, current_frame)
+
+	if texture != null:
+		sprite.texture = texture
+
+
+func _apply_state_visuals() -> void:
+	if sprite == null:
+		return
+
+	var action_progress: float = clampf(state_age / 0.22, 0.0, 1.0)
+	var punch: float = sin((1.0 - action_progress) * PI) if action_progress < 1.0 else 0.0
+	var offset := Vector2(0.0, y_sort_offset)
+	var scale_multiplier := Vector2.ONE
+	var rotation_amount := 0.0
+	var modulate_color := Color(1.0, 1.0, 1.0, 1.0)
+	var hit_flash: float = _get_player_float_property("hit_flash", 0.0)
+	var dash_timer: float = _get_player_float_property("dash_timer", 0.0)
+	var invuln_timer: float = _get_player_float_property("invuln_timer", 0.0)
+	var hurt_feedback_timer: float = _get_player_float_property("hurt_feedback_timer", 0.0)
+	var dodge_feedback_timer: float = _get_player_float_property("dodge_feedback_timer", 0.0)
+
+	match visual_state:
+		"light", "light_1":
+			offset -= facing_vector.normalized() * combat_recoil_distance * punch
+			scale_multiplier = Vector2(1.05 + punch * 0.05, 0.96)
+			rotation_amount = 0.035 * _get_side_sign()
+			modulate_color = Color(1.12, 1.04, 0.88, 1.0)
+		"light_2":
+			offset -= facing_vector.normalized() * combat_recoil_distance * 1.2 * punch
+			scale_multiplier = Vector2(1.07 + punch * 0.06, 0.94)
+			rotation_amount = -0.045 * _get_side_sign()
+			modulate_color = Color(1.16, 1.06, 0.82, 1.0)
+		"light_3":
+			offset -= facing_vector.normalized() * combat_recoil_distance * 1.8 * punch
+			scale_multiplier = Vector2(1.12 + punch * 0.08, 0.91)
+			rotation_amount = 0.065 * _get_side_sign()
+			modulate_color = Color(1.22, 1.10, 0.72, 1.0)
+		"heavy_windup":
+			offset += facing_vector.normalized() * 2.5
+			scale_multiplier = Vector2(0.94, 1.08)
+			modulate_color = Color(1.20, 0.72, 0.58, 1.0)
+		"heavy":
+			offset -= facing_vector.normalized() * combat_recoil_distance * 2.2 * punch
+			scale_multiplier = Vector2(1.18 + punch * 0.10, 0.88)
+			rotation_amount = 0.080 * _get_side_sign()
+			modulate_color = Color(1.28, 0.86, 0.60, 1.0)
+		"q":
+			offset -= facing_vector.normalized() * dash_lean_distance * 0.65
+			scale_multiplier = Vector2(1.10, 0.92)
+			rotation_amount = 0.035 * _get_side_sign()
+			modulate_color = Color(0.72, 0.92, 1.18, 1.0)
+		"dash":
+			offset -= facing_vector.normalized() * dash_lean_distance
+			scale_multiplier = Vector2(1.12, 0.90)
+			rotation_amount = 0.030 * _get_side_sign()
+			modulate_color = Color(0.70, 0.86, 1.12, 1.0)
+		"ultimate":
+			offset -= facing_vector.normalized() * combat_recoil_distance * 1.2 * punch
+			scale_multiplier = Vector2(1.16 + punch * 0.07, 0.90)
+			modulate_color = Color(1.35, 1.10, 0.58, 1.0)
+		"death":
+			scale_multiplier = Vector2(1.18, 0.78)
+			rotation_amount = 0.18
+			modulate_color = Color(1.0, 0.48, 0.38, 0.72)
+		_:
+			if dash_timer > 0.0:
+				modulate_color = Color(0.78, 0.90, 1.12, 1.0)
+
+	if hurt_feedback_timer > 0.0 or visual_state == "hit":
+		modulate_color = Color(1.70, 0.54, 0.42, 1.0)
+		scale_multiplier *= Vector2(1.10, 0.91)
+		offset += facing_vector.normalized() * 2.0
+
+	if hit_flash > 0.0:
+		modulate_color = Color(1.85, 1.68, 1.42, 1.0)
+		scale_multiplier *= Vector2(1.08, 0.94)
+
+	if dodge_feedback_timer > 0.0:
+		modulate_color = Color(0.72, 1.02, 1.28, 1.0)
+		scale_multiplier *= Vector2(1.06, 0.96)
+
+	if invuln_timer > 0.0 and visual_state not in ["dash", "q"] and hurt_feedback_timer <= 0.0:
+		var blink_alpha := 0.68 + 0.32 * absf(sin(state_age * 34.0))
+		modulate_color.a = minf(modulate_color.a, blink_alpha)
+
+	sprite.position = offset
+	sprite.scale = sprite_scale * scale_multiplier
+	sprite.rotation = rotation_amount
+	sprite.modulate = modulate_color
+
+
+func _draw() -> void:
+	if not draw_action_shadow:
+		return
+
+	_draw_ground_shadow()
+
+	var invuln_timer: float = _get_player_float_property("invuln_timer", 0.0)
+	var hurt_feedback_timer: float = _get_player_float_property("hurt_feedback_timer", 0.0)
+	var dodge_feedback_timer: float = _get_player_float_property("dodge_feedback_timer", 0.0)
+
+	if invuln_timer > 0.0:
+		_draw_protection_blink(Color(0.55, 0.82, 1.0, 0.24))
+
+	if hurt_feedback_timer > 0.0:
+		_draw_protection_blink(Color(1.0, 0.18, 0.08, 0.22))
+
+	if dodge_feedback_timer > 0.0:
+		_draw_protection_blink(Color(0.70, 0.96, 1.0, 0.30))
+
+	match visual_state:
+		"heavy_windup":
+			_draw_charge_marks(Color(1.0, 0.32, 0.18, 0.46), 38.0)
+		"dash", "q":
+			_draw_dash_afterimage(Color(0.50, 0.78, 1.0, 0.28))
+		"ultimate":
+			_draw_charge_marks(Color(1.0, 0.74, 0.24, 0.54), 50.0)
+
+
+func _draw_ground_shadow() -> void:
+	var points := PackedVector2Array()
+	var radius_x := 18.0
+	var radius_y := 6.0
+	var center := Vector2(0.0, 8.0)
+	var steps := 28
+
+	for i in range(steps):
+		var angle := TAU * float(i) / float(steps)
+		points.append(center + Vector2(cos(angle) * radius_x, sin(angle) * radius_y))
+
+	draw_colored_polygon(points, Color(0.0, 0.0, 0.0, 0.30))
+
+
+func _draw_charge_marks(color: Color, radius: float) -> void:
+	var pulse := 0.5 + 0.5 * sin(state_age * 18.0)
+	var draw_radius := radius + pulse * 4.0
+	draw_arc(Vector2.ZERO, draw_radius, 0.0, TAU, 48, color, 2.0)
+
+	for i in range(4):
+		var angle := TAU * float(i) / 4.0 + state_age * 2.2
+		var p1 := Vector2.RIGHT.rotated(angle) * (draw_radius - 7.0)
+		var p2 := Vector2.RIGHT.rotated(angle) * (draw_radius + 4.0)
+		draw_line(p1, p2, color, 2.0)
+
+
+func _draw_dash_afterimage(color: Color) -> void:
+	var dir := facing_vector.normalized()
+	if dir.length() <= 0.05:
+		dir = Vector2.RIGHT
+
+	for i in range(3):
+		var dist := float(i + 1) * 10.0
+		var alpha := color.a * (1.0 - float(i) * 0.25)
+		draw_circle(-dir * dist + Vector2(0.0, y_sort_offset * 0.4), 8.0 - float(i), Color(color.r, color.g, color.b, alpha))
+
+
+func _draw_protection_blink(color: Color) -> void:
+	var pulse := 0.5 + 0.5 * sin(state_age * 24.0)
+	var radius := 24.0 + pulse * 5.0
+	draw_arc(Vector2.ZERO, radius, 0.0, TAU, 48, color, 2.0)
+
+
+func _get_texture(direction: String, frame: int) -> Texture2D:
+	var key := "idle_%s_%02d" % [direction, frame]
+
+	if texture_cache.has(key):
+		return texture_cache[key]
+
+	var path := "res://art/actors/player/penitent/idle_%s_%02d.png" % [direction, frame]
+
+	if not ResourceLoader.exists(path):
+		path = "res://art/actors/player/penitent/idle_down_01.png"
+
+	if not ResourceLoader.exists(path):
+		push_warning("Missing Penitent idle sprite frame: %s" % key)
+		return null
+
+	var texture := load(path) as Texture2D
+
+	if texture != null:
+		texture_cache[key] = texture
+
+	return texture
+
+
+func _is_action_state(state_name: String) -> bool:
+	return state_name in [
+		"light",
+		"light_1",
+		"light_2",
+		"light_3",
+		"heavy_windup",
+		"heavy",
+		"q",
+		"dash",
+		"ultimate"
+	]
+
+
+func _get_side_sign() -> float:
+	if current_direction == "left":
+		return -1.0
+
+	return 1.0
+
+
+func _direction_name_to_vector(direction_name: String) -> Vector2:
+	match direction_name:
+		"left":
+			return Vector2.LEFT
+		"right":
+			return Vector2.RIGHT
+		"up":
+			return Vector2.UP
+		_:
+			return Vector2.DOWN
+
+
+func _get_player_string_property(property_name: String, fallback: String) -> String:
+	if player == null:
+		return fallback
+
+	if not _object_has_property(player, property_name):
+		return fallback
+
+	return str(player.get(property_name))
+
+
+func _get_player_float_property(property_name: String, fallback: float) -> float:
+	if player == null:
+		return fallback
+
+	if not _object_has_property(player, property_name):
+		return fallback
+
+	var value = player.get(property_name)
+
+	if value == null:
+		return fallback
+
+	return float(value)
+
+
+func _object_has_property(object: Object, property_name: String) -> bool:
+	if object == null:
+		return false
+
+	for property in object.get_property_list():
+		if str(property.get("name", "")) == property_name:
+			return true
+
+	return false

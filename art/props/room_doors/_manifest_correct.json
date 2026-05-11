@@ -1,0 +1,243 @@
+{
+  "source": "/home/kaey/Desktop/Assets/Room_Doors.png",
+  "layout": "3 rows x 5 columns",
+  "rows": {
+    "1": "north/top-wall/front-facing-down",
+    "2": "east/right-wall",
+    "3": "west/left-wall"
+  },
+  "columns": {
+    "1": "circle/tier 1",
+    "2": "circle/tier 2",
+    "3": "circle/tier 3",
+    "4": "circle/tier 4",
+    "5": "circle/tier 5"
+  },
+  "exports": [
+    {
+      "file": "circle_01_north.png",
+      "tier": 1,
+      "orientation": "north",
+      "source_cell": [
+        0,
+        0,
+        298,
+        352
+      ],
+      "size": [
+        298,
+        324
+      ]
+    },
+    {
+      "file": "circle_02_north.png",
+      "tier": 2,
+      "orientation": "north",
+      "source_cell": [
+        298,
+        0,
+        596,
+        352
+      ],
+      "size": [
+        298,
+        318
+      ]
+    },
+    {
+      "file": "circle_03_north.png",
+      "tier": 3,
+      "orientation": "north",
+      "source_cell": [
+        596,
+        0,
+        895,
+        352
+      ],
+      "size": [
+        299,
+        348
+      ]
+    },
+    {
+      "file": "circle_04_north.png",
+      "tier": 4,
+      "orientation": "north",
+      "source_cell": [
+        895,
+        0,
+        1193,
+        352
+      ],
+      "size": [
+        298,
+        329
+      ]
+    },
+    {
+      "file": "circle_05_north.png",
+      "tier": 5,
+      "orientation": "north",
+      "source_cell": [
+        1193,
+        0,
+        1491,
+        352
+      ],
+      "size": [
+        296,
+        327
+      ]
+    },
+    {
+      "file": "circle_01_east.png",
+      "tier": 1,
+      "orientation": "east",
+      "source_cell": [
+        0,
+        352,
+        298,
+        703
+      ],
+      "size": [
+        263,
+        351
+      ]
+    },
+    {
+      "file": "circle_02_east.png",
+      "tier": 2,
+      "orientation": "east",
+      "source_cell": [
+        298,
+        352,
+        596,
+        703
+      ],
+      "size": [
+        268,
+        301
+      ]
+    },
+    {
+      "file": "circle_03_east.png",
+      "tier": 3,
+      "orientation": "east",
+      "source_cell": [
+        596,
+        352,
+        895,
+        703
+      ],
+      "size": [
+        248,
+        351
+      ]
+    },
+    {
+      "file": "circle_04_east.png",
+      "tier": 4,
+      "orientation": "east",
+      "source_cell": [
+        895,
+        352,
+        1193,
+        703
+      ],
+      "size": [
+        262,
+        351
+      ]
+    },
+    {
+      "file": "circle_05_east.png",
+      "tier": 5,
+      "orientation": "east",
+      "source_cell": [
+        1193,
+        352,
+        1491,
+        703
+      ],
+      "size": [
+        241,
+        351
+      ]
+    },
+    {
+      "file": "circle_01_west.png",
+      "tier": 1,
+      "orientation": "west",
+      "source_cell": [
+        0,
+        703,
+        298,
+        1055
+      ],
+      "size": [
+        261,
+        288
+      ]
+    },
+    {
+      "file": "circle_02_west.png",
+      "tier": 2,
+      "orientation": "west",
+      "source_cell": [
+        298,
+        703,
+        596,
+        1055
+      ],
+      "size": [
+        266,
+        289
+      ]
+    },
+    {
+      "file": "circle_03_west.png",
+      "tier": 3,
+      "orientation": "west",
+      "source_cell": [
+        596,
+        703,
+        895,
+        1055
+      ],
+      "size": [
+        242,
+        294
+      ]
+    },
+    {
+      "file": "circle_04_west.png",
+      "tier": 4,
+      "orientation": "west",
+      "source_cell": [
+        895,
+        703,
+        1193,
+        1055
+      ],
+      "size": [
+        264,
+        300
+      ]
+    },
+    {
+      "file": "circle_05_west.png",
+      "tier": 5,
+      "orientation": "west",
+      "source_cell": [
+        1193,
+        703,
+        1491,
+        1055
+      ],
+      "size": [
+        250,
+        295
+      ]
+    }
+  ]
+}

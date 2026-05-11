@@ -1,0 +1,2036 @@
+extends Node2D
+
+signal return_to_hub_requested()
+signal reward_room_requested(reward_type: String)
+signal room_choice_requested(room_type: String)
+
+const ChoiceDoorScene := preload("res://scenes/props/ChoiceDoor.tscn")
+const AttackEffectScene := preload("res://scenes/combat/AttackEffect.tscn")
+const DamageNumberScene := preload("res://scenes/combat/DamageNumber.tscn")
+const UpgradeCardScene := preload("res://scenes/ui/UpgradeCard.tscn")
+const SpecialRoomPropScene := preload("res://scenes/props/SpecialRoomProp.tscn")
+
+const FLOOR_TEXTURE_PATHS := [
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_1.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_2.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_3.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_4.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_5.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_6.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_7.png",
+    "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_8.png"
+]
+
+const COLUMN_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/column.png"
+const CRATE_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/crate.png"
+const CHEST_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/chest_full_open_anim_f0.png"
+const SPIKES_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_spikes_anim_f0.png"
+const BANNER_RED_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_red.png"
+const BANNER_BLUE_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_blue.png"
+const BANNER_GREEN_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_green.png"
+const BANNER_YELLOW_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_yellow.png"
+
+@export var enemy_scene: PackedScene
+
+var room_type := "combat"
+var choice_doors: Array[Node2D] = []
+var enemies_alive: int = 0
+var room_clear: bool = false
+var room_clear_pulse_timer: float = 0.0
+var spawned_enemies: Array[Node2D] = []
+
+var reward_available: bool = false
+var reward_taken: bool = false
+var reward_position: Vector2 = Vector2(640, 330)
+var reward_radius: float = 86.0
+var hint: String = ""
+
+var boon_offers: Array[Dictionary] = []
+var boon_positions: Array[Vector2] = []
+var upgrade_cards: Array[Node2D] = []
+var special_room_prop: Node2D = null
+
+var collision_root: Node2D = null
+
+var shake_timer: float = 0.0
+var shake_strength: float = 0.0
+
+var hit_stop_active: bool = false
+var attack_fx: Array = []
+
+var room_layout_type: String = "chapel_box"
+
+var floor_textures: Array[Texture2D] = []
+var column_texture: Texture2D = null
+var crate_texture: Texture2D = null
+var chest_texture: Texture2D = null
+var spikes_texture: Texture2D = null
+var banner_red_texture: Texture2D = null
+var banner_blue_texture: Texture2D = null
+var banner_green_texture: Texture2D = null
+var banner_yellow_texture: Texture2D = null
+
+var arena_rect := Rect2(Vector2(92, 86), Vector2(1096, 548))
+
+
+func set_room_type(new_room_type: String) -> void:
+	room_type = new_room_type
+
+
+func _ready() -> void:
+	_load_room_art_textures()
+	_choose_room_layout()
+	_build_room_collision()
+	_place_player_from_template()
+
+	$Player.attack_performed.connect(_on_player_attack)
+	$Player.perfect_dodge_triggered.connect(_on_perfect_dodge)
+
+	_spawn_enemies()
+	queue_redraw()
+
+
+func _exit_tree() -> void:
+	Engine.time_scale = 1.0
+
+
+func _process(delta: float) -> void:
+	hint = ""
+	enemies_alive = _get_alive_enemy_count()
+
+	if enemies_alive <= 0 and not room_clear:
+		room_clear = true
+		room_clear_pulse_timer = 0.90
+		add_screen_shake(0.12, 12.0)
+		_spawn_post_clear_reward()
+
+	room_clear_pulse_timer = maxf(0.0, room_clear_pulse_timer - delta)
+	_update_reward_interaction()
+
+	for fx in attack_fx:
+		fx["time"] -= delta
+
+	attack_fx = attack_fx.filter(func(fx): return fx["time"] > 0.0)
+
+	_update_screen_shake(delta)
+	queue_redraw()
+
+
+func _load_room_art_textures() -> void:
+	floor_textures.clear()
+
+	for path in FLOOR_TEXTURE_PATHS:
+		if ResourceLoader.exists(path):
+			var texture := load(path) as Texture2D
+
+			if texture != null:
+				floor_textures.append(texture)
+
+	column_texture = _load_texture(COLUMN_TEXTURE_PATH)
+	crate_texture = _load_texture(CRATE_TEXTURE_PATH)
+	chest_texture = _load_texture(CHEST_TEXTURE_PATH)
+	spikes_texture = _load_texture(SPIKES_TEXTURE_PATH)
+	banner_red_texture = _load_texture(BANNER_RED_TEXTURE_PATH)
+	banner_blue_texture = _load_texture(BANNER_BLUE_TEXTURE_PATH)
+	banner_green_texture = _load_texture(BANNER_GREEN_TEXTURE_PATH)
+	banner_yellow_texture = _load_texture(BANNER_YELLOW_TEXTURE_PATH)
+
+
+func _load_texture(path: String) -> Texture2D:
+	if not ResourceLoader.exists(path):
+		return null
+
+	return load(path) as Texture2D
+
+
+func _choose_room_layout() -> void:
+	if room_type == RunState.ROOM_BOSS:
+		room_layout_type = "boss_sanctum"
+	elif room_type == RunState.ROOM_ELITE:
+		room_layout_type = "pillar_hall"
+	elif room_type == RunState.ROOM_FORGE:
+		room_layout_type = "reliquary_chamber"
+	elif room_type == RunState.ROOM_SHRINE:
+		room_layout_type = "chapel_box"
+	elif room_type == RunState.ROOM_UPGRADE:
+		room_layout_type = "cross_hall"
+	else:
+		var layouts := [
+			"chapel_box",
+			"cross_hall",
+			"pillar_hall",
+			"blood_pit",
+            "reliquary_chamber"
+		]
+
+		var seed_value: int = int(RunState.depth * 19 + room_type.length() * 37)
+		room_layout_type = layouts[abs(seed_value) % layouts.size()]
+
+	var template := _get_current_room_template()
+	arena_rect = template.get("room_rect", arena_rect)
+
+
+func _get_current_room_template() -> Dictionary:
+	return _get_room_template(room_layout_type)
+
+
+func _get_room_template(template_id: String) -> Dictionary:
+	match template_id:
+		"chapel_box":
+			return {
+				"id": "chapel_box",
+				"display_name": "Chapel Box",
+				"room_rect": Rect2(Vector2(176, 82), Vector2(928, 540)),
+				"floor_rects": [
+					Rect2(Vector2(176, 82), Vector2(928, 540))
+				],
+				"player_spawn": Vector2(640, 520),
+				"enemy_spawns": [
+					Vector2(470, 230),
+					Vector2(810, 230),
+					Vector2(640, 330),
+					Vector2(470, 430),
+					Vector2(810, 430)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 110), "orientation": "north"},
+					{"pos": Vector2(205, 352), "orientation": "west"},
+					{"pos": Vector2(1075, 352), "orientation": "east"}
+				],
+				"reward_positions": [
+					Vector2(400, 342),
+					Vector2(640, 300),
+					Vector2(880, 342)
+				],
+				"reward_position": Vector2(640, 342),
+				"blockers": [
+					Rect2(Vector2(282, 190), Vector2(48, 74)),
+					Rect2(Vector2(950, 190), Vector2(48, 74)),
+					Rect2(Vector2(282, 454), Vector2(48, 74)),
+					Rect2(Vector2(950, 454), Vector2(48, 74))
+				],
+				"decor": [
+					{"type": "banner_yellow", "pos": Vector2(238, 126)},
+					{"type": "banner_yellow", "pos": Vector2(1042, 126)},
+					{"type": "crate", "pos": Vector2(250, 548)},
+					{"type": "crate", "pos": Vector2(1030, 548)}
+				],
+				"tint": Color("#dfaa46"),
+				"fill": Color(0.13, 0.09, 0.05, 0.12)
+			}
+
+		"cross_hall":
+			return {
+				"id": "cross_hall",
+				"display_name": "Cross Hall",
+				"room_rect": Rect2(Vector2(160, 78), Vector2(960, 556)),
+				"floor_rects": [
+					Rect2(Vector2(544, 94), Vector2(192, 508)),
+					Rect2(Vector2(240, 258), Vector2(800, 184)),
+					Rect2(Vector2(448, 178), Vector2(384, 348))
+				],
+				"player_spawn": Vector2(640, 520),
+				"enemy_spawns": [
+					Vector2(640, 188),
+					Vector2(382, 350),
+					Vector2(898, 350),
+					Vector2(540, 350),
+					Vector2(740, 350)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 122), "orientation": "north"},
+					{"pos": Vector2(256, 352), "orientation": "west"},
+					{"pos": Vector2(1024, 352), "orientation": "east"}
+				],
+				"reward_positions": [
+					Vector2(410, 352),
+					Vector2(640, 304),
+					Vector2(870, 352)
+				],
+				"reward_position": Vector2(640, 352),
+				"blockers": [
+					Rect2(Vector2(446, 222), Vector2(52, 52)),
+					Rect2(Vector2(782, 222), Vector2(52, 52)),
+					Rect2(Vector2(446, 426), Vector2(52, 52)),
+					Rect2(Vector2(782, 426), Vector2(52, 52))
+				],
+				"decor": [
+					{"type": "banner_green", "pos": Vector2(640, 122)},
+					{"type": "crate", "pos": Vector2(292, 294)},
+					{"type": "crate", "pos": Vector2(988, 294)},
+					{"type": "spikes", "pos": Vector2(640, 352)}
+				],
+				"tint": Color("#9ed8cd"),
+				"fill": Color(0.05, 0.13, 0.13, 0.12)
+			}
+
+		"pillar_hall":
+			return {
+				"id": "pillar_hall",
+				"display_name": "Pillar Hall",
+				"room_rect": Rect2(Vector2(154, 82), Vector2(972, 540)),
+				"floor_rects": [
+					Rect2(Vector2(154, 82), Vector2(972, 540))
+				],
+				"player_spawn": Vector2(640, 520),
+				"enemy_spawns": [
+					Vector2(430, 230),
+					Vector2(850, 230),
+					Vector2(520, 430),
+					Vector2(760, 430),
+					Vector2(640, 330)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 112), "orientation": "north"},
+					{"pos": Vector2(200, 352), "orientation": "west"},
+					{"pos": Vector2(1080, 352), "orientation": "east"}
+				],
+				"reward_positions": [
+					Vector2(382, 326),
+					Vector2(640, 286),
+					Vector2(898, 326)
+				],
+				"reward_position": Vector2(640, 334),
+				"blockers": [
+					Rect2(Vector2(334, 204), Vector2(56, 86)),
+					Rect2(Vector2(506, 204), Vector2(56, 86)),
+					Rect2(Vector2(718, 204), Vector2(56, 86)),
+					Rect2(Vector2(890, 204), Vector2(56, 86)),
+					Rect2(Vector2(334, 430), Vector2(56, 86)),
+					Rect2(Vector2(506, 430), Vector2(56, 86)),
+					Rect2(Vector2(718, 430), Vector2(56, 86)),
+					Rect2(Vector2(890, 430), Vector2(56, 86))
+				],
+				"decor": [
+					{"type": "banner_blue", "pos": Vector2(640, 126)},
+					{"type": "crate", "pos": Vector2(240, 548)},
+					{"type": "crate", "pos": Vector2(1040, 548)}
+				],
+				"tint": Color("#b49ce2"),
+				"fill": Color(0.08, 0.06, 0.14, 0.12)
+			}
+
+		"blood_pit":
+			return {
+				"id": "blood_pit",
+				"display_name": "Blood Pit",
+				"room_rect": Rect2(Vector2(170, 86), Vector2(940, 532)),
+				"floor_rects": [
+					Rect2(Vector2(170, 86), Vector2(940, 532))
+				],
+				"player_spawn": Vector2(640, 520),
+				"enemy_spawns": [
+					Vector2(640, 220),
+					Vector2(458, 350),
+					Vector2(822, 350),
+					Vector2(540, 470),
+					Vector2(740, 470)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 116), "orientation": "north"},
+					{"pos": Vector2(212, 352), "orientation": "west"},
+					{"pos": Vector2(1068, 352), "orientation": "east"}
+				],
+				"reward_positions": [
+					Vector2(384, 326),
+					Vector2(640, 286),
+					Vector2(896, 326)
+				],
+				"reward_position": Vector2(640, 338),
+				"blockers": [
+					Rect2(Vector2(274, 202), Vector2(56, 56)),
+					Rect2(Vector2(950, 202), Vector2(56, 56)),
+					Rect2(Vector2(274, 476), Vector2(56, 56)),
+					Rect2(Vector2(950, 476), Vector2(56, 56))
+				],
+				"decor": [
+					{"type": "banner_red", "pos": Vector2(236, 126)},
+					{"type": "banner_red", "pos": Vector2(1044, 126)},
+					{"type": "spikes", "pos": Vector2(380, 250)},
+					{"type": "spikes", "pos": Vector2(900, 250)},
+					{"type": "spikes", "pos": Vector2(380, 500)},
+					{"type": "spikes", "pos": Vector2(900, 500)}
+				],
+				"tint": Color("#ff684a"),
+				"fill": Color(0.22, 0.03, 0.02, 0.15)
+			}
+
+		"reliquary_chamber":
+			return {
+				"id": "reliquary_chamber",
+				"display_name": "Reliquary Chamber",
+				"room_rect": Rect2(Vector2(166, 84), Vector2(948, 536)),
+				"floor_rects": [
+					Rect2(Vector2(230, 112), Vector2(820, 480)),
+					Rect2(Vector2(166, 250), Vector2(120, 190)),
+					Rect2(Vector2(994, 250), Vector2(120, 190))
+				],
+				"player_spawn": Vector2(640, 520),
+				"enemy_spawns": [
+					Vector2(456, 244),
+					Vector2(824, 244),
+					Vector2(430, 444),
+					Vector2(850, 444),
+					Vector2(640, 338)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 140), "orientation": "north"},
+					{"pos": Vector2(186, 346), "orientation": "west"},
+					{"pos": Vector2(1094, 346), "orientation": "east"}
+				],
+				"reward_positions": [
+					Vector2(400, 340),
+					Vector2(640, 298),
+					Vector2(880, 340)
+				],
+				"reward_position": Vector2(640, 340),
+				"blockers": [
+					Rect2(Vector2(360, 302), Vector2(64, 96)),
+					Rect2(Vector2(856, 302), Vector2(64, 96)),
+					Rect2(Vector2(592, 232), Vector2(96, 56))
+				],
+				"decor": [
+					{"type": "banner_yellow", "pos": Vector2(260, 148)},
+					{"type": "banner_yellow", "pos": Vector2(1020, 148)},
+					{"type": "chest", "pos": Vector2(310, 350)},
+					{"type": "chest", "pos": Vector2(970, 350)},
+					{"type": "crate", "pos": Vector2(262, 536)},
+					{"type": "crate", "pos": Vector2(1018, 536)}
+				],
+				"tint": Color("#f4d49a"),
+				"fill": Color(0.17, 0.12, 0.04, 0.12)
+			}
+
+		"boss_sanctum":
+			return {
+				"id": "boss_sanctum",
+				"display_name": "Boss Sanctum",
+				"room_rect": Rect2(Vector2(142, 72), Vector2(996, 566)),
+				"floor_rects": [
+					Rect2(Vector2(142, 72), Vector2(996, 566))
+				],
+				"player_spawn": Vector2(640, 540),
+				"enemy_spawns": [
+					Vector2(640, 244)
+				],
+				"door_positions": [
+					{"pos": Vector2(640, 120), "orientation": "north"}
+				],
+				"reward_positions": [
+					Vector2(640, 350)
+				],
+				"reward_position": Vector2(640, 350),
+				"blockers": [
+					Rect2(Vector2(250, 176), Vector2(66, 90)),
+					Rect2(Vector2(964, 176), Vector2(66, 90)),
+					Rect2(Vector2(250, 490), Vector2(66, 90)),
+					Rect2(Vector2(964, 490), Vector2(66, 90))
+				],
+				"decor": [
+					{"type": "banner_red", "pos": Vector2(230, 126)},
+					{"type": "banner_red", "pos": Vector2(1050, 126)}
+				],
+				"tint": Color("#ff321f"),
+				"fill": Color(0.32, 0.02, 0.02, 0.18)
+			}
+
+		_:
+			return _get_room_template("chapel_box")
+
+
+func _place_player_from_template() -> void:
+	var template := _get_current_room_template()
+	var player_spawn: Vector2 = template.get("player_spawn", Vector2(640, 520))
+
+	if has_node("Player"):
+		$Player.global_position = player_spawn
+
+
+func _build_room_collision() -> void:
+	_clear_room_collision()
+
+	collision_root = Node2D.new()
+	collision_root.name = "GeneratedRoomCollision"
+	add_child(collision_root)
+
+	var template := _get_current_room_template()
+	var floor_rects: Array = template.get("floor_rects", [arena_rect])
+
+	for floor_rect in floor_rects:
+		if floor_rect is Rect2:
+			_add_floor_rect_edge_collision(floor_rect, floor_rects)
+
+	var blockers: Array = template.get("blockers", [])
+
+	for i in range(blockers.size()):
+		var blocker = blockers[i]
+
+		if blocker is Rect2:
+			_add_rect_collision(blocker, "Blocker_%d" % i)
+			
+func _add_floor_rect_edge_collision(rect: Rect2, all_floor_rects: Array) -> void:
+	var thickness := 14.0
+	var step := 32.0
+
+	var x := rect.position.x
+
+	while x < rect.position.x + rect.size.x:
+		var segment_width: float = minf(step, rect.position.x + rect.size.x - x)
+
+		var top_sample := Vector2(x + segment_width * 0.5, rect.position.y - thickness * 0.5)
+		var bottom_sample := Vector2(x + segment_width * 0.5, rect.position.y + rect.size.y + thickness * 0.5)
+
+		if not _point_inside_any_floor_rect(top_sample, all_floor_rects):
+			_add_rect_collision(
+				Rect2(Vector2(x, rect.position.y - thickness), Vector2(segment_width, thickness)),
+                "FloorEdge_Top"
+			)
+
+		if not _point_inside_any_floor_rect(bottom_sample, all_floor_rects):
+			_add_rect_collision(
+				Rect2(Vector2(x, rect.position.y + rect.size.y), Vector2(segment_width, thickness)),
+                "FloorEdge_Bottom"
+			)
+
+		x += step
+
+	var y := rect.position.y
+
+	while y < rect.position.y + rect.size.y:
+		var segment_height: float = minf(step, rect.position.y + rect.size.y - y)
+
+		var left_sample := Vector2(rect.position.x - thickness * 0.5, y + segment_height * 0.5)
+		var right_sample := Vector2(rect.position.x + rect.size.x + thickness * 0.5, y + segment_height * 0.5)
+
+		if not _point_inside_any_floor_rect(left_sample, all_floor_rects):
+			_add_rect_collision(
+				Rect2(Vector2(rect.position.x - thickness, y), Vector2(thickness, segment_height)),
+                "FloorEdge_Left"
+			)
+
+		if not _point_inside_any_floor_rect(right_sample, all_floor_rects):
+			_add_rect_collision(
+				Rect2(Vector2(rect.position.x + rect.size.x, y), Vector2(thickness, segment_height)),
+                "FloorEdge_Right"
+			)
+
+		y += step
+
+
+func _point_inside_any_floor_rect(point: Vector2, floor_rects: Array) -> bool:
+	for value in floor_rects:
+		if not (value is Rect2):
+			continue
+
+		var rect: Rect2 = value
+
+		if rect.has_point(point):
+			return true
+
+	return false
+
+
+func _clear_room_collision() -> void:
+	var existing := get_node_or_null("GeneratedRoomCollision")
+
+	if existing != null:
+		existing.queue_free()
+
+
+func _add_rect_collision(rect: Rect2, node_name: String) -> void:
+	if collision_root == null:
+		return
+
+	var body := StaticBody2D.new()
+	body.name = node_name
+	body.collision_layer = 1
+	body.collision_mask = 1
+	body.global_position = rect.position + rect.size * 0.5
+
+	var shape := CollisionShape2D.new()
+	var rectangle := RectangleShape2D.new()
+	rectangle.size = rect.size
+	shape.shape = rectangle
+	shape.debug_color = Color(1.0, 0.2, 0.1, 0.35)
+
+	body.add_child(shape)
+	collision_root.add_child(body)
+
+
+func _get_template_array(key: String) -> Array:
+	var template := _get_current_room_template()
+	var value = template.get(key, [])
+
+	if value is Array:
+		return value
+
+	return []
+
+
+func _get_template_vector(key: String, fallback: Vector2) -> Vector2:
+	var template := _get_current_room_template()
+	var value = template.get(key, fallback)
+
+	if value is Vector2:
+		return value
+
+	return fallback
+
+
+func _spawn_enemies() -> void:
+	if enemy_scene == null:
+		push_error("CombatRoom enemy_scene is not assigned.")
+		return
+
+	spawned_enemies.clear()
+
+	var enemy_count: int = RunState.get_enemy_count_for_room(room_type, RunState.depth)
+	var enemy_stats: Dictionary = RunState.get_enemy_stats_for_room(room_type, RunState.depth)
+	var spawn_positions: Array[Vector2] = _get_scaled_spawn_positions(enemy_count)
+
+	for i in range(enemy_count):
+		var spawn_position: Vector2 = spawn_positions[i]
+		_spawn_enemy_at(spawn_position, enemy_stats)
+
+
+func _get_scaled_spawn_positions(enemy_count: int) -> Array[Vector2]:
+	var positions: Array[Vector2] = []
+	var spawn_values := _get_template_array("enemy_spawns")
+
+	if spawn_values.is_empty():
+		spawn_values = [
+			Vector2(440, 260),
+			Vector2(640, 220),
+			Vector2(840, 260)
+		]
+
+	for i in range(enemy_count):
+		var base_position: Vector2 = spawn_values[i % spawn_values.size()]
+		var wave_index := int(floor(float(i) / float(spawn_values.size())))
+		var jitter := Vector2.ZERO
+
+		if wave_index > 0:
+			var angle := (TAU / float(maxi(enemy_count, 1))) * float(i)
+			jitter = Vector2(cos(angle), sin(angle)) * (34.0 * float(wave_index))
+
+		positions.append(base_position + jitter)
+
+	return positions
+
+
+func _spawn_enemy_at(spawn_position: Vector2, stats: Dictionary) -> void:
+	var enemy := enemy_scene.instantiate() as Node2D
+
+	if enemy == null:
+		push_error("Enemy scene root must be Node2D or CharacterBody2D.")
+		return
+
+	add_child(enemy)
+	enemy.global_position = spawn_position
+
+	var rank: String = str(stats["rank"])
+
+	if rank == "elite":
+		enemy.scale = Vector2(1.25, 1.25)
+	elif rank == "miniboss":
+		enemy.scale = Vector2(1.55, 1.55)
+	elif rank == "boss":
+		enemy.scale = Vector2(2.35, 2.35)
+
+	if enemy.has_method("setup_enemy_stats"):
+		enemy.call(
+			"setup_enemy_stats",
+			float(stats["max_hp"]),
+			float(stats["damage"]),
+			float(stats["speed"]),
+			float(stats["contact_radius"]),
+			rank
+		)
+
+	if enemy.has_signal("died"):
+		enemy.connect("died", Callable(self, "_on_enemy_died"))
+
+	spawned_enemies.append(enemy)
+
+
+
+func _get_special_prop_id_for_room_type() -> String:
+	match room_type:
+		RunState.ROOM_FORGE:
+			return "forge"
+		RunState.ROOM_SHRINE:
+			return "shrine"
+		RunState.ROOM_SHOP:
+			return "shop"
+		RunState.ROOM_FOUNTAIN:
+			return "fountain"
+		RunState.ROOM_BOSS:
+			return "reward"
+		_:
+			return "reward"
+
+
+func _spawn_special_room_prop(prop_id: String) -> void:
+	if special_room_prop != null and is_instance_valid(special_room_prop):
+		return
+
+	special_room_prop = SpecialRoomPropScene.instantiate() as Node2D
+
+	if special_room_prop == null:
+		return
+
+	special_room_prop.global_position = reward_position
+	special_room_prop.z_index = 90
+	add_child(special_room_prop)
+
+	if special_room_prop.has_method("setup"):
+		var label_text := RunState.get_room_display_name(room_type)
+		special_room_prop.call("setup", prop_id, label_text)
+
+
+func _clear_special_room_prop() -> void:
+	if special_room_prop != null and is_instance_valid(special_room_prop):
+		special_room_prop.queue_free()
+
+	special_room_prop = null
+
+
+
+func _spawn_post_clear_reward() -> void:
+	if reward_taken:
+		return
+
+	reward_position = _get_template_vector("reward_position", Vector2(640, 330))
+
+	_clear_special_room_prop()
+
+	match room_type:
+		RunState.ROOM_UPGRADE:
+			_spawn_upgrade_cards()
+
+		RunState.ROOM_FORGE:
+			reward_available = true
+
+		RunState.ROOM_SHRINE:
+			reward_available = true
+
+		RunState.ROOM_BOSS:
+			reward_available = true
+
+		_:
+			_spawn_boon_offers()
+
+	if reward_available:
+		_spawn_special_room_prop(_get_special_prop_id_for_room_type())
+
+
+func _spawn_boon_offers() -> void:
+	if not boon_offers.is_empty():
+		return
+
+	boon_offers = RunState.generate_boon_offers(3)
+
+	if boon_offers.is_empty():
+		reward_taken = true
+		_spawn_choice_doors()
+		return
+
+	boon_positions.clear()
+	var reward_values := _get_template_array("reward_positions")
+
+	for value in reward_values:
+		if value is Vector2:
+			boon_positions.append(value)
+
+	while boon_positions.size() < 3:
+		var fallback_positions := [
+			Vector2(385, 315),
+			Vector2(640, 280),
+			Vector2(895, 315)
+		]
+		boon_positions.append(fallback_positions[boon_positions.size()])
+
+
+func _spawn_upgrade_cards() -> void:
+	if not upgrade_cards.is_empty():
+		return
+
+	var offers: Array[RunUpgradeData] = RunState.generate_upgrade_offers(3)
+
+	if offers.is_empty():
+		reward_taken = true
+		_spawn_choice_doors()
+		return
+
+	var positions: Array[Vector2] = []
+	var reward_values := _get_template_array("reward_positions")
+
+	for value in reward_values:
+		if value is Vector2:
+			positions.append(value)
+
+	while positions.size() < 3:
+		var fallback_positions := [
+			Vector2(385, 300),
+			Vector2(640, 270),
+			Vector2(895, 300)
+		]
+		positions.append(fallback_positions[positions.size()])
+
+	for i in range(offers.size()):
+		var card := UpgradeCardScene.instantiate() as Node2D
+		card.global_position = positions[i]
+		add_child(card)
+
+		if card.has_method("setup"):
+			card.setup(offers[i])
+
+		if card.has_signal("upgrade_selected"):
+			card.upgrade_selected.connect(_on_upgrade_card_selected)
+
+		upgrade_cards.append(card)
+
+
+func _on_upgrade_card_selected(upgrade_data: RunUpgradeData) -> void:
+	if reward_taken:
+		return
+
+	reward_taken = true
+	RunState.apply_upgrade(upgrade_data)
+
+	if $Player and $Player.has_method("apply_run_modifiers"):
+		$Player.apply_run_modifiers()
+
+	for card in upgrade_cards:
+		if card != null and is_instance_valid(card):
+			card.queue_free()
+
+	upgrade_cards.clear()
+	_spawn_choice_doors()
+	queue_redraw()
+
+
+func _update_reward_interaction() -> void:
+	if not room_clear:
+		return
+
+	if reward_taken:
+		hint = "Reward claimed — choose your next door"
+		return
+
+	if not boon_offers.is_empty():
+		_update_boon_choice_interaction()
+		return
+
+	if reward_available:
+		_update_object_reward_interaction()
+		return
+
+	if not upgrade_cards.is_empty():
+		hint = "Choose one reward card"
+		return
+
+
+func _update_boon_choice_interaction() -> void:
+	hint = "Choose a Witness or Sinner boon"
+
+	var nearest_index: int = -1
+	var nearest_distance: float = 99999.0
+
+	for i in range(boon_positions.size()):
+		var distance: float = $Player.global_position.distance_to(boon_positions[i])
+
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest_index = i
+
+	if nearest_index >= 0 and nearest_distance <= 92.0:
+		var boon: Dictionary = boon_offers[nearest_index]
+		hint = "Press E — Accept %s" % str(boon.get("display_name", "Boon"))
+
+		if Input.is_action_just_pressed("interact"):
+			_accept_boon(nearest_index)
+
+
+func _accept_boon(index: int) -> void:
+	if index < 0 or index >= boon_offers.size():
+		return
+
+	var boon: Dictionary = boon_offers[index]
+	RunState.apply_boon(boon)
+
+	reward_taken = true
+	boon_offers.clear()
+	boon_positions.clear()
+
+	if $Player and $Player.has_method("apply_run_modifiers"):
+		$Player.apply_run_modifiers()
+
+	_spawn_choice_doors()
+	queue_redraw()
+
+
+func _update_object_reward_interaction() -> void:
+	var near_reward: bool = $Player.global_position.distance_to(reward_position) <= reward_radius
+
+	match room_type:
+		RunState.ROOM_FORGE:
+			hint = "Forge cleared — approach the anvil"
+		RunState.ROOM_SHRINE:
+			hint = "Shrine cleared — approach the offering"
+		RunState.ROOM_BOSS:
+			hint = "Boss defeated — claim the remnant"
+		_:
+			hint = "Approach the reward"
+
+	if near_reward:
+		hint = "Press E — Claim %s Reward" % RunState.get_room_display_name(room_type)
+
+		if Input.is_action_just_pressed("interact"):
+			_claim_object_reward()
+
+
+func _claim_object_reward() -> void:
+	if reward_taken:
+		return
+
+	reward_taken = true
+	reward_available = false
+	_clear_special_room_prop()
+
+	match room_type:
+		RunState.ROOM_FORGE:
+			if $Player:
+				$Player.armor = minf($Player.armor + 12.0, $Player.max_armor)
+
+		RunState.ROOM_SHRINE:
+			if $Player:
+				$Player.hp = minf($Player.hp + 18.0, $Player.max_hp)
+
+			if $Player and $Player.has_method("gain_ultimate"):
+				$Player.gain_ultimate(18.0)
+
+		RunState.ROOM_BOSS:
+			if $Player and $Player.has_method("gain_ultimate"):
+				$Player.gain_ultimate(100.0)
+
+		_:
+			pass
+
+	_spawn_choice_doors()
+	queue_redraw()
+
+
+
+func _get_choice_door_sockets(offer_count: int) -> Array[Dictionary]:
+	var template := _get_current_room_template()
+	var room_rect: Rect2 = template.get("room_rect", arena_rect)
+	var center := room_rect.get_center()
+
+	if offer_count <= 1:
+		return [
+			{"position": Vector2(center.x, room_rect.position.y + room_rect.size.y - 70.0), "orientation": "south"}
+		]
+
+	match room_layout_type:
+		"cross_hall":
+			return [
+				{"position": Vector2(640, 166), "orientation": "north"},
+				{"position": Vector2(316, 350), "orientation": "west"},
+				{"position": Vector2(964, 350), "orientation": "east"}
+			]
+
+		"reliquary_chamber":
+			return [
+				{"position": Vector2(640, 180), "orientation": "north"},
+				{"position": Vector2(240, 345), "orientation": "west"},
+				{"position": Vector2(1040, 345), "orientation": "east"}
+			]
+
+		"chapel_box":
+			return [
+				{"position": Vector2(640, 154), "orientation": "north"},
+				{"position": Vector2(250, 352), "orientation": "west"},
+				{"position": Vector2(1030, 352), "orientation": "east"}
+			]
+
+		"pillar_hall":
+			return [
+				{"position": Vector2(640, 154), "orientation": "north"},
+				{"position": Vector2(228, 352), "orientation": "west"},
+				{"position": Vector2(1052, 352), "orientation": "east"}
+			]
+
+		"blood_pit":
+			return [
+				{"position": Vector2(640, 158), "orientation": "north"},
+				{"position": Vector2(244, 352), "orientation": "west"},
+				{"position": Vector2(1036, 352), "orientation": "east"}
+			]
+
+		"boss_sanctum":
+			return [
+				{"position": Vector2(640, 166), "orientation": "north"},
+				{"position": Vector2(232, 356), "orientation": "west"},
+				{"position": Vector2(1048, 356), "orientation": "east"}
+			]
+
+		_:
+			return [
+				{"position": Vector2(center.x, room_rect.position.y + 72.0), "orientation": "north"},
+				{"position": Vector2(room_rect.position.x + 72.0, center.y), "orientation": "west"},
+				{"position": Vector2(room_rect.position.x + room_rect.size.x - 72.0, center.y), "orientation": "east"}
+			]
+
+
+func _spawn_choice_doors() -> void:
+	if not choice_doors.is_empty():
+		return
+
+	var offers: Array[String] = RunState.generate_offers_after_clear()
+
+	if offers.is_empty():
+		return
+
+	var socket_values := _get_template_array("door_positions")
+	var sockets: Array[Dictionary] = []
+
+	for value in socket_values:
+		if value is Dictionary:
+			sockets.append(value)
+		elif value is Vector2:
+			sockets.append({
+				"pos": value,
+				"orientation": "north"
+			})
+
+	if offers.size() == 1:
+		var chosen_socket: Dictionary = {
+			"pos": Vector2(640, 120),
+			"orientation": "north"
+		}
+
+		if not sockets.is_empty():
+			chosen_socket = sockets[0]
+
+		var door := ChoiceDoorScene.instantiate() as Node2D
+		door.global_position = chosen_socket.get("pos", Vector2(640, 120))
+		add_child(door)
+
+		if door.has_method("setup"):
+			door.setup(str(offers[0]), str(chosen_socket.get("orientation", "north")))
+
+		if door.has_signal("room_choice_requested"):
+			door.room_choice_requested.connect(_on_choice_door_selected)
+
+		choice_doors.append(door)
+		return
+
+	while sockets.size() < offers.size():
+		var fallback_index := sockets.size()
+
+		if fallback_index == 0:
+			sockets.append({"pos": Vector2(640, 120), "orientation": "north"})
+		elif fallback_index == 1:
+			sockets.append({"pos": Vector2(210, 352), "orientation": "west"})
+		else:
+			sockets.append({"pos": Vector2(1070, 352), "orientation": "east"})
+
+	for i in range(offers.size()):
+		var offered_room_type: String = str(offers[i])
+		var socket: Dictionary = sockets[i]
+
+		var door := ChoiceDoorScene.instantiate() as Node2D
+		door.global_position = socket.get("pos", Vector2(640, 120))
+		add_child(door)
+
+		if door.has_method("setup"):
+			door.setup(offered_room_type, str(socket.get("orientation", "north")))
+
+		if door.has_signal("room_choice_requested"):
+			door.room_choice_requested.connect(_on_choice_door_selected)
+
+		choice_doors.append(door)
+
+
+func _on_choice_door_selected(selected_room_type: String) -> void:
+	room_choice_requested.emit(selected_room_type)
+
+
+func _get_alive_enemy_count() -> int:
+	var alive_enemies: Array[Node2D] = []
+
+	for enemy in spawned_enemies:
+		if enemy == null:
+			continue
+
+		if not is_instance_valid(enemy):
+			continue
+
+		if enemy.is_queued_for_deletion():
+			continue
+
+		if _object_has_property(enemy, "dead") and bool(enemy.get("dead")):
+			continue
+
+		alive_enemies.append(enemy)
+
+	spawned_enemies = alive_enemies
+	return spawned_enemies.size()
+
+
+func _on_player_attack(kind: String, origin: Vector2, direction: Vector2, radius: float, damage: float) -> void:
+	var safe_direction: Vector2 = direction
+
+	if safe_direction.length() <= 0.01:
+		safe_direction = Vector2.RIGHT
+
+	safe_direction = safe_direction.normalized()
+
+	var fx = AttackEffectScene.instantiate()
+	fx.global_position = origin
+	fx.setup(kind, radius, safe_direction)
+	add_child(fx)
+
+	attack_fx.append({
+		"kind": kind,
+		"origin": origin,
+		"direction": safe_direction,
+		"radius": radius,
+		"time": 0.18
+	})
+
+	var hit_any_enemy: bool = false
+
+	for enemy_node in spawned_enemies:
+		if enemy_node == null:
+			continue
+
+		if not is_instance_valid(enemy_node):
+			continue
+
+		if enemy_node.is_queued_for_deletion():
+			continue
+
+		var to_enemy: Vector2 = enemy_node.global_position - origin
+		var distance: float = to_enemy.length()
+
+		if distance > radius:
+			continue
+
+		var can_hit: bool = false
+
+		if kind in ["light", "light_1", "light_2", "light_3"]:
+			can_hit = _is_in_front(to_enemy, safe_direction, 0.10)
+		elif kind == "heavy":
+			can_hit = _is_in_front(to_enemy, safe_direction, -0.20)
+		elif kind == "q":
+			can_hit = true
+		elif kind == "ultimate":
+			can_hit = true
+
+		if can_hit:
+			hit_any_enemy = true
+
+			var final_damage: float = damage
+
+			if RunState.has_method("get_attack_damage_multiplier"):
+				final_damage *= RunState.get_attack_damage_multiplier(kind)
+
+			if RunState.has_method("get_bonus_damage_multiplier_for_target"):
+				final_damage *= RunState.get_bonus_damage_multiplier_for_target(kind, enemy_node)
+
+			if enemy_node.has_method("take_damage"):
+				enemy_node.call("take_damage", final_damage, origin, kind)
+
+			_apply_on_hit_boon_effects(kind, enemy_node)
+			_apply_on_hit_status_detonations(kind, enemy_node)
+			_apply_on_hit_spread_status_synergies(kind, enemy_node)
+			_apply_on_hit_execute_synergies(kind, enemy_node)
+			_apply_on_hit_heal_synergies(kind, enemy_node)
+
+			_spawn_damage_number(enemy_node.global_position, final_damage, kind)
+
+			match kind:
+				"light", "light_1":
+					add_screen_shake(0.06, 8.0)
+				"light_2":
+					add_screen_shake(0.06, 9.0)
+				"light_3":
+					add_screen_shake(0.08, 13.0)
+				"heavy":
+					add_screen_shake(0.10, 16.0)
+				"q":
+					add_screen_shake(0.09, 14.0)
+				"ultimate":
+					add_screen_shake(0.18, 28.0)
+
+			if $Player.has_method("gain_ultimate"):
+				$Player.gain_ultimate(6.0)
+
+	if hit_any_enemy:
+		match kind:
+			"light", "light_1":
+				add_hit_stop(0.035, 0.12)
+			"light_2":
+				add_hit_stop(0.04, 0.10)
+			"light_3":
+				add_hit_stop(0.055, 0.08)
+			"heavy":
+				add_hit_stop(0.075, 0.06)
+			"q":
+				add_hit_stop(0.06, 0.08)
+			"ultimate":
+				add_hit_stop(0.11, 0.04)
+
+
+func _spawn_damage_number(pos: Vector2, amount: float, kind: String) -> void:
+	var number = DamageNumberScene.instantiate()
+	number.global_position = pos + Vector2(randf_range(-10.0, 10.0), randf_range(-20.0, -8.0))
+
+	var number_color := Color("#f7e8d4")
+	var is_big := false
+
+	match kind:
+		"light", "light_1":
+			number_color = Color("#f7e8d4")
+		"light_2":
+			number_color = Color("#ffe2a8")
+		"light_3":
+			number_color = Color("#dfaa46")
+			is_big = true
+		"heavy":
+			number_color = Color("#ff684a")
+			is_big = true
+		"q":
+			number_color = Color("#9ed8cd")
+			is_big = true
+		"ultimate":
+			number_color = Color("#ffd36a")
+			is_big = true
+
+	number.setup(amount, number_color, is_big)
+	add_child(number)
+
+
+func _apply_on_hit_boon_effects(kind: String, enemy_node: Node2D) -> void:
+	if enemy_node == null:
+		return
+
+	if not is_instance_valid(enemy_node):
+		return
+
+	if not RunState.has_method("get_on_hit_status_effects"):
+		return
+
+	var effects: Array[Dictionary] = RunState.get_on_hit_status_effects(kind)
+
+	for effect in effects:
+		var status_id: String = str(effect.get("status_id", ""))
+		var stacks: int = int(effect.get("stacks", 1))
+		var duration: float = float(effect.get("duration", 4.0))
+
+		if status_id == "":
+			continue
+
+		if enemy_node.has_method("apply_status"):
+			enemy_node.call("apply_status", status_id, stacks, duration)
+
+
+func _apply_on_hit_status_detonations(kind: String, enemy_node: Node2D) -> void:
+	if enemy_node == null:
+		return
+
+	if not is_instance_valid(enemy_node):
+		return
+
+	if not RunState.has_method("get_on_hit_status_detonations"):
+		return
+
+	var detonations: Array[Dictionary] = RunState.get_on_hit_status_detonations(kind)
+
+	for detonation in detonations:
+		var status_id: String = str(detonation.get("status_id", ""))
+		var damage_per_stack: float = float(detonation.get("flat_value", 0.0))
+
+		if status_id == "":
+			continue
+
+		if damage_per_stack <= 0.0:
+			continue
+
+		if not enemy_node.has_method("consume_status"):
+			continue
+
+		var stacks: int = int(enemy_node.call("consume_status", status_id))
+
+		if stacks <= 0:
+			continue
+
+		var burst_damage: float = damage_per_stack * float(stacks)
+		var number_kind := "ultimate"
+
+		if status_id == "bleed":
+			number_kind = "heavy"
+		elif status_id == "judgment":
+			number_kind = "ultimate"
+		elif status_id == "poison":
+			number_kind = "q"
+
+		if enemy_node.has_method("take_damage"):
+			enemy_node.call("take_damage", burst_damage, $Player.global_position, number_kind)
+
+		_spawn_damage_number(
+			enemy_node.global_position + Vector2(randf_range(-8.0, 8.0), randf_range(-32.0, -18.0)),
+			burst_damage,
+			number_kind
+		)
+
+		add_screen_shake(0.08, 14.0)
+
+
+func _apply_on_hit_spread_status_synergies(kind: String, enemy_node: Node2D) -> void:
+	if enemy_node == null:
+		return
+
+	if not is_instance_valid(enemy_node):
+		return
+
+	if not RunState.has_method("get_on_hit_effects_by_type"):
+		return
+
+	var effects: Array[Dictionary] = RunState.get_on_hit_effects_by_type(kind, "spread_status_on_hit")
+
+	for effect in effects:
+		var required_status_id: String = str(effect.get("required_status_id", ""))
+		var spread_status_id: String = str(effect.get("status_id", ""))
+		var stacks: int = int(effect.get("stacks", 1))
+		var duration: float = float(effect.get("duration", 4.0))
+		var spread_radius: float = float(effect.get("spread_radius", 140.0))
+
+		if required_status_id == "":
+			continue
+
+		if spread_status_id == "":
+			continue
+
+		if not enemy_node.has_method("has_status"):
+			continue
+
+		if not bool(enemy_node.call("has_status", required_status_id)):
+			continue
+
+		_apply_status_to_nearby_enemies(enemy_node, enemy_node.global_position, spread_radius, spread_status_id, stacks, duration)
+
+		var fx = AttackEffectScene.instantiate()
+		fx.global_position = enemy_node.global_position
+		fx.setup("q", spread_radius, Vector2.RIGHT)
+		add_child(fx)
+
+		add_screen_shake(0.045, 7.0)
+
+
+func _apply_status_to_nearby_enemies(excluded_enemy: Node2D, center: Vector2, radius: float, status_id: String, stacks: int, duration: float) -> void:
+	for other_enemy in spawned_enemies:
+		if other_enemy == null:
+			continue
+
+		if not is_instance_valid(other_enemy):
+			continue
+
+		if other_enemy == excluded_enemy:
+			continue
+
+		if other_enemy.is_queued_for_deletion():
+			continue
+
+		if _object_has_property(other_enemy, "dead") and bool(other_enemy.get("dead")):
+			continue
+
+		if other_enemy.global_position.distance_to(center) > radius:
+			continue
+
+		if other_enemy.has_method("apply_status"):
+			other_enemy.call("apply_status", status_id, stacks, duration)
+
+
+func _apply_on_hit_execute_synergies(kind: String, enemy_node: Node2D) -> void:
+	if enemy_node == null:
+		return
+
+	if not is_instance_valid(enemy_node):
+		return
+
+	if not RunState.has_method("get_on_hit_effects_by_type"):
+		return
+
+	var effects: Array[Dictionary] = RunState.get_on_hit_effects_by_type(kind, "execute_status_below_ratio")
+
+	for effect in effects:
+		var status_id: String = str(effect.get("status_id", ""))
+		var threshold: float = float(effect.get("execute_threshold_ratio", 0.20))
+
+		if status_id == "":
+			continue
+
+		if not enemy_node.has_method("has_status"):
+			continue
+
+		if not bool(enemy_node.call("has_status", status_id)):
+			continue
+
+		var hp_ratio: float = _get_enemy_hp_ratio(enemy_node)
+
+		if hp_ratio > threshold:
+			continue
+
+		var current_hp: float = _safe_get_float(enemy_node, "hp", 1.0)
+		var execute_damage: float = maxf(999.0, current_hp + 999.0)
+
+		if enemy_node.has_method("take_damage"):
+			enemy_node.call("take_damage", execute_damage, $Player.global_position, "ultimate")
+
+		_spawn_damage_number(
+			enemy_node.global_position + Vector2(0, -34),
+			execute_damage,
+            "ultimate"
+		)
+
+		var fx = AttackEffectScene.instantiate()
+		fx.global_position = enemy_node.global_position
+		fx.setup("ultimate", 78.0, Vector2.RIGHT)
+		add_child(fx)
+
+		add_screen_shake(0.12, 24.0)
+
+
+func _apply_on_hit_heal_synergies(kind: String, enemy_node: Node2D) -> void:
+	if enemy_node == null:
+		return
+
+	if not is_instance_valid(enemy_node):
+		return
+
+	if $Player == null:
+		return
+
+	if not RunState.has_method("get_on_hit_effects_by_type"):
+		return
+
+	var effects: Array[Dictionary] = RunState.get_on_hit_effects_by_type(kind, "heal_on_hit_vs_status")
+
+	for effect in effects:
+		var status_id: String = str(effect.get("status_id", ""))
+		var heal_amount: float = float(effect.get("flat_value", 0.0))
+
+		if status_id == "":
+			continue
+
+		if heal_amount <= 0.0:
+			continue
+
+		if not enemy_node.has_method("has_status"):
+			continue
+
+		if not bool(enemy_node.call("has_status", status_id)):
+			continue
+
+		$Player.hp = minf($Player.hp + heal_amount, $Player.max_hp)
+
+		if $Player.has_method("_save_run_vitals"):
+			$Player._save_run_vitals()
+
+
+func _get_enemy_hp_ratio(enemy_node: Node2D) -> float:
+	var hp: float = _safe_get_float(enemy_node, "hp", 1.0)
+	var max_hp: float = maxf(1.0, _safe_get_float(enemy_node, "max_hp", 1.0))
+
+	return clampf(hp / max_hp, 0.0, 1.0)
+
+
+func _safe_get_float(object: Object, property_name: String, fallback: float) -> float:
+	if object == null:
+		return fallback
+
+	if not _object_has_property(object, property_name):
+		return fallback
+
+	var value = object.get(property_name)
+
+	if value == null:
+		return fallback
+
+	return float(value)
+
+
+func _on_enemy_died(enemy_position: Vector2) -> void:
+	add_screen_shake(0.08, 10.0)
+	add_hit_stop(0.045, 0.08)
+
+	var heal_bonus: float = 0.0
+
+	if RunState.has_method("get_on_kill_heal_bonus"):
+		heal_bonus = RunState.get_on_kill_heal_bonus()
+
+	if heal_bonus > 0.0 and $Player:
+		$Player.hp = minf($Player.hp + heal_bonus, $Player.max_hp)
+
+	var fx = AttackEffectScene.instantiate()
+	fx.global_position = enemy_position
+	fx.setup("death", 48.0, Vector2.RIGHT)
+	add_child(fx)
+
+
+func _is_in_front(to_target: Vector2, direction: Vector2, threshold: float) -> bool:
+	if to_target.length() <= 1.0:
+		return true
+
+	var safe_direction := direction
+
+	if safe_direction.length() <= 0.01:
+		safe_direction = Vector2.RIGHT
+
+	var dot: float = safe_direction.normalized().dot(to_target.normalized())
+	return dot >= threshold
+
+
+func _on_perfect_dodge() -> void:
+	var fx = AttackEffectScene.instantiate()
+	fx.global_position = $Player.global_position
+	fx.setup("perfect", 72.0, Vector2.RIGHT)
+	add_child(fx)
+
+	attack_fx.append({
+		"kind": "perfect",
+		"origin": $Player.global_position,
+		"direction": Vector2.RIGHT,
+		"radius": 72.0,
+		"time": 0.24
+	})
+
+	var bonus_ultimate: float = 0.0
+
+	if RunState.has_method("get_perfect_dodge_ultimate_bonus"):
+		bonus_ultimate = RunState.get_perfect_dodge_ultimate_bonus()
+
+	if bonus_ultimate > 0.0 and $Player.has_method("gain_ultimate"):
+		$Player.gain_ultimate(bonus_ultimate)
+
+	add_screen_shake(0.06, 8.0)
+	add_hit_stop(0.045, 0.10)
+
+
+func _update_screen_shake(delta: float) -> void:
+	var camera := $Player.get_node_or_null("Camera2D") as Camera2D
+
+	if camera == null:
+		return
+
+	if shake_timer > 0.0:
+		shake_timer -= delta
+
+		camera.offset = Vector2(
+			randf_range(-shake_strength, shake_strength),
+			randf_range(-shake_strength, shake_strength)
+		)
+
+		if shake_timer <= 0.0:
+			camera.offset = Vector2.ZERO
+			shake_strength = 0.0
+	else:
+		camera.offset = Vector2.ZERO
+
+
+func add_screen_shake(duration: float, strength: float) -> void:
+	shake_timer = maxf(shake_timer, duration)
+	shake_strength = maxf(shake_strength, strength)
+
+
+func add_hit_stop(duration: float, time_scale: float) -> void:
+	if hit_stop_active:
+		return
+
+	hit_stop_active = true
+	Engine.time_scale = time_scale
+
+	await get_tree().create_timer(duration, true, false, true).timeout
+
+	Engine.time_scale = 1.0
+	hit_stop_active = false
+
+
+func _object_has_property(object: Object, property_name: String) -> bool:
+	if object == null:
+		return false
+
+	for property in object.get_property_list():
+		if str(property["name"]) == property_name:
+			return true
+
+	return false
+
+
+func _draw() -> void:
+	_draw_room()
+	_draw_attack_fx()
+	_draw_reward_layer()
+	_draw_hint()
+
+
+func _draw_room() -> void:
+	var template := _get_current_room_template()
+
+	_draw_template_background(template)
+	_draw_template_floor(template)
+	_draw_template_walls(template)
+	_draw_template_blockers(template)
+	_draw_template_decor(template)
+	_draw_room_header()
+
+	if room_clear_pulse_timer > 0.0:
+		_draw_room_clear_pulse()
+
+	if room_clear:
+		_draw_room_clear_banner()
+
+
+func _draw_template_background(template: Dictionary) -> void:
+	var bg_color := Color("#060304")
+
+	if room_type == RunState.ROOM_ELITE:
+		bg_color = Color("#09050e")
+	elif room_type == RunState.ROOM_BOSS:
+		bg_color = Color("#090202")
+
+	draw_rect(Rect2(Vector2.ZERO, Vector2(1280, 720)), bg_color)
+
+	var room_rect: Rect2 = template.get("room_rect", arena_rect)
+	draw_rect(room_rect.grow(44), Color(0, 0, 0, 0.34))
+	draw_rect(room_rect.grow(24), Color("#0d0506"))
+	draw_rect(room_rect.grow(10), Color("#1a0b0d"))
+
+
+func _draw_template_floor(template: Dictionary) -> void:
+	var floor_rects: Array = template.get("floor_rects", [arena_rect])
+
+	for floor_rect in floor_rects:
+		if floor_rect is Rect2:
+			_draw_tiled_rect(floor_rect)
+
+	var tint: Color = template.get("tint", _get_room_tint())
+	var fill: Color = template.get("fill", Color(tint.r, tint.g, tint.b, 0.12))
+
+	for floor_rect in floor_rects:
+		if floor_rect is Rect2:
+			draw_rect(floor_rect, fill)
+
+
+func _draw_tiled_rect(rect: Rect2) -> void:
+	if floor_textures.is_empty():
+		draw_rect(rect, Color("#181012"))
+		return
+
+	var start_x := int(rect.position.x)
+	var start_y := int(rect.position.y)
+	var end_x := int(rect.position.x + rect.size.x)
+	var end_y := int(rect.position.y + rect.size.y)
+
+	for y in range(start_y, end_y, 32):
+		for x in range(start_x, end_x, 32):
+			var index_seed := int((x / 32) * 7 + (y / 32) * 11 + RunState.depth * 3)
+			var texture := floor_textures[abs(index_seed) % floor_textures.size()]
+			draw_texture_rect(texture, Rect2(Vector2(x, y), Vector2(32, 32)), false)
+
+
+func _get_room_tint() -> Color:
+	var template := _get_current_room_template()
+	return template.get("tint", Color("#dfaa46"))
+
+
+func _draw_template_walls(template: Dictionary) -> void:
+	var room_rect: Rect2 = template.get("room_rect", arena_rect)
+	var accent: Color = template.get("tint", Color("#dfaa46"))
+
+	draw_rect(room_rect.grow(12), Color("#050202"), false, 12.0)
+	draw_rect(room_rect.grow(6), Color("#241010"), false, 6.0)
+	draw_rect(room_rect.grow(2), Color("#4a1b17"), false, 3.0)
+	draw_rect(room_rect, Color(accent.r, accent.g, accent.b, 0.72), false, 1.0)
+
+	var floor_rects: Array = template.get("floor_rects", [])
+
+	if floor_rects.size() > 1:
+		for floor_rect in floor_rects:
+			if floor_rect is Rect2:
+				draw_rect(floor_rect, Color(accent.r, accent.g, accent.b, 0.24), false, 1.0)
+
+	_draw_column(room_rect.position)
+	_draw_column(room_rect.position + Vector2(room_rect.size.x, 0))
+	_draw_column(room_rect.position + Vector2(0, room_rect.size.y))
+	_draw_column(room_rect.position + Vector2(room_rect.size.x, room_rect.size.y))
+
+
+func _draw_template_identity(template: Dictionary) -> void:
+	var template_id := str(template.get("id", "chapel_box"))
+	var room_rect: Rect2 = template.get("room_rect", arena_rect)
+	var center := room_rect.get_center()
+	var accent: Color = template.get("tint", Color("#dfaa46"))
+
+	match template_id:
+		"chapel_box":
+			draw_rect(Rect2(Vector2(center.x - 24, room_rect.position.y + 72), Vector2(48, room_rect.size.y - 144)), Color(0, 0, 0, 0.16))
+			draw_rect(Rect2(Vector2(center.x - 170, center.y - 16), Vector2(340, 32)), Color(0, 0, 0, 0.12))
+			draw_arc(center, 72.0, 0.0, TAU, 64, Color(accent.r, accent.g, accent.b, 0.75), 1.2)
+			draw_line(center + Vector2(-42, 0), center + Vector2(42, 0), Color("#6b2a1f"), 1.0)
+			draw_line(center + Vector2(0, -42), center + Vector2(0, 42), Color("#6b2a1f"), 1.0)
+
+		"cross_hall":
+			draw_arc(center, 58.0, 0.0, TAU, 56, Color(accent.r, accent.g, accent.b, 0.72), 1.4)
+			draw_line(center + Vector2(-90, 0), center + Vector2(90, 0), Color(accent.r, accent.g, accent.b, 0.35), 1.0)
+			draw_line(center + Vector2(0, -90), center + Vector2(0, 90), Color(accent.r, accent.g, accent.b, 0.35), 1.0)
+
+		"pillar_hall":
+			draw_rect(Rect2(Vector2(room_rect.position.x + 82, center.y - 24), Vector2(room_rect.size.x - 164, 48)), Color(0, 0, 0, 0.13))
+
+		"blood_pit":
+			draw_circle(center, 118.0, Color(0.45, 0.02, 0.01, 0.22))
+			draw_arc(center, 118.0, 0.0, TAU, 80, Color("#6b2a1f"), 2.0)
+			draw_arc(center, 74.0, 0.0, TAU, 72, Color("#ff684a"), 1.0)
+
+		"reliquary_chamber":
+			draw_rect(Rect2(center - Vector2(178, 58), Vector2(356, 116)), Color(0.16, 0.10, 0.03, 0.18))
+			draw_arc(center, 86.0, 0.0, TAU, 72, Color("#f4d49a"), 1.5)
+			draw_arc(center, 44.0, 0.0, TAU, 48, Color("#dfaa46"), 1.0)
+
+		"boss_sanctum":
+			draw_circle(center, 168.0, Color(0.36, 0.02, 0.02, 0.24))
+			draw_arc(center, 168.0, 0.0, TAU, 96, Color("#ff684a"), 3.0)
+			draw_arc(center, 108.0, 0.0, TAU, 96, Color("#dfaa46"), 1.8)
+			draw_arc(center, 58.0, 0.0, TAU, 64, Color("#f7e8d4"), 1.0)
+
+
+func _draw_template_blockers(template: Dictionary) -> void:
+	var blockers: Array = template.get("blockers", [])
+
+	for blocker in blockers:
+		if not (blocker is Rect2):
+			continue
+
+		var rect: Rect2 = blocker
+		draw_rect(rect, Color(0, 0, 0, 0.34))
+		draw_rect(rect.grow(-4), Color("#26120f"))
+		draw_rect(rect.grow(-4), Color("#6b2a1f"), false, 2.0)
+
+		if rect.size.x <= 70 and rect.size.y <= 100:
+			_draw_column(rect.get_center() + Vector2(0, 12))
+
+
+func _draw_template_decor(template: Dictionary) -> void:
+	var decor: Array = template.get("decor", [])
+
+	for entry in decor:
+		if not (entry is Dictionary):
+			continue
+
+		var entry_dict: Dictionary = entry
+		var decor_type := str(entry_dict.get("type", ""))
+		var pos: Vector2 = entry_dict.get("pos", Vector2.ZERO)
+
+		match decor_type:
+			"banner_red":
+				_draw_banner(banner_red_texture, pos)
+			"banner_blue":
+				_draw_banner(banner_blue_texture, pos)
+			"banner_green":
+				_draw_banner(banner_green_texture, pos)
+			"banner_yellow":
+				_draw_banner(banner_yellow_texture, pos)
+			"crate":
+				_draw_object(crate_texture, pos, Vector2(32, 32))
+			"chest":
+				_draw_object(chest_texture, pos, Vector2(32, 32))
+			"spikes":
+				_draw_object(spikes_texture, pos, Vector2(32, 32))
+
+
+func _draw_column(pos: Vector2) -> void:
+	if column_texture == null:
+		draw_circle(pos, 12.0, Color("#4a2320"))
+		return
+
+	draw_texture_rect(column_texture, Rect2(pos - Vector2(16, 28), Vector2(32, 32)), false)
+
+
+func _draw_banner(texture: Texture2D, pos: Vector2) -> void:
+	_draw_object(texture, pos, Vector2(32, 32))
+
+
+func _draw_object(texture: Texture2D, pos: Vector2, size: Vector2) -> void:
+	if texture == null:
+		return
+
+	draw_texture_rect(texture, Rect2(pos - size * 0.5, size), false)
+
+
+func _draw_room_header() -> void:
+	var template := _get_current_room_template()
+	var room_title := "%s Room" % RunState.get_room_display_name(room_type)
+	var accent: Color = template.get("tint", Color("#dfaa46"))
+	var template_name := str(template.get("display_name", room_layout_type.capitalize()))
+
+	draw_rect(Rect2(Vector2(26, 26), Vector2(420, 58)), Color(0, 0, 0, 0.72))
+	draw_rect(Rect2(Vector2(26, 26), Vector2(420, 58)), accent, false, 1.0)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(42, 51),
+		"%s — Depth %d" % [room_title, RunState.depth],
+		HORIZONTAL_ALIGNMENT_LEFT,
+		390,
+		18,
+		Color("#f7e8d4")
+	)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(42, 75),
+		"%s · %s" % [template_name, RunState.get_combat_debug_text(room_type, RunState.depth)],
+		HORIZONTAL_ALIGNMENT_LEFT,
+		390,
+		12,
+		Color("#c4a98f")
+	)
+
+
+func _draw_room_clear_pulse() -> void:
+	var template := _get_current_room_template()
+	var room_rect: Rect2 = template.get("room_rect", arena_rect)
+	var center := room_rect.get_center()
+	var progress := 1.0 - clampf(room_clear_pulse_timer / 0.90, 0.0, 1.0)
+	var alpha := 1.0 - progress
+	var accent: Color = template.get("tint", Color("#dfaa46"))
+
+	draw_rect(room_rect, Color(accent.r, accent.g, accent.b, 0.12 * alpha))
+	draw_rect(room_rect.grow(10.0 + progress * 28.0), Color(accent.r, accent.g, accent.b, 0.62 * alpha), false, 4.0)
+	draw_arc(center, 70.0 + progress * 120.0, 0.0, TAU, 96, Color(accent.r, accent.g, accent.b, 0.72 * alpha), 4.0)
+	draw_arc(center, 38.0 + progress * 74.0, 0.0, TAU, 72, Color(1.0, 0.92, 0.70, 0.56 * alpha), 2.0)
+
+	for i in range(8):
+		var angle := TAU * float(i) / 8.0
+		var start := center + Vector2.RIGHT.rotated(angle) * (34.0 + progress * 52.0)
+		var end := center + Vector2.RIGHT.rotated(angle) * (86.0 + progress * 150.0)
+		draw_line(start, end, Color(accent.r, accent.g, accent.b, 0.48 * alpha), 2.0)
+
+
+func _draw_room_clear_banner() -> void:
+	var panel := Rect2(Vector2(412, 638), Vector2(456, 42))
+
+	draw_rect(panel, Color(0, 0, 0, 0.76))
+	draw_rect(panel, Color("#dfaa46"), false, 1.0)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(438, 665),
+		"Room clear — choose your next door",
+		HORIZONTAL_ALIGNMENT_CENTER,
+		404,
+		17,
+		Color("#dfaa46")
+	)
+
+
+func _draw_reward_layer() -> void:
+	if not room_clear or reward_taken:
+		return
+
+	if not boon_offers.is_empty():
+		_draw_boon_offers()
+
+	if reward_available:
+		_draw_object_reward()
+
+
+func _draw_boon_offers() -> void:
+	for i in range(boon_offers.size()):
+		var boon: Dictionary = boon_offers[i]
+		var pos: Vector2 = boon_positions[i]
+		var witness_name: String = str(boon.get("witness_name", "Witness"))
+		var display_name: String = str(boon.get("display_name", "Boon"))
+		var description: String = str(boon.get("description", ""))
+		var target_action: String = str(boon.get("target_action", "Power"))
+		var rarity: String = str(boon.get("rarity", "Common"))
+		var effect_type: String = str(boon.get("effect_type", ""))
+
+		var color := _get_boon_color(witness_name, rarity)
+		var rect := Rect2(pos - Vector2(112, 88), Vector2(224, 176))
+
+		draw_rect(rect, Color(0.035, 0.018, 0.014, 0.94))
+		draw_rect(rect, color, false, 3.0)
+		draw_rect(Rect2(rect.position + Vector2(8, 8), rect.size - Vector2(16, 16)), Color(1, 1, 1, 0.08), false, 1.0)
+
+		draw_string(
+			ThemeDB.fallback_font,
+			pos + Vector2(-96, -62),
+			"%s · %s" % [witness_name, rarity],
+			HORIZONTAL_ALIGNMENT_CENTER,
+			192,
+			15,
+			color
+		)
+
+		draw_string(
+			ThemeDB.fallback_font,
+			pos + Vector2(-96, -34),
+			display_name,
+			HORIZONTAL_ALIGNMENT_CENTER,
+			192,
+			20,
+			Color("#f7e8d4")
+		)
+
+		draw_string(
+			ThemeDB.fallback_font,
+			pos + Vector2(-96, -6),
+			"Affects: %s" % target_action,
+			HORIZONTAL_ALIGNMENT_CENTER,
+			192,
+			13,
+			Color("#c4a98f")
+		)
+
+		draw_string(
+			ThemeDB.fallback_font,
+			pos + Vector2(-96, 16),
+			_format_effect_label(effect_type),
+			HORIZONTAL_ALIGNMENT_CENTER,
+			192,
+			12,
+			color.lightened(0.18)
+		)
+
+		draw_string(
+			ThemeDB.fallback_font,
+			pos + Vector2(-96, 42),
+			description,
+			HORIZONTAL_ALIGNMENT_CENTER,
+			192,
+			12,
+			Color("#d8c1a1")
+		)
+
+
+func _format_effect_label(effect_type: String) -> String:
+	match effect_type:
+		"apply_status":
+			return "Status Effect"
+		"bonus_damage_vs_status":
+			return "Conditional Damage"
+		"detonate_status_damage":
+			return "Status Detonation"
+		"spread_status_on_hit":
+			return "Status Spread"
+		"execute_status_below_ratio":
+			return "Execute"
+		"heal_on_hit_vs_status":
+			return "Sustain"
+		"on_kill_heal_flat":
+			return "On Kill"
+		"perfect_dodge_ultimate_flat":
+			return "Perfect Dodge"
+		_:
+			return "Power"
+
+
+func _get_boon_color(witness_name: String, rarity: String) -> Color:
+	var base := Color("#dfaa46")
+
+	match witness_name:
+		"Virgil":
+			base = Color("#dfaa46")
+		"Francesca":
+			base = Color("#d85c8a")
+		"Minos":
+			base = Color("#ff684a")
+		"Ugolino":
+			base = Color("#9ed8cd")
+		"Geryon":
+			base = Color("#7fdc54")
+		"Beatrice":
+			base = Color("#f7e8d4")
+
+	if rarity == "Rare":
+		base = base.lightened(0.30)
+	elif rarity == "Uncommon":
+		base = base.lightened(0.12)
+
+	return base
+
+
+func _draw_object_reward() -> void:
+	pass
+
+
+func _draw_hint() -> void:
+	if hint == "":
+		return
+
+	draw_rect(Rect2(Vector2(370, 662), Vector2(540, 36)), Color(0, 0, 0, 0.72))
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(395, 687),
+		hint,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		490,
+		16,
+		Color("#f7e8d4")
+	)
+
+
+func _draw_attack_fx() -> void:
+	for fx in attack_fx:
+		var kind: String = fx["kind"]
+		var origin: Vector2 = fx["origin"]
+		var direction: Vector2 = fx["direction"]
+		var radius: float = fx["radius"]
+		var time: float = fx["time"]
+
+		var alpha: float = clampf(time / 0.18, 0.0, 1.0)
+
+		if kind in ["light", "light_1"]:
+			_draw_cone(origin, direction, radius, 0.55, Color(1.0, 0.75, 0.28, alpha))
+		elif kind == "light_2":
+			_draw_cone(origin, direction, radius, 0.55, Color(1.0, 0.82, 0.36, alpha))
+		elif kind == "light_3":
+			_draw_cone(origin, direction, radius, 0.95, Color(1.0, 0.88, 0.42, alpha))
+		elif kind == "heavy":
+			_draw_cone(origin, direction, radius, 1.1, Color(1.0, 0.28, 0.18, alpha))
+		elif kind == "q":
+			draw_circle(origin, radius, Color(0.50, 0.80, 1.0, 0.10 * alpha))
+			draw_arc(origin, radius, 0.0, TAU, 64, Color(0.50, 0.80, 1.0, alpha), 4.0)
+		elif kind == "ultimate":
+			draw_circle(origin, radius, Color(1.0, 0.72, 0.16, 0.14 * alpha))
+			draw_arc(origin, radius, 0.0, TAU, 96, Color(1.0, 0.72, 0.16, alpha), 6.0)
+		elif kind == "perfect":
+			draw_circle(origin, radius, Color(0.90, 0.95, 1.0, 0.12 * alpha))
+			draw_arc(origin, radius, 0.0, TAU, 64, Color(0.90, 0.95, 1.0, alpha), 5.0)
+
+
+func _draw_cone(origin: Vector2, direction: Vector2, radius: float, angle_width: float, color: Color) -> void:
+	var safe_direction := direction
+
+	if safe_direction.length() <= 0.01:
+		safe_direction = Vector2.RIGHT
+
+	safe_direction = safe_direction.normalized()
+
+	var angle: float = safe_direction.angle()
+	var start_angle: float = angle - angle_width
+	var end_angle: float = angle + angle_width
+
+	draw_arc(origin, radius, start_angle, end_angle, 32, color, 6.0)
+
+	var left: Vector2 = origin + Vector2.RIGHT.rotated(start_angle) * radius
+	var right: Vector2 = origin + Vector2.RIGHT.rotated(end_angle) * radius
+
+	draw_line(origin, left, color, 3.0)
+	draw_line(origin, right, color, 3.0)

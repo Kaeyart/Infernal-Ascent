@@ -1,0 +1,67 @@
+extends Resource
+class_name WeaponData
+
+@export var id: String = "penitent_blade"
+@export var display_name: String = "Penitent Blade"
+@export_multiline var description: String = "A chained crusader blade built for fast confession cuts, charged absolution, and judgment movement."
+@export var tags: Array[String] = ["Slash", "Combo", "Judgment", "Mobile"]
+
+@export_group("Light Combo")
+@export var light_description: String = "Three-hit slash chain. The third hit is wider and heavier."
+@export var light_radius: float = 58.0
+@export var light_damage: float = 18.0
+@export var light_cooldown: float = 0.22
+@export var light_startup: float = 0.045
+@export var light_active_time: float = 0.075
+@export var light_recovery: float = 0.12
+
+@export_group("Heavy")
+@export var heavy_description: String = "Wind up, then release a broad absolution slash."
+@export var heavy_radius: float = 92.0
+@export var heavy_damage: float = 48.0
+@export var heavy_cooldown: float = 0.78
+@export var heavy_startup: float = 0.035
+@export var heavy_active_time: float = 0.13
+@export var heavy_recovery: float = 0.30
+@export var heavy_windup_time: float = 0.36
+
+@export_group("Q Skill")
+@export var q_description: String = "Forward judgment dash slash with a clean blue-gold trail."
+@export var q_radius: float = 98.0
+@export var q_damage: float = 34.0
+@export var q_cooldown: float = 3.0
+@export var q_offset: float = 76.0
+@export var q_startup: float = 0.035
+@export var q_active_time: float = 0.12
+@export var q_recovery: float = 0.18
+
+@export_group("Ultimate")
+@export var ultimate_description: String = "Circular penance burst. High hit stop, large radius, strong status payoff."
+@export var ultimate_radius: float = 215.0
+@export var ultimate_damage: float = 98.0
+@export var ultimate_cooldown: float = 1.0
+@export var ultimate_cost: float = 100.0
+@export var ultimate_startup: float = 0.09
+@export var ultimate_active_time: float = 0.18
+@export var ultimate_recovery: float = 0.40
+
+@export_group("Presentation")
+@export var primary_color: Color = Color("#dfaa46")
+@export var secondary_color: Color = Color("#ff684a")
+@export var q_color: Color = Color("#9ed8cd")
+@export var ultimate_color: Color = Color("#ffd36a")
+
+
+func get_tags_text() -> String:
+	if tags.is_empty():
+		return "None"
+
+	var text := ""
+
+	for i in range(tags.size()):
+		if i > 0:
+			text += " / "
+
+		text += tags[i]
+
+	return text

@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://c88tvsshq1brg"
+
+[deps]
+
+files=["res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.category.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.source.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.trimmed.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.trimmed.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.padded.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.trimmed.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.padded.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.notes.translation"]
+
+source_file="res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.csv"
+dest_files=["res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.category.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.source.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.trimmed.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.trimmed.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.padded.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.trimmed.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.padded.translation", "res://art/iso/circle0/ash_intake_hall_01/ash_intake_hall_01_iso_asset_manifest.notes.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

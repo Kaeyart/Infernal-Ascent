@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dudugm3wjbq71"]
+
+[ext_resource type="Script" uid="uid://bpqildpekymj7" path="res://scripts/rooms/WeaponPedestal.gd" id="1_xxvsx"]
+[ext_resource type="Script" uid="uid://30ukalq4k1wm" path="res://scripts/player/WeaponData.gd" id="2_2a3ws"]
+
+[sub_resource type="Resource" id="Resource_6k5mq"]
+script = ExtResource("2_2a3ws")
+metadata/_custom_type_script = "uid://30ukalq4k1wm"
+
+[node name="WeaponPedestal" type="Node2D" unique_id=1710569456]
+script = ExtResource("1_xxvsx")
+weapon = SubResource("Resource_6k5mq")
+display_name = "Penitent Blade"

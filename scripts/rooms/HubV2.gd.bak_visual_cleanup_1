@@ -1,0 +1,337 @@
+extends Node2D
+
+signal enter_run_requested()
+
+const TILE_SIZE := 32.0
+
+const FLOOR_TEXTURE_PATHS := [
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_1.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_2.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_3.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_4.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_5.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_6.png",
+	"res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_7.png",
+    "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_8.png"
+]
+
+const COLUMN_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/column.png"
+const COLUMN_WALL_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/column_wall.png"
+const DOOR_TOP_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/doors_frame_top.png"
+const DOOR_LEFT_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/doors_frame_left.png"
+const DOOR_RIGHT_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/doors_frame_right.png"
+const DOOR_CLOSED_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/doors_leaf_closed.png"
+const CHEST_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/chest_full_open_anim_f0.png"
+const CRATE_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/crate.png"
+const BANNER_RED_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_red.png"
+const BANNER_BLUE_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_blue.png"
+const BANNER_YELLOW_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/wall_banner_yellow.png"
+const SPIKES_TEXTURE_PATH := "res://art/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7/frames/floor_spikes_anim_f0.png"
+
+var floor_textures: Array[Texture2D] = []
+var column_texture: Texture2D = null
+var column_wall_texture: Texture2D = null
+var door_top_texture: Texture2D = null
+var door_left_texture: Texture2D = null
+var door_right_texture: Texture2D = null
+var door_closed_texture: Texture2D = null
+var chest_texture: Texture2D = null
+var crate_texture: Texture2D = null
+var banner_red_texture: Texture2D = null
+var banner_blue_texture: Texture2D = null
+var banner_yellow_texture: Texture2D = null
+var spikes_texture: Texture2D = null
+
+var player: Node2D = null
+var hell_gate_position := Vector2(640, 642)
+var hell_gate_radius := 72.0
+var is_near_hell_gate := false
+var pulse_time := 0.0
+
+var rooms := {
+	"archive": Rect2(Vector2(448, 48), Vector2(384, 160)),
+	"central": Rect2(Vector2(448, 240), Vector2(384, 192)),
+	"training": Rect2(Vector2(80, 240), Vector2(320, 240)),
+	"smithy": Rect2(Vector2(880, 240), Vector2(320, 240)),
+	"reliquary": Rect2(Vector2(448, 464), Vector2(384, 112)),
+	"hell_gate": Rect2(Vector2(480, 608), Vector2(320, 80))
+}
+
+var corridors := [
+	Rect2(Vector2(576, 208), Vector2(128, 32)),
+	Rect2(Vector2(400, 304), Vector2(48, 64)),
+	Rect2(Vector2(832, 304), Vector2(48, 64)),
+	Rect2(Vector2(576, 432), Vector2(128, 32)),
+	Rect2(Vector2(576, 576), Vector2(128, 32))
+]
+
+
+func _ready() -> void:
+	_load_textures()
+	_cache_player()
+	_position_existing_nodes()
+	set_process(true)
+	queue_redraw()
+
+
+func _process(delta: float) -> void:
+	pulse_time += delta
+
+	if player == null or not is_instance_valid(player):
+		_cache_player()
+
+	_update_hell_gate_interaction()
+	queue_redraw()
+
+
+func _cache_player() -> void:
+	player = get_node_or_null("Player") as Node2D
+
+	if player == null:
+		player = get_tree().get_first_node_in_group("player") as Node2D
+
+
+func _load_textures() -> void:
+	floor_textures.clear()
+
+	for path in FLOOR_TEXTURE_PATHS:
+		if ResourceLoader.exists(path):
+			var texture := load(path) as Texture2D
+
+			if texture != null:
+				floor_textures.append(texture)
+
+	column_texture = _load_texture(COLUMN_TEXTURE_PATH)
+	column_wall_texture = _load_texture(COLUMN_WALL_TEXTURE_PATH)
+	door_top_texture = _load_texture(DOOR_TOP_TEXTURE_PATH)
+	door_left_texture = _load_texture(DOOR_LEFT_TEXTURE_PATH)
+	door_right_texture = _load_texture(DOOR_RIGHT_TEXTURE_PATH)
+	door_closed_texture = _load_texture(DOOR_CLOSED_TEXTURE_PATH)
+	chest_texture = _load_texture(CHEST_TEXTURE_PATH)
+	crate_texture = _load_texture(CRATE_TEXTURE_PATH)
+	banner_red_texture = _load_texture(BANNER_RED_TEXTURE_PATH)
+	banner_blue_texture = _load_texture(BANNER_BLUE_TEXTURE_PATH)
+	banner_yellow_texture = _load_texture(BANNER_YELLOW_TEXTURE_PATH)
+	spikes_texture = _load_texture(SPIKES_TEXTURE_PATH)
+
+
+func _load_texture(path: String) -> Texture2D:
+	if not ResourceLoader.exists(path):
+		return null
+
+	return load(path) as Texture2D
+
+
+func _position_existing_nodes() -> void:
+	_set_node_position("Player", Vector2(640, 338))
+	_set_node_position("SpawnPoint", Vector2(640, 338))
+
+	_set_node_position("VirgilEcho", Vector2(640, 292))
+	_set_node_position("CodexKeeper", Vector2(640, 128))
+	_set_node_position("SilentSmith", Vector2(1040, 342))
+	_set_node_position("WeaponPedestal", Vector2(640, 520))
+	_set_node_position("TrainingDummy", Vector2(240, 358))
+
+	_set_node_z("Player", 20)
+	_set_node_z("VirgilEcho", 18)
+	_set_node_z("CodexKeeper", 18)
+	_set_node_z("SilentSmith", 18)
+	_set_node_z("WeaponPedestal", 12)
+	_set_node_z("TrainingDummy", 12)
+
+
+func _set_node_position(node_name: String, pos: Vector2) -> void:
+	var node := get_node_or_null(NodePath(node_name)) as Node2D
+
+	if node != null:
+		node.global_position = pos
+
+
+func _set_node_z(node_name: String, z: int) -> void:
+	var node := get_node_or_null(NodePath(node_name)) as Node2D
+
+	if node != null:
+		node.z_index = z
+
+
+func _update_hell_gate_interaction() -> void:
+	is_near_hell_gate = false
+
+	if player == null:
+		return
+
+	is_near_hell_gate = player.global_position.distance_to(hell_gate_position) <= hell_gate_radius
+
+	if is_near_hell_gate and Input.is_action_just_pressed("interact"):
+		enter_run_requested.emit()
+
+
+func _draw() -> void:
+	_draw_background()
+	_draw_tiled_rooms()
+	_draw_room_walls()
+	_draw_room_labels()
+	_draw_decorations()
+	_draw_hell_gate()
+	_draw_interaction_hint()
+
+
+func _draw_background() -> void:
+	draw_rect(Rect2(Vector2.ZERO, Vector2(1280, 720)), Color("#080506"))
+
+	for y in range(0, 720, 32):
+		for x in range(0, 1280, 32):
+			if int(x + y) % 96 == 0:
+				draw_rect(Rect2(Vector2(x, y), Vector2(32, 32)), Color(1, 1, 1, 0.012))
+
+
+func _draw_tiled_rooms() -> void:
+	for key in rooms.keys():
+		_draw_floor_rect(rooms[key])
+
+	for corridor in corridors:
+		_draw_floor_rect(corridor)
+
+
+func _draw_floor_rect(rect: Rect2) -> void:
+	if floor_textures.is_empty():
+		draw_rect(rect, Color("#181012"))
+		return
+
+	var start_x := int(rect.position.x)
+	var start_y := int(rect.position.y)
+	var end_x := int(rect.position.x + rect.size.x)
+	var end_y := int(rect.position.y + rect.size.y)
+
+	for y in range(start_y, end_y, int(TILE_SIZE)):
+		for x in range(start_x, end_x, int(TILE_SIZE)):
+			var index_seed := int((x / TILE_SIZE) * 7 + (y / TILE_SIZE) * 11)
+			var texture := floor_textures[index_seed % floor_textures.size()]
+			var dest := Rect2(Vector2(x, y), Vector2(TILE_SIZE, TILE_SIZE))
+			draw_texture_rect(texture, dest, false)
+
+
+func _draw_room_walls() -> void:
+	for key in rooms.keys():
+		_draw_wall_frame(rooms[key])
+
+	for corridor in corridors:
+		_draw_corridor_edge(corridor)
+
+
+func _draw_wall_frame(rect: Rect2) -> void:
+	var outer := rect.grow(12)
+	draw_rect(outer, Color("#080304"), false, 12.0)
+	draw_rect(rect.grow(4), Color("#2a1010"), false, 4.0)
+	draw_rect(rect, Color("#6b2a1f"), false, 2.0)
+
+	_draw_column_at(rect.position + Vector2(0, 0))
+	_draw_column_at(rect.position + Vector2(rect.size.x, 0))
+	_draw_column_at(rect.position + Vector2(0, rect.size.y))
+	_draw_column_at(rect.position + Vector2(rect.size.x, rect.size.y))
+
+
+func _draw_corridor_edge(rect: Rect2) -> void:
+	draw_rect(rect.grow(3), Color("#2a1010"), false, 3.0)
+	draw_rect(rect, Color("#6b2a1f"), false, 1.0)
+
+
+func _draw_column_at(pos: Vector2) -> void:
+	if column_texture == null:
+		draw_circle(pos, 8.0, Color("#4a2320"))
+		return
+
+	draw_texture_rect(
+		column_texture,
+		Rect2(pos - Vector2(16, 28), Vector2(32, 32)),
+		false
+	)
+
+
+func _draw_room_labels() -> void:
+	_draw_label("ARCHIVE", Vector2(640, 76), Color("#c4a98f"))
+	_draw_label("CENTRAL SLAB HALL", Vector2(640, 258), Color("#dfaa46"))
+	_draw_label("TRAINING CHAMBER", Vector2(240, 262), Color("#9ed8cd"))
+	_draw_label("SILENT SMITHY", Vector2(1040, 262), Color("#ff684a"))
+	_draw_label("WEAPON RELIQUARY", Vector2(640, 484), Color("#f4d49a"))
+	_draw_label("HELL DOORS", Vector2(640, 624), Color("#ff684a"))
+
+
+func _draw_label(text_value: String, pos: Vector2, color: Color) -> void:
+	draw_string(
+		ThemeDB.fallback_font,
+		pos,
+		text_value,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		260,
+		15,
+		color
+	)
+
+
+func _draw_decorations() -> void:
+	_draw_banner(banner_blue_texture, Vector2(520, 90))
+	_draw_banner(banner_blue_texture, Vector2(760, 90))
+	_draw_banner(banner_yellow_texture, Vector2(500, 282))
+	_draw_banner(banner_yellow_texture, Vector2(780, 282))
+	_draw_banner(banner_red_texture, Vector2(930, 284))
+	_draw_banner(banner_red_texture, Vector2(1150, 284))
+
+	_draw_object(crate_texture, Vector2(132, 420), Vector2(32, 32))
+	_draw_object(crate_texture, Vector2(364, 420), Vector2(32, 32))
+	_draw_object(chest_texture, Vector2(548, 516), Vector2(32, 32))
+	_draw_object(chest_texture, Vector2(732, 516), Vector2(32, 32))
+
+	_draw_object(spikes_texture, Vector2(584, 646), Vector2(32, 32))
+	_draw_object(spikes_texture, Vector2(664, 646), Vector2(32, 32))
+
+
+func _draw_banner(texture: Texture2D, pos: Vector2) -> void:
+	_draw_object(texture, pos, Vector2(32, 32))
+
+
+func _draw_object(texture: Texture2D, pos: Vector2, size: Vector2) -> void:
+	if texture == null:
+		return
+
+	draw_texture_rect(texture, Rect2(pos - size * 0.5, size), false)
+
+
+func _draw_hell_gate() -> void:
+	var pulse := 0.5 + 0.3 * absf(sin(pulse_time * 2.6))
+	var gate_pos := hell_gate_position
+
+	draw_circle(gate_pos, 64.0, Color(0.45, 0.04, 0.02, 0.18 + pulse * 0.12))
+	draw_arc(gate_pos, 64.0, 0.0, TAU, 64, Color("#ff684a"), 4.0)
+	draw_arc(gate_pos, 42.0, 0.0, TAU, 64, Color("#dfaa46"), 2.0)
+
+	if door_left_texture != null:
+		draw_texture_rect(door_left_texture, Rect2(gate_pos + Vector2(-40, -34), Vector2(32, 64)), false)
+
+	if door_right_texture != null:
+		draw_texture_rect(door_right_texture, Rect2(gate_pos + Vector2(8, -34), Vector2(32, 64)), false)
+
+	if door_top_texture != null:
+		draw_texture_rect(door_top_texture, Rect2(gate_pos + Vector2(-16, -58), Vector2(32, 32)), false)
+
+	if door_closed_texture != null:
+		draw_texture_rect(door_closed_texture, Rect2(gate_pos + Vector2(-16, -24), Vector2(32, 32)), false)
+
+
+func _draw_interaction_hint() -> void:
+	if not is_near_hell_gate:
+		return
+
+	var panel := Rect2(Vector2(500, 682), Vector2(280, 28))
+	draw_rect(panel, Color(0, 0, 0, 0.78))
+	draw_rect(panel, Color("#ff684a"), false, 1.0)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(514, 701),
+		"Press E — Enter the Inferno",
+		HORIZONTAL_ALIGNMENT_CENTER,
+		252,
+		15,
+		Color("#f7e8d4")
+	)

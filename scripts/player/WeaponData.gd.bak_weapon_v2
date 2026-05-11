@@ -1,0 +1,23 @@
+extends Resource
+class_name WeaponData
+
+@export var id: String = "penitent_blade"
+@export var display_name: String = "Penitent Blade"
+
+@export var light_radius: float = 58.0
+@export var light_damage: float = 18.0
+@export var light_cooldown: float = 0.22
+
+@export var heavy_radius: float = 86.0
+@export var heavy_damage: float = 44.0
+@export var heavy_cooldown: float = 0.72
+
+@export var q_radius: float = 92.0
+@export var q_damage: float = 32.0
+@export var q_cooldown: float = 3.0
+@export var q_offset: float = 72.0
+
+@export var ultimate_radius: float = 210.0
+@export var ultimate_damage: float = 95.0
+@export var ultimate_cooldown: float = 1.0
+@export var ultimate_cost: float = 100.0

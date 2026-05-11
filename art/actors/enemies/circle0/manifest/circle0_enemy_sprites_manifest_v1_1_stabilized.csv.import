@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://wfasddcwlu86"
+
+[deps]
+
+files=["res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.direction.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.frame.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.path.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.source.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.component.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.component.translation"]
+
+source_file="res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.csv"
+dest_files=["res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.direction.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.frame.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.path.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.source.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.component.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.component.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

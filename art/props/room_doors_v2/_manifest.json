@@ -1,0 +1,226 @@
+{
+  "source": "/home/kaey/Desktop/Assets/Room_Doors.png",
+  "output": "art/props/room_doors_v2",
+  "rows": 4,
+  "cols": 3,
+  "trim_alpha": true,
+  "pad": 28,
+  "exports": [
+    {
+      "file": "circle_01_north.png",
+      "path": "art/props/room_doors_v2/circle_01_north.png",
+      "row": 1,
+      "col": 1,
+      "row_label": "01",
+      "col_label": "north",
+      "source_cell": [
+        0,
+        0,
+        497,
+        264
+      ],
+      "size": [
+        487,
+        260
+      ]
+    },
+    {
+      "file": "circle_01_east.png",
+      "path": "art/props/room_doors_v2/circle_01_east.png",
+      "row": 1,
+      "col": 2,
+      "row_label": "01",
+      "col_label": "east",
+      "source_cell": [
+        497,
+        0,
+        994,
+        264
+      ],
+      "size": [
+        497,
+        252
+      ]
+    },
+    {
+      "file": "circle_01_west.png",
+      "path": "art/props/room_doors_v2/circle_01_west.png",
+      "row": 1,
+      "col": 3,
+      "row_label": "01",
+      "col_label": "west",
+      "source_cell": [
+        994,
+        0,
+        1491,
+        264
+      ],
+      "size": [
+        487,
+        264
+      ]
+    },
+    {
+      "file": "circle_02_north.png",
+      "path": "art/props/room_doors_v2/circle_02_north.png",
+      "row": 2,
+      "col": 1,
+      "row_label": "02",
+      "col_label": "north",
+      "source_cell": [
+        0,
+        264,
+        497,
+        528
+      ],
+      "size": [
+        489,
+        264
+      ]
+    },
+    {
+      "file": "circle_02_east.png",
+      "path": "art/props/room_doors_v2/circle_02_east.png",
+      "row": 2,
+      "col": 2,
+      "row_label": "02",
+      "col_label": "east",
+      "source_cell": [
+        497,
+        264,
+        994,
+        528
+      ],
+      "size": [
+        497,
+        264
+      ]
+    },
+    {
+      "file": "circle_02_west.png",
+      "path": "art/props/room_doors_v2/circle_02_west.png",
+      "row": 2,
+      "col": 3,
+      "row_label": "02",
+      "col_label": "west",
+      "source_cell": [
+        994,
+        264,
+        1491,
+        528
+      ],
+      "size": [
+        487,
+        264
+      ]
+    },
+    {
+      "file": "circle_03_north.png",
+      "path": "art/props/room_doors_v2/circle_03_north.png",
+      "row": 3,
+      "col": 1,
+      "row_label": "03",
+      "col_label": "north",
+      "source_cell": [
+        0,
+        528,
+        497,
+        791
+      ],
+      "size": [
+        466,
+        263
+      ]
+    },
+    {
+      "file": "circle_03_east.png",
+      "path": "art/props/room_doors_v2/circle_03_east.png",
+      "row": 3,
+      "col": 2,
+      "row_label": "03",
+      "col_label": "east",
+      "source_cell": [
+        497,
+        528,
+        994,
+        791
+      ],
+      "size": [
+        497,
+        263
+      ]
+    },
+    {
+      "file": "circle_03_west.png",
+      "path": "art/props/room_doors_v2/circle_03_west.png",
+      "row": 3,
+      "col": 3,
+      "row_label": "03",
+      "col_label": "west",
+      "source_cell": [
+        994,
+        528,
+        1491,
+        791
+      ],
+      "size": [
+        444,
+        263
+      ]
+    },
+    {
+      "file": "circle_04_north.png",
+      "path": "art/props/room_doors_v2/circle_04_north.png",
+      "row": 4,
+      "col": 1,
+      "row_label": "04",
+      "col_label": "north",
+      "source_cell": [
+        0,
+        791,
+        497,
+        1055
+      ],
+      "size": [
+        463,
+        193
+      ]
+    },
+    {
+      "file": "circle_04_east.png",
+      "path": "art/props/room_doors_v2/circle_04_east.png",
+      "row": 4,
+      "col": 2,
+      "row_label": "04",
+      "col_label": "east",
+      "source_cell": [
+        497,
+        791,
+        994,
+        1055
+      ],
+      "size": [
+        497,
+        198
+      ]
+    },
+    {
+      "file": "circle_04_west.png",
+      "path": "art/props/room_doors_v2/circle_04_west.png",
+      "row": 4,
+      "col": 3,
+      "row_label": "04",
+      "col_label": "west",
+      "source_cell": [
+        994,
+        791,
+        1491,
+        1055
+      ],
+      "size": [
+        445,
+        204
+      ]
+    }
+  ]
+}

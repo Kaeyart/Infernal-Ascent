@@ -1,0 +1,170 @@
+extends Node2D
+
+@export var sprite_scale: Vector2 = Vector2(0.42, 0.42)
+@export var idle_frame_duration: float = 0.24
+@export var movement_deadzone: float = 8.0
+@export var y_sort_offset: float = -10.0
+
+var player: Node = null
+var sprite: Sprite2D = null
+
+var current_direction: String = "down"
+var current_frame: int = 1
+var frame_timer: float = 0.0
+
+var texture_cache: Dictionary = {}
+
+
+func _ready() -> void:
+	player = get_parent()
+	_ensure_sprite()
+	set_process(true)
+	_apply_frame()
+
+
+func _process(delta: float) -> void:
+	if player == null:
+		return
+
+	var input_vector := _get_movement_input_vector()
+	var velocity := _get_player_velocity()
+
+	_update_direction(input_vector, velocity)
+
+	frame_timer += delta
+
+	if frame_timer >= idle_frame_duration:
+		frame_timer = 0.0
+		current_frame += 1
+
+		if current_frame > 4:
+			current_frame = 1
+
+		_apply_frame()
+
+
+func _ensure_sprite() -> void:
+	sprite = get_node_or_null("Sprite2D") as Sprite2D
+
+	if sprite == null:
+		sprite = Sprite2D.new()
+		sprite.name = "Sprite2D"
+		add_child(sprite)
+
+	sprite.centered = true
+	sprite.scale = sprite_scale
+	sprite.position = Vector2(0.0, y_sort_offset)
+	sprite.z_index = 80
+
+
+func _get_movement_input_vector() -> Vector2:
+	var x := 0.0
+	var y := 0.0
+
+	if _is_action_pressed_safe("move_left") or _is_action_pressed_safe("ui_left"):
+		x -= 1.0
+
+	if _is_action_pressed_safe("move_right") or _is_action_pressed_safe("ui_right"):
+		x += 1.0
+
+	if _is_action_pressed_safe("move_up") or _is_action_pressed_safe("ui_up"):
+		y -= 1.0
+
+	if _is_action_pressed_safe("move_down") or _is_action_pressed_safe("ui_down"):
+		y += 1.0
+
+	var input_vector := Vector2(x, y)
+
+	if input_vector.length() > 1.0:
+		input_vector = input_vector.normalized()
+
+	return input_vector
+
+
+func _is_action_pressed_safe(action_name: String) -> bool:
+	if not InputMap.has_action(action_name):
+		return false
+
+	return Input.is_action_pressed(action_name)
+
+
+func _get_player_velocity() -> Vector2:
+	if player == null:
+		return Vector2.ZERO
+
+	if not _object_has_property(player, "velocity"):
+		return Vector2.ZERO
+
+	var value = player.get("velocity")
+
+	if value is Vector2:
+		return value
+
+	return Vector2.ZERO
+
+
+func _update_direction(input_vector: Vector2, velocity: Vector2) -> void:
+	var facing_vector := Vector2.ZERO
+
+	if input_vector.length() > 0.05:
+		facing_vector = input_vector
+	elif velocity.length() > movement_deadzone:
+		facing_vector = velocity.normalized()
+	else:
+		return
+
+	if absf(facing_vector.x) > absf(facing_vector.y):
+		if facing_vector.x >= 0.0:
+			current_direction = "right"
+		else:
+			current_direction = "left"
+	else:
+		if facing_vector.y >= 0.0:
+			current_direction = "down"
+		else:
+			current_direction = "up"
+
+
+func _apply_frame() -> void:
+	if sprite == null:
+		return
+
+	var texture := _get_texture(current_direction, current_frame)
+
+	if texture != null:
+		sprite.texture = texture
+		sprite.scale = sprite_scale
+
+
+func _get_texture(direction: String, frame: int) -> Texture2D:
+	var key := "idle_%s_%02d" % [direction, frame]
+
+	if texture_cache.has(key):
+		return texture_cache[key]
+
+	var path := "res://art/actors/player/penitent/idle_%s_%02d.png" % [direction, frame]
+
+	if not ResourceLoader.exists(path):
+		path = "res://art/actors/player/penitent/idle_down_01.png"
+
+	if not ResourceLoader.exists(path):
+		push_warning("Missing Penitent idle sprite frame: %s" % key)
+		return null
+
+	var texture := load(path) as Texture2D
+
+	if texture != null:
+		texture_cache[key] = texture
+
+	return texture
+
+
+func _object_has_property(object: Object, property_name: String) -> bool:
+	if object == null:
+		return false
+
+	for property in object.get_property_list():
+		if str(property.get("name", "")) == property_name:
+			return true
+
+	return false

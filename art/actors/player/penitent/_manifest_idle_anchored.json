@@ -1,0 +1,477 @@
+{
+  "source": "/home/kaey/Desktop/Assets/Penitent_Idle.png",
+  "layout": "4 rows x 4 columns",
+  "rows": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "method": "bottom-center anchored idle slicing",
+  "exports": [
+    {
+      "direction": "down",
+      "frame": 1,
+      "file": "idle_down_01.png",
+      "source_cell": [
+        0,
+        0,
+        314,
+        314
+      ],
+      "bbox": [
+        83,
+        53,
+        291,
+        302
+      ],
+      "cropped_size": [
+        208,
+        249
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        80,
+        80
+      ]
+    },
+    {
+      "direction": "down",
+      "frame": 2,
+      "file": "idle_down_02.png",
+      "source_cell": [
+        314,
+        0,
+        627,
+        314
+      ],
+      "bbox": [
+        56,
+        53,
+        267,
+        302
+      ],
+      "cropped_size": [
+        211,
+        249
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        79,
+        80
+      ]
+    },
+    {
+      "direction": "down",
+      "frame": 3,
+      "file": "idle_down_03.png",
+      "source_cell": [
+        627,
+        0,
+        940,
+        314
+      ],
+      "bbox": [
+        19,
+        53,
+        313,
+        302
+      ],
+      "cropped_size": [
+        294,
+        249
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        37,
+        80
+      ]
+    },
+    {
+      "direction": "down",
+      "frame": 4,
+      "file": "idle_down_04.png",
+      "source_cell": [
+        940,
+        0,
+        1254,
+        314
+      ],
+      "bbox": [
+        0,
+        53,
+        209,
+        302
+      ],
+      "cropped_size": [
+        209,
+        249
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        80,
+        80
+      ]
+    },
+    {
+      "direction": "left",
+      "frame": 1,
+      "file": "idle_left_01.png",
+      "source_cell": [
+        0,
+        314,
+        314,
+        627
+      ],
+      "bbox": [
+        59,
+        31,
+        272,
+        274
+      ],
+      "cropped_size": [
+        213,
+        243
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        78,
+        86
+      ]
+    },
+    {
+      "direction": "left",
+      "frame": 2,
+      "file": "idle_left_02.png",
+      "source_cell": [
+        314,
+        314,
+        627,
+        627
+      ],
+      "bbox": [
+        32,
+        31,
+        313,
+        275
+      ],
+      "cropped_size": [
+        281,
+        244
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        44,
+        85
+      ]
+    },
+    {
+      "direction": "left",
+      "frame": 3,
+      "file": "idle_left_03.png",
+      "source_cell": [
+        627,
+        314,
+        940,
+        627
+      ],
+      "bbox": [
+        0,
+        33,
+        313,
+        275
+      ],
+      "cropped_size": [
+        313,
+        242
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        28,
+        87
+      ]
+    },
+    {
+      "direction": "left",
+      "frame": 4,
+      "file": "idle_left_04.png",
+      "source_cell": [
+        940,
+        314,
+        1254,
+        627
+      ],
+      "bbox": [
+        0,
+        33,
+        180,
+        275
+      ],
+      "cropped_size": [
+        180,
+        242
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        94,
+        87
+      ]
+    },
+    {
+      "direction": "right",
+      "frame": 1,
+      "file": "idle_right_01.png",
+      "source_cell": [
+        0,
+        627,
+        314,
+        940
+      ],
+      "bbox": [
+        95,
+        8,
+        304,
+        313
+      ],
+      "cropped_size": [
+        209,
+        305
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        80,
+        24
+      ]
+    },
+    {
+      "direction": "right",
+      "frame": 2,
+      "file": "idle_right_02.png",
+      "source_cell": [
+        314,
+        627,
+        627,
+        940
+      ],
+      "bbox": [
+        73,
+        9,
+        275,
+        313
+      ],
+      "cropped_size": [
+        202,
+        304
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        83,
+        25
+      ]
+    },
+    {
+      "direction": "right",
+      "frame": 3,
+      "file": "idle_right_03.png",
+      "source_cell": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "bbox": [
+        32,
+        9,
+        239,
+        313
+      ],
+      "cropped_size": [
+        207,
+        304
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        81,
+        25
+      ]
+    },
+    {
+      "direction": "right",
+      "frame": 4,
+      "file": "idle_right_04.png",
+      "source_cell": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "bbox": [
+        7,
+        9,
+        214,
+        313
+      ],
+      "cropped_size": [
+        207,
+        304
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        81,
+        25
+      ]
+    },
+    {
+      "direction": "up",
+      "frame": 1,
+      "file": "idle_up_01.png",
+      "source_cell": [
+        0,
+        940,
+        314,
+        1254
+      ],
+      "bbox": [
+        104,
+        0,
+        301,
+        225
+      ],
+      "cropped_size": [
+        197,
+        225
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        86,
+        104
+      ]
+    },
+    {
+      "direction": "up",
+      "frame": 2,
+      "file": "idle_up_02.png",
+      "source_cell": [
+        314,
+        940,
+        627,
+        1254
+      ],
+      "bbox": [
+        72,
+        0,
+        274,
+        226
+      ],
+      "cropped_size": [
+        202,
+        226
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        83,
+        103
+      ]
+    },
+    {
+      "direction": "up",
+      "frame": 3,
+      "file": "idle_up_03.png",
+      "source_cell": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "bbox": [
+        33,
+        0,
+        237,
+        227
+      ],
+      "cropped_size": [
+        204,
+        227
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        82,
+        102
+      ]
+    },
+    {
+      "direction": "up",
+      "frame": 4,
+      "file": "idle_up_04.png",
+      "source_cell": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "bbox": [
+        7,
+        0,
+        212,
+        227
+      ],
+      "cropped_size": [
+        205,
+        227
+      ],
+      "canvas_size": [
+        369,
+        347
+      ],
+      "paste": [
+        82,
+        102
+      ]
+    }
+  ]
+}

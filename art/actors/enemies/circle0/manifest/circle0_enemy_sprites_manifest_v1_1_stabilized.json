@@ -1,0 +1,1362 @@
+[
+  {
+    "role": "ash_wretch",
+    "direction": "down",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_down_01.png",
+    "source_bbox": [
+      108,
+      101,
+      265,
+      301
+    ],
+    "component_center": [
+      187.03181861484234,
+      202.39973325712108
+    ],
+    "component_area": 20994
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "down",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_down_02.png",
+    "source_bbox": [
+      395,
+      102,
+      555,
+      300
+    ],
+    "component_center": [
+      479.140483028106,
+      202.63349183183465
+    ],
+    "component_area": 21241
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "down",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_down_03.png",
+    "source_bbox": [
+      696,
+      107,
+      848,
+      310
+    ],
+    "component_center": [
+      769.0958140863851,
+      208.85161198152292
+    ],
+    "component_area": 20999
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "down",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_down_04.png",
+    "source_bbox": [
+      976,
+      104,
+      1135,
+      308
+    ],
+    "component_center": [
+      1053.949059114237,
+      209.85411518722677
+    ],
+    "component_area": 21044
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "left",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_left_01.png",
+    "source_bbox": [
+      76,
+      388,
+      280,
+      565
+    ],
+    "component_center": [
+      184.34153067221192,
+      475.81027078341845
+    ],
+    "component_area": 22121
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "left",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_left_02.png",
+    "source_bbox": [
+      366,
+      387,
+      575,
+      570
+    ],
+    "component_center": [
+      471.23140563564874,
+      477.53694298820443
+    ],
+    "component_area": 24416
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "left",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_left_03.png",
+    "source_bbox": [
+      684,
+      392,
+      861,
+      571
+    ],
+    "component_center": [
+      767.9836318570827,
+      479.0426039377075
+    ],
+    "component_area": 21383
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "left",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_left_04.png",
+    "source_bbox": [
+      957,
+      391,
+      1165,
+      564
+    ],
+    "component_center": [
+      1066.4418795246552,
+      480.02863907480764
+    ],
+    "component_area": 21963
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "right",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_right_01.png",
+    "source_bbox": [
+      90,
+      672,
+      300,
+      850
+    ],
+    "component_center": [
+      183.82442904588135,
+      763.2589692074296
+    ],
+    "component_area": 24389
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "right",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_right_02.png",
+    "source_bbox": [
+      373,
+      672,
+      583,
+      857
+    ],
+    "component_center": [
+      478.22589220978006,
+      765.7879239506968
+    ],
+    "component_area": 24826
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "right",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_right_03.png",
+    "source_bbox": [
+      670,
+      678,
+      867,
+      852
+    ],
+    "component_center": [
+      767.1134078473553,
+      768.2075948183136
+    ],
+    "component_area": 21383
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "right",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_right_04.png",
+    "source_bbox": [
+      962,
+      678,
+      1173,
+      858
+    ],
+    "component_center": [
+      1066.1275225052264,
+      767.7613806049746
+    ],
+    "component_area": 23439
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "up",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_up_01.png",
+    "source_bbox": [
+      111,
+      925,
+      258,
+      1137
+    ],
+    "component_center": [
+      186.92149104539774,
+      1031.5599229487714
+    ],
+    "component_area": 19208
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "up",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_up_02.png",
+    "source_bbox": [
+      400,
+      928,
+      549,
+      1142
+    ],
+    "component_center": [
+      474.7601871709885,
+      1037.8868687853383
+    ],
+    "component_area": 20516
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "up",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_up_03.png",
+    "source_bbox": [
+      698,
+      929,
+      842,
+      1137
+    ],
+    "component_center": [
+      767.6823342880524,
+      1036.1780380523733
+    ],
+    "component_area": 19552
+  },
+  {
+    "role": "ash_wretch",
+    "direction": "up",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/ash_wretch/ash_wretch_up_04.png",
+    "source_bbox": [
+      981,
+      926,
+      1133,
+      1144
+    ],
+    "component_center": [
+      1060.1143104359949,
+      1037.1654569052541
+    ],
+    "component_area": 20803
+  },
+  {
+    "role": "gate_warden",
+    "direction": "down",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_down_01.png",
+    "source_bbox": [
+      69,
+      49,
+      305,
+      306
+    ],
+    "component_center": [
+      196.7790840688757,
+      189.8403993633338
+    ],
+    "component_area": 27644
+  },
+  {
+    "role": "gate_warden",
+    "direction": "down",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_down_02.png",
+    "source_bbox": [
+      360,
+      49,
+      588,
+      306
+    ],
+    "component_center": [
+      483.8929500144467,
+      191.3159130309159
+    ],
+    "component_area": 27688
+  },
+  {
+    "role": "gate_warden",
+    "direction": "down",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_down_03.png",
+    "source_bbox": [
+      646,
+      49,
+      876,
+      313
+    ],
+    "component_center": [
+      772.4188441059275,
+      193.33421488768997
+    ],
+    "component_area": 28359
+  },
+  {
+    "role": "gate_warden",
+    "direction": "down",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_down_04.png",
+    "source_bbox": [
+      935,
+      60,
+      1166,
+      314
+    ],
+    "component_center": [
+      1061.8351877607788,
+      195.95553034184906
+    ],
+    "component_area": 27322
+  },
+  {
+    "role": "gate_warden",
+    "direction": "left",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_left_01.png",
+    "source_bbox": [
+      72,
+      330,
+      249,
+      580
+    ],
+    "component_center": [
+      170.7333650642551,
+      474.50637791527845
+    ],
+    "component_area": 21010
+  },
+  {
+    "role": "gate_warden",
+    "direction": "left",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_left_02.png",
+    "source_bbox": [
+      337,
+      332,
+      549,
+      568
+    ],
+    "component_center": [
+      462.9339689894849,
+      476.29638210657635
+    ],
+    "component_area": 22444
+  },
+  {
+    "role": "gate_warden",
+    "direction": "left",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_left_03.png",
+    "source_bbox": [
+      619,
+      343,
+      828,
+      571
+    ],
+    "component_center": [
+      745.9698036045461,
+      481.946787769271
+    ],
+    "component_area": 21029
+  },
+  {
+    "role": "gate_warden",
+    "direction": "left",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_left_04.png",
+    "source_bbox": [
+      931,
+      342,
+      1113,
+      587
+    ],
+    "component_center": [
+      1035.0951973777967,
+      482.98551137713173
+    ],
+    "component_area": 21051
+  },
+  {
+    "role": "gate_warden",
+    "direction": "right",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_right_01.png",
+    "source_bbox": [
+      124,
+      619,
+      346,
+      866
+    ],
+    "component_center": [
+      207.35156360216317,
+      759.477357159652
+    ],
+    "component_area": 21265
+  },
+  {
+    "role": "gate_warden",
+    "direction": "right",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_right_02.png",
+    "source_bbox": [
+      423,
+      619,
+      624,
+      864
+    ],
+    "component_center": [
+      492.6862726129438,
+      760.2928315758925
+    ],
+    "component_area": 20674
+  },
+  {
+    "role": "gate_warden",
+    "direction": "right",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_right_03.png",
+    "source_bbox": [
+      703,
+      628,
+      921,
+      865
+    ],
+    "component_center": [
+      781.5885708984647,
+      766.091609072777
+    ],
+    "component_area": 21559
+  },
+  {
+    "role": "gate_warden",
+    "direction": "right",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_right_04.png",
+    "source_bbox": [
+      987,
+      629,
+      1179,
+      864
+    ],
+    "component_center": [
+      1063.5948661250782,
+      767.5105994327741
+    ],
+    "component_area": 20803
+  },
+  {
+    "role": "gate_warden",
+    "direction": "up",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_up_01.png",
+    "source_bbox": [
+      80,
+      907,
+      308,
+      1153
+    ],
+    "component_center": [
+      192.82308481142468,
+      1042.7874586957348
+    ],
+    "component_area": 26329
+  },
+  {
+    "role": "gate_warden",
+    "direction": "up",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_up_02.png",
+    "source_bbox": [
+      364,
+      908,
+      588,
+      1152
+    ],
+    "component_center": [
+      465.36326200738915,
+      1042.47610067734
+    ],
+    "component_area": 25984
+  },
+  {
+    "role": "gate_warden",
+    "direction": "up",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_up_03.png",
+    "source_bbox": [
+      656,
+      909,
+      883,
+      1149
+    ],
+    "component_center": [
+      766.9070197528921,
+      1041.454591957189
+    ],
+    "component_area": 25414
+  },
+  {
+    "role": "gate_warden",
+    "direction": "up",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/gate_warden/gate_warden_up_04.png",
+    "source_bbox": [
+      944,
+      908,
+      1168,
+      1150
+    ],
+    "component_center": [
+      1053.396159261577,
+      1042.6050531914893
+    ],
+    "component_area": 25568
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "down",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_down_01.png",
+    "source_bbox": [
+      178,
+      35,
+      344,
+      304
+    ],
+    "component_center": [
+      268.18129860031104,
+      180.53211508553656
+    ],
+    "component_area": 25720
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "down",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_down_02.png",
+    "source_bbox": [
+      423,
+      29,
+      589,
+      307
+    ],
+    "component_center": [
+      510.5039896230494,
+      183.6377107818089
+    ],
+    "component_area": 25441
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "down",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_down_03.png",
+    "source_bbox": [
+      676,
+      29,
+      840,
+      307
+    ],
+    "component_center": [
+      762.6838104480025,
+      184.44602134885977
+    ],
+    "component_area": 24732
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "down",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_down_04.png",
+    "source_bbox": [
+      917,
+      38,
+      1085,
+      308
+    ],
+    "component_center": [
+      1004.7480280103026,
+      191.53791049581454
+    ],
+    "component_area": 24848
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "left",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_left_01.png",
+    "source_bbox": [
+      175,
+      328,
+      333,
+      588
+    ],
+    "component_center": [
+      255.9749674492839,
+      474.8935696585325
+    ],
+    "component_area": 23809
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "left",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_left_02.png",
+    "source_bbox": [
+      402,
+      340,
+      583,
+      597
+    ],
+    "component_center": [
+      488.345013584785,
+      480.4263624740291
+    ],
+    "component_area": 25028
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "left",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_left_03.png",
+    "source_bbox": [
+      653,
+      341,
+      837,
+      597
+    ],
+    "component_center": [
+      743.9546537484117,
+      480.86070520965694
+    ],
+    "component_area": 25184
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "left",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_left_04.png",
+    "source_bbox": [
+      910,
+      340,
+      1093,
+      594
+    ],
+    "component_center": [
+      995.4133930714457,
+      479.9060324825986
+    ],
+    "component_area": 24998
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "right",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_right_01.png",
+    "source_bbox": [
+      192,
+      637,
+      342,
+      877
+    ],
+    "component_center": [
+      263.81574113324854,
+      771.2234939475295
+    ],
+    "component_area": 21231
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "right",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_right_02.png",
+    "source_bbox": [
+      408,
+      637,
+      582,
+      884
+    ],
+    "component_center": [
+      502.0675034372644,
+      780.6237636936178
+    ],
+    "component_area": 22547
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "right",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_right_03.png",
+    "source_bbox": [
+      663,
+      645,
+      830,
+      888
+    ],
+    "component_center": [
+      750.8445491251682,
+      780.8641991924629
+    ],
+    "component_area": 22290
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "right",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_right_04.png",
+    "source_bbox": [
+      900,
+      645,
+      1070,
+      890
+    ],
+    "component_center": [
+      993.5497292299564,
+      782.7585963985383
+    ],
+    "component_area": 22713
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "up",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_up_01.png",
+    "source_bbox": [
+      185,
+      910,
+      331,
+      1177
+    ],
+    "component_center": [
+      254.3889701885688,
+      1054.8782874106284
+    ],
+    "component_area": 23917
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "up",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_up_02.png",
+    "source_bbox": [
+      422,
+      908,
+      570,
+      1173
+    ],
+    "component_center": [
+      491.348029783318,
+      1053.5216682004518
+    ],
+    "component_area": 23906
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "up",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_up_03.png",
+    "source_bbox": [
+      681,
+      908,
+      830,
+      1175
+    ],
+    "component_center": [
+      752.021660202987,
+      1053.2730423302253
+    ],
+    "component_area": 24238
+  },
+  {
+    "role": "cinder_scribe",
+    "direction": "up",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/cinder_scribe/cinder_scribe_up_04.png",
+    "source_bbox": [
+      919,
+      911,
+      1070,
+      1173
+    ],
+    "component_center": [
+      990.0479140328698,
+      1054.8842815002106
+    ],
+    "component_area": 23730
+  },
+  {
+    "role": "bell_hound",
+    "direction": "down",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_down_01.png",
+    "source_bbox": [
+      115,
+      81,
+      218,
+      334
+    ],
+    "component_center": [
+      166.1578137436986,
+      209.43289997346776
+    ],
+    "component_area": 18845
+  },
+  {
+    "role": "bell_hound",
+    "direction": "down",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_down_02.png",
+    "source_bbox": [
+      376,
+      75,
+      516,
+      334
+    ],
+    "component_center": [
+      425.39745560561886,
+      197.0692817386695
+    ],
+    "component_area": 18865
+  },
+  {
+    "role": "bell_hound",
+    "direction": "down",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_down_03.png",
+    "source_bbox": [
+      656,
+      76,
+      819,
+      334
+    ],
+    "component_center": [
+      714.1016626602565,
+      191.3436999198718
+    ],
+    "component_area": 19968
+  },
+  {
+    "role": "bell_hound",
+    "direction": "down",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_down_04.png",
+    "source_bbox": [
+      920,
+      79,
+      1106,
+      325
+    ],
+    "component_center": [
+      1010.1488449834998,
+      188.12960185145502
+    ],
+    "component_area": 23333
+  },
+  {
+    "role": "bell_hound",
+    "direction": "left",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_left_01.png",
+    "source_bbox": [
+      79,
+      397,
+      280,
+      580
+    ],
+    "component_center": [
+      167.39749639858925,
+      482.4218866424917
+    ],
+    "component_area": 20131
+  },
+  {
+    "role": "bell_hound",
+    "direction": "left",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_left_02.png",
+    "source_bbox": [
+      323,
+      409,
+      578,
+      597
+    ],
+    "component_center": [
+      434.4349911971831,
+      490.515713028169
+    ],
+    "component_area": 22720
+  },
+  {
+    "role": "bell_hound",
+    "direction": "left",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_left_03.png",
+    "source_bbox": [
+      627,
+      397,
+      889,
+      573
+    ],
+    "component_center": [
+      745.8792855328875,
+      480.2330906628291
+    ],
+    "component_area": 23626
+  },
+  {
+    "role": "bell_hound",
+    "direction": "left",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_left_04.png",
+    "source_bbox": [
+      915,
+      397,
+      1181,
+      573
+    ],
+    "component_center": [
+      1029.6540397350993,
+      480.17505518763795
+    ],
+    "component_area": 22650
+  },
+  {
+    "role": "bell_hound",
+    "direction": "right",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_right_01.png",
+    "source_bbox": [
+      66,
+      666,
+      264,
+      847
+    ],
+    "component_center": [
+      173.90717343097313,
+      748.2206178123872
+    ],
+    "component_area": 19391
+  },
+  {
+    "role": "bell_hound",
+    "direction": "right",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_right_02.png",
+    "source_bbox": [
+      327,
+      675,
+      571,
+      861
+    ],
+    "component_center": [
+      457.55911142895457,
+      754.7241764627006
+    ],
+    "component_area": 22373
+  },
+  {
+    "role": "bell_hound",
+    "direction": "right",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_right_03.png",
+    "source_bbox": [
+      619,
+      669,
+      863,
+      850
+    ],
+    "component_center": [
+      752.3409798675381,
+      748.6134918198167
+    ],
+    "component_area": 22799
+  },
+  {
+    "role": "bell_hound",
+    "direction": "right",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_right_04.png",
+    "source_bbox": [
+      906,
+      668,
+      1165,
+      845
+    ],
+    "component_center": [
+      1049.9770304954975,
+      751.4125375212076
+    ],
+    "component_area": 22987
+  },
+  {
+    "role": "bell_hound",
+    "direction": "up",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_up_01.png",
+    "source_bbox": [
+      124,
+      915,
+      218,
+      1190
+    ],
+    "component_center": [
+      170.9737045630317,
+      1037.0771610446784
+    ],
+    "component_area": 16809
+  },
+  {
+    "role": "bell_hound",
+    "direction": "up",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_up_02.png",
+    "source_bbox": [
+      383,
+      923,
+      487,
+      1181
+    ],
+    "component_center": [
+      428.7629677006716,
+      1037.5934122161816
+    ],
+    "component_area": 15635
+  },
+  {
+    "role": "bell_hound",
+    "direction": "up",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_up_03.png",
+    "source_bbox": [
+      663,
+      928,
+      775,
+      1181
+    ],
+    "component_center": [
+      716.9157513729406,
+      1042.9721667498752
+    ],
+    "component_area": 16024
+  },
+  {
+    "role": "bell_hound",
+    "direction": "up",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/bell_hound/bell_hound_up_04.png",
+    "source_bbox": [
+      926,
+      937,
+      1059,
+      1181
+    ],
+    "component_center": [
+      1010.6151417566458,
+      1045.6649617983203
+    ],
+    "component_area": 15837
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "down",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_down_01.png",
+    "source_bbox": [
+      115,
+      26,
+      278,
+      297
+    ],
+    "component_center": [
+      197.58873565116855,
+      177.66805681724338
+    ],
+    "component_area": 24218
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "down",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_down_02.png",
+    "source_bbox": [
+      396,
+      22,
+      557,
+      305
+    ],
+    "component_center": [
+      478.4930950109899,
+      177.82743748185626
+    ],
+    "component_area": 24113
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "down",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_down_03.png",
+    "source_bbox": [
+      669,
+      32,
+      834,
+      298
+    ],
+    "component_center": [
+      755.1374135401384,
+      179.9382519387969
+    ],
+    "component_area": 23855
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "down",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_down_04.png",
+    "source_bbox": [
+      934,
+      34,
+      1098,
+      302
+    ],
+    "component_center": [
+      1021.2612123993491,
+      179.80207768367475
+    ],
+    "component_area": 23969
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "left",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_left_01.png",
+    "source_bbox": [
+      101,
+      332,
+      301,
+      571
+    ],
+    "component_center": [
+      205.98983974506996,
+      456.9996305361844
+    ],
+    "component_area": 21653
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "left",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_left_02.png",
+    "source_bbox": [
+      359,
+      334,
+      562,
+      573
+    ],
+    "component_center": [
+      467.43642196289926,
+      455.21330605792923
+    ],
+    "component_area": 21509
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "left",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_left_03.png",
+    "source_bbox": [
+      635,
+      334,
+      839,
+      574
+    ],
+    "component_center": [
+      745.3799472295515,
+      454.82794056381056
+    ],
+    "component_area": 21603
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "left",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_left_04.png",
+    "source_bbox": [
+      910,
+      334,
+      1125,
+      572
+    ],
+    "component_center": [
+      1021.5925892656636,
+      457.629687850887
+    ],
+    "component_area": 22265
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "right",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_right_01.png",
+    "source_bbox": [
+      111,
+      609,
+      300,
+      841
+    ],
+    "component_center": [
+      197.19800069282923,
+      734.2444697382095
+    ],
+    "component_area": 20207
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "right",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_right_02.png",
+    "source_bbox": [
+      386,
+      607,
+      587,
+      842
+    ],
+    "component_center": [
+      473.5304614794205,
+      733.569030029742
+    ],
+    "component_area": 20846
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "right",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_right_03.png",
+    "source_bbox": [
+      673,
+      609,
+      859,
+      842
+    ],
+    "component_center": [
+      757.234072698847,
+      735.5753859683408
+    ],
+    "component_area": 20468
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "right",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_right_04.png",
+    "source_bbox": [
+      945,
+      604,
+      1138,
+      839
+    ],
+    "component_center": [
+      1030.2179474660677,
+      730.2000292940143
+    ],
+    "component_area": 20482
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "up",
+    "frame": 1,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_up_01.png",
+    "source_bbox": [
+      112,
+      869,
+      258,
+      1144
+    ],
+    "component_center": [
+      187.4396310671508,
+      1022.6184633362548
+    ],
+    "component_area": 23961
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "up",
+    "frame": 2,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_up_02.png",
+    "source_bbox": [
+      388,
+      867,
+      552,
+      1151
+    ],
+    "component_center": [
+      467.6936130573893,
+      1022.5108339070916
+    ],
+    "component_area": 24691
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "up",
+    "frame": 3,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_up_03.png",
+    "source_bbox": [
+      681,
+      872,
+      831,
+      1151
+    ],
+    "component_center": [
+      753.5710462387285,
+      1023.9790011117059
+    ],
+    "component_area": 24287
+  },
+  {
+    "role": "vestibule_bailiff",
+    "direction": "up",
+    "frame": 4,
+    "path": "art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_up_04.png",
+    "source_bbox": [
+      941,
+      871,
+      1091,
+      1149
+    ],
+    "component_center": [
+      1014.5880465632841,
+      1023.8192999053927
+    ],
+    "component_area": 24311
+  }
+]

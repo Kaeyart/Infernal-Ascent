@@ -1,0 +1,473 @@
+extends Node2D
+
+const BASE_PATH: String = "res://art/player/FREE_Adventurer 2D Pixel Art/Sprites"
+const FRAME_WIDTH: int = 96
+const FRAME_HEIGHT: int = 80
+const VISUAL_SCALE: Vector2 = Vector2(1.45, 1.45)
+
+var visual_state: String = "idle"
+var facing: Vector2 = Vector2.DOWN
+var hit_flash: float = 0.0
+var dash_timer: float = 0.0
+
+var frame_time: float = 0.0
+var state_age: float = 0.0
+var previous_visual_state: String = ""
+
+var sprite: Sprite2D = null
+var animations: Dictionary = {}
+
+
+func _ready() -> void:
+	_create_sprite()
+	_load_all_animations()
+	_update_sprite()
+
+
+func _process(delta: float) -> void:
+	frame_time += delta
+	state_age += delta
+	_update_sprite()
+	queue_redraw()
+
+
+func set_visual_state(
+	new_visual_state: String,
+	new_facing: Vector2,
+	new_hit_flash: float,
+	new_dash_timer: float
+) -> void:
+	if new_visual_state != previous_visual_state:
+		previous_visual_state = new_visual_state
+		state_age = 0.0
+		frame_time = 0.0
+
+	visual_state = new_visual_state
+	hit_flash = new_hit_flash
+	dash_timer = new_dash_timer
+
+	if new_facing.length() > 0.05:
+		facing = new_facing.normalized()
+
+	_update_sprite()
+	queue_redraw()
+
+
+func _create_sprite() -> void:
+	sprite = get_node_or_null("Sprite") as Sprite2D
+
+	if sprite == null:
+		sprite = Sprite2D.new()
+		sprite.name = "Sprite"
+		add_child(sprite)
+
+	sprite.centered = true
+	sprite.position = Vector2(0, -18)
+	sprite.scale = VISUAL_SCALE
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	sprite.z_index = 4
+
+
+func _load_all_animations() -> void:
+	animations.clear()
+
+	animations["idle_down"] = _load_sheet_frames("%s/IDLE/idle_down.png" % BASE_PATH)
+	animations["idle_up"] = _load_sheet_frames("%s/IDLE/idle_up.png" % BASE_PATH)
+	animations["idle_left"] = _load_sheet_frames("%s/IDLE/idle_left.png" % BASE_PATH)
+	animations["idle_right"] = _load_sheet_frames("%s/IDLE/idle_right.png" % BASE_PATH)
+
+	animations["run_down"] = _load_sheet_frames("%s/RUN/run_down.png" % BASE_PATH)
+	animations["run_up"] = _load_sheet_frames("%s/RUN/run_up.png" % BASE_PATH)
+	animations["run_left"] = _load_sheet_frames("%s/RUN/run_left.png" % BASE_PATH)
+	animations["run_right"] = _load_sheet_frames("%s/RUN/run_right.png" % BASE_PATH)
+
+	animations["attack_1_down"] = _load_sheet_frames("%s/ATTACK 1/attack1_down.png" % BASE_PATH)
+	animations["attack_1_up"] = _load_sheet_frames("%s/ATTACK 1/attack1_up.png" % BASE_PATH)
+	animations["attack_1_left"] = _load_sheet_frames("%s/ATTACK 1/attack1_left.png" % BASE_PATH)
+	animations["attack_1_right"] = _load_sheet_frames("%s/ATTACK 1/attack1_right.png" % BASE_PATH)
+
+	animations["attack_2_down"] = _load_sheet_frames("%s/ATTACK 2/attack2_down.png" % BASE_PATH)
+	animations["attack_2_up"] = _load_sheet_frames("%s/ATTACK 2/attack2_up.png" % BASE_PATH)
+	animations["attack_2_left"] = _load_sheet_frames("%s/ATTACK 2/attack2_left.png" % BASE_PATH)
+	animations["attack_2_right"] = _load_sheet_frames("%s/ATTACK 2/attack2_right.png" % BASE_PATH)
+
+
+func _load_sheet_frames(path: String) -> Array[Texture2D]:
+	var frames: Array[Texture2D] = []
+
+	if not ResourceLoader.exists(path):
+		push_warning("Missing spritesheet: %s" % path)
+		return frames
+
+	var sheet := load(path) as Texture2D
+
+	if sheet == null:
+		push_warning("Could not load spritesheet: %s" % path)
+		return frames
+
+	var sheet_width: int = sheet.get_width()
+	var sheet_height: int = sheet.get_height()
+
+	if sheet_width <= 0 or sheet_height <= 0:
+		push_warning("Invalid spritesheet size: %s" % path)
+		return frames
+
+	var frame_count: int = int(floor(float(sheet_width) / float(FRAME_WIDTH)))
+
+	if frame_count <= 0:
+		push_warning("Spritesheet too small for FRAME_WIDTH: %s" % path)
+		return frames
+
+	for i in range(frame_count):
+		var atlas_texture := AtlasTexture.new()
+		atlas_texture.atlas = sheet
+		atlas_texture.region = Rect2(
+			Vector2(float(i * FRAME_WIDTH), 0.0),
+			Vector2(float(FRAME_WIDTH), float(FRAME_HEIGHT))
+		)
+
+		frames.append(atlas_texture)
+
+	return frames
+
+
+func _update_sprite() -> void:
+	if sprite == null:
+		return
+
+	var animation_key: String = _get_animation_key()
+	var selected_frames: Array[Texture2D] = []
+
+	if animations.has(animation_key):
+		selected_frames = animations[animation_key]
+
+	if selected_frames.is_empty():
+		selected_frames = _get_fallback_frames()
+
+	if selected_frames.is_empty():
+		sprite.texture = null
+		return
+
+	var fps: float = _get_animation_fps()
+	var frame_index: int = int(frame_time * fps) % selected_frames.size()
+
+	sprite.texture = selected_frames[frame_index]
+	sprite.modulate = _get_state_modulate()
+	sprite.scale = _get_state_scale()
+
+
+func _get_animation_key() -> String:
+	var direction_name: String = _get_direction_name()
+
+	match visual_state:
+		"death":
+			return "idle_%s" % direction_name
+		"move":
+			return "run_%s" % direction_name
+		"dash":
+			return "run_%s" % direction_name
+		"q":
+			return "run_%s" % direction_name
+		"light", "light_1", "light_2", "light_3":
+			return "attack_1_%s" % direction_name
+		"heavy":
+			return "attack_2_%s" % direction_name
+		"ultimate":
+			return "attack_2_%s" % direction_name
+		"heavy_windup":
+			return "idle_%s" % direction_name
+		"hit":
+			return "idle_%s" % direction_name
+		_:
+			return "idle_%s" % direction_name
+
+
+func _get_fallback_frames() -> Array[Texture2D]:
+	for key in ["idle_down", "idle_right", "idle_left", "idle_up", "run_down", "attack_1_down"]:
+		if animations.has(key):
+			var found_frames: Array[Texture2D] = animations[key]
+
+			if not found_frames.is_empty():
+				return found_frames
+
+	return []
+
+
+func _get_direction_name() -> String:
+	if absf(facing.x) > absf(facing.y):
+		if facing.x < 0.0:
+			return "left"
+
+		return "right"
+
+	if facing.y < 0.0:
+		return "up"
+
+	return "down"
+
+
+func _get_animation_fps() -> float:
+	match visual_state:
+		"death":
+			return 3.0
+		"move":
+			return 10.0
+		"dash":
+			return 14.0
+		"q":
+			return 15.0
+		"light", "light_1", "light_2":
+			return 18.0
+		"light_3":
+			return 15.0
+		"heavy":
+			return 12.0
+		"ultimate":
+			return 13.0
+		_:
+			return 7.0
+
+
+func _get_state_modulate() -> Color:
+	if visual_state == "death":
+		var progress: float = clampf(state_age / 1.35, 0.0, 1.0)
+		var alpha: float = maxf(0.0, 1.0 - progress * 0.85)
+		return Color(1.15, 0.62, 0.48, alpha)
+
+	if hit_flash > 0.0:
+		return Color(1.65, 1.55, 1.45, 1.0)
+
+	match visual_state:
+		"dash":
+			return Color(0.70, 0.86, 1.05, 1.0)
+		"q":
+			return Color(0.55, 0.82, 1.12, 1.0)
+		"heavy_windup":
+			return Color(1.18, 0.58, 0.42, 1.0)
+		"heavy":
+			return Color(1.20, 0.78, 0.45, 1.0)
+		"ultimate":
+			return Color(1.32, 1.05, 0.55, 1.0)
+		_:
+			return Color(0.78, 0.72, 0.68, 1.0)
+
+
+func _get_state_scale() -> Vector2:
+	if visual_state == "death":
+		var progress: float = clampf(state_age / 1.35, 0.0, 1.0)
+		return VISUAL_SCALE * Vector2(1.0 + progress * 0.20, 1.0 - progress * 0.34)
+
+	match visual_state:
+		"dash":
+			return VISUAL_SCALE * Vector2(1.10, 0.92)
+		"q":
+			return VISUAL_SCALE * Vector2(1.14, 0.88)
+		"light_1":
+			return VISUAL_SCALE * Vector2(1.05, 0.98)
+		"light_2":
+			return VISUAL_SCALE * Vector2(0.98, 1.05)
+		"light_3":
+			return VISUAL_SCALE * Vector2(1.10, 1.00)
+		"heavy_windup":
+			return VISUAL_SCALE * Vector2(1.05, 1.05)
+		"heavy":
+			return VISUAL_SCALE * Vector2(1.13, 0.95)
+		"ultimate":
+			return VISUAL_SCALE * Vector2(1.10, 1.10)
+		_:
+			return VISUAL_SCALE
+
+
+func _draw() -> void:
+	_draw_shadow(Vector2(0, 18), 34.0, 10.0, Color(0.0, 0.0, 0.0, 0.32))
+	_draw_state_effects()
+	_draw_weapon_overlay()
+
+	if sprite == null or sprite.texture == null:
+		_draw_missing_sprite_marker()
+
+
+func _draw_state_effects() -> void:
+	match visual_state:
+		"death":
+			_draw_death_effects()
+		"dash":
+			_draw_dash_effect()
+		"q":
+			_draw_q_effect()
+		"heavy_windup":
+			_draw_heavy_windup_effect()
+		"heavy":
+			_draw_heavy_release_effect()
+		"ultimate":
+			_draw_ultimate_effect()
+		_:
+			pass
+
+
+func _draw_weapon_overlay() -> void:
+	match visual_state:
+		"light_1":
+			_draw_light_slash(0.55, Color("#f7e8d4"), 48.0, 0.95)
+		"light_2":
+			_draw_light_slash(-0.65, Color("#ffe2a8"), 54.0, 0.95)
+		"light_3":
+			_draw_light_slash(0.0, Color("#dfaa46"), 68.0, 1.20)
+		"heavy":
+			_draw_heavy_blade_sweep()
+		"q":
+			_draw_q_blade_trail()
+		"ultimate":
+			_draw_ultimate_sigil_lines()
+		"heavy_windup":
+			_draw_charging_blade()
+		_:
+			_draw_idle_blade()
+
+
+func _draw_idle_blade() -> void:
+	var dir := _safe_facing()
+	var base := Vector2(0, -24)
+	var tip := base + dir * 32.0
+	var guard_left := base + dir.rotated(PI * 0.5) * 7.0
+	var guard_right := base + dir.rotated(-PI * 0.5) * 7.0
+
+	draw_line(base, tip, Color("#d8c1a1"), 2.0)
+	draw_line(guard_left, guard_right, Color("#dfaa46"), 2.0)
+
+
+func _draw_light_slash(angle_offset: float, color: Color, radius: float, width_mult: float) -> void:
+	var dir := _safe_facing().rotated(angle_offset)
+	var center := Vector2(0, -20)
+	var angle := dir.angle()
+	var age_ratio: float = clampf(state_age / 0.26, 0.0, 1.0)
+	var alpha: float = maxf(0.0, 1.0 - age_ratio)
+
+	draw_arc(center, radius, angle - 0.92, angle + 0.92, 42, Color(color.r, color.g, color.b, 0.74 * alpha), 5.0 * width_mult)
+	draw_arc(center, radius + 8.0, angle - 0.70, angle + 0.70, 36, Color(1.0, 0.95, 0.70, 0.30 * alpha), 2.0)
+	draw_line(center + dir * 12.0, center + dir * (radius + 6.0), Color(color.r, color.g, color.b, 0.48 * alpha), 3.0)
+
+
+func _draw_heavy_blade_sweep() -> void:
+	var dir := _safe_facing()
+	var center := Vector2(0, -16)
+	var angle := dir.angle()
+	var alpha: float = maxf(0.0, 1.0 - clampf(state_age / 0.42, 0.0, 1.0))
+
+	draw_arc(center, 78.0, angle - 1.18, angle + 1.18, 58, Color(1.0, 0.28, 0.10, 0.72 * alpha), 8.0)
+	draw_arc(center, 92.0, angle - 0.82, angle + 0.82, 44, Color(1.0, 0.75, 0.22, 0.38 * alpha), 3.0)
+	draw_line(center - dir * 10.0, center + dir * 88.0, Color("#ff684a"), 4.0)
+
+
+func _draw_charging_blade() -> void:
+	var dir := _safe_facing()
+	var center := Vector2(0, -18)
+	var charge: float = 0.5 + 0.5 * absf(sin(state_age * 14.0))
+
+	draw_circle(center, 30.0 + charge * 8.0, Color(1.0, 0.18, 0.05, 0.16 + charge * 0.10))
+	draw_arc(center, 42.0, -PI * 0.7, PI * 0.7, 32, Color(1.0, 0.24, 0.10, 0.54), 3.0)
+	draw_line(center, center + dir * 44.0, Color("#ff684a"), 3.0 + charge * 2.0)
+
+
+func _draw_q_blade_trail() -> void:
+	var dir := _safe_facing()
+	var center := Vector2(0, -18)
+	var side := dir.rotated(PI * 0.5)
+
+	for i in range(4):
+		var t := float(i) / 3.0
+		var alpha := 0.34 * (1.0 - t)
+		var start := center - dir * (18.0 + t * 42.0) - side * 10.0
+		var end := center + dir * (34.0 - t * 8.0) + side * 10.0
+		draw_line(start, end, Color(0.55, 0.88, 1.0, alpha), 4.0 - t * 1.2)
+
+	draw_arc(center + dir * 20.0, 46.0, dir.angle() - 0.72, dir.angle() + 0.72, 36, Color("#9ed8cd"), 3.0)
+
+
+func _draw_ultimate_sigil_lines() -> void:
+	var center := Vector2(0, -14)
+	var alpha: float = maxf(0.0, 1.0 - clampf(state_age / 0.60, 0.0, 1.0))
+
+	for i in range(8):
+		var angle := TAU * float(i) / 8.0 + state_age * 1.4
+		var inner := center + Vector2.RIGHT.rotated(angle) * 20.0
+		var outer := center + Vector2.RIGHT.rotated(angle) * 66.0
+		draw_line(inner, outer, Color(1.0, 0.82, 0.25, 0.42 * alpha), 2.0)
+
+
+func _draw_dash_effect() -> void:
+	draw_circle(Vector2(0, -10), 30.0, Color(0.45, 0.75, 1.0, 0.16))
+	draw_arc(Vector2(0, -10), 35.0, -PI, PI, 48, Color(0.55, 0.80, 1.0, 0.34), 2.0)
+
+
+func _draw_q_effect() -> void:
+	draw_circle(Vector2(0, -10), 38.0, Color(0.45, 0.85, 1.0, 0.20))
+	draw_arc(Vector2(0, -10), 42.0, 0.0, TAU, 48, Color(0.50, 0.85, 1.0, 0.42), 2.0)
+
+
+func _draw_heavy_windup_effect() -> void:
+	draw_circle(Vector2(0, -10), 38.0, Color(1.0, 0.20, 0.08, 0.22))
+	draw_arc(Vector2(0, -10), 42.0, -PI * 0.7, PI * 0.7, 32, Color(1.0, 0.24, 0.10, 0.60), 3.0)
+	draw_arc(Vector2(0, -10), 48.0, PI * 0.3, PI * 1.65, 32, Color(0.95, 0.55, 0.18, 0.38), 2.0)
+
+
+func _draw_heavy_release_effect() -> void:
+	draw_circle(Vector2(0, -10), 36.0, Color(1.0, 0.42, 0.12, 0.20))
+	draw_arc(Vector2(0, -10), 42.0, 0.0, TAU, 48, Color(1.0, 0.52, 0.16, 0.36), 3.0)
+
+
+func _draw_ultimate_effect() -> void:
+	draw_circle(Vector2(0, -10), 52.0, Color(1.0, 0.72, 0.16, 0.24))
+	draw_arc(Vector2(0, -10), 56.0, 0.0, TAU, 72, Color(1.0, 0.75, 0.18, 0.55), 4.0)
+	draw_arc(Vector2(0, -10), 66.0, 0.0, TAU, 72, Color(1.0, 0.95, 0.48, 0.30), 2.0)
+
+
+func _draw_death_effects() -> void:
+	var progress: float = clampf(state_age / 1.35, 0.0, 1.0)
+	var inverse: float = 1.0 - progress
+	var core_alpha: float = 0.30 * inverse
+	var ring_alpha: float = 0.58 * inverse
+	var radius: float = lerpf(20.0, 74.0, progress)
+
+	draw_circle(Vector2(0, -10), radius, Color(1.0, 0.18, 0.08, core_alpha))
+	draw_arc(Vector2(0, -10), radius + 6.0, 0.0, TAU, 72, Color(1.0, 0.70, 0.24, ring_alpha), 4.0)
+
+	for i in range(8):
+		var angle: float = TAU * float(i) / 8.0 + state_age * 1.8
+		var start_pos: Vector2 = Vector2(0, -10) + Vector2.RIGHT.rotated(angle) * lerpf(10.0, 26.0, progress)
+		var end_pos: Vector2 = Vector2(0, -10) + Vector2.RIGHT.rotated(angle) * lerpf(24.0, 58.0, progress)
+		draw_line(start_pos, end_pos, Color(1.0, 0.58, 0.18, 0.42 * inverse), 2.0)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(-60, -72),
+		"SOUL SEVERED",
+		HORIZONTAL_ALIGNMENT_CENTER,
+		120,
+		14,
+		Color(1.0, 0.70, 0.42, 0.75 * inverse)
+	)
+
+
+func _draw_shadow(center: Vector2, width: float, height: float, color: Color) -> void:
+	var points: PackedVector2Array = PackedVector2Array()
+	var steps: int = 32
+
+	for i in range(steps):
+		var angle: float = TAU * float(i) / float(steps)
+		points.append(center + Vector2(cos(angle) * width * 0.5, sin(angle) * height * 0.5))
+
+	draw_colored_polygon(points, color)
+
+
+func _draw_missing_sprite_marker() -> void:
+	draw_circle(Vector2.ZERO, 18.0, Color("#ff2b1f"))
+	draw_line(Vector2(-12, -12), Vector2(12, 12), Color.WHITE, 3.0)
+	draw_line(Vector2(12, -12), Vector2(-12, 12), Color.WHITE, 3.0)
+
+
+func _safe_facing() -> Vector2:
+	if facing.length() <= 0.01:
+		return Vector2.RIGHT
+
+	return facing.normalized()

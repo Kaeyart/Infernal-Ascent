@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://d0nrit1q5bpyx"
+
+[deps]
+
+files=["res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest.direction.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest.frame.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest.file.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest.source.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest.cell.translation"]
+
+source_file="res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest.csv"
+dest_files=["res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest.direction.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest.frame.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest.file.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest.source.translation", "res://art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest.cell.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

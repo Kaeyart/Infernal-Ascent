@@ -1,0 +1,69 @@
+extends Node2D
+
+var text: String = "0"
+var color: Color = Color.WHITE
+
+var velocity: Vector2 = Vector2(0, -48)
+var lifetime: float = 0.65
+var max_lifetime: float = 0.65
+
+var scale_start: float = 1.0
+var scale_end: float = 0.75
+
+func setup(amount: float, new_color: Color = Color.WHITE, is_big: bool = false) -> void:
+	text = str(int(ceil(amount)))
+	color = new_color
+
+	if is_big:
+		scale_start = 1.35
+		scale_end = 0.95
+		velocity = Vector2(randf_range(-12.0, 12.0), -68.0)
+		lifetime = 0.78
+	else:
+		scale_start = 1.0
+		scale_end = 0.72
+		velocity = Vector2(randf_range(-10.0, 10.0), -48.0)
+		lifetime = 0.62
+
+	max_lifetime = lifetime
+	queue_redraw()
+
+func _process(delta: float) -> void:
+	lifetime -= delta
+	position += velocity * delta
+
+	if lifetime <= 0.0:
+		queue_free()
+
+	queue_redraw()
+
+func _draw() -> void:
+	var t := clampf(lifetime / max_lifetime, 0.0, 1.0)
+	var alpha := t
+	var s := lerpf(scale_end, scale_start, t)
+
+	var draw_color := Color(color.r, color.g, color.b, alpha)
+	var shadow_color := Color(0, 0, 0, 0.70 * alpha)
+
+	var font := ThemeDB.fallback_font
+	var font_size := int(22 * s)
+
+	draw_string(
+		font,
+		Vector2(-10, 8) + Vector2(2, 2),
+		text,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		80,
+		font_size,
+		shadow_color
+	)
+
+	draw_string(
+		font,
+		Vector2(-10, 8),
+		text,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		80,
+		font_size,
+		draw_color
+	)

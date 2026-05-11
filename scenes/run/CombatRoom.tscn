@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dclbyqo4pa58y"]
+
+[ext_resource type="Script" uid="uid://dgedqwsvqu0vs" path="res://scripts/rooms/CombatRoom.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://258o6hja7d81" path="res://scenes/actors/Player.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/actors/Enemy.tscn" id="3"]
+
+[node name="CombatRoom" type="Node2D" unique_id=240801834]
+script = ExtResource("1")
+enemy_scene = ExtResource("3")
+
+[node name="Player" parent="." unique_id=1973201083 instance=ExtResource("2")]
+position = Vector2(640, 520)
+
+[node name="EnemySpawnA" type="Marker2D" parent="." unique_id=480771075]
+position = Vector2(270, 220)
+
+[node name="EnemySpawnB" type="Marker2D" parent="." unique_id=1249642446]
+position = Vector2(640, 180)
+
+[node name="EnemySpawnC" type="Marker2D" parent="." unique_id=1319323033]
+position = Vector2(1010, 250)

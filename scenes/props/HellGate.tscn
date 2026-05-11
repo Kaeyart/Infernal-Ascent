@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/props/HellGate.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://art/props/hell_gate/hell_gate_extract_00_626x525.png" id="2_texture"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
+radius = 86.0
+
+[node name="HellGate" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_texture")
+scale = Vector2(0.16, 0.16)
+
+[node name="InteractArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea"]
+shape = SubResource("CircleShape2D_interact")
+
+[node name="PromptLabel" type="Label" parent="."]
+offset_left = -90.0
+offset_top = 76.0
+offset_right = 90.0
+offset_bottom = 104.0
+text = "Press E — Enter Inferno"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true

@@ -1,0 +1,1042 @@
+extends Node2D
+
+signal return_to_hub_requested()
+signal reward_room_requested(reward_type: String)
+signal room_choice_requested(room_type: String)
+
+const ChoiceDoorScene := preload("res://scenes/run/ChoiceDoor.tscn")
+const AttackEffectScene := preload("res://scenes/combat/AttackEffect.tscn")
+const DamageNumberScene := preload("res://scenes/combat/DamageNumber.tscn")
+const UpgradeCardScene := preload("res://scenes/ui/UpgradeCard.tscn")
+
+@export var enemy_scene: PackedScene
+
+var room_type := "combat"
+var choice_doors: Array[Node2D] = []
+var enemies_alive: int = 0
+var room_clear: bool = false
+var spawned_enemies: Array[Node2D] = []
+
+var reward_available: bool = false
+var reward_taken: bool = false
+var reward_position: Vector2 = Vector2(640, 330)
+var reward_radius: float = 86.0
+var hint: String = ""
+
+var boon_offers: Array[Dictionary] = []
+var boon_positions: Array[Vector2] = []
+var upgrade_cards: Array[Node2D] = []
+
+var shake_timer: float = 0.0
+var shake_strength: float = 0.0
+
+var hit_stop_active: bool = false
+var attack_fx: Array = []
+
+
+func set_room_type(new_room_type: String) -> void:
+	room_type = new_room_type
+
+
+func _ready() -> void:
+	$Player.attack_performed.connect(_on_player_attack)
+	$Player.perfect_dodge_triggered.connect(_on_perfect_dodge)
+
+	_spawn_enemies()
+	queue_redraw()
+
+
+func _exit_tree() -> void:
+	Engine.time_scale = 1.0
+
+
+func _process(delta: float) -> void:
+	hint = ""
+
+	enemies_alive = _get_alive_enemy_count()
+
+	if enemies_alive <= 0 and not room_clear:
+		room_clear = true
+		_spawn_post_clear_reward()
+
+	_update_reward_interaction()
+
+	for fx in attack_fx:
+		fx["time"] -= delta
+
+	attack_fx = attack_fx.filter(func(fx): return fx["time"] > 0.0)
+
+	_update_screen_shake(delta)
+	queue_redraw()
+
+
+func _spawn_enemies() -> void:
+	if enemy_scene == null:
+		push_error("CombatRoom enemy_scene is not assigned.")
+		return
+
+	spawned_enemies.clear()
+
+	var enemy_count: int = RunState.get_enemy_count_for_room(room_type, RunState.depth)
+	var enemy_stats: Dictionary = RunState.get_enemy_stats_for_room(room_type, RunState.depth)
+	var spawn_positions: Array[Vector2] = _get_scaled_spawn_positions(enemy_count)
+
+	for i in range(enemy_count):
+		var spawn_position: Vector2 = spawn_positions[i]
+		_spawn_enemy_at(spawn_position, enemy_stats)
+
+
+func _get_scaled_spawn_positions(enemy_count: int) -> Array[Vector2]:
+	var marker_positions := _get_spawn_marker_positions()
+	var positions: Array[Vector2] = []
+
+	if room_type == RunState.ROOM_BOSS:
+		var boss_spawn := Vector2(640, 230)
+
+		var boss_marker := get_node_or_null(NodePath("EnemySpawnB")) as Node2D
+		if boss_marker != null:
+			boss_spawn = boss_marker.global_position
+
+		positions.append(boss_spawn)
+		return positions
+
+	if marker_positions.is_empty():
+		marker_positions = [
+			Vector2(440, 260),
+			Vector2(640, 210),
+			Vector2(840, 260)
+		]
+
+	for i in range(enemy_count):
+		var base_position := marker_positions[i % marker_positions.size()]
+		var ring_index := int(floor(float(i) / float(marker_positions.size())))
+		var jitter := Vector2.ZERO
+
+		if ring_index > 0:
+			var angle := (TAU / float(maxi(enemy_count, 1))) * float(i)
+			jitter = Vector2(cos(angle), sin(angle)) * (52.0 * float(ring_index))
+
+		positions.append(base_position + jitter)
+
+	return positions
+
+
+func _get_spawn_marker_positions() -> Array[Vector2]:
+	var positions: Array[Vector2] = []
+
+	for marker_name in ["EnemySpawnA", "EnemySpawnB", "EnemySpawnC"]:
+		var marker := get_node_or_null(NodePath(marker_name)) as Node2D
+
+		if marker != null:
+			positions.append(marker.global_position)
+
+	return positions
+
+
+func _spawn_enemy_at(spawn_position: Vector2, stats: Dictionary) -> void:
+	var enemy := enemy_scene.instantiate() as Node2D
+
+	if enemy == null:
+		push_error("Enemy scene root must be Node2D or CharacterBody2D.")
+		return
+
+	add_child(enemy)
+	enemy.global_position = spawn_position
+
+	var rank: String = str(stats["rank"])
+
+	if rank == "elite":
+		enemy.scale = Vector2(1.25, 1.25)
+	elif rank == "miniboss":
+		enemy.scale = Vector2(1.55, 1.55)
+	elif rank == "boss":
+		enemy.scale = Vector2(2.35, 2.35)
+
+	if enemy.has_method("setup_enemy_stats"):
+		enemy.call(
+			"setup_enemy_stats",
+			float(stats["max_hp"]),
+			float(stats["damage"]),
+			float(stats["speed"]),
+			float(stats["contact_radius"]),
+			rank
+		)
+
+	if enemy.has_signal("died"):
+		enemy.connect("died", Callable(self, "_on_enemy_died"))
+
+	spawned_enemies.append(enemy)
+
+
+func _spawn_post_clear_reward() -> void:
+	if reward_taken:
+		return
+
+	match room_type:
+		RunState.ROOM_UPGRADE:
+			_spawn_upgrade_cards()
+
+		RunState.ROOM_FORGE:
+			reward_available = true
+			reward_position = Vector2(640, 330)
+
+		RunState.ROOM_SHRINE:
+			reward_available = true
+			reward_position = Vector2(640, 330)
+
+		RunState.ROOM_BOSS:
+			reward_available = true
+			reward_position = Vector2(640, 330)
+
+		_:
+			_spawn_boon_offers()
+
+
+func _spawn_boon_offers() -> void:
+	if not boon_offers.is_empty():
+		return
+
+	boon_offers = RunState.generate_boon_offers(3)
+
+	if boon_offers.is_empty():
+		reward_taken = true
+		_spawn_choice_doors()
+		return
+
+	boon_positions = [
+		Vector2(385, 315),
+		Vector2(640, 280),
+		Vector2(895, 315)
+	]
+
+
+func _spawn_upgrade_cards() -> void:
+	if not upgrade_cards.is_empty():
+		return
+
+	var offers: Array[RunUpgradeData] = RunState.generate_upgrade_offers(3)
+
+	if offers.is_empty():
+		reward_taken = true
+		_spawn_choice_doors()
+		return
+
+	var positions: Array[Vector2] = [
+		Vector2(385, 300),
+		Vector2(640, 270),
+		Vector2(895, 300)
+	]
+
+	for i in range(offers.size()):
+		var card := UpgradeCardScene.instantiate() as Node2D
+		card.global_position = positions[i]
+		add_child(card)
+
+		if card.has_method("setup"):
+			card.setup(offers[i])
+
+		if card.has_signal("upgrade_selected"):
+			card.upgrade_selected.connect(_on_upgrade_card_selected)
+
+		upgrade_cards.append(card)
+
+
+func _on_upgrade_card_selected(upgrade_data: RunUpgradeData) -> void:
+	if reward_taken:
+		return
+
+	reward_taken = true
+	RunState.apply_upgrade(upgrade_data)
+
+	if $Player and $Player.has_method("apply_run_modifiers"):
+		$Player.apply_run_modifiers()
+
+	for card in upgrade_cards:
+		if card != null and is_instance_valid(card):
+			card.queue_free()
+
+	upgrade_cards.clear()
+	_spawn_choice_doors()
+	queue_redraw()
+
+
+func _update_reward_interaction() -> void:
+	if not room_clear:
+		return
+
+	if reward_taken:
+		hint = "Reward claimed — choose your next door"
+		return
+
+	if not boon_offers.is_empty():
+		_update_boon_choice_interaction()
+		return
+
+	if reward_available:
+		_update_object_reward_interaction()
+		return
+
+	if not upgrade_cards.is_empty():
+		hint = "Choose one reward card"
+		return
+
+
+func _update_boon_choice_interaction() -> void:
+	hint = "Choose a Witness or Sinner boon"
+
+	var nearest_index: int = -1
+	var nearest_distance: float = 99999.0
+
+	for i in range(boon_positions.size()):
+		var distance: float = $Player.global_position.distance_to(boon_positions[i])
+
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest_index = i
+
+	if nearest_index >= 0 and nearest_distance <= 92.0:
+		var boon: Dictionary = boon_offers[nearest_index]
+		hint = "Press E — Accept %s" % str(boon.get("display_name", "Boon"))
+
+		if Input.is_action_just_pressed("interact"):
+			_accept_boon(nearest_index)
+
+
+func _accept_boon(index: int) -> void:
+	if index < 0 or index >= boon_offers.size():
+		return
+
+	var boon: Dictionary = boon_offers[index]
+	RunState.apply_boon(boon)
+
+	reward_taken = true
+	boon_offers.clear()
+	boon_positions.clear()
+
+	if $Player and $Player.has_method("apply_run_modifiers"):
+		$Player.apply_run_modifiers()
+
+	_spawn_choice_doors()
+	queue_redraw()
+
+
+func _update_object_reward_interaction() -> void:
+	var near_reward: bool = $Player.global_position.distance_to(reward_position) <= reward_radius
+
+	match room_type:
+		RunState.ROOM_FORGE:
+			hint = "Forge cleared — approach the anvil"
+		RunState.ROOM_SHRINE:
+			hint = "Shrine cleared — approach the offering"
+		RunState.ROOM_BOSS:
+			hint = "Boss defeated — claim the remnant"
+		_:
+			hint = "Approach the reward"
+
+	if near_reward:
+		hint = "Press E — Claim %s Reward" % RunState.get_room_display_name(room_type)
+
+		if Input.is_action_just_pressed("interact"):
+			_claim_object_reward()
+
+
+func _claim_object_reward() -> void:
+	if reward_taken:
+		return
+
+	reward_taken = true
+	reward_available = false
+
+	match room_type:
+		RunState.ROOM_FORGE:
+			if $Player:
+				$Player.armor = minf($Player.armor + 12.0, $Player.max_armor)
+
+		RunState.ROOM_SHRINE:
+			if $Player:
+				$Player.hp = minf($Player.hp + 18.0, $Player.max_hp)
+
+			if $Player and $Player.has_method("gain_ultimate"):
+				$Player.gain_ultimate(18.0)
+
+		RunState.ROOM_BOSS:
+			if $Player and $Player.has_method("gain_ultimate"):
+				$Player.gain_ultimate(100.0)
+
+		_:
+			pass
+
+	_spawn_choice_doors()
+	queue_redraw()
+
+
+func _spawn_choice_doors() -> void:
+	if not choice_doors.is_empty():
+		return
+
+	var offers: Array[String] = RunState.generate_offers_after_clear()
+
+	if offers.is_empty():
+		return
+
+	var positions: Array[Vector2] = []
+
+	if offers.size() == 1:
+		positions = [Vector2(640, 160)]
+	else:
+		positions = [
+			Vector2(410, 170),
+			Vector2(640, 150),
+			Vector2(870, 170)
+		]
+
+	for i in range(offers.size()):
+		var offered_room_type: String = str(offers[i])
+		var door := ChoiceDoorScene.instantiate() as Node2D
+		door.global_position = positions[i]
+		add_child(door)
+
+		if door.has_method("setup"):
+			door.setup(offered_room_type)
+
+		if door.has_signal("room_choice_requested"):
+			door.room_choice_requested.connect(_on_choice_door_selected)
+
+		choice_doors.append(door)
+
+
+func _on_choice_door_selected(selected_room_type: String) -> void:
+	room_choice_requested.emit(selected_room_type)
+
+
+func _get_alive_enemy_count() -> int:
+	var alive_enemies: Array[Node2D] = []
+
+	for enemy in spawned_enemies:
+		if enemy == null:
+			continue
+
+		if not is_instance_valid(enemy):
+			continue
+
+		if enemy.is_queued_for_deletion():
+			continue
+
+		if _object_has_property(enemy, "dead") and bool(enemy.get("dead")):
+			continue
+
+		alive_enemies.append(enemy)
+
+	spawned_enemies = alive_enemies
+	return spawned_enemies.size()
+
+
+func _on_player_attack(kind: String, origin: Vector2, direction: Vector2, radius: float, damage: float) -> void:
+	var safe_direction: Vector2 = direction
+
+	if safe_direction.length() <= 0.01:
+		safe_direction = Vector2.RIGHT
+
+	safe_direction = safe_direction.normalized()
+
+	var fx = AttackEffectScene.instantiate()
+	fx.global_position = origin
+	fx.setup(kind, radius, safe_direction)
+	add_child(fx)
+
+	attack_fx.append({
+		"kind": kind,
+		"origin": origin,
+		"direction": safe_direction,
+		"radius": radius,
+		"time": 0.18
+	})
+
+	var hit_any_enemy: bool = false
+
+	for enemy_node in spawned_enemies:
+		if enemy_node == null:
+			continue
+
+		if not is_instance_valid(enemy_node):
+			continue
+
+		if enemy_node.is_queued_for_deletion():
+			continue
+
+		var to_enemy: Vector2 = enemy_node.global_position - origin
+		var distance: float = to_enemy.length()
+
+		if distance > radius:
+			continue
+
+		var can_hit: bool = false
+
+		if kind in ["light", "light_1", "light_2", "light_3"]:
+			can_hit = _is_in_front(to_enemy, safe_direction, 0.10)
+		elif kind == "heavy":
+			can_hit = _is_in_front(to_enemy, safe_direction, -0.20)
+		elif kind == "q":
+			can_hit = true
+		elif kind == "ultimate":
+			can_hit = true
+
+		if can_hit:
+			hit_any_enemy = true
+
+			var final_damage: float = damage
+
+			if RunState.has_method("get_attack_damage_multiplier"):
+				final_damage *= RunState.get_attack_damage_multiplier(kind)
+
+			if RunState.has_method("get_bonus_damage_multiplier_for_target"):
+				final_damage *= RunState.get_bonus_damage_multiplier_for_target(kind, enemy_node)
+
+			if enemy_node.has_method("take_damage"):
+				enemy_node.call("take_damage", final_damage)
+
+			_apply_on_hit_boon_effects(kind, enemy_node)
+			_apply_on_hit_status_detonations(kind, enemy_node)
+
+			_spawn_damage_number(enemy_node.global_position, final_damage, kind)
+
+			match kind:
+				"light", "light_1":
+					add_screen_shake(0.06, 8.0)
+				"light_2":
+					add_screen_shake(0.06, 9.0)
+				"light_3":
+					add_screen_shake(0.08, 13.0)
+				"heavy":
+					add_screen_shake(0.10, 16.0)
+				"q":
+					add_screen_shake(0.09, 14.0)
+				"ultimate":
+					add_screen_shake(0.18, 28.0)
+
+			if $Player.has_method("gain_ultimate"):
+				$Player.gain_ultimate(6.0)
+
+	if hit_any_enemy:
+		match kind:
+			"light", "light_1":
+				add_hit_stop(0.035, 0.12)
+			"light_2":
+				add_hit_stop(0.04, 0.10)
+			"light_3":
+				add_hit_stop(0.055, 0.08)
+			"heavy":
+				add_hit_stop(0.075, 0.06)
+			"q":
+				add_hit_stop(0.06, 0.08)
+			"ultimate":
+				add_hit_stop(0.11, 0.04)
+
+
+func _spawn_damage_number(pos: Vector2, amount: float, kind: String) -> void:
+	var number = DamageNumberScene.instantiate()
+	number.global_position = pos + Vector2(randf_range(-10.0, 10.0), randf_range(-20.0, -8.0))
+
+	var number_color := Color("#f7e8d4")
+	var is_big := false
+
+	match kind:
+		"light", "light_1":
+			number_color = Color("#f7e8d4")
+		"light_2":
+			number_color = Color("#ffe2a8")
+		"light_3":
+			number_color = Color("#dfaa46")
+			is_big = true
+		"heavy":
+			number_color = Color("#ff684a")
+			is_big = true
+		"q":
+			number_color = Color("#9ed8cd")
+			is_big = true
+		"ultimate":
+			number_color = Color("#ffd36a")
+			is_big = true
+
+	number.setup(amount, number_color, is_big)
+	add_child(number)
+
+func _apply_on_hit_boon_effects(kind: String, enemy_node: Node2D) -> void:
+	if enemy_node == null:
+		return
+
+	if not is_instance_valid(enemy_node):
+		return
+
+	if not RunState.has_method("get_on_hit_status_effects"):
+		return
+
+	var effects: Array[Dictionary] = RunState.get_on_hit_status_effects(kind)
+
+	for effect in effects:
+		var status_id: String = str(effect.get("status_id", ""))
+		var stacks: int = int(effect.get("stacks", 1))
+		var duration: float = float(effect.get("duration", 4.0))
+
+		if status_id == "":
+			continue
+
+		if enemy_node.has_method("apply_status"):
+			enemy_node.call("apply_status", status_id, stacks, duration)
+
+func _apply_on_hit_status_detonations(kind: String, enemy_node: Node2D) -> void:
+	if enemy_node == null:
+		return
+
+	if not is_instance_valid(enemy_node):
+		return
+
+	if not RunState.has_method("get_on_hit_status_detonations"):
+		return
+
+	var detonations: Array[Dictionary] = RunState.get_on_hit_status_detonations(kind)
+
+	for detonation in detonations:
+		var status_id: String = str(detonation.get("status_id", ""))
+		var damage_per_stack: float = float(detonation.get("flat_value", 0.0))
+
+		if status_id == "":
+			continue
+
+		if damage_per_stack <= 0.0:
+			continue
+
+		if not enemy_node.has_method("consume_status"):
+			continue
+
+		var stacks: int = int(enemy_node.call("consume_status", status_id))
+
+		if stacks <= 0:
+			continue
+
+		var burst_damage: float = damage_per_stack * float(stacks)
+
+		if enemy_node.has_method("take_damage"):
+			enemy_node.call("take_damage", burst_damage)
+
+		var number_kind := "ultimate"
+
+		if status_id == "bleed":
+			number_kind = "heavy"
+		elif status_id == "judgment":
+			number_kind = "ultimate"
+		elif status_id == "poison":
+			number_kind = "q"
+
+		_spawn_damage_number(
+			enemy_node.global_position + Vector2(randf_range(-8.0, 8.0), randf_range(-32.0, -18.0)),
+			burst_damage,
+			number_kind
+		)
+
+		add_screen_shake(0.08, 14.0)
+
+func _on_enemy_died(enemy_position: Vector2) -> void:
+	add_screen_shake(0.08, 10.0)
+	add_hit_stop(0.045, 0.08)
+
+	var heal_bonus: float = 0.0
+
+	if RunState.has_method("get_on_kill_heal_bonus"):
+		heal_bonus = RunState.get_on_kill_heal_bonus()
+
+	if heal_bonus > 0.0 and $Player:
+		$Player.hp = minf($Player.hp + heal_bonus, $Player.max_hp)
+
+	var fx = AttackEffectScene.instantiate()
+	fx.global_position = enemy_position
+	fx.setup("death", 48.0, Vector2.RIGHT)
+	add_child(fx)
+
+
+func _is_in_front(to_target: Vector2, direction: Vector2, threshold: float) -> bool:
+	if to_target.length() <= 1.0:
+		return true
+
+	var safe_direction := direction
+
+	if safe_direction.length() <= 0.01:
+		safe_direction = Vector2.RIGHT
+
+	var dot: float = safe_direction.normalized().dot(to_target.normalized())
+	return dot >= threshold
+
+
+func _on_perfect_dodge() -> void:
+	var fx = AttackEffectScene.instantiate()
+	fx.global_position = $Player.global_position
+	fx.setup("perfect", 72.0, Vector2.RIGHT)
+	add_child(fx)
+
+	attack_fx.append({
+		"kind": "perfect",
+		"origin": $Player.global_position,
+		"direction": Vector2.RIGHT,
+		"radius": 72.0,
+		"time": 0.24
+	})
+
+	var bonus_ultimate: float = 0.0
+
+	if RunState.has_method("get_perfect_dodge_ultimate_bonus"):
+		bonus_ultimate = RunState.get_perfect_dodge_ultimate_bonus()
+
+	if bonus_ultimate > 0.0 and $Player.has_method("gain_ultimate"):
+		$Player.gain_ultimate(bonus_ultimate)
+
+	add_screen_shake(0.06, 8.0)
+	add_hit_stop(0.045, 0.10)
+
+
+func _update_screen_shake(delta: float) -> void:
+	var camera := $Player.get_node_or_null("Camera2D") as Camera2D
+
+	if camera == null:
+		return
+
+	if shake_timer > 0.0:
+		shake_timer -= delta
+
+		camera.offset = Vector2(
+			randf_range(-shake_strength, shake_strength),
+			randf_range(-shake_strength, shake_strength)
+		)
+
+		if shake_timer <= 0.0:
+			camera.offset = Vector2.ZERO
+			shake_strength = 0.0
+	else:
+		camera.offset = Vector2.ZERO
+
+
+func add_screen_shake(duration: float, strength: float) -> void:
+	shake_timer = maxf(shake_timer, duration)
+	shake_strength = maxf(shake_strength, strength)
+
+
+func add_hit_stop(duration: float, time_scale: float) -> void:
+	if hit_stop_active:
+		return
+
+	hit_stop_active = true
+	Engine.time_scale = time_scale
+
+	await get_tree().create_timer(duration, true, false, true).timeout
+
+	Engine.time_scale = 1.0
+	hit_stop_active = false
+
+
+func _object_has_property(object: Object, property_name: String) -> bool:
+	if object == null:
+		return false
+
+	for property in object.get_property_list():
+		if str(property["name"]) == property_name:
+			return true
+
+	return false
+
+
+func _draw() -> void:
+	_draw_room()
+	_draw_attack_fx()
+	_draw_reward_layer()
+	_draw_hint()
+
+
+func _draw_room() -> void:
+	var room_title := "%s Room" % RunState.get_room_display_name(room_type)
+	var border_color := Color("#261014")
+	var room_color := Color("#11080a")
+
+	if room_type == RunState.ROOM_ELITE:
+		border_color = Color("#5d3c85")
+		room_color = Color("#130d1a")
+	elif room_type == RunState.ROOM_BOSS:
+		border_color = Color("#5c1111")
+		room_color = Color("#160607")
+	elif room_type == RunState.ROOM_UPGRADE:
+		border_color = Color("#7a5520")
+		room_color = Color("#130d08")
+	elif room_type == RunState.ROOM_FORGE:
+		border_color = Color("#7a2d1b")
+		room_color = Color("#160906")
+	elif room_type == RunState.ROOM_SHRINE:
+		border_color = Color("#56377c")
+		room_color = Color("#10091a")
+
+	draw_rect(Rect2(Vector2.ZERO, Vector2(1280, 720)), room_color)
+	draw_rect(Rect2(Vector2(70, 70), Vector2(1140, 580)), border_color, false, 6.0)
+
+	for x in range(120, 1180, 80):
+		draw_line(Vector2(x, 90), Vector2(x, 635), Color(1, 1, 1, 0.05), 1.0)
+
+	for y in range(110, 640, 80):
+		draw_line(Vector2(90, y), Vector2(1190, y), Color(1, 1, 1, 0.05), 1.0)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(30, 34),
+		"%s — Depth %d" % [room_title, RunState.depth],
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		20,
+		Color("#f7e8d4")
+	)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(30, 60),
+		RunState.get_combat_debug_text(room_type, RunState.depth),
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		15,
+		Color("#c4a98f")
+	)
+
+	if room_clear and not reward_taken:
+		draw_string(
+			ThemeDB.fallback_font,
+			Vector2(430, 118),
+			"Room cleared — claim what answered the violence",
+			HORIZONTAL_ALIGNMENT_CENTER,
+			420,
+			18,
+			Color("#dfaa46")
+		)
+
+	if reward_taken:
+		draw_rect(Rect2(Vector2(420, 620), Vector2(440, 46)), Color(0, 0, 0, 0.70))
+		draw_string(
+			ThemeDB.fallback_font,
+			Vector2(456, 650),
+			"Reward claimed — choose your next door",
+			HORIZONTAL_ALIGNMENT_LEFT,
+			390,
+			18,
+			Color("#dfaa46")
+		)
+
+
+func _draw_reward_layer() -> void:
+	if not room_clear or reward_taken:
+		return
+
+	if not boon_offers.is_empty():
+		_draw_boon_offers()
+
+	if reward_available:
+		_draw_object_reward()
+
+
+func _draw_boon_offers() -> void:
+	for i in range(boon_offers.size()):
+		var boon: Dictionary = boon_offers[i]
+		var pos: Vector2 = boon_positions[i]
+		var witness_name: String = str(boon.get("witness_name", "Witness"))
+		var display_name: String = str(boon.get("display_name", "Boon"))
+		var description: String = str(boon.get("description", ""))
+		var target_action: String = str(boon.get("target_action", "Power"))
+		var rarity: String = str(boon.get("rarity", "Common"))
+		var effect_type: String = str(boon.get("effect_type", ""))
+
+		var color := _get_boon_color(witness_name, rarity)
+		var rect := Rect2(pos - Vector2(112, 88), Vector2(224, 176))
+
+		draw_rect(rect, Color(0.035, 0.018, 0.014, 0.94))
+		draw_rect(rect, color, false, 3.0)
+		draw_rect(Rect2(rect.position + Vector2(8, 8), rect.size - Vector2(16, 16)), Color(1, 1, 1, 0.08), false, 1.0)
+
+		draw_string(
+			ThemeDB.fallback_font,
+			pos + Vector2(-96, -62),
+			"%s · %s" % [witness_name, rarity],
+			HORIZONTAL_ALIGNMENT_CENTER,
+			192,
+			15,
+			color
+		)
+
+		draw_string(
+			ThemeDB.fallback_font,
+			pos + Vector2(-96, -34),
+			display_name,
+			HORIZONTAL_ALIGNMENT_CENTER,
+			192,
+			20,
+			Color("#f7e8d4")
+		)
+
+		draw_string(
+			ThemeDB.fallback_font,
+			pos + Vector2(-96, -6),
+			"Affects: %s" % target_action,
+			HORIZONTAL_ALIGNMENT_CENTER,
+			192,
+			13,
+			Color("#c4a98f")
+		)
+
+		draw_string(
+			ThemeDB.fallback_font,
+			pos + Vector2(-96, 16),
+			_format_effect_label(effect_type),
+			HORIZONTAL_ALIGNMENT_CENTER,
+			192,
+			12,
+			color.lightened(0.18)
+		)
+
+		draw_string(
+			ThemeDB.fallback_font,
+			pos + Vector2(-96, 42),
+			description,
+			HORIZONTAL_ALIGNMENT_CENTER,
+			192,
+			12,
+			Color("#d8c1a1")
+		)
+
+func _format_effect_label(effect_type: String) -> String:
+	match effect_type:
+		"apply_status":
+			return "Status Effect"
+		"bonus_damage_vs_status":
+			return "Conditional Damage"
+		"detonate_status_damage":
+			return "Status Detonation"
+		"on_kill_heal_flat":
+			return "On Kill"
+		"perfect_dodge_ultimate_flat":
+			return "Perfect Dodge"
+		_:
+			return "Power"
+
+func _get_boon_color(witness_name: String, rarity: String) -> Color:
+	var base := Color("#dfaa46")
+
+	match witness_name:
+		"Virgil":
+			base = Color("#dfaa46")
+		"Francesca":
+			base = Color("#d85c8a")
+		"Minos":
+			base = Color("#ff684a")
+		"Ugolino":
+			base = Color("#9ed8cd")
+		"Geryon":
+			base = Color("#7fdc54")
+		"Beatrice":
+			base = Color("#f7e8d4")
+
+	if rarity == "Rare":
+		base = base.lightened(0.30)
+	elif rarity == "Uncommon":
+		base = base.lightened(0.12)
+
+	return base
+
+
+func _draw_object_reward() -> void:
+	var reward_color := Color("#dfaa46")
+	var label := "Reward"
+
+	match room_type:
+		RunState.ROOM_FORGE:
+			reward_color = Color("#ff684a")
+			label = "Forge Remnant"
+		RunState.ROOM_SHRINE:
+			reward_color = Color("#b49ce2")
+			label = "Shrine Offering"
+		RunState.ROOM_BOSS:
+			reward_color = Color("#ffd36a")
+			label = "Boss Remnant"
+
+	draw_circle(reward_position, 58, Color(reward_color.r, reward_color.g, reward_color.b, 0.16))
+	draw_arc(reward_position, 58, 0.0, TAU, 64, reward_color, 4.0)
+	draw_arc(reward_position, 36, 0.0, TAU, 64, Color("#f7e8d4"), 2.0)
+	draw_circle(reward_position, 20, Color("#f7e8d4"))
+	draw_circle(reward_position, 9, reward_color)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		reward_position + Vector2(-86, 84),
+		label,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		172,
+		16,
+		reward_color
+	)
+
+
+func _draw_hint() -> void:
+	if hint == "":
+		return
+
+	draw_rect(Rect2(Vector2(370, 662), Vector2(540, 36)), Color(0, 0, 0, 0.72))
+
+	draw_string(
+		ThemeDB.fallback_font,
+		Vector2(395, 687),
+		hint,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		490,
+		16,
+		Color("#f7e8d4")
+	)
+
+
+func _draw_attack_fx() -> void:
+	for fx in attack_fx:
+		var kind: String = fx["kind"]
+		var origin: Vector2 = fx["origin"]
+		var direction: Vector2 = fx["direction"]
+		var radius: float = fx["radius"]
+		var time: float = fx["time"]
+
+		var alpha: float = clampf(time / 0.18, 0.0, 1.0)
+
+		if kind in ["light", "light_1"]:
+			_draw_cone(origin, direction, radius, 0.55, Color(1.0, 0.75, 0.28, alpha))
+		elif kind == "light_2":
+			_draw_cone(origin, direction, radius, 0.55, Color(1.0, 0.82, 0.36, alpha))
+		elif kind == "light_3":
+			_draw_cone(origin, direction, radius, 0.95, Color(1.0, 0.88, 0.42, alpha))
+		elif kind == "heavy":
+			_draw_cone(origin, direction, radius, 1.1, Color(1.0, 0.28, 0.18, alpha))
+		elif kind == "q":
+			draw_circle(origin, radius, Color(0.50, 0.80, 1.0, 0.10 * alpha))
+			draw_arc(origin, radius, 0.0, TAU, 64, Color(0.50, 0.80, 1.0, alpha), 4.0)
+		elif kind == "ultimate":
+			draw_circle(origin, radius, Color(1.0, 0.72, 0.16, 0.14 * alpha))
+			draw_arc(origin, radius, 0.0, TAU, 96, Color(1.0, 0.72, 0.16, alpha), 6.0)
+		elif kind == "perfect":
+			draw_circle(origin, radius, Color(0.90, 0.95, 1.0, 0.12 * alpha))
+			draw_arc(origin, radius, 0.0, TAU, 64, Color(0.90, 0.95, 1.0, alpha), 5.0)
+
+
+func _draw_cone(origin: Vector2, direction: Vector2, radius: float, angle_width: float, color: Color) -> void:
+	var safe_direction := direction
+
+	if safe_direction.length() <= 0.01:
+		safe_direction = Vector2.RIGHT
+
+	safe_direction = safe_direction.normalized()
+
+	var angle: float = safe_direction.angle()
+	var start_angle: float = angle - angle_width
+	var end_angle: float = angle + angle_width
+
+	draw_arc(origin, radius, start_angle, end_angle, 32, color, 6.0)
+
+	var left: Vector2 = origin + Vector2.RIGHT.rotated(start_angle) * radius
+	var right: Vector2 = origin + Vector2.RIGHT.rotated(end_angle) * radius
+
+	draw_line(origin, left, color, 3.0)
+	draw_line(origin, right, color, 3.0)

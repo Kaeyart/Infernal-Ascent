@@ -1,0 +1,1002 @@
+extends Node2D
+
+var player: Node2D = null
+
+var hp: float = 160.0
+var max_hp: float = 160.0
+var dead: bool = false
+var break_timer: float = 0.0
+
+var dummy_visual_scale: float = 1.0
+
+var interact_cooldown: float = 0.0
+
+var last_hit_kind: String = "None"
+var last_hit_damage: float = 0.0
+var last_hit_timer: float = 0.0
+
+var damage_events: Array[Dictionary] = []
+var dps_window: float = 5.0
+var current_dps: float = 0.0
+
+var visual_time: float = 0.0
+var hit_flash: float = 0.0
+var status_effects: Dictionary = {}
+
+var selected_boon_index: int = 0
+var selected_profile_index: int = 0
+
+var interaction_radius: float = 130.0
+var player_near: bool = false
+
+var dummy_profiles := [
+	{
+		"id": "normal",
+		"name": "Normal Dummy",
+		"max_hp": 160.0,
+		"scale": 1.0
+	},
+	{
+		"id": "elite",
+		"name": "Elite Dummy",
+		"max_hp": 260.0,
+		"scale": 1.18
+	},
+	{
+		"id": "miniboss",
+		"name": "Miniboss Dummy",
+		"max_hp": 480.0,
+		"scale": 1.38
+	},
+	{
+		"id": "boss",
+		"name": "Boss Dummy",
+		"max_hp": 900.0,
+		"scale": 1.72
+	}
+]
+
+
+func _ready() -> void:
+	add_to_group("training_dummy")
+	_apply_profile()
+	set_process(true)
+	set_physics_process(true)
+
+
+func _process(delta: float) -> void:
+	visual_time += delta
+	hit_flash = maxf(0.0, hit_flash - delta)
+	last_hit_timer = maxf(0.0, last_hit_timer - delta)
+	_update_damage_readout(delta)
+	interact_cooldown = maxf(0.0, interact_cooldown - delta)
+
+	if player == null or not is_instance_valid(player):
+		player = get_tree().get_first_node_in_group("player") as Node2D
+		_connect_player_attack_signal()
+
+	_update_player_near_state()
+	_update_status_effects(delta)
+	_update_break_state(delta)
+
+	if player_near and interact_cooldown <= 0.0 and not _is_training_menu_active():
+		if _is_interact_pressed():
+			interact_cooldown = 0.35
+			_open_training_menu()
+
+	queue_redraw()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not player_near:
+		return
+
+	if _is_training_menu_active():
+		return
+
+	if not event is InputEventKey:
+		return
+
+	var key_event := event as InputEventKey
+
+	if not key_event.pressed or key_event.echo:
+		return
+
+	match key_event.keycode:
+		KEY_R:
+			_reset_training_state()
+			get_viewport().set_input_as_handled()
+
+		KEY_H:
+			_reset_dummy()
+			get_viewport().set_input_as_handled()
+
+		KEY_TAB:
+			_cycle_profile()
+			get_viewport().set_input_as_handled()
+
+		KEY_B:
+			apply_status("bleed", 1, 4.0)
+			get_viewport().set_input_as_handled()
+
+		KEY_P:
+			apply_status("poison", 1, 7.0)
+			get_viewport().set_input_as_handled()
+
+		KEY_J:
+			apply_status("judgment", 1, 8.0)
+			get_viewport().set_input_as_handled()
+
+func _is_interact_pressed() -> bool:
+	if InputMap.has_action("interact") and Input.is_action_just_pressed("interact"):
+		return true
+
+	return Input.is_physical_key_pressed(KEY_E)
+
+func _connect_player_attack_signal() -> void:
+	if player == null:
+		return
+
+	if not player.has_signal("attack_performed"):
+		return
+
+	var callable := Callable(self, "_on_player_attack")
+
+	if not player.attack_performed.is_connected(callable):
+		player.attack_performed.connect(callable)
+
+
+func _update_player_near_state() -> void:
+	player_near = false
+
+	if player == null:
+		return
+
+	player_near = global_position.distance_to(player.global_position) <= interaction_radius
+
+func _open_training_menu() -> void:
+	var menus := get_tree().get_nodes_in_group("training_dummy_menu")
+
+	if menus.is_empty():
+		push_warning("No TrainingDummyMenu found. Add scenes/ui/TrainingDummyMenu.tscn to HubV2.tscn.")
+		return
+
+	var menu := menus[0]
+
+	if menu != null and menu.has_method("open_menu"):
+		menu.call("open_menu", self)
+
+
+func _is_training_menu_active() -> bool:
+	var menus := get_tree().get_nodes_in_group("training_dummy_menu")
+
+	if menus.is_empty():
+		return false
+
+	var menu := menus[0]
+
+	if menu != null and menu.has_method("is_menu_active"):
+		return bool(menu.call("is_menu_active"))
+
+	return false
+
+func _on_player_attack(kind: String, origin: Vector2, direction: Vector2, radius: float, damage: float) -> void:
+	if dead:
+		return
+
+	var safe_direction: Vector2 = direction
+
+	if safe_direction.length() <= 0.01:
+		safe_direction = Vector2.RIGHT
+
+	safe_direction = safe_direction.normalized()
+
+	var to_dummy: Vector2 = global_position - origin
+	var distance: float = to_dummy.length()
+
+	if distance > radius:
+		return
+
+	var can_hit: bool = false
+
+	if kind in ["light", "light_1", "light_2", "light_3"]:
+		can_hit = _is_in_front(to_dummy, safe_direction, 0.10)
+	elif kind == "heavy":
+		can_hit = _is_in_front(to_dummy, safe_direction, -0.20)
+	elif kind == "q":
+		can_hit = true
+	elif kind == "ultimate":
+		can_hit = true
+
+	if not can_hit:
+		return
+
+	var final_damage: float = damage
+
+	if RunState.has_method("get_attack_damage_multiplier"):
+		final_damage *= RunState.get_attack_damage_multiplier(kind)
+
+	if RunState.has_method("get_bonus_damage_multiplier_for_target"):
+		final_damage *= RunState.get_bonus_damage_multiplier_for_target(kind, self)
+
+	var hp_before_hit: float = hp
+
+	take_damage(final_damage)
+
+	_apply_on_hit_status_effects(kind)
+	_apply_on_hit_status_detonations(kind)
+	_apply_on_hit_execute_synergies(kind)
+	_apply_on_hit_heal_synergies(kind)
+
+	var total_hit_damage: float = maxf(0.0, hp_before_hit - hp)
+	_record_last_hit(kind, total_hit_damage)
+
+func take_damage(amount: float) -> void:
+	if dead:
+		return
+
+	var safe_amount: float = maxf(0.0, amount)
+
+	if safe_amount <= 0.0:
+		return
+
+	hp -= safe_amount
+	hp = maxf(0.0, hp)
+	hit_flash = 0.12
+
+	_record_damage_event(safe_amount)
+
+	if hp <= 0.0:
+		_break_dummy()
+
+
+func _break_dummy() -> void:
+	dead = true
+	break_timer = 1.1
+
+	var heal_bonus: float = 0.0
+
+	if RunState.has_method("get_on_kill_heal_bonus"):
+		heal_bonus = RunState.get_on_kill_heal_bonus()
+
+	if heal_bonus > 0.0 and player != null:
+		player.hp = minf(player.hp + heal_bonus, player.max_hp)
+
+		if player.has_method("_save_run_vitals"):
+			player._save_run_vitals()
+
+
+func _update_break_state(delta: float) -> void:
+	if not dead:
+		return
+
+	break_timer -= delta
+
+	if break_timer <= 0.0:
+		_reset_dummy()
+
+
+func _reset_dummy() -> void:
+	hp = max_hp
+	dead = false
+	break_timer = 0.0
+	hit_flash = 0.0
+	status_effects.clear()
+	last_hit_kind = "None"
+	last_hit_damage = 0.0
+	last_hit_timer = 0.0
+	damage_events.clear()
+	current_dps = 0.0
+
+
+func _reset_training_state() -> void:
+	if RunState.has_method("debug_clear_boons"):
+		RunState.debug_clear_boons()
+
+	_reset_dummy()
+
+
+func _cycle_profile() -> void:
+	selected_profile_index += 1
+	selected_profile_index = selected_profile_index % dummy_profiles.size()
+	_apply_profile()
+
+
+func _apply_profile() -> void:
+	var profile: Dictionary = dummy_profiles[selected_profile_index]
+
+	max_hp = float(profile.get("max_hp", 160.0))
+	hp = max_hp
+
+	dummy_visual_scale = clampf(float(profile.get("scale", 1.0)), 1.0, 1.8)
+
+	# Important: never scale the whole node.
+	# Scaling the node also scales UI, status icons, panels, and hit readouts.
+	scale = Vector2.ONE
+
+	status_effects.clear()
+	dead = false
+	break_timer = 0.0
+	hit_flash = 0.0
+
+	last_hit_kind = "None"
+	last_hit_damage = 0.0
+	last_hit_timer = 0.0
+	damage_events.clear()
+	current_dps = 0.0
+
+
+func _get_boon_pool() -> Array[Dictionary]:
+	if RunState.has_method("debug_get_boon_pool"):
+		return RunState.debug_get_boon_pool()
+
+	return []
+
+
+func _get_selected_boon() -> Dictionary:
+	var pool := _get_boon_pool()
+
+	if pool.is_empty():
+		return {}
+
+	selected_boon_index = clampi(selected_boon_index, 0, pool.size() - 1)
+	return pool[selected_boon_index]
+
+
+func _add_selected_boon() -> void:
+	var boon: Dictionary = _get_selected_boon()
+
+	if boon.is_empty():
+		return
+
+	var boon_id := str(boon.get("boon_id", ""))
+
+	if boon_id == "":
+		return
+
+	if RunState.has_method("debug_add_boon_by_id"):
+		RunState.debug_add_boon_by_id(boon_id)
+
+
+func _apply_on_hit_status_effects(kind: String) -> void:
+	if not RunState.has_method("get_on_hit_status_effects"):
+		return
+
+	var effects: Array[Dictionary] = RunState.get_on_hit_status_effects(kind)
+
+	for effect in effects:
+		var status_id: String = str(effect.get("status_id", ""))
+		var stacks: int = int(effect.get("stacks", 1))
+		var duration: float = float(effect.get("duration", 4.0))
+
+		if status_id == "":
+			continue
+
+		apply_status(status_id, stacks, duration)
+
+
+func _apply_on_hit_status_detonations(kind: String) -> void:
+	if not RunState.has_method("get_on_hit_status_detonations"):
+		return
+
+	var detonations: Array[Dictionary] = RunState.get_on_hit_status_detonations(kind)
+
+	for detonation in detonations:
+		var status_id: String = str(detonation.get("status_id", ""))
+		var damage_per_stack: float = float(detonation.get("flat_value", 0.0))
+
+		if status_id == "":
+			continue
+
+		if damage_per_stack <= 0.0:
+			continue
+
+		var stacks: int = consume_status(status_id)
+
+		if stacks <= 0:
+			continue
+
+		take_damage(damage_per_stack * float(stacks))
+
+
+func _apply_on_hit_execute_synergies(kind: String) -> void:
+	if not RunState.has_method("get_on_hit_effects_by_type"):
+		return
+
+	var effects: Array[Dictionary] = RunState.get_on_hit_effects_by_type(kind, "execute_status_below_ratio")
+
+	for effect in effects:
+		var status_id: String = str(effect.get("status_id", ""))
+		var threshold: float = float(effect.get("execute_threshold_ratio", 0.20))
+
+		if status_id == "":
+			continue
+
+		if not has_status(status_id):
+			continue
+
+		if hp / maxf(1.0, max_hp) > threshold:
+			continue
+
+		take_damage(hp + 999.0)
+
+
+func _apply_on_hit_heal_synergies(kind: String) -> void:
+	if player == null:
+		return
+
+	if not RunState.has_method("get_on_hit_effects_by_type"):
+		return
+
+	var effects: Array[Dictionary] = RunState.get_on_hit_effects_by_type(kind, "heal_on_hit_vs_status")
+
+	for effect in effects:
+		var status_id: String = str(effect.get("status_id", ""))
+		var heal_amount: float = float(effect.get("flat_value", 0.0))
+
+		if status_id == "":
+			continue
+
+		if heal_amount <= 0.0:
+			continue
+
+		if not has_status(status_id):
+			continue
+
+		player.hp = minf(player.hp + heal_amount, player.max_hp)
+
+		if player.has_method("_save_run_vitals"):
+			player._save_run_vitals()
+
+
+func apply_status(status_id: String, stacks: int = 1, duration: float = 4.0) -> void:
+	if dead:
+		return
+
+	var safe_status_id := status_id.strip_edges()
+
+	if safe_status_id == "":
+		return
+
+	var effect: Dictionary = {}
+
+	if status_effects.has(safe_status_id):
+		effect = status_effects[safe_status_id]
+
+	var previous_stacks: int = int(effect.get("stacks", 0))
+	var new_stacks: int = mini(_get_status_max_stacks(safe_status_id), previous_stacks + maxi(1, stacks))
+
+	effect["stacks"] = new_stacks
+	effect["duration"] = maxf(float(effect.get("duration", 0.0)), duration)
+	effect["tick_timer"] = float(effect.get("tick_timer", _get_status_tick_interval(safe_status_id)))
+
+	status_effects[safe_status_id] = effect
+
+
+func has_status(status_id: String) -> bool:
+	if not status_effects.has(status_id):
+		return false
+
+	var effect: Dictionary = status_effects[status_id]
+	return float(effect.get("duration", 0.0)) > 0.0
+
+
+func get_status_stacks(status_id: String) -> int:
+	if not status_effects.has(status_id):
+		return 0
+
+	var effect: Dictionary = status_effects[status_id]
+	return int(effect.get("stacks", 0))
+
+
+func consume_status(status_id: String) -> int:
+	if not status_effects.has(status_id):
+		return 0
+
+	var effect: Dictionary = status_effects[status_id]
+	var stacks: int = int(effect.get("stacks", 0))
+
+	status_effects.erase(status_id)
+	return stacks
+
+
+func _update_status_effects(delta: float) -> void:
+	if status_effects.is_empty():
+		return
+
+	var keys := status_effects.keys()
+
+	for status_id_value in keys:
+		var status_id := str(status_id_value)
+
+		if not status_effects.has(status_id):
+			continue
+
+		var effect: Dictionary = status_effects[status_id]
+		var duration: float = float(effect.get("duration", 0.0)) - delta
+
+		effect["duration"] = duration
+
+		if status_id == "bleed" or status_id == "poison":
+			var tick_timer: float = float(effect.get("tick_timer", _get_status_tick_interval(status_id))) - delta
+
+			if tick_timer <= 0.0:
+				tick_timer += _get_status_tick_interval(status_id)
+				_apply_status_tick_damage(status_id, int(effect.get("stacks", 1)))
+
+			effect["tick_timer"] = tick_timer
+
+		if duration <= 0.0:
+			status_effects.erase(status_id)
+		else:
+			status_effects[status_id] = effect
+
+
+func _apply_status_tick_damage(status_id: String, stacks: int) -> void:
+	if dead:
+		return
+
+	var damage_amount: float = _get_status_tick_damage(status_id, stacks)
+
+	if damage_amount <= 0.0:
+		return
+
+	take_damage(damage_amount)
+
+func get_training_readout_data() -> Dictionary:
+	var profile: Dictionary = dummy_profiles[selected_profile_index]
+	var status_entries: Array[Dictionary] = []
+
+	if has_status("judgment"):
+		status_entries.append({
+			"id": "judgment",
+			"name": "Judgment",
+			"stacks": get_status_stacks("judgment")
+		})
+
+	if has_status("bleed"):
+		status_entries.append({
+			"id": "bleed",
+			"name": "Bleed",
+			"stacks": get_status_stacks("bleed")
+		})
+
+	if has_status("poison"):
+		status_entries.append({
+			"id": "poison",
+			"name": "Poison",
+			"stacks": get_status_stacks("poison")
+		})
+
+	return {
+		"near": player_near,
+		"profile_name": str(profile.get("name", "Dummy")),
+		"hp": hp,
+		"max_hp": max_hp,
+		"hp_ratio": clampf(hp / maxf(1.0, max_hp), 0.0, 1.0),
+		"last_hit_kind": last_hit_kind,
+		"last_hit_damage": last_hit_damage,
+		"last_hit_active": last_hit_timer > 0.0,
+		"current_dps": current_dps,
+		"dps_window": dps_window,
+		"statuses": status_entries,
+		"boon_lines": _get_active_boon_summary_lines(7)
+	}
+
+func _get_status_tick_interval(status_id: String) -> float:
+	match status_id:
+		"bleed":
+			return 0.60
+		"poison":
+			return 0.85
+		_:
+			return 1.0
+
+
+func _get_status_tick_damage(status_id: String, stacks: int) -> float:
+	match status_id:
+		"bleed":
+			return 0.95 * float(stacks)
+		"poison":
+			return 0.65 * float(stacks)
+		_:
+			return 0.0
+
+
+func _get_status_max_stacks(status_id: String) -> int:
+	match status_id:
+		"bleed":
+			return 8
+		"poison":
+			return 8
+		"judgment":
+			return 1
+		_:
+			return 5
+
+
+func _is_in_front(to_target: Vector2, direction: Vector2, threshold: float) -> bool:
+	if to_target.length() <= 1.0:
+		return true
+
+	var safe_direction := direction
+
+	if safe_direction.length() <= 0.01:
+		safe_direction = Vector2.RIGHT
+
+	var dot: float = safe_direction.normalized().dot(to_target.normalized())
+	return dot >= threshold
+
+
+func _draw() -> void:
+	_draw_dummy_shadow()
+	_draw_dummy_body()
+	_draw_hp_bar()
+	_draw_status_icons()
+	_draw_training_ui()
+
+
+func _draw_training_floor() -> void:
+	pass
+
+func _draw_dummy_body() -> void:
+	var s: float = dummy_visual_scale
+	var body_color := Color("#6d5141")
+	var trim_color := Color("#dfaa46")
+
+	if dead:
+		body_color = Color("#2b1a16")
+		trim_color = Color("#5c1a14")
+	elif hit_flash > 0.0:
+		body_color = Color("#f7e8d4")
+		trim_color = Color("#ffd36a")
+
+	var body_rect := Rect2(Vector2(-18.0 * s, -54.0 * s), Vector2(36.0 * s, 68.0 * s))
+	var head_center := Vector2(0, -66.0 * s)
+	var head_radius := 18.0 * s
+
+	draw_rect(body_rect, body_color)
+	draw_rect(body_rect, Color("#1b0c09"), false, maxf(1.0, 2.0 * s))
+
+	draw_circle(head_center, head_radius, body_color.lightened(0.10))
+	draw_arc(head_center, head_radius, 0.0, TAU, 32, Color("#1b0c09"), maxf(1.0, 2.0 * s))
+
+	draw_line(Vector2(-28.0 * s, -22.0 * s), Vector2(28.0 * s, -22.0 * s), trim_color, maxf(3.0, 4.0 * s))
+	draw_line(Vector2(0, -54.0 * s), Vector2(0, 12.0 * s), Color("#2a0f0c"), maxf(2.0, 3.0 * s))
+
+	# Profile plates so bigger dummies feel different without scaling the UI.
+	if dummy_visual_scale >= 1.25:
+		draw_rect(
+			Rect2(Vector2(-24.0 * s, -42.0 * s), Vector2(8.0 * s, 42.0 * s)),
+			Color("#3a2720")
+		)
+		draw_rect(
+			Rect2(Vector2(16.0 * s, -42.0 * s), Vector2(8.0 * s, 42.0 * s)),
+			Color("#3a2720")
+		)
+
+	if dummy_visual_scale >= 1.55:
+		draw_line(Vector2(-18.0 * s, -8.0 * s), Vector2(18.0 * s, -8.0 * s), Color("#ff684a"), maxf(2.0, 3.0 * s))
+		draw_line(Vector2(-14.0 * s, 4.0 * s), Vector2(14.0 * s, 4.0 * s), Color("#ff684a"), maxf(2.0, 3.0 * s))
+
+	if dead:
+		draw_string(
+			ThemeDB.fallback_font,
+			Vector2(-54, -112.0 * s),
+			"BROKEN",
+			HORIZONTAL_ALIGNMENT_CENTER,
+			108,
+			13,
+			Color("#ff684a")
+		)
+
+func _draw_dummy_shadow() -> void:
+	var width: float = 54.0 * dummy_visual_scale
+	var height: float = 18.0
+	var center := Vector2(0, 18)
+
+	var points := PackedVector2Array()
+	var steps := 24
+
+	for i in range(steps):
+		var angle := TAU * float(i) / float(steps)
+		points.append(center + Vector2(cos(angle) * width * 0.5, sin(angle) * height * 0.5))
+
+	draw_colored_polygon(points, Color(0.0, 0.0, 0.0, 0.32))
+
+func _get_hp_bar_y() -> float:
+	return -92.0 * dummy_visual_scale - 24.0
+
+
+func _get_status_icon_y() -> float:
+	return _get_hp_bar_y() - 24.0
+
+func _draw_hp_bar() -> void:
+	var ratio: float = clampf(hp / maxf(1.0, max_hp), 0.0, 1.0)
+	var width: float = 112.0 + (dummy_visual_scale - 1.0) * 52.0
+	var pos := Vector2(-width * 0.5, _get_hp_bar_y())
+	var size := Vector2(width, 9)
+
+	draw_rect(Rect2(pos + Vector2(1, 1), size), Color(0, 0, 0, 0.65))
+	draw_rect(Rect2(pos, size), Color("#1a0606"))
+	draw_rect(Rect2(pos, Vector2(size.x * ratio, size.y)), Color("#d63a2f"))
+	draw_rect(Rect2(pos, size), Color("#f4d49a"), false, 1.0)
+
+func _record_damage_event(amount: float) -> void:
+	damage_events.append({
+		"time": Time.get_ticks_msec() / 1000.0,
+		"amount": maxf(0.0, amount)
+	})
+
+
+func _record_last_hit(kind: String, amount: float) -> void:
+	last_hit_kind = _format_attack_kind(kind)
+	last_hit_damage = amount
+	last_hit_timer = 2.5
+
+
+func _update_damage_readout(_delta: float) -> void:
+	var now: float = Time.get_ticks_msec() / 1000.0
+	var cutoff: float = now - dps_window
+
+	var filtered_events: Array[Dictionary] = []
+	var total_damage: float = 0.0
+
+	for event in damage_events:
+		var event_time: float = float(event.get("time", 0.0))
+
+		if event_time < cutoff:
+			continue
+
+		filtered_events.append(event)
+		total_damage += float(event.get("amount", 0.0))
+
+	damage_events = filtered_events
+	current_dps = total_damage / dps_window
+
+
+func _format_attack_kind(kind: String) -> String:
+	match kind:
+		"light", "light_1":
+			return "Light 1"
+		"light_2":
+			return "Light 2"
+		"light_3":
+			return "Light 3"
+		"heavy":
+			return "Heavy"
+		"q":
+			return "Q Dash"
+		"ultimate":
+			return "Ultimate"
+		_:
+			return kind.capitalize()
+
+
+func _get_status_summary_text() -> String:
+	var parts: Array[String] = []
+
+	if has_status("judgment"):
+		parts.append("Judgment")
+
+	if has_status("bleed"):
+		parts.append("Bleed x%d" % get_status_stacks("bleed"))
+
+	if has_status("poison"):
+		parts.append("Poison x%d" % get_status_stacks("poison"))
+
+	if parts.is_empty():
+		return "None"
+
+	return ", ".join(parts)
+
+
+func _get_active_boon_summary_lines(max_lines: int = 5) -> Array[String]:
+	var lines: Array[String] = []
+
+	if not RunState.has_method("debug_get_selected_boons"):
+		lines.append("None")
+		return lines
+
+	var boons: Array[Dictionary] = RunState.debug_get_selected_boons()
+
+	if boons.is_empty():
+		lines.append("None")
+		return lines
+
+	var shown: int = 0
+
+	for boon in boons:
+		if shown >= max_lines:
+			break
+
+		lines.append("[%s] %s" % [
+			str(boon.get("target_action", "?")),
+			str(boon.get("display_name", "?"))
+		])
+
+		shown += 1
+
+	if boons.size() > shown:
+		lines.append("+%d more" % (boons.size() - shown))
+
+	return lines
+
+func _draw_status_icons() -> void:
+	var active_statuses: Array[String] = []
+
+	if has_status("judgment"):
+		active_statuses.append("judgment")
+
+	if has_status("bleed"):
+		active_statuses.append("bleed")
+
+	if has_status("poison"):
+		active_statuses.append("poison")
+
+	if active_statuses.is_empty():
+		return
+
+	var spacing: float = 30.0
+	var total_width: float = float(active_statuses.size() - 1) * spacing
+	var start_x: float = -total_width * 0.5
+
+	for i in range(active_statuses.size()):
+		var status_id := active_statuses[i]
+		var icon_pos := Vector2(start_x + float(i) * spacing, _get_status_icon_y())
+		_draw_status_icon(status_id, icon_pos)
+
+func _draw_status_icon(status_id: String, pos: Vector2) -> void:
+	var color := _get_status_color(status_id)
+
+	draw_circle(pos, 10.0, Color(0, 0, 0, 0.74))
+	draw_arc(pos, 10.0, 0.0, TAU, 28, color, 1.5)
+
+	match status_id:
+		"bleed":
+			_draw_bleed_icon(pos)
+			_draw_status_stack_pips(pos + Vector2(0, 13), get_status_stacks("bleed"), color)
+
+		"poison":
+			_draw_poison_icon(pos)
+			_draw_status_stack_pips(pos + Vector2(0, 13), get_status_stacks("poison"), color)
+
+		"judgment":
+			_draw_judgment_icon(pos)
+
+		_:
+			draw_circle(pos, 3.0, Color.WHITE)
+
+func _draw_bleed_icon(pos: Vector2) -> void:
+	var color := Color("#ff2b1f")
+	draw_circle(pos + Vector2(0, -2.5), 3.5, color)
+
+	var points := PackedVector2Array([
+		pos + Vector2(-3.2, 0.0),
+		pos + Vector2(3.2, 0.0),
+		pos + Vector2(0.0, 6.2)
+	])
+
+	draw_polygon(points, PackedColorArray([color, color, color]))
+
+func _draw_poison_icon(pos: Vector2) -> void:
+	var color := Color("#6eea4b")
+	var bright := Color("#d7ffd0")
+
+	draw_circle(pos + Vector2(-3.7, -1.2), 2.1, color)
+	draw_circle(pos + Vector2(3.7, -1.2), 2.1, color)
+	draw_circle(pos + Vector2(0.0, 3.1), 2.5, color)
+
+	draw_line(pos + Vector2(-5.2, -5.4), pos + Vector2(5.2, 5.4), bright, 1.1)
+	draw_line(pos + Vector2(5.2, -5.4), pos + Vector2(-5.2, 5.4), bright, 1.1)
+
+
+func _draw_judgment_icon(pos: Vector2) -> void:
+	var color := Color("#ffd36a")
+
+	draw_arc(pos, 5.8, 0.0, TAU, 28, color, 1.3)
+	draw_line(pos + Vector2(0, -5.5), pos + Vector2(0, 4.2), color, 1.3)
+	draw_line(pos + Vector2(-5.0, -2.0), pos + Vector2(5.0, -2.0), color, 1.3)
+
+
+func _draw_status_stack_pips(pos: Vector2, stacks: int, color: Color) -> void:
+	var safe_stacks: int = clampi(stacks, 1, 8)
+	var spacing: float = 3.2
+	var total_width: float = float(safe_stacks - 1) * spacing
+	var start_x: float = -total_width * 0.5
+
+	for i in range(safe_stacks):
+		var pip_pos := pos + Vector2(start_x + float(i) * spacing, 0.0)
+		draw_circle(pip_pos + Vector2(0.6, 0.8), 1.35, Color(0, 0, 0, 0.75))
+		draw_circle(pip_pos, 1.25, color)
+
+
+func _get_status_color(status_id: String) -> Color:
+	match status_id:
+		"bleed":
+			return Color("#ff2b1f")
+		"poison":
+			return Color("#6eea4b")
+		"judgment":
+			return Color("#ffd36a")
+		_:
+			return Color("#f7e8d4")
+
+func _draw_small_dummy_label(profile_name: String) -> void:
+	var pos := Vector2(-105, 102)
+	var size := Vector2(210, 42)
+
+	draw_rect(Rect2(pos, size), Color(0, 0, 0, 0.66))
+	draw_rect(Rect2(pos, size), Color("#c4a98f"), false, 1.0)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		pos + Vector2(8, 25),
+		"Training Dummy — %s" % profile_name,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		194,
+		13,
+		Color("#c4a98f")
+	)
+
+func _draw_ui_chip(pos: Vector2, text_value: String, color: Color, width: float = 120.0) -> void:
+	var rect := Rect2(pos, Vector2(width, 20.0))
+
+	draw_rect(rect, Color(0.0, 0.0, 0.0, 0.58))
+	draw_rect(rect, Color(color.r, color.g, color.b, 0.15))
+	draw_rect(rect, color, false, 1.0)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		pos + Vector2(7, 14),
+		text_value,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		width - 12.0,
+		11,
+		Color("#f7e8d4")
+	)
+	
+func _draw_ui_meter(pos: Vector2, width: float, ratio: float, label: String, color: Color) -> void:
+	var size := Vector2(width, 16.0)
+	var rect := Rect2(pos, size)
+
+	draw_rect(rect, Color(0.0, 0.0, 0.0, 0.62))
+	draw_rect(Rect2(pos, Vector2(width * clampf(ratio, 0.0, 1.0), size.y)), Color(color.r, color.g, color.b, 0.72))
+	draw_rect(rect, color, false, 1.0)
+
+	draw_string(
+		ThemeDB.fallback_font,
+		pos + Vector2(8, 12),
+		label,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		width - 16.0,
+		11,
+		Color("#fff1dc")
+	)
+
+func _draw_training_ui() -> void:
+	var profile: Dictionary = dummy_profiles[selected_profile_index]
+	var profile_name: String = str(profile.get("name", "Dummy"))
+
+	if not player_near:
+		var pos: Vector2 = Vector2(-106, 96)
+		var size: Vector2 = Vector2(212, 38)
+
+		draw_rect(Rect2(pos, size), Color(0, 0, 0, 0.58))
+		draw_rect(Rect2(pos, size), Color("#c4a98f"), false, 1.0)
+
+		draw_string(ThemeDB.fallback_font, pos + Vector2(8, 20), "Training Dummy — %s" % profile_name, HORIZONTAL_ALIGNMENT_CENTER, 196, 12, Color("#f7e8d4"))
+		draw_string(ThemeDB.fallback_font, pos + Vector2(8, 34), "Damage & Timing Trial", HORIZONTAL_ALIGNMENT_CENTER, 196, 10, Color("#c4a98f"))
+		return
+
+	var pos_near: Vector2 = Vector2(-132, 96)
+	var size_near: Vector2 = Vector2(264, 58)
+
+	draw_rect(Rect2(pos_near, size_near), Color(0.018, 0.010, 0.008, 0.86))
+	draw_rect(Rect2(pos_near, size_near), Color(0.95, 0.70, 0.28, 0.10))
+	draw_rect(Rect2(pos_near, size_near), Color("#dfaa46"), false, 1.5)
+	draw_rect(Rect2(pos_near, size_near).grow(-5), Color(1, 1, 1, 0.05), false, 1.0)
+
+	draw_string(ThemeDB.fallback_font, pos_near + Vector2(0, 20), "[E] Train — Damage & Timing Trial", HORIZONTAL_ALIGNMENT_CENTER, size_near.x, 13, Color("#f7e8d4"))
+	draw_string(ThemeDB.fallback_font, pos_near + Vector2(0, 38), "Tab Profile  ·  H Reset  ·  R Clear", HORIZONTAL_ALIGNMENT_CENTER, size_near.x, 11, Color("#8f7a64"))
+	draw_string(ThemeDB.fallback_font, pos_near + Vector2(0, 52), profile_name, HORIZONTAL_ALIGNMENT_CENTER, size_near.x, 10, Color("#c4a98f"))

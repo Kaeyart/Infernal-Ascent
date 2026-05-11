@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dcl80jpgg3e0h"]
+
+[ext_resource type="Script" uid="uid://bxh4phf0q4s13" path="res://scripts/rooms/HubNPC.gd" id="1_n63qd"]
+
+[node name="HubNpc" type="Node2D" unique_id=1326312213]
+script = ExtResource("1_n63qd")

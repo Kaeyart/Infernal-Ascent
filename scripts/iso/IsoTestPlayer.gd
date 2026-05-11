@@ -1,0 +1,81 @@
+extends Node2D
+class_name IsoTestPlayer
+
+@export var move_speed: float = 260.0
+@export var room_min: Vector2 = Vector2(220.0, 180.0)
+@export var room_max: Vector2 = Vector2(1060.0, 625.0)
+
+var facing: Vector2 = Vector2.DOWN
+
+func _ready() -> void:
+	add_to_group("player")
+	queue_redraw()
+
+func _process(delta: float) -> void:
+	var input_vector: Vector2 = _read_movement_input()
+	if input_vector.length() > 0.01:
+		input_vector = input_vector.normalized()
+		facing = input_vector
+		position += input_vector * move_speed * delta
+		position.x = clamp(position.x, room_min.x, room_max.x)
+		position.y = clamp(position.y, room_min.y, room_max.y)
+	queue_redraw()
+
+func _draw() -> void:
+	var shadow_color: Color = Color(0.0, 0.0, 0.0, 0.32)
+	_draw_filled_ellipse(Rect2(Vector2(-18.0, 10.0), Vector2(36.0, 12.0)), shadow_color)
+	var cape_color: Color = Color("#6d1d1d")
+	var armor_color: Color = Color("#1c2025")
+	var trim_color: Color = Color("#d1a45b")
+	var blade_color: Color = Color("#d9d2c0")
+	var body: PackedVector2Array = PackedVector2Array([
+		Vector2(0.0, -34.0),
+		Vector2(17.0, -10.0),
+		Vector2(10.0, 16.0),
+		Vector2(-10.0, 16.0),
+		Vector2(-17.0, -10.0),
+	])
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(-16.0, -8.0),
+		Vector2(-4.0, -2.0),
+		Vector2(-6.0, 20.0),
+		Vector2(-22.0, 24.0),
+	]), cape_color)
+	draw_colored_polygon(body, armor_color)
+	draw_polyline(PackedVector2Array([body[0], body[1], body[2], body[3], body[4], body[0]]), trim_color, 2.0)
+	draw_circle(Vector2(0.0, -38.0), 9.0, Color("#101216"))
+	draw_arc(Vector2(0.0, -38.0), 11.0, 0.0, TAU, 24, trim_color, 1.5)
+
+	var blade_end: Vector2 = Vector2(22.0, -6.0)
+	if abs(facing.x) > abs(facing.y):
+		blade_end = Vector2(30.0 * sign(facing.x), -8.0)
+	elif facing.y < 0.0:
+		blade_end = Vector2(9.0, -46.0)
+	else:
+		blade_end = Vector2(18.0, 18.0)
+
+	draw_line(Vector2(8.0, -8.0), blade_end, blade_color, 3.0)
+	draw_circle(Vector2(8.0, -8.0), 3.0, trim_color)
+
+	var hp_back: Rect2 = Rect2(Vector2(-24.0, -58.0), Vector2(48.0, 5.0))
+	draw_rect(hp_back, Color(0.0, 0.0, 0.0, 0.60), true)
+	draw_rect(Rect2(hp_back.position + Vector2(1.0, 1.0), Vector2(46.0, 3.0)), Color("#a83d32"), true)
+
+func _read_movement_input() -> Vector2:
+	var input_vector: Vector2 = Vector2.ZERO
+	if Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT):
+		input_vector.x -= 1.0
+	if Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT):
+		input_vector.x += 1.0
+	if Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP):
+		input_vector.y -= 1.0
+	if Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN):
+		input_vector.y += 1.0
+	return input_vector
+
+func _draw_filled_ellipse(rect: Rect2, color: Color) -> void:
+	var points: PackedVector2Array = PackedVector2Array()
+	for i: int in range(24):
+		var angle: float = TAU * float(i) / 24.0
+		points.append(rect.position + rect.size * 0.5 + Vector2(cos(angle) * rect.size.x * 0.5, sin(angle) * rect.size.y * 0.5))
+	draw_colored_polygon(points, color)

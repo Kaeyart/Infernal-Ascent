@@ -1,0 +1,371 @@
+extends CanvasLayer
+
+var root: Control = null
+var panel: Control = null
+var title_label: Label = null
+var souls_label: Label = null
+var row_labels: Array[Label] = []
+var description_label: Label = null
+var controls_label: Label = null
+var status_label: Label = null
+
+var active: bool = false
+var source_npc: Node2D = null
+var player: Node2D = null
+var selected_index: int = 0
+var input_guard_timer: float = 0.0
+var auto_close_distance: float = 105.0
+
+var upgrade_ids: Array[String] = ["max_hp", "max_armor", "move_speed"]
+var pending_levels: Dictionary = {
+	"max_hp": 0,
+	"max_armor": 0,
+	"move_speed": 0
+}
+
+var base_costs: Dictionary = {
+	"max_hp": 18,
+	"max_armor": 14,
+	"move_speed": 22
+}
+
+
+func _ready() -> void:
+	add_to_group("smith_menu")
+	_build_ui()
+	close_menu()
+	set_process(true)
+
+
+func _process(delta: float) -> void:
+	input_guard_timer = maxf(0.0, input_guard_timer - delta)
+
+	if not active:
+		return
+
+	if player == null or not is_instance_valid(player):
+		player = get_tree().get_first_node_in_group("player") as Node2D
+
+	if source_npc != null and is_instance_valid(source_npc) and player != null:
+		if source_npc.global_position.distance_to(player.global_position) > auto_close_distance:
+			close_menu()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not active:
+		return
+
+	if input_guard_timer > 0.0:
+		return
+
+	if not event is InputEventKey:
+		return
+
+	var key_event := event as InputEventKey
+
+	if not key_event.pressed or key_event.echo:
+		return
+
+	match key_event.keycode:
+		KEY_ESCAPE, KEY_SPACE:
+			get_viewport().set_input_as_handled()
+			close_menu()
+
+		KEY_UP, KEY_W:
+			get_viewport().set_input_as_handled()
+			selected_index = max(0, selected_index - 1)
+			_refresh()
+
+		KEY_DOWN, KEY_S:
+			get_viewport().set_input_as_handled()
+			selected_index = min(upgrade_ids.size() - 1, selected_index + 1)
+			_refresh()
+
+		KEY_RIGHT, KEY_D, KEY_EQUAL, KEY_KP_ADD:
+			get_viewport().set_input_as_handled()
+			_add_pending_level()
+			_refresh()
+
+		KEY_LEFT, KEY_A, KEY_MINUS, KEY_KP_SUBTRACT:
+			get_viewport().set_input_as_handled()
+			_remove_pending_level()
+			_refresh()
+
+		KEY_ENTER, KEY_KP_ENTER:
+			get_viewport().set_input_as_handled()
+			_confirm_purchase()
+			_refresh()
+
+		KEY_R:
+			get_viewport().set_input_as_handled()
+			_reset_pending()
+			_refresh()
+
+
+func open_menu(new_source_npc: Node2D = null) -> void:
+	source_npc = new_source_npc
+	player = get_tree().get_first_node_in_group("player") as Node2D
+	active = true
+	input_guard_timer = 0.18
+	root.visible = true
+	status_label.text = "Choose an upgrade. Add levels, then confirm."
+	_refresh()
+
+
+func close_menu() -> void:
+	active = false
+	source_npc = null
+
+	if root != null:
+		root.visible = false
+
+
+func is_menu_active() -> bool:
+	return active
+
+
+func _build_ui() -> void:
+	root = Control.new()
+	root.name = "SmithMenuRoot"
+	root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(root)
+
+	panel = SmithPanel.new()
+	panel.name = "SmithPanel"
+	panel.position = Vector2(235, 105)
+	panel.size = Vector2(810, 500)
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(panel)
+
+	title_label = _make_label("Title", "THE SILENT SMITH", Vector2(285, 135), Vector2(700, 36), 28, Color("#f4d49a"))
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	root.add_child(title_label)
+
+	souls_label = _make_label("Souls", "Broken Souls: 0", Vector2(300, 184), Vector2(660, 26), 20, Color("#ffb199"))
+	souls_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	root.add_child(souls_label)
+
+	for i in range(upgrade_ids.size()):
+		var row := _make_label("UpgradeRow%d" % i, "", Vector2(300, 240 + i * 58), Vector2(660, 42), 19, Color("#f7e8d4"))
+		root.add_child(row)
+		row_labels.append(row)
+
+	description_label = _make_label("Description", "", Vector2(310, 430), Vector2(640, 48), 17, Color("#c4a98f"))
+	description_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	root.add_child(description_label)
+
+	status_label = _make_label("Status", "", Vector2(310, 486), Vector2(640, 34), 16, Color("#dfaa46"))
+	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	root.add_child(status_label)
+
+	controls_label = _make_label(
+		"Controls",
+		"↑/↓ Select    ←/- Remove    →/+ Add    Enter Buy    R Reset    Space Close",
+		Vector2(280, 544),
+		Vector2(720, 28),
+		15,
+		Color("#8f7a64")
+	)
+	controls_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	root.add_child(controls_label)
+
+
+func _make_label(node_name: String, text_value: String, pos: Vector2, label_size: Vector2, font_size: int, color: Color) -> Label:
+	var label := Label.new()
+	label.name = node_name
+	label.text = text_value
+	label.position = pos
+	label.size = label_size
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.add_theme_font_size_override("font_size", font_size)
+	label.add_theme_color_override("font_color", color)
+	label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.90))
+	label.add_theme_constant_override("shadow_offset_x", 2)
+	label.add_theme_constant_override("shadow_offset_y", 2)
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	return label
+
+
+func _refresh() -> void:
+	var game_state := _get_game_state()
+
+	if game_state == null:
+		return
+
+	var souls: int = int(game_state.call("get_broken_souls"))
+	var pending_cost: int = _get_total_pending_cost()
+	var remaining: int = max(0, souls - pending_cost)
+
+	souls_label.text = "Broken Souls: %d    Pending Cost: %d    Remaining: %d" % [souls, pending_cost, remaining]
+
+	for i in range(upgrade_ids.size()):
+		var upgrade_id := upgrade_ids[i]
+		var level: int = int(game_state.call("get_permanent_upgrade_level", upgrade_id))
+		var max_level: int = int(game_state.call("get_permanent_upgrade_max_level", upgrade_id))
+		var pending: int = int(pending_levels.get(upgrade_id, 0))
+		var display_name: String = str(game_state.call("get_permanent_upgrade_display_name", upgrade_id))
+		var cost: int = _get_pending_cost_for_upgrade(upgrade_id)
+
+		var marker := "  "
+		if i == selected_index:
+			marker = "> "
+
+		var target_text := "Lv.%d/%d" % [level, max_level]
+
+		if pending > 0:
+			target_text = "Lv.%d → %d/%d" % [level, level + pending, max_level]
+
+		row_labels[i].text = "%s%s   %s   [+%d]   Cost: %d" % [
+			marker,
+			display_name,
+			target_text,
+			pending,
+			cost
+		]
+
+		if level >= max_level:
+			row_labels[i].modulate = Color(1, 1, 1, 0.45)
+		elif pending > 0:
+			row_labels[i].modulate = Color(1.0, 0.86, 0.55, 1.0)
+		else:
+			row_labels[i].modulate = Color(1, 1, 1, 1)
+
+	var selected_id := upgrade_ids[selected_index]
+	description_label.text = str(game_state.call("get_permanent_upgrade_description", selected_id))
+
+func _get_next_pending_level_cost(upgrade_id: String) -> int:
+	var game_state := _get_game_state()
+
+	if game_state == null:
+		return 0
+
+	var current_level: int = int(game_state.call("get_permanent_upgrade_level", upgrade_id))
+	var pending: int = int(pending_levels.get(upgrade_id, 0))
+	var base_cost: int = int(base_costs.get(upgrade_id, 20))
+
+	return base_cost + (current_level + pending) * base_cost
+
+func _add_pending_level() -> void:
+	var game_state := _get_game_state()
+
+	if game_state == null:
+		return
+
+	var upgrade_id := upgrade_ids[selected_index]
+	var level: int = int(game_state.call("get_permanent_upgrade_level", upgrade_id))
+	var max_level: int = int(game_state.call("get_permanent_upgrade_max_level", upgrade_id))
+	var pending: int = int(pending_levels.get(upgrade_id, 0))
+
+	if level + pending >= max_level:
+		status_label.text = "That upgrade is already at its limit."
+		return
+
+	var souls: int = int(game_state.call("get_broken_souls"))
+	var current_pending_cost: int = _get_total_pending_cost()
+	var next_cost: int = _get_next_pending_level_cost(upgrade_id)
+
+	if current_pending_cost + next_cost > souls:
+		status_label.text = "Not enough Broken Souls for that investment."
+		return
+
+	pending_levels[upgrade_id] = pending + 1
+	status_label.text = "Investment marked."
+
+
+func _remove_pending_level() -> void:
+	var upgrade_id := upgrade_ids[selected_index]
+	var pending: int = int(pending_levels.get(upgrade_id, 0))
+
+	pending_levels[upgrade_id] = max(0, pending - 1)
+	status_label.text = "Investment reduced."
+
+
+func _reset_pending() -> void:
+	for upgrade_id in upgrade_ids:
+		pending_levels[upgrade_id] = 0
+
+	status_label.text = "Pending investment cleared."
+
+
+func _confirm_purchase() -> void:
+	var game_state := _get_game_state()
+
+	if game_state == null:
+		return
+
+	var total_cost: int = _get_total_pending_cost()
+
+	if total_cost <= 0:
+		status_label.text = "No levels selected."
+		return
+
+	var souls: int = int(game_state.call("get_broken_souls"))
+
+	if souls < total_cost:
+		status_label.text = "Not enough Broken Souls."
+		_reset_pending()
+		return
+
+	var bought_count: int = 0
+
+	for upgrade_id in upgrade_ids:
+		var pending: int = int(pending_levels.get(upgrade_id, 0))
+
+		for i in range(pending):
+			var result: Dictionary = game_state.call("buy_permanent_upgrade", upgrade_id)
+
+			if bool(result.get("success", false)):
+				bought_count += 1
+			else:
+				status_label.text = str(result.get("message", "Purchase failed."))
+				_reset_pending()
+				return
+
+		pending_levels[upgrade_id] = 0
+
+	status_label.text = "The Smith shaped %d improvement(s)." % bought_count
+
+
+func _get_total_pending_cost() -> int:
+	var total: int = 0
+
+	for upgrade_id in upgrade_ids:
+		total += _get_pending_cost_for_upgrade(upgrade_id)
+
+	return total
+
+
+func _get_pending_cost_for_upgrade(upgrade_id: String) -> int:
+	var game_state := _get_game_state()
+
+	if game_state == null:
+		return 0
+
+	var current_level: int = int(game_state.call("get_permanent_upgrade_level", upgrade_id))
+	var pending: int = int(pending_levels.get(upgrade_id, 0))
+	var base_cost: int = int(base_costs.get(upgrade_id, 20))
+
+	var total: int = 0
+
+	for i in range(pending):
+		total += base_cost + (current_level + i) * base_cost
+
+	return total
+
+
+func _get_game_state() -> Node:
+	if has_node("/root/GameState"):
+		return get_node("/root/GameState")
+
+	return null
+
+
+class SmithPanel:
+	extends Control
+
+	func _draw() -> void:
+		draw_rect(Rect2(Vector2.ZERO, size), Color(0.025, 0.012, 0.010, 0.95))
+		draw_rect(Rect2(Vector2(12, 12), size - Vector2(24, 24)), Color(0.10, 0.034, 0.024, 0.88))
+		draw_rect(Rect2(Vector2.ZERO, size), Color("#6b2a1f"), false, 4.0)
+		draw_rect(Rect2(Vector2(10, 10), size - Vector2(20, 20)), Color("#dfaa46"), false, 1.0)

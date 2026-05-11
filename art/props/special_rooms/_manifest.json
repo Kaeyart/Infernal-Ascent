@@ -1,0 +1,339 @@
+{
+  "source": "/home/kaey/Desktop/Assets/Special_Room_Props.png",
+  "layout": "5 rows x 4 columns",
+  "rows": {
+    "1": "forge",
+    "2": "fountain",
+    "3": "shrine",
+    "4": "shop",
+    "5": "reward/chest"
+  },
+  "columns": {
+    "1": "base/default",
+    "2": "variant/frame 2",
+    "3": "variant/frame 3",
+    "4": "variant/frame 4"
+  },
+  "exports": [
+    {
+      "file": "forge_01.png",
+      "alias": "forge.png",
+      "prop_id": "forge",
+      "variant": 1,
+      "source_cell": [
+        0,
+        0,
+        280,
+        280
+      ],
+      "size": [
+        280,
+        280
+      ]
+    },
+    {
+      "file": "forge_02.png",
+      "alias": "",
+      "prop_id": "forge",
+      "variant": 2,
+      "source_cell": [
+        280,
+        0,
+        561,
+        280
+      ],
+      "size": [
+        281,
+        280
+      ]
+    },
+    {
+      "file": "forge_03.png",
+      "alias": "",
+      "prop_id": "forge",
+      "variant": 3,
+      "source_cell": [
+        561,
+        0,
+        842,
+        280
+      ],
+      "size": [
+        281,
+        280
+      ]
+    },
+    {
+      "file": "forge_04.png",
+      "alias": "",
+      "prop_id": "forge",
+      "variant": 4,
+      "source_cell": [
+        842,
+        0,
+        1122,
+        280
+      ],
+      "size": [
+        280,
+        280
+      ]
+    },
+    {
+      "file": "fountain_01.png",
+      "alias": "fountain.png",
+      "prop_id": "fountain",
+      "variant": 1,
+      "source_cell": [
+        0,
+        280,
+        280,
+        561
+      ],
+      "size": [
+        280,
+        281
+      ]
+    },
+    {
+      "file": "fountain_02.png",
+      "alias": "",
+      "prop_id": "fountain",
+      "variant": 2,
+      "source_cell": [
+        280,
+        280,
+        561,
+        561
+      ],
+      "size": [
+        281,
+        281
+      ]
+    },
+    {
+      "file": "fountain_03.png",
+      "alias": "",
+      "prop_id": "fountain",
+      "variant": 3,
+      "source_cell": [
+        561,
+        280,
+        842,
+        561
+      ],
+      "size": [
+        281,
+        281
+      ]
+    },
+    {
+      "file": "fountain_04.png",
+      "alias": "",
+      "prop_id": "fountain",
+      "variant": 4,
+      "source_cell": [
+        842,
+        280,
+        1122,
+        561
+      ],
+      "size": [
+        280,
+        281
+      ]
+    },
+    {
+      "file": "shrine_01.png",
+      "alias": "shrine.png",
+      "prop_id": "shrine",
+      "variant": 1,
+      "source_cell": [
+        0,
+        561,
+        280,
+        841
+      ],
+      "size": [
+        280,
+        280
+      ]
+    },
+    {
+      "file": "shrine_02.png",
+      "alias": "",
+      "prop_id": "shrine",
+      "variant": 2,
+      "source_cell": [
+        280,
+        561,
+        561,
+        841
+      ],
+      "size": [
+        281,
+        280
+      ]
+    },
+    {
+      "file": "shrine_03.png",
+      "alias": "",
+      "prop_id": "shrine",
+      "variant": 3,
+      "source_cell": [
+        561,
+        561,
+        842,
+        841
+      ],
+      "size": [
+        281,
+        280
+      ]
+    },
+    {
+      "file": "shrine_04.png",
+      "alias": "",
+      "prop_id": "shrine",
+      "variant": 4,
+      "source_cell": [
+        842,
+        561,
+        1122,
+        841
+      ],
+      "size": [
+        280,
+        280
+      ]
+    },
+    {
+      "file": "shop_01.png",
+      "alias": "shop.png",
+      "prop_id": "shop",
+      "variant": 1,
+      "source_cell": [
+        0,
+        841,
+        280,
+        1122
+      ],
+      "size": [
+        280,
+        281
+      ]
+    },
+    {
+      "file": "shop_02.png",
+      "alias": "",
+      "prop_id": "shop",
+      "variant": 2,
+      "source_cell": [
+        280,
+        841,
+        561,
+        1122
+      ],
+      "size": [
+        281,
+        281
+      ]
+    },
+    {
+      "file": "shop_03.png",
+      "alias": "",
+      "prop_id": "shop",
+      "variant": 3,
+      "source_cell": [
+        561,
+        841,
+        842,
+        1122
+      ],
+      "size": [
+        281,
+        281
+      ]
+    },
+    {
+      "file": "shop_04.png",
+      "alias": "",
+      "prop_id": "shop",
+      "variant": 4,
+      "source_cell": [
+        842,
+        841,
+        1122,
+        1122
+      ],
+      "size": [
+        280,
+        281
+      ]
+    },
+    {
+      "file": "reward_01.png",
+      "alias": "reward.png",
+      "prop_id": "reward",
+      "variant": 1,
+      "source_cell": [
+        0,
+        1122,
+        280,
+        1402
+      ],
+      "size": [
+        280,
+        280
+      ]
+    },
+    {
+      "file": "reward_02.png",
+      "alias": "",
+      "prop_id": "reward",
+      "variant": 2,
+      "source_cell": [
+        280,
+        1122,
+        561,
+        1402
+      ],
+      "size": [
+        281,
+        280
+      ]
+    },
+    {
+      "file": "reward_03.png",
+      "alias": "",
+      "prop_id": "reward",
+      "variant": 3,
+      "source_cell": [
+        561,
+        1122,
+        842,
+        1402
+      ],
+      "size": [
+        281,
+        280
+      ]
+    },
+    {
+      "file": "reward_04.png",
+      "alias": "",
+      "prop_id": "reward",
+      "variant": 4,
+      "source_cell": [
+        842,
+        1122,
+        1122,
+        1402
+      ],
+      "size": [
+        280,
+        280
+      ]
+    }
+  ]
+}
