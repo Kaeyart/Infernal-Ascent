@@ -3,8 +3,8 @@ class_name IsoAuthoredRoomRuntimeAdapter
 
 ## Runtime adapter for hand-authored isometric rooms.
 ##
-## This version can spawn temporary test enemies from authored enemy markers.
-## When all test enemies die, PatronFlow.report_room_cleared() is called.
+## This version spawns a physics-based CharacterBody2D test player, so authored
+## StaticBody2D / CollisionShape2D room walls finally block movement.
 
 @export var use_parent_as_room_root: bool = true
 @export var auto_create_test_player: bool = true
@@ -13,9 +13,10 @@ class_name IsoAuthoredRoomRuntimeAdapter
 @export var auto_spawn_test_enemies: bool = true
 @export var move_existing_nodes_to_markers: bool = true
 @export var clear_room_when_test_enemies_dead: bool = true
+@export var hide_legacy_node2d_test_player: bool = true
 @export var debug_print_mapping: bool = true
 
-@export var player_node_name: String = "IsoTestPlayer"
+@export var player_node_name: String = "IsoPhysicsTestPlayer"
 @export var patron_flow_node_name: String = "PatronFlow"
 @export var marker_root_name: String = "Markers"
 
@@ -38,6 +39,9 @@ func _ready() -> void:
 	if room_root == null:
 		push_warning("[IsoRuntimeAdapter] No room root found.")
 		return
+
+	if hide_legacy_node2d_test_player:
+		_hide_legacy_test_players()
 
 	var player_spawn: Node2D = _find_marker([
 		"PlayerSpawn",
@@ -104,20 +108,41 @@ func _get_room_root() -> Node:
 		return get_parent()
 	return self
 
+func _hide_legacy_test_players() -> void:
+	if room_root == null:
+		return
+
+	var legacy_node: Node = room_root.find_child("IsoTestPlayer", true, false)
+	if legacy_node != null and not (legacy_node is CharacterBody2D):
+		legacy_node.remove_from_group("player")
+		legacy_node.set_process(false)
+		legacy_node.set_physics_process(false)
+		if legacy_node is CanvasItem:
+			(legacy_node as CanvasItem).visible = false
+		print("[IsoRuntimeAdapter] Hidden legacy Node2D IsoTestPlayer. Physics player will be used.")
+
 func _find_or_create_player(player_spawn: Node2D) -> Node2D:
-	var found_player: Node2D = _find_named_node2d(player_node_name)
+	var found_player: Node2D = null
+
+	var named: Node = room_root.find_child(player_node_name, true, false)
+	if named is IsoPhysicsTestPlayer:
+		found_player = named as Node2D
+
 	if found_player == null:
-		var grouped: Node = get_tree().get_first_node_in_group("player")
-		if grouped is Node2D:
-			found_player = grouped as Node2D
+		var grouped_players: Array[Node] = get_tree().get_nodes_in_group("player")
+		for grouped_node: Node in grouped_players:
+			if grouped_node is IsoPhysicsTestPlayer:
+				found_player = grouped_node as Node2D
+				break
 
 	if found_player == null and auto_create_test_player:
-		found_player = IsoTestPlayer.new()
-		found_player.name = player_node_name
+		var physics_player: IsoPhysicsTestPlayer = IsoPhysicsTestPlayer.new()
+		physics_player.name = player_node_name
 		var parent_for_player: Node = _get_y_sort_parent()
-		parent_for_player.add_child(found_player)
-		found_player.add_to_group("player")
-		print("[IsoRuntimeAdapter] Created IsoTestPlayer.")
+		parent_for_player.add_child(physics_player)
+		physics_player.add_to_group("player")
+		found_player = physics_player
+		print("[IsoRuntimeAdapter] Created IsoPhysicsTestPlayer.")
 
 	if found_player != null and player_spawn != null and move_existing_nodes_to_markers:
 		found_player.global_position = player_spawn.global_position
@@ -252,14 +277,6 @@ func _find_enemy_markers() -> Array[Node2D]:
 
 	return result
 
-func _find_named_node2d(node_name: String) -> Node2D:
-	if room_root == null:
-		return null
-	var node: Node = room_root.find_child(node_name, true, false)
-	if node is Node2D:
-		return node as Node2D
-	return null
-
 func _find_marker(candidate_names: Array[String]) -> Node2D:
 	var marker_root: Node = room_root.find_child(marker_root_name, true, false)
 	var search_root: Node = marker_root if marker_root != null else room_root
@@ -291,8 +308,8 @@ func _find_marker(candidate_names: Array[String]) -> Node2D:
 
 	return null
 
-func _collect_nodes(root: Node, out_nodes: Array[Node]) -> void:
-	for child: Node in root.get_children():
+func _collect_nodes(root_node: Node, out_nodes: Array[Node]) -> void:
+	for child: Node in root_node.get_children():
 		out_nodes.append(child)
 		_collect_nodes(child, out_nodes)
 

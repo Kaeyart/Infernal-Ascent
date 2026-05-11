@@ -16,12 +16,6 @@
 [ext_resource type="Script" uid="uid://cx8rykbcs27sa" path="res://scripts/iso/IsoAuthoredRoomRuntimeAdapter.gd" id="15_8hkts"]
 [ext_resource type="Script" uid="uid://b6yn8nd25rie3" path="res://scripts/iso/IsoPatronFlowController.gd" id="16_8hkts"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_bottom"]
-size = Vector2(752.0356, 129.12613)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_left"]
-size = Vector2(595.9629, 94.99527)
-
 [node name="IsoCombatAshIntakeHall01" type="Node2D" unique_id=556770769]
 script = ExtResource("1_room")
 room_id = "combat_ash_intake_hall_01_iso"
@@ -188,48 +182,6 @@ y_sort_enabled = true
 [node name="L4_Foreground" type="Node2D" parent="." unique_id=19267672]
 z_index = 100
 
-[node name="Collision" type="Node2D" parent="." unique_id=800536338]
-
-[node name="LeftBoundary" type="StaticBody2D" parent="Collision" unique_id=1162548675]
-position = Vector2(274, 382)
-
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1111034148]
-position = Vector2(-363, -178)
-rotation = -0.5235988
-scale = Vector2(1, 0.9999998)
-skew = 0.5811945
-shape = SubResource("RectangleShape2D_bottom")
-
-[node name="RightBoundary" type="StaticBody2D" parent="Collision" unique_id=1351229833]
-position = Vector2(274, 382)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=2035696558]
-position = Vector2(159, 93)
-rotation = -0.5235988
-scale = Vector2(1, 0.99999994)
-skew = 0.5811945
-shape = SubResource("RectangleShape2D_bottom")
-
-[node name="TopBoundary" type="StaticBody2D" parent="Collision" unique_id=1659729325]
-position = Vector2(274, 382)
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Collision/TopBoundary" unique_id=1053944173]
-position = Vector2(267.00006, -227.99997)
-rotation = 0.46774822
-scale = Vector2(0.99999994, 1)
-skew = -0.4642576
-shape = SubResource("RectangleShape2D_left")
-
-[node name="BottomBoundary" type="StaticBody2D" parent="Collision" unique_id=719141803]
-position = Vector2(640, 590)
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Collision/BottomBoundary" unique_id=548611532]
-position = Vector2(-811.9611, -73.052246)
-rotation = 0.46774822
-scale = Vector2(0.99999994, 1)
-skew = -0.4642576
-shape = SubResource("RectangleShape2D_left")
-
 [node name="Markers" type="Node2D" parent="." unique_id=1060076946]
 z_index = 200
 
@@ -260,13 +212,13 @@ marker_label = "Enemy 02"
 marker_color = Color(1, 0.31, 0.22, 0.95)
 
 [node name="EnemySpawn_03" type="Node2D" parent="Markers/EnemySpawns" unique_id=880874888]
-position = Vector2(640, 256)
+position = Vector2(49, 260)
 script = ExtResource("3_marker")
 marker_label = "Enemy 03"
 marker_color = Color(1, 0.31, 0.22, 0.95)
 
 [node name="EnemySpawn_04" type="Node2D" parent="Markers/EnemySpawns" unique_id=1754319502]
-position = Vector2(520, 444)
+position = Vector2(-123, 379)
 script = ExtResource("3_marker")
 marker_label = "Enemy 04"
 marker_color = Color(1, 0.31, 0.22, 0.95)
@@ -303,11 +255,14 @@ scale = Vector2(0.3359375, 0.44375008)
 texture = ExtResource("13_ea6i4")
 
 [node name="IsoTestPlayer" type="Node2D" parent="." unique_id=1880694907]
-position = Vector2(51, 290)
+position = Vector2(287, 244)
 script = ExtResource("15_8d855")
+room_min = Vector2(-2000, -2000)
+room_max = Vector2(3000, 3000)
 
 [node name="Camera2D" type="Camera2D" parent="IsoTestPlayer" unique_id=1084108272]
 position = Vector2(50, -30)
+limit_enabled = false
 limit_left = -200
 limit_top = -100
 limit_right = 1600
