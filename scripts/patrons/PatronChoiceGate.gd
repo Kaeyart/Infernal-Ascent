@@ -31,14 +31,38 @@ func _draw() -> void:
 	draw_polyline(PackedVector2Array([diamond[0], diamond[1], diamond[2], diamond[3], diamond[0]]), color, 3.0)
 	draw_circle(Vector2(0.0, -6.0), 18.0, Color(color.r, color.g, color.b, 0.22))
 	draw_arc(Vector2(0.0, -6.0), 25.0, 0.0, TAU, 48, color, 2.0)
+
 	var title: String = str(choice_data.get("display_name", "Gate"))
 	var subtitle: String = str(choice_data.get("subtitle", "Next room"))
+	var helper: String = _get_helper_text()
+
 	draw_string(font, Vector2(-92.0, 68.0), title, HORIZONTAL_ALIGNMENT_CENTER, 184.0, 18, color)
-	draw_string(font, Vector2(-100.0, 92.0), subtitle, HORIZONTAL_ALIGNMENT_CENTER, 200.0, 13, Color("#d6c5aa"))
+	draw_string(font, Vector2(-112.0, 92.0), subtitle, HORIZONTAL_ALIGNMENT_CENTER, 224.0, 13, Color("#d6c5aa"))
+	draw_string(font, Vector2(-122.0, 112.0), helper, HORIZONTAL_ALIGNMENT_CENTER, 244.0, 12, Color("#a99478"))
+
 	if bool(choice_data.get("is_new_patron", false)):
 		draw_string(font, Vector2(-86.0, -64.0), "NEW PATRON", HORIZONTAL_ALIGNMENT_CENTER, 172.0, 12, Color("#ffffff"))
+
 	if prompt_visible:
-		draw_string(font, Vector2(-76.0, 122.0), "Press E", HORIZONTAL_ALIGNMENT_CENTER, 152.0, 14, Color("#ffffff"))
+		draw_string(font, Vector2(-76.0, 136.0), "Press E", HORIZONTAL_ALIGNMENT_CENTER, 152.0, 14, Color("#ffffff"))
+
+func _get_helper_text() -> String:
+	var choice_type: String = str(choice_data.get("type", "patron"))
+	if choice_type == "patron":
+		var patron_id: String = str(choice_data.get("patron_id", ""))
+		if patron_id != "":
+			return PatronRegistry.get_patron_simple_text(patron_id)
+		return "Choose this path to gain or upgrade a patron boon."
+
+	var id_value: String = str(choice_data.get("id", ""))
+	if id_value == "forge":
+		return "Weapon upgrades and aspect changes."
+	if id_value == "fountain":
+		return "Heal before the next fight."
+	if id_value == "shop":
+		return "Spend coins for useful rewards."
+
+	return "Utility room."
 
 func _get_choice_color() -> Color:
 	var value: Variant = choice_data.get("color", Color("#d8b866"))
