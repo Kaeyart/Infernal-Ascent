@@ -3,8 +3,10 @@ class_name IsoAuthoredRoomRuntimeAdapter
 
 ## Runtime adapter for hand-authored isometric rooms.
 ##
-## This version spawns a physics-based CharacterBody2D test player, so authored
-## StaticBody2D / CollisionShape2D room walls finally block movement.
+## V1.1 enemy-marker filter:
+## - Enemy container nodes such as "EnemySpawns" are no longer treated as spawn sockets.
+## - Only leaf marker nodes such as Enemy01 / EnemySpawn_01 are used.
+## - If an EnemySpawns container exists, only its direct children are used.
 
 @export var use_parent_as_room_root: bool = true
 @export var auto_create_test_player: bool = true
@@ -201,7 +203,7 @@ func _spawn_test_enemies_from_markers() -> void:
 		spawned_enemies.append(enemy)
 		_alive_enemy_count += 1
 
-	print("[IsoRuntimeAdapter] Spawned %d test enemies from authored markers." % _alive_enemy_count)
+	print("[IsoRuntimeAdapter] Spawned %d test enemies from authored enemy sockets." % _alive_enemy_count)
 
 func _on_test_enemy_died(enemy: IsoTestEnemy) -> void:
 	var enemy_index: int = spawned_enemies.find(enemy)
@@ -262,20 +264,68 @@ func _get_y_sort_parent() -> Node:
 	return room_root
 
 func _find_enemy_markers() -> Array[Node2D]:
-	var result: Array[Node2D] = []
 	var marker_root: Node = room_root.find_child(marker_root_name, true, false)
 	var search_root: Node = marker_root if marker_root != null else room_root
+
+	var container: Node = _find_enemy_marker_container(search_root)
+	if container != null:
+		return _get_direct_enemy_marker_children(container)
+
+	var result: Array[Node2D] = []
 	var all_nodes: Array[Node] = []
 	_collect_nodes(search_root, all_nodes)
 
 	for node: Node in all_nodes:
-		if node is Node2D:
-			var normalized_name: String = _normalize_marker_name(node.name)
-			var is_enemy_marker: bool = normalized_name.find("enemy") >= 0
-			if is_enemy_marker:
-				result.append(node as Node2D)
+		if node is Node2D and _is_valid_enemy_marker(node):
+			result.append(node as Node2D)
 
 	return result
+
+func _find_enemy_marker_container(search_root: Node) -> Node:
+	var container_names: Array[String] = [
+		"EnemySpawns",
+		"EnemySpawnSockets",
+		"EnemySockets",
+		"EnemyMarkers",
+		"Enemies"
+	]
+
+	for container_name: String in container_names:
+		var found: Node = search_root.find_child(container_name, true, false)
+		if found != null:
+			return found
+
+	return null
+
+func _get_direct_enemy_marker_children(container: Node) -> Array[Node2D]:
+	var result: Array[Node2D] = []
+	for child: Node in container.get_children():
+		if child is Node2D and _is_valid_enemy_marker(child):
+			result.append(child as Node2D)
+	return result
+
+func _is_valid_enemy_marker(node: Node) -> bool:
+	var normalized_name: String = _normalize_marker_name(node.name)
+
+	if normalized_name == "enemyspawns":
+		return false
+	if normalized_name == "enemyspawnsockets":
+		return false
+	if normalized_name == "enemysockets":
+		return false
+	if normalized_name == "enemymarkers":
+		return false
+	if normalized_name == "enemies":
+		return false
+
+	if normalized_name.find("enemy") < 0:
+		return false
+
+	# Container nodes usually have children; spawn sockets should be leaf nodes.
+	if node.get_child_count() > 0:
+		return false
+
+	return true
 
 func _find_marker(candidate_names: Array[String]) -> Node2D:
 	var marker_root: Node = room_root.find_child(marker_root_name, true, false)
