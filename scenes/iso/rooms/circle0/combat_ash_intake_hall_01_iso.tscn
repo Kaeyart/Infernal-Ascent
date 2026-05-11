@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://1kid83kh4iio"]
 
 [ext_resource type="Script" uid="uid://cj6lypl0fimjn" path="res://scripts/iso/IsoRoomTemplate.gd" id="1_room"]
-[ext_resource type="Script" uid="uid://d5iosni6hgaw" path="res://scripts/iso/IsoGridGuide.gd" id="2_grid"]
 [ext_resource type="Texture2D" uid="uid://cykukfe2kxbtu" path="res://art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/corner_niche_left_01.png" id="3_k16aa"]
 [ext_resource type="Script" uid="uid://bc34amjs2ried" path="res://scripts/iso/IsoMarker.gd" id="3_marker"]
 [ext_resource type="Texture2D" uid="uid://cx0jtriywk54h" path="res://art/iso/circle0/ash_intake_hall_01/sliced_padded_32/tiles/tile_floor_border_lane_01.png" id="4_6d5p6"]
@@ -13,16 +12,14 @@
 [ext_resource type="Texture2D" uid="uid://nama3ekfn57o" path="res://art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/wall_north_segment_01.png" id="10_uqr62"]
 [ext_resource type="Texture2D" uid="uid://ddefd3ssaicne" path="res://art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/corner_inner_back_01.png" id="11_54yiw"]
 [ext_resource type="Texture2D" uid="uid://bmalty4y2jv6y" path="res://art/iso/circle0/ash_intake_hall_01/sliced_padded_32/props/urn_ash_cluster_01.png" id="13_ea6i4"]
-[ext_resource type="Texture2D" uid="uid://dru4c6mrsu258" path="res://art/iso/circle0/ash_intake_hall_01/sliced_trimmed/props/chain_barrier_queue_01.png" id="14_6d5p6"]
+[ext_resource type="Script" uid="uid://j8wg1gddlit5" path="res://scripts/iso/IsoTestPlayer.gd" id="15_8d855"]
+[ext_resource type="Script" uid="uid://b6yn8nd25rie3" path="res://scripts/iso/IsoPatronFlowController.gd" id="16_8hkts"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_left"]
 size = Vector2(595.9629, 94.99527)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bottom"]
 size = Vector2(790.73364, 80.117905)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_6d5p6"]
-size = Vector2(255.34294, 128.11823)
 
 [node name="IsoCombatAshIntakeHall01" type="Node2D" unique_id=556770769]
 script = ExtResource("1_room")
@@ -31,103 +28,6 @@ display_name = "Ash Intake Hall 01 — Iso Prototype"
 
 [node name="L0_Background" type="Node2D" parent="." unique_id=942210773]
 z_index = -100
-
-[node name="GridGuide" type="Node2D" parent="L0_Background" unique_id=1465650852]
-visible = false
-position = Vector2(640, 122)
-script = ExtResource("2_grid")
-
-[node name="L1_IsoFloor" type="Node2D" parent="L0_Background" unique_id=1793643727]
-z_index = -60
-
-[node name="CornerNicheLeft01" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=1524853520]
-position = Vector2(303, 16)
-texture = ExtResource("3_k16aa")
-
-[node name="TileFloorBorderLane01" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=19596826]
-position = Vector2(295, 144)
-texture = ExtResource("4_6d5p6")
-
-[node name="TileFloorCracked01" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=73223203]
-position = Vector2(424, 210)
-texture = ExtResource("5_8d855")
-
-[node name="TileFloorPlain01" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=198909013]
-position = Vector2(542, 276)
-texture = ExtResource("6_8hkts")
-
-[node name="TileFloorGrateAshVent01" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=2048076716]
-position = Vector2(666, 339.5)
-scale = Vector2(0.95312506, 0.89375013)
-texture = ExtResource("7_y3xqr")
-
-[node name="TileFloorPlain02" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=475726911]
-position = Vector2(172, 211)
-texture = ExtResource("6_8hkts")
-
-[node name="TileFloorPlain03" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=1185088256]
-position = Vector2(298, 278)
-texture = ExtResource("6_8hkts")
-
-[node name="TileFloorPlain04" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=752857776]
-position = Vector2(423, 345)
-texture = ExtResource("6_8hkts")
-
-[node name="TileFloorCracked02" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=1712483794]
-position = Vector2(542.5, 410)
-scale = Vector2(0.96484375, 1.0125)
-texture = ExtResource("5_8d855")
-
-[node name="TileFloorPlain05" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=952064461]
-position = Vector2(45, 274)
-texture = ExtResource("6_8hkts")
-
-[node name="TileFloorSigilJudgment01" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=1280661070]
-position = Vector2(169, 345)
-texture = ExtResource("8_y3drl")
-
-[node name="TileFloorPlain06" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=605602174]
-position = Vector2(295, 409)
-texture = ExtResource("6_8hkts")
-
-[node name="TileFloorPlain07" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=883918852]
-position = Vector2(420, 477)
-texture = ExtResource("6_8hkts")
-
-[node name="TileFloorCracked03" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=1949152732]
-position = Vector2(-83, 343)
-texture = ExtResource("5_8d855")
-
-[node name="TileFloorPlain08" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=1044766639]
-position = Vector2(42.5, 407)
-scale = Vector2(1.0351563, 1.0125)
-texture = ExtResource("6_8hkts")
-
-[node name="TileFloorPlain09" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=755320519]
-position = Vector2(170, 476)
-texture = ExtResource("6_8hkts")
-
-[node name="TileFloorPlain10" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=99999620]
-position = Vector2(297, 542)
-texture = ExtResource("6_8hkts")
-
-[node name="TileFloorPlain12" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=1423765414]
-position = Vector2(-213, 406)
-texture = ExtResource("6_8hkts")
-
-[node name="TileFloorGrateAshVent02" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=169376056]
-position = Vector2(-86, 474)
-scale = Vector2(1.0390625, 1.025)
-texture = ExtResource("7_y3xqr")
-
-[node name="TileFloorCracked04" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=791247328]
-position = Vector2(34, 542)
-texture = ExtResource("5_8d855")
-
-[node name="TileFloorPlain11" type="Sprite2D" parent="L0_Background/L1_IsoFloor" unique_id=680815570]
-position = Vector2(164.00002, 605.00006)
-scale = Vector2(1.0585936, 1.01875)
-texture = ExtResource("6_8hkts")
 
 [node name="L2_IsoWalls" type="Node2D" parent="." unique_id=641411219]
 z_index = -20
@@ -189,6 +89,98 @@ texture = ExtResource("9_4we0q")
 position = Vector2(97, 618)
 texture = ExtResource("11_54yiw")
 
+[node name="L1_IsoFloor" type="Node2D" parent="L2_IsoWalls" unique_id=1793643727]
+z_index = -60
+
+[node name="CornerNicheLeft01" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=1524853520]
+position = Vector2(303, 16)
+texture = ExtResource("3_k16aa")
+
+[node name="TileFloorBorderLane01" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=19596826]
+position = Vector2(295, 144)
+texture = ExtResource("4_6d5p6")
+
+[node name="TileFloorCracked01" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=73223203]
+position = Vector2(424, 210)
+texture = ExtResource("5_8d855")
+
+[node name="TileFloorPlain01" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=198909013]
+position = Vector2(542, 276)
+texture = ExtResource("6_8hkts")
+
+[node name="TileFloorGrateAshVent01" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=2048076716]
+position = Vector2(666, 339.5)
+scale = Vector2(0.95312506, 0.89375013)
+texture = ExtResource("7_y3xqr")
+
+[node name="TileFloorPlain02" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=475726911]
+position = Vector2(172, 211)
+texture = ExtResource("6_8hkts")
+
+[node name="TileFloorPlain03" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=1185088256]
+position = Vector2(298, 278)
+texture = ExtResource("6_8hkts")
+
+[node name="TileFloorPlain04" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=752857776]
+position = Vector2(423, 345)
+texture = ExtResource("6_8hkts")
+
+[node name="TileFloorCracked02" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=1712483794]
+position = Vector2(542.5, 410)
+scale = Vector2(0.96484375, 1.0125)
+texture = ExtResource("5_8d855")
+
+[node name="TileFloorPlain05" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=952064461]
+position = Vector2(45, 274)
+texture = ExtResource("6_8hkts")
+
+[node name="TileFloorSigilJudgment01" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=1280661070]
+position = Vector2(169, 345)
+texture = ExtResource("8_y3drl")
+
+[node name="TileFloorPlain06" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=605602174]
+position = Vector2(295, 409)
+texture = ExtResource("6_8hkts")
+
+[node name="TileFloorPlain07" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=883918852]
+position = Vector2(420, 477)
+texture = ExtResource("6_8hkts")
+
+[node name="TileFloorCracked03" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=1949152732]
+position = Vector2(-83, 343)
+texture = ExtResource("5_8d855")
+
+[node name="TileFloorPlain08" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=1044766639]
+position = Vector2(42.5, 407)
+scale = Vector2(1.0351563, 1.0125)
+texture = ExtResource("6_8hkts")
+
+[node name="TileFloorPlain09" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=755320519]
+position = Vector2(170, 476)
+texture = ExtResource("6_8hkts")
+
+[node name="TileFloorPlain10" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=99999620]
+position = Vector2(297, 542)
+texture = ExtResource("6_8hkts")
+
+[node name="TileFloorPlain12" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=1423765414]
+position = Vector2(-213, 406)
+texture = ExtResource("6_8hkts")
+
+[node name="TileFloorGrateAshVent02" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=169376056]
+position = Vector2(-86, 474)
+scale = Vector2(1.0390625, 1.025)
+texture = ExtResource("7_y3xqr")
+
+[node name="TileFloorCracked04" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=791247328]
+position = Vector2(34, 542)
+texture = ExtResource("5_8d855")
+
+[node name="TileFloorPlain11" type="Sprite2D" parent="L2_IsoWalls/L1_IsoFloor" unique_id=680815570]
+position = Vector2(164.00002, 605.00006)
+scale = Vector2(1.0585936, 1.01875)
+texture = ExtResource("6_8hkts")
+
 [node name="L3_YSorted" type="Node2D" parent="." unique_id=1956533489]
 y_sort_enabled = true
 
@@ -240,7 +232,7 @@ marker_label = "PlayerSpawn"
 marker_color = Color(0.42, 0.82, 1, 0.95)
 
 [node name="RewardSocket" type="Node2D" parent="Markers" unique_id=1680463534]
-position = Vector2(640, 392)
+position = Vector2(268, 282)
 script = ExtResource("3_marker")
 marker_label = "RewardSocket"
 marker_color = Color(0.95, 0.76, 0.25, 0.95)
@@ -286,13 +278,13 @@ marker_label = "Door L"
 marker_color = Color(0.78, 0.55, 1, 0.95)
 
 [node name="DoorSocket_Center" type="Node2D" parent="Markers/DoorSockets" unique_id=382293652]
-position = Vector2(508, 207)
+position = Vector2(462, 183)
 script = ExtResource("3_marker")
 marker_label = "Door C"
 marker_color = Color(0.78, 0.55, 1, 0.95)
 
 [node name="DoorSocket_Right" type="Node2D" parent="Markers/DoorSockets" unique_id=1135721988]
-position = Vector2(327, 447)
+position = Vector2(415, 453)
 script = ExtResource("3_marker")
 marker_label = "Door R"
 marker_color = Color(0.78, 0.55, 1, 0.95)
@@ -302,14 +294,23 @@ position = Vector2(-212, 355)
 scale = Vector2(0.3359375, 0.44375008)
 texture = ExtResource("13_ea6i4")
 
-[node name="ChainBarrierQueue01" type="Sprite2D" parent="." unique_id=360899064]
-position = Vector2(93.71776, 276.41116)
-rotation = -0.5009095
-scale = Vector2(0.585, 0.585)
-skew = 0.53407073
-texture = ExtResource("14_6d5p6")
+[node name="IsoTestPlayer" type="Node2D" parent="." unique_id=1880694907]
+position = Vector2(51, 290)
+script = ExtResource("15_8d855")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ChainBarrierQueue01" unique_id=999213650]
-position = Vector2(-0.42636108, -4.8606567)
-scale = Vector2(1.0000008, 1.0000004)
-shape = SubResource("RectangleShape2D_6d5p6")
+[node name="Camera2D" type="Camera2D" parent="IsoTestPlayer" unique_id=1084108272]
+position = Vector2(50, -30)
+limit_left = -200
+limit_top = -100
+limit_right = 1600
+limit_bottom = 1000
+position_smoothing_enabled = true
+rotation_smoothing_enabled = true
+
+[node name="PatronFlow" type="Node2D" parent="." unique_id=1065725251]
+position = Vector2(334, 244)
+script = ExtResource("16_8hkts")
+altar_position = Vector2(268, 282)
+gate_left_position = Vector2(-53, 232)
+gate_center_position = Vector2(462, 183)
+gate_right_position = Vector2(415, 453)
