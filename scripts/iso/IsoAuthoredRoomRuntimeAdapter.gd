@@ -1,13 +1,6 @@
 extends Node2D
 class_name IsoAuthoredRoomRuntimeAdapter
 
-## Runtime adapter for hand-authored isometric rooms.
-##
-## V1.1 enemy-marker filter:
-## - Enemy container nodes such as "EnemySpawns" are no longer treated as spawn sockets.
-## - Only leaf marker nodes such as Enemy01 / EnemySpawn_01 are used.
-## - If an EnemySpawns container exists, only its direct children are used.
-
 @export var use_parent_as_room_root: bool = true
 @export var auto_create_test_player: bool = true
 @export var auto_create_camera: bool = true
@@ -33,6 +26,7 @@ var room_root: Node = null
 var player_node: Node2D = null
 var patron_flow_node: IsoPatronFlowController = null
 var spawned_enemies: Array[IsoTestEnemy] = []
+var shared_patron_manager_override: PatronRunManager = null
 var _room_cleared: bool = false
 var _alive_enemy_count: int = 0
 
@@ -41,67 +35,46 @@ func _ready() -> void:
 	if room_root == null:
 		push_warning("[IsoRuntimeAdapter] No room root found.")
 		return
-
 	if hide_legacy_node2d_test_player:
 		_hide_legacy_test_players()
+	_setup_runtime_nodes()
 
-	var player_spawn: Node2D = _find_marker([
-		"PlayerSpawn",
-		"Player Spawn",
-		"SpawnPlayer",
-		"Spawn_Player",
-		"player_spawn"
-	])
+func set_shared_patron_manager(manager: PatronRunManager) -> void:
+	shared_patron_manager_override = manager
+	if patron_flow_node != null and manager != null:
+		patron_flow_node.set_manager(manager)
+		print("[IsoRuntimeAdapter] PatronFlow linked to local room-loop manager.")
 
-	var reward_socket: Node2D = _find_marker([
-		"RewardSocket",
-		"Reward Socket",
-		"Reward",
-		"BoonSocket",
-		"Boon Socket",
-		"AltarSocket",
-		"Altar Socket"
-	])
+func reset_runtime_for_next_room() -> void:
+	if room_root == null:
+		room_root = _get_room_root()
+	if room_root == null:
+		return
 
-	var door_left: Node2D = _find_marker([
-		"DoorL",
-		"Door L",
-		"Door_Left",
-		"DoorLeft",
-		"LeftDoor",
-		"DoorSocketLeft",
-		"DoorSocket_L"
-	])
+	_clear_existing_test_enemies()
+	_room_cleared = false
+	_alive_enemy_count = 0
+	_setup_runtime_nodes()
 
-	var door_center: Node2D = _find_marker([
-		"DoorC",
-		"Door C",
-		"Door_C",
-		"DoorCenter",
-		"CenterDoor",
-		"DoorSocketCenter",
-		"DoorSocket_C"
-	])
+	if patron_flow_node != null:
+		patron_flow_node.clear_runtime_elements()
 
-	var door_right: Node2D = _find_marker([
-		"DoorR",
-		"Door R",
-		"Door_Right",
-		"DoorRight",
-		"RightDoor",
-		"DoorSocketRight",
-		"DoorSocket_R"
-	])
+	print("[IsoRuntimeAdapter] Runtime reset for next room cycle.")
+
+func _setup_runtime_nodes() -> void:
+	var player_spawn: Node2D = _find_marker(["PlayerSpawn", "Player Spawn", "SpawnPlayer", "Spawn_Player", "player_spawn"])
+	var reward_socket: Node2D = _find_marker(["RewardSocket", "Reward Socket", "Reward", "BoonSocket", "Boon Socket", "AltarSocket", "Altar Socket"])
+	var door_left: Node2D = _find_marker(["DoorL", "Door L", "Door_Left", "DoorLeft", "LeftDoor", "DoorSocketLeft", "DoorSocket_L"])
+	var door_center: Node2D = _find_marker(["DoorC", "Door C", "Door_C", "DoorCenter", "CenterDoor", "DoorSocketCenter", "DoorSocket_C"])
+	var door_right: Node2D = _find_marker(["DoorR", "Door R", "Door_Right", "DoorRight", "RightDoor", "DoorSocketRight", "DoorSocket_R"])
 
 	player_node = _find_or_create_player(player_spawn)
 	patron_flow_node = _find_or_create_patron_flow(reward_socket, door_left, door_center, door_right)
 
 	if auto_create_camera and player_node != null:
 		_ensure_camera(player_node)
-
 	if auto_spawn_test_enemies:
 		_spawn_test_enemies_from_markers()
-
 	if debug_print_mapping:
 		_print_mapping(player_spawn, reward_socket, door_left, door_center, door_right)
 
@@ -110,10 +83,18 @@ func _get_room_root() -> Node:
 		return get_parent()
 	return self
 
+func _find_shared_patron_manager() -> PatronRunManager:
+	if shared_patron_manager_override != null:
+		return shared_patron_manager_override
+	if room_root != null and room_root.has_meta("shared_patron_manager"):
+		var meta_value: Variant = room_root.get_meta("shared_patron_manager")
+		if meta_value is PatronRunManager:
+			return meta_value as PatronRunManager
+	return null
+
 func _hide_legacy_test_players() -> void:
 	if room_root == null:
 		return
-
 	var legacy_node: Node = room_root.find_child("IsoTestPlayer", true, false)
 	if legacy_node != null and not (legacy_node is CharacterBody2D):
 		legacy_node.remove_from_group("player")
@@ -125,7 +106,6 @@ func _hide_legacy_test_players() -> void:
 
 func _find_or_create_player(player_spawn: Node2D) -> Node2D:
 	var found_player: Node2D = null
-
 	var named: Node = room_root.find_child(player_node_name, true, false)
 	if named is IsoPhysicsTestPlayer:
 		found_player = named as Node2D
@@ -133,7 +113,7 @@ func _find_or_create_player(player_spawn: Node2D) -> Node2D:
 	if found_player == null:
 		var grouped_players: Array[Node] = get_tree().get_nodes_in_group("player")
 		for grouped_node: Node in grouped_players:
-			if grouped_node is IsoPhysicsTestPlayer:
+			if grouped_node is IsoPhysicsTestPlayer and _is_node_inside_room(grouped_node):
 				found_player = grouped_node as Node2D
 				break
 
@@ -148,15 +128,9 @@ func _find_or_create_player(player_spawn: Node2D) -> Node2D:
 
 	if found_player != null and player_spawn != null and move_existing_nodes_to_markers:
 		found_player.global_position = player_spawn.global_position
-
 	return found_player
 
-func _find_or_create_patron_flow(
-	reward_socket: Node2D,
-	door_left: Node2D,
-	door_center: Node2D,
-	door_right: Node2D
-) -> IsoPatronFlowController:
+func _find_or_create_patron_flow(reward_socket: Node2D, door_left: Node2D, door_center: Node2D, door_right: Node2D) -> IsoPatronFlowController:
 	var found_flow: IsoPatronFlowController = null
 	var named: Node = room_root.find_child(patron_flow_node_name, true, false)
 	if named is IsoPatronFlowController:
@@ -170,6 +144,10 @@ func _find_or_create_patron_flow(
 		print("[IsoRuntimeAdapter] Created PatronFlow.")
 
 	if found_flow != null:
+		var shared_manager: PatronRunManager = _find_shared_patron_manager()
+		if shared_manager != null:
+			found_flow.set_manager(shared_manager)
+			print("[IsoRuntimeAdapter] PatronFlow linked to shared manager.")
 		if reward_socket != null:
 			found_flow.altar_position = found_flow.to_local(reward_socket.global_position)
 		if door_left != null:
@@ -178,7 +156,6 @@ func _find_or_create_patron_flow(
 			found_flow.gate_center_position = found_flow.to_local(door_center.global_position)
 		if door_right != null:
 			found_flow.gate_right_position = found_flow.to_local(door_right.global_position)
-
 	return found_flow
 
 func _spawn_test_enemies_from_markers() -> void:
@@ -205,6 +182,17 @@ func _spawn_test_enemies_from_markers() -> void:
 
 	print("[IsoRuntimeAdapter] Spawned %d test enemies from authored enemy sockets." % _alive_enemy_count)
 
+func _clear_existing_test_enemies() -> void:
+	for enemy: IsoTestEnemy in spawned_enemies:
+		if enemy != null and is_instance_valid(enemy):
+			enemy.queue_free()
+	spawned_enemies.clear()
+
+	var group_nodes: Array[Node] = get_tree().get_nodes_in_group("iso_test_enemy")
+	for node: Node in group_nodes:
+		if _is_node_inside_room(node):
+			node.queue_free()
+
 func _on_test_enemy_died(enemy: IsoTestEnemy) -> void:
 	var enemy_index: int = spawned_enemies.find(enemy)
 	if enemy_index >= 0:
@@ -219,7 +207,6 @@ func _on_test_enemy_died(enemy: IsoTestEnemy) -> void:
 func _complete_test_room_clear() -> void:
 	if _room_cleared:
 		return
-
 	_room_cleared = true
 	if patron_flow_node != null:
 		print("[IsoRuntimeAdapter] Test room cleared. Calling PatronFlow.")
@@ -233,13 +220,11 @@ func _ensure_camera(target_player: Node2D) -> void:
 		if child is Camera2D:
 			camera = child as Camera2D
 			break
-
 	if camera == null:
 		camera = Camera2D.new()
 		camera.name = "IsoRoomCamera"
 		target_player.add_child(camera)
 		print("[IsoRuntimeAdapter] Created player Camera2D.")
-
 	camera.position = Vector2.ZERO
 	camera.zoom = camera_zoom
 	camera.position_smoothing_enabled = camera_smoothing_enabled
@@ -248,25 +233,16 @@ func _ensure_camera(target_player: Node2D) -> void:
 	camera.make_current()
 
 func _get_y_sort_parent() -> Node:
-	var candidates: Array[String] = [
-		"L3_YSorted",
-		"YSorted",
-		"Actors",
-		"Runtime",
-		"RuntimeActors"
-	]
-
+	var candidates: Array[String] = ["L3_YSorted", "YSorted", "Actors", "Runtime", "RuntimeActors"]
 	for candidate: String in candidates:
 		var node: Node = room_root.find_child(candidate, true, false)
 		if node != null:
 			return node
-
 	return room_root
 
 func _find_enemy_markers() -> Array[Node2D]:
 	var marker_root: Node = room_root.find_child(marker_root_name, true, false)
 	var search_root: Node = marker_root if marker_root != null else room_root
-
 	var container: Node = _find_enemy_marker_container(search_root)
 	if container != null:
 		return _get_direct_enemy_marker_children(container)
@@ -274,27 +250,17 @@ func _find_enemy_markers() -> Array[Node2D]:
 	var result: Array[Node2D] = []
 	var all_nodes: Array[Node] = []
 	_collect_nodes(search_root, all_nodes)
-
 	for node: Node in all_nodes:
 		if node is Node2D and _is_valid_enemy_marker(node):
 			result.append(node as Node2D)
-
 	return result
 
 func _find_enemy_marker_container(search_root: Node) -> Node:
-	var container_names: Array[String] = [
-		"EnemySpawns",
-		"EnemySpawnSockets",
-		"EnemySockets",
-		"EnemyMarkers",
-		"Enemies"
-	]
-
+	var container_names: Array[String] = ["EnemySpawns", "EnemySpawnSockets", "EnemySockets", "EnemyMarkers", "Enemies"]
 	for container_name: String in container_names:
 		var found: Node = search_root.find_child(container_name, true, false)
 		if found != null:
 			return found
-
 	return null
 
 func _get_direct_enemy_marker_children(container: Node) -> Array[Node2D]:
@@ -306,31 +272,17 @@ func _get_direct_enemy_marker_children(container: Node) -> Array[Node2D]:
 
 func _is_valid_enemy_marker(node: Node) -> bool:
 	var normalized_name: String = _normalize_marker_name(node.name)
-
-	if normalized_name == "enemyspawns":
+	if ["enemyspawns", "enemyspawnsockets", "enemysockets", "enemymarkers", "enemies"].has(normalized_name):
 		return false
-	if normalized_name == "enemyspawnsockets":
-		return false
-	if normalized_name == "enemysockets":
-		return false
-	if normalized_name == "enemymarkers":
-		return false
-	if normalized_name == "enemies":
-		return false
-
 	if normalized_name.find("enemy") < 0:
 		return false
-
-	# Container nodes usually have children; spawn sockets should be leaf nodes.
 	if node.get_child_count() > 0:
 		return false
-
 	return true
 
 func _find_marker(candidate_names: Array[String]) -> Node2D:
 	var marker_root: Node = room_root.find_child(marker_root_name, true, false)
 	var search_root: Node = marker_root if marker_root != null else room_root
-
 	for candidate_name: String in candidate_names:
 		var exact: Node = search_root.find_child(candidate_name, true, false)
 		if exact is Node2D:
@@ -339,7 +291,6 @@ func _find_marker(candidate_names: Array[String]) -> Node2D:
 	var normalized_candidates: Array[String] = []
 	for candidate_name: String in candidate_names:
 		normalized_candidates.append(_normalize_marker_name(candidate_name))
-
 	var all_nodes: Array[Node] = []
 	_collect_nodes(search_root, all_nodes)
 
@@ -355,8 +306,17 @@ func _find_marker(candidate_names: Array[String]) -> Node2D:
 			for normalized_candidate: String in normalized_candidates:
 				if normalized_node_name.find(normalized_candidate) >= 0:
 					return node as Node2D
-
 	return null
+
+func _is_node_inside_room(node: Node) -> bool:
+	if node == null or room_root == null:
+		return false
+	var cursor: Node = node
+	while cursor != null:
+		if cursor == room_root:
+			return true
+		cursor = cursor.get_parent()
+	return false
 
 func _collect_nodes(root_node: Node, out_nodes: Array[Node]) -> void:
 	for child: Node in root_node.get_children():
@@ -371,13 +331,7 @@ func _normalize_marker_name(value: String) -> String:
 	normalized_value = normalized_value.replace(".", "")
 	return normalized_value
 
-func _print_mapping(
-	player_spawn: Node2D,
-	reward_socket: Node2D,
-	door_left: Node2D,
-	door_center: Node2D,
-	door_right: Node2D
-) -> void:
+func _print_mapping(player_spawn: Node2D, reward_socket: Node2D, door_left: Node2D, door_center: Node2D, door_right: Node2D) -> void:
 	print("[IsoRuntimeAdapter] Room root: %s" % room_root.name)
 	print("[IsoRuntimeAdapter] PlayerSpawn: %s" % _node_label(player_spawn))
 	print("[IsoRuntimeAdapter] RewardSocket: %s" % _node_label(reward_socket))

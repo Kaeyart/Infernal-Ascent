@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/iso/IsoRunLoopController.gd" id="1_loop"]
+
+[node name="IsoV2RoomLoopTest" type="Node2D"]
+script = ExtResource("1_loop")
+room_scene_paths = PackedStringArray("res://scenes/iso/rooms/circle0/combat_ash_intake_hall_01_iso.tscn")
+rooms_until_run_end = 5
+auto_start = true
+restart_key_enabled = true

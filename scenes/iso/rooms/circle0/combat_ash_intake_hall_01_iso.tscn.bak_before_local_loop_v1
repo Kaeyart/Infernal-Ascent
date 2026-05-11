@@ -15,7 +15,6 @@
 [ext_resource type="Script" uid="uid://j8wg1gddlit5" path="res://scripts/iso/IsoTestPlayer.gd" id="15_8d855"]
 [ext_resource type="Script" uid="uid://cx8rykbcs27sa" path="res://scripts/iso/IsoAuthoredRoomRuntimeAdapter.gd" id="15_8hkts"]
 [ext_resource type="Script" uid="uid://b6yn8nd25rie3" path="res://scripts/iso/IsoPatronFlowController.gd" id="16_8hkts"]
-[ext_resource type="Script" path="res://scripts/iso/IsoRoomLocalLoopController.gd" id="iso_room_local_loop_v1"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8d855"]
 radius = 33.0
@@ -441,10 +440,3 @@ shape = SubResource("CapsuleShape2D_8hkts")
 position = Vector2(734, 335)
 rotation = -0.063396655
 shape = SubResource("CapsuleShape2D_8hkts")
-
-[node name="RoomLoopController" type="Node2D" parent="."]
-script = ExtResource("iso_room_local_loop_v1")
-rooms_until_run_end = 5
-restart_key_enabled = true
-print_debug = true
-
