@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="RunUpgradeData" format=3 uid="uid://c7dqob27n8ygf"]
+
+[ext_resource type="Script" uid="uid://wf5d3am8bklh" path="res://scripts/resources/RunUpgradeData.gd" id="1_v77gj"]
+
+[resource]
+script = ExtResource("1_v77gj")
+upgrade_id = "quickened_step"
+display_name = "Quickened Step"
+description = "Dash cooldown reduced by 12%."
+effect_type = "dash_cooldown_mult"
+multiplier_value = 0.8

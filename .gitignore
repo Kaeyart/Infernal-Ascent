@@ -18,3 +18,20 @@ Thumbs.db
 # Export config may contain local paths or secrets
 export.cfg
 export_presets.cfg
+
+# Old nested project copy / accidental project-in-project
+infernal_ascent_godot_scaffold/
+
+# Root patch/readme clutter from generated patches
+*_README.txt
+PATCH_README.txt
+README_INSTALL.txt
+README_FIRST.md
+
+# Old one-off helper scripts unless moved into tools intentionally
+clean_hud_assets.py
+clean_sprite_fringe.py
+tools_slice_hell_gate.py
+
+# Old top-down slicing manifest clutter
+ash_intake_hall_01_asset_manifest*

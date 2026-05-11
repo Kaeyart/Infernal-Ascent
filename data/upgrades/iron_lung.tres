@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="RunUpgradeData" format=3 uid="uid://bmx4jq875t48d"]
+
+[ext_resource type="Script" uid="uid://wf5d3am8bklh" path="res://scripts/resources/RunUpgradeData.gd" id="1_bm0ba"]
+
+[resource]
+script = ExtResource("1_bm0ba")
+upgrade_id = "iron_lung"
+display_name = "Iron Lung"
+description = "+15 Max HP for this run."
+effect_type = "max_hp_flat"
+flat_value = 15.0
+metadata/_custom_type_script = "uid://wf5d3am8bklh"

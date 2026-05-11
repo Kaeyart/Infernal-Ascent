@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="RunUpgradeData" format=3 uid="uid://clna41xiwp88a"]
+
+[ext_resource type="Script" uid="uid://wf5d3am8bklh" path="res://scripts/resources/RunUpgradeData.gd" id="1_r5ln8"]
+
+[resource]
+script = ExtResource("1_r5ln8")
+upgrade_id = "pilgrim_stride"
+display_name = "Pilgrim Stride"
+description = "+10% movement speed for this run."
+effect_type = "move_speed_mult"
+multiplier_value = 1.5

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="RunUpgradeData" format=3 uid="uid://colv1x3nas5yb"]
+
+[ext_resource type="Script" uid="uid://wf5d3am8bklh" path="res://scripts/resources/RunUpgradeData.gd" id="1_7fhl0"]
+
+[resource]
+script = ExtResource("1_7fhl0")
+upgrade_id = "ashen_plate"
+display_name = "Ashen Plate"
+description = "+8 Armor capacity for this run."
+effect_type = "max_armor_flat"
+flat_value = 8.0

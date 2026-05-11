@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="RunUpgradeData" format=3 uid="uid://bvh3ucqvg23if"]
+
+[ext_resource type="Script" uid="uid://wf5d3am8bklh" path="res://scripts/resources/RunUpgradeData.gd" id="1_pk7ee"]
+
+[resource]
+script = ExtResource("1_pk7ee")
+upgrade_id = "penance_engine"
+display_name = "Penance Eninge"
+description = "+20% ultimate gain."
+effect_type = "ultimate_gain_mult"
+multiplier_value = 1.2

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="RunUpgradeData" format=3 uid="uid://g8fdef33jbrl"]
+
+[ext_resource type="Script" uid="uid://wf5d3am8bklh" path="res://scripts/resources/RunUpgradeData.gd" id="1_m3ihu"]
+
+[resource]
+script = ExtResource("1_m3ihu")
+upgrade_id = "burning_confession"
+display_name = "Bruning Confession"
+description = "Light attacks deal +2 damage."
+effect_type = "light_damage_flat"
+flat_value = 2.0
