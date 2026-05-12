@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/iso/room_pipeline/IsoGodotTileRoomLoader.gd" id="1_loader"]
+
+[node name="GodotTileMapRoomLoaderTest" type="Node2D"]
+script = ExtResource("1_loader")
+runtime_room_path = "res://data/rooms/circle0/tilemap/ash_intake_hall_iso.room.tilemap.runtime.json"
+room_origin = Vector2(640, 360)
+show_help_overlay = true
+show_debug_labels = false
+show_socket_markers = true
+show_prop_markers = true

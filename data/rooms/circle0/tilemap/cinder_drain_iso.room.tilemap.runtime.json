@@ -1,0 +1,1270 @@
+{
+  "schema_version": "r0.5d_godot_tilemap_room_v1",
+  "source_spec": "rooms/circle0/cinder_drain_iso.room.json",
+  "id": "cinder_drain_iso",
+  "display_name": "Cinder Drain",
+  "template": "long_channel",
+  "tile_size": {
+    "x": 96,
+    "y": 48
+  },
+  "tile_shape": "isometric",
+  "tile_layout": "diamond_down",
+  "iso_floor_polygon": [
+    [
+      -530,
+      -60
+    ],
+    [
+      -260,
+      -210
+    ],
+    [
+      270,
+      -210
+    ],
+    [
+      535,
+      -60
+    ],
+    [
+      395,
+      170
+    ],
+    [
+      100,
+      275
+    ],
+    [
+      -100,
+      275
+    ],
+    [
+      -395,
+      170
+    ]
+  ],
+  "wall_height": 104,
+  "tile_layers": {
+    "floor": [
+      {
+        "x": -7,
+        "y": -1,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": -6,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -1,
+        "y": -7,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": -8,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": -9,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": -10,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": -11,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": -12,
+        "tile": "floor"
+      },
+      {
+        "x": 5,
+        "y": -13,
+        "tile": "floor"
+      },
+      {
+        "x": 6,
+        "y": -14,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": -1,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": -6,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": -7,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": -8,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": 2,
+        "y": -9,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": -10,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": -11,
+        "tile": "floor"
+      },
+      {
+        "x": 5,
+        "y": -12,
+        "tile": "floor"
+      },
+      {
+        "x": 6,
+        "y": -13,
+        "tile": "floor"
+      },
+      {
+        "x": 7,
+        "y": -14,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 0,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": -1,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": -6,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": -7,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": -8,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": -9,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": -10,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": 5,
+        "y": -11,
+        "tile": "floor"
+      },
+      {
+        "x": 6,
+        "y": -12,
+        "tile": "floor"
+      },
+      {
+        "x": 7,
+        "y": -13,
+        "tile": "floor"
+      },
+      {
+        "x": 8,
+        "y": -14,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 1,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 0,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": -1,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -3,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": -6,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": -7,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": -8,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": -9,
+        "tile": "floor"
+      },
+      {
+        "x": 5,
+        "y": -10,
+        "tile": "floor"
+      },
+      {
+        "x": 6,
+        "y": -11,
+        "tile": "floor"
+      },
+      {
+        "x": 7,
+        "y": -12,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": 8,
+        "y": -13,
+        "tile": "floor"
+      },
+      {
+        "x": 9,
+        "y": -14,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 1,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 0,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": -1,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": -3,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": 0,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": -6,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": -7,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": -8,
+        "tile": "floor"
+      },
+      {
+        "x": 5,
+        "y": -9,
+        "tile": "floor"
+      },
+      {
+        "x": 6,
+        "y": -10,
+        "tile": "floor"
+      },
+      {
+        "x": 7,
+        "y": -11,
+        "tile": "floor"
+      },
+      {
+        "x": 8,
+        "y": -12,
+        "tile": "floor"
+      },
+      {
+        "x": 9,
+        "y": -13,
+        "tile": "floor"
+      },
+      {
+        "x": 10,
+        "y": -14,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -6,
+        "y": 3,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 1,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 0,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": -1,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": -5,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": 3,
+        "y": -6,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": -7,
+        "tile": "floor"
+      },
+      {
+        "x": 5,
+        "y": -8,
+        "tile": "floor"
+      },
+      {
+        "x": 6,
+        "y": -9,
+        "tile": "floor"
+      },
+      {
+        "x": 7,
+        "y": -10,
+        "tile": "floor"
+      },
+      {
+        "x": 8,
+        "y": -11,
+        "tile": "floor"
+      },
+      {
+        "x": 9,
+        "y": -12,
+        "tile": "floor"
+      },
+      {
+        "x": 10,
+        "y": -13,
+        "tile": "floor"
+      },
+      {
+        "x": 11,
+        "y": -14,
+        "tile": "floor"
+      },
+      {
+        "x": -14,
+        "y": 12,
+        "tile": "floor"
+      },
+      {
+        "x": -13,
+        "y": 11,
+        "tile": "floor"
+      },
+      {
+        "x": -12,
+        "y": 10,
+        "tile": "floor"
+      },
+      {
+        "x": -11,
+        "y": 9,
+        "tile": "floor"
+      },
+      {
+        "x": -10,
+        "y": 8,
+        "tile": "floor"
+      },
+      {
+        "x": -9,
+        "y": 7,
+        "tile": "floor"
+      },
+      {
+        "x": -8,
+        "y": 6,
+        "tile": "floor"
+      },
+      {
+        "x": -7,
+        "y": 5,
+        "tile": "floor"
+      },
+      {
+        "x": -14,
+        "y": 13,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -13,
+        "y": 12,
+        "tile": "floor"
+      },
+      {
+        "x": -12,
+        "y": 11,
+        "tile": "floor"
+      },
+      {
+        "x": -11,
+        "y": 10,
+        "tile": "floor"
+      },
+      {
+        "x": -10,
+        "y": 9,
+        "tile": "floor"
+      },
+      {
+        "x": -9,
+        "y": 8,
+        "tile": "floor"
+      },
+      {
+        "x": -8,
+        "y": 7,
+        "tile": "floor"
+      },
+      {
+        "x": -7,
+        "y": 6,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 5,
+        "tile": "floor"
+      },
+      {
+        "x": -14,
+        "y": 14,
+        "tile": "floor"
+      },
+      {
+        "x": -13,
+        "y": 13,
+        "tile": "floor"
+      },
+      {
+        "x": -12,
+        "y": 12,
+        "tile": "floor"
+      },
+      {
+        "x": -11,
+        "y": 11,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -10,
+        "y": 10,
+        "tile": "floor"
+      },
+      {
+        "x": -9,
+        "y": 9,
+        "tile": "floor"
+      },
+      {
+        "x": -8,
+        "y": 8,
+        "tile": "floor"
+      },
+      {
+        "x": -7,
+        "y": 7,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 6,
+        "tile": "floor"
+      },
+      {
+        "x": -14,
+        "y": 15,
+        "tile": "floor"
+      },
+      {
+        "x": -13,
+        "y": 14,
+        "tile": "floor"
+      },
+      {
+        "x": -12,
+        "y": 13,
+        "tile": "floor"
+      },
+      {
+        "x": -11,
+        "y": 12,
+        "tile": "floor"
+      },
+      {
+        "x": -10,
+        "y": 11,
+        "tile": "floor"
+      },
+      {
+        "x": -9,
+        "y": 10,
+        "tile": "floor"
+      },
+      {
+        "x": -8,
+        "y": 9,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -7,
+        "y": 8,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 7,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 6,
+        "tile": "floor"
+      },
+      {
+        "x": -13,
+        "y": 15,
+        "tile": "floor"
+      },
+      {
+        "x": -12,
+        "y": 14,
+        "tile": "floor"
+      },
+      {
+        "x": -11,
+        "y": 13,
+        "tile": "floor"
+      },
+      {
+        "x": -10,
+        "y": 12,
+        "tile": "floor"
+      },
+      {
+        "x": -9,
+        "y": 11,
+        "tile": "floor"
+      },
+      {
+        "x": -8,
+        "y": 10,
+        "tile": "floor"
+      },
+      {
+        "x": -7,
+        "y": 9,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 8,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 7,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -4,
+        "y": 6,
+        "tile": "floor"
+      },
+      {
+        "x": -12,
+        "y": 15,
+        "tile": "floor"
+      },
+      {
+        "x": -11,
+        "y": 14,
+        "tile": "floor"
+      },
+      {
+        "x": -10,
+        "y": 13,
+        "tile": "floor"
+      },
+      {
+        "x": -9,
+        "y": 12,
+        "tile": "floor"
+      },
+      {
+        "x": -8,
+        "y": 11,
+        "tile": "floor"
+      },
+      {
+        "x": -7,
+        "y": 10,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 9,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 8,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 7,
+        "tile": "floor"
+      },
+      {
+        "x": -11,
+        "y": 15,
+        "tile": "floor"
+      },
+      {
+        "x": -10,
+        "y": 14,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -9,
+        "y": 13,
+        "tile": "floor"
+      },
+      {
+        "x": -8,
+        "y": 12,
+        "tile": "floor"
+      },
+      {
+        "x": -7,
+        "y": 11,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 10,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 9,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 8,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 7,
+        "tile": "floor"
+      },
+      {
+        "x": -10,
+        "y": 15,
+        "tile": "floor"
+      },
+      {
+        "x": -9,
+        "y": 14,
+        "tile": "floor"
+      },
+      {
+        "x": -8,
+        "y": 13,
+        "tile": "floor"
+      },
+      {
+        "x": -7,
+        "y": 12,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -6,
+        "y": 11,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 10,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 9,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 8,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": 7,
+        "tile": "floor"
+      },
+      {
+        "x": -9,
+        "y": 15,
+        "tile": "floor"
+      },
+      {
+        "x": -8,
+        "y": 14,
+        "tile": "floor"
+      },
+      {
+        "x": -7,
+        "y": 13,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 12,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 11,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 10,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -3,
+        "y": 9,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": 8,
+        "tile": "floor"
+      },
+      {
+        "x": -8,
+        "y": 15,
+        "tile": "floor"
+      },
+      {
+        "x": -7,
+        "y": 14,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 13,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 12,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 11,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 10,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": 9,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": 8,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -7,
+        "y": 15,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 14,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 13,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 12,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 11,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": 10,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": 9,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 15,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -5,
+        "y": 14,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 13,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 12,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": 11,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": 10,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": 9,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": 8,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 15,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 14,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 13,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -2,
+        "y": 12,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": 11,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": 10,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": 9,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": 8,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 15,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 14,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": 13,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": 12,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": 11,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": 1,
+        "y": 10,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": 9,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": 8,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": 7,
+        "tile": "floor"
+      }
+    ],
+    "decals": [],
+    "blocking": []
+  },
+  "player_spawn": {
+    "id": "player_spawn",
+    "x": -220,
+    "y": 185,
+    "clear_radius": 150,
+    "map_x": 2,
+    "map_y": 6
+  },
+  "gate_sockets": [
+    {
+      "id": "left",
+      "label": "COMBAT",
+      "x": -360,
+      "y": -82,
+      "map_x": -5,
+      "map_y": 2
+    },
+    {
+      "id": "center",
+      "label": "SHOP",
+      "x": 0,
+      "y": -165,
+      "map_x": -3,
+      "map_y": -3
+    },
+    {
+      "id": "right",
+      "label": "FORGE",
+      "x": 360,
+      "y": -82,
+      "map_x": 2,
+      "map_y": -5
+    }
+  ],
+  "enemy_spawns": [
+    {
+      "id": "enemy_a",
+      "role": "ember_spitter",
+      "x": 265,
+      "y": -85,
+      "tags": [
+        "ranged"
+      ],
+      "map_x": 1,
+      "map_y": -5
+    },
+    {
+      "id": "enemy_b",
+      "role": "ash_grunt",
+      "x": 60,
+      "y": 40,
+      "tags": [
+        "melee"
+      ],
+      "map_x": 1,
+      "map_y": 0
+    },
+    {
+      "id": "enemy_c",
+      "role": "cinder_lunger",
+      "x": 330,
+      "y": 85,
+      "tags": [
+        "lunge"
+      ],
+      "map_x": 5,
+      "map_y": -2
+    }
+  ],
+  "hazard_sockets": [
+    {
+      "id": "drain_line_a",
+      "type": "ember_grate",
+      "x": -80,
+      "y": 25,
+      "radius": 44,
+      "map_x": 0,
+      "map_y": 1
+    },
+    {
+      "id": "drain_line_b",
+      "type": "ember_grate",
+      "x": 115,
+      "y": 25,
+      "radius": 44,
+      "map_x": 2,
+      "map_y": -1
+    }
+  ],
+  "dressing_zones": {
+    "floor_props": [
+      {
+        "x": 0,
+        "y": 55,
+        "kind": "cinder_channel",
+        "map_x": 1,
+        "map_y": 1
+      },
+      {
+        "x": -300,
+        "y": 95,
+        "kind": "ash_runoff",
+        "map_x": -1,
+        "map_y": 5
+      },
+      {
+        "x": 265,
+        "y": 130,
+        "kind": "ash_runoff",
+        "map_x": 5,
+        "map_y": 0
+      }
+    ],
+    "wall_props": [
+      {
+        "x": -455,
+        "y": -55,
+        "kind": "drain_mouth",
+        "map_x": -6,
+        "map_y": 4
+      },
+      {
+        "x": 455,
+        "y": -55,
+        "kind": "drain_mouth",
+        "map_x": 4,
+        "map_y": -6
+      }
+    ]
+  },
+  "combat_notes": "Long lane room. Ranged pressure matters; player must advance through channel hazards.",
+  "validation": {
+    "floor_cell_count": 216,
+    "uses_godot_tilemap_layer": true,
+    "actors_use_y_sort_world_layer": true
+  }
+}

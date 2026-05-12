@@ -1,0 +1,920 @@
+{
+  "schema_version": "r0.5d_godot_tilemap_room_v1",
+  "source_spec": "rooms/circle0/penitent_crossing_iso.room.json",
+  "id": "penitent_crossing_iso",
+  "display_name": "Penitent Crossing",
+  "template": "ritual_cross",
+  "tile_size": {
+    "x": 96,
+    "y": 48
+  },
+  "tile_shape": "isometric",
+  "tile_layout": "diamond_down",
+  "iso_floor_polygon": [
+    [
+      -180,
+      -300
+    ],
+    [
+      180,
+      -300
+    ],
+    [
+      180,
+      -150
+    ],
+    [
+      440,
+      -150
+    ],
+    [
+      440,
+      70
+    ],
+    [
+      180,
+      70
+    ],
+    [
+      180,
+      305
+    ],
+    [
+      -180,
+      305
+    ],
+    [
+      -180,
+      70
+    ],
+    [
+      -440,
+      70
+    ],
+    [
+      -440,
+      -150
+    ],
+    [
+      -180,
+      -150
+    ]
+  ],
+  "wall_height": 104,
+  "tile_layers": {
+    "floor": [
+      {
+        "x": -7,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": -6,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": -7,
+        "tile": "floor"
+      },
+      {
+        "x": -7,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": -6,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": -7,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": -6,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": -4,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -4,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": -6,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": -7,
+        "y": 1,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -6,
+        "y": 0,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": -1,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": -6,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": -7,
+        "tile": "floor"
+      },
+      {
+        "x": -7,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 1,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 0,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": -1,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -3,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": -6,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": -7,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 1,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 0,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": -1,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": -3,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": 0,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": -6,
+        "tile": "floor"
+      },
+      {
+        "x": -6,
+        "y": 3,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 1,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 0,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": -1,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": -5,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": 3,
+        "y": -6,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 3,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 1,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": 0,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": -1,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": -5,
+        "y": 4,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 3,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 2,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": -2,
+        "y": 1,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": 0,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": -1,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": -5,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 4,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 3,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": 1,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": 1,
+        "y": -1,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": -4,
+        "y": 5,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 4,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": 3,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": -1,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": -2,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": 4,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": 5,
+        "y": -4,
+        "tile": "floor"
+      },
+      {
+        "x": -3,
+        "y": 5,
+        "tile": "floor"
+      },
+      {
+        "x": -2,
+        "y": 4,
+        "tile": "floor"
+      },
+      {
+        "x": -1,
+        "y": 3,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": -1,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": -2,
+        "tile": "floor"
+      },
+      {
+        "x": 5,
+        "y": -3,
+        "tile": "floor"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "tile": "floor"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": 2,
+        "y": 5,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "tile": "floor"
+      },
+      {
+        "x": 5,
+        "y": 2,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": 5,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "tile": "floor"
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "tile": "floor"
+      },
+      {
+        "x": 3,
+        "y": 6,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": 5,
+        "tile": "floor"
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "tile": "cracked_floor"
+      },
+      {
+        "x": 6,
+        "y": 3,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": 6,
+        "tile": "floor"
+      },
+      {
+        "x": 5,
+        "y": 5,
+        "tile": "floor"
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "tile": "floor"
+      },
+      {
+        "x": 4,
+        "y": 7,
+        "tile": "floor"
+      },
+      {
+        "x": 5,
+        "y": 6,
+        "tile": "floor"
+      },
+      {
+        "x": 6,
+        "y": 5,
+        "tile": "floor"
+      },
+      {
+        "x": 7,
+        "y": 4,
+        "tile": "floor"
+      },
+      {
+        "x": 5,
+        "y": 7,
+        "tile": "floor"
+      },
+      {
+        "x": 6,
+        "y": 6,
+        "tile": "floor"
+      },
+      {
+        "x": 7,
+        "y": 5,
+        "tile": "floor"
+      }
+    ],
+    "decals": [],
+    "blocking": []
+  },
+  "player_spawn": {
+    "id": "player_spawn",
+    "x": 0,
+    "y": 225,
+    "clear_radius": 150,
+    "map_x": 5,
+    "map_y": 5
+  },
+  "gate_sockets": [
+    {
+      "id": "left",
+      "label": "FOUNTAIN",
+      "x": -300,
+      "y": -95,
+      "map_x": -5,
+      "map_y": 1
+    },
+    {
+      "id": "center",
+      "label": "COMBAT",
+      "x": 0,
+      "y": -240,
+      "map_x": -5,
+      "map_y": -5
+    },
+    {
+      "id": "right",
+      "label": "REWARD",
+      "x": 300,
+      "y": -95,
+      "map_x": 1,
+      "map_y": -5
+    }
+  ],
+  "enemy_spawns": [
+    {
+      "id": "enemy_a",
+      "role": "bell_wretch",
+      "x": 0,
+      "y": -130,
+      "tags": [
+        "support"
+      ],
+      "map_x": -3,
+      "map_y": -3
+    },
+    {
+      "id": "enemy_b",
+      "role": "ash_grunt",
+      "x": -230,
+      "y": 15,
+      "tags": [
+        "melee"
+      ],
+      "map_x": -2,
+      "map_y": 3
+    },
+    {
+      "id": "enemy_c",
+      "role": "ash_grunt",
+      "x": 230,
+      "y": 15,
+      "tags": [
+        "melee"
+      ],
+      "map_x": 3,
+      "map_y": -2
+    },
+    {
+      "id": "enemy_d",
+      "role": "cinder_lunger",
+      "x": 0,
+      "y": 45,
+      "tags": [
+        "lunge"
+      ],
+      "map_x": 1,
+      "map_y": 1
+    }
+  ],
+  "hazard_sockets": [
+    {
+      "id": "cross_center",
+      "type": "falling_cinder",
+      "x": 0,
+      "y": 0,
+      "radius": 64,
+      "map_x": 0,
+      "map_y": 0
+    }
+  ],
+  "dressing_zones": {
+    "floor_props": [
+      {
+        "x": 0,
+        "y": 0,
+        "kind": "cross_sigil",
+        "map_x": 0,
+        "map_y": 0
+      },
+      {
+        "x": -285,
+        "y": 15,
+        "kind": "kneeling_penitent",
+        "map_x": -3,
+        "map_y": 3
+      },
+      {
+        "x": 285,
+        "y": 15,
+        "kind": "kneeling_penitent",
+        "map_x": 3,
+        "map_y": -3
+      }
+    ],
+    "wall_props": [
+      {
+        "x": -250,
+        "y": -120,
+        "kind": "penitent_row",
+        "map_x": -5,
+        "map_y": 0
+      },
+      {
+        "x": 250,
+        "y": -120,
+        "kind": "penitent_row",
+        "map_x": 0,
+        "map_y": -5
+      },
+      {
+        "x": 0,
+        "y": -248,
+        "kind": "judgment_icon",
+        "map_x": -5,
+        "map_y": -5
+      }
+    ]
+  },
+  "combat_notes": "Cross-shaped ritual arena. Pressure comes from multiple arms but center remains readable.",
+  "validation": {
+    "floor_cell_count": 141,
+    "uses_godot_tilemap_layer": true,
+    "actors_use_y_sort_world_layer": true
+  }
+}
