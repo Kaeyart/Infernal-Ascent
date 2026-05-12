@@ -2,14 +2,16 @@ extends Node2D
 class_name IsoHubRuntimeController
 
 ## V26 — Hub Stations V1.
-## Makes the hub readable and functional without adding permanent-upgrade purchasing,
-## save-system expansion, boss logic, enemy changes, or player-art changes.
+## V27 — Permanent Upgrade V1.
+## V28 — Save System V1 loads/saves hub currency, upgrades, and last-run data.
 
 const PLAYER_SCRIPT: Script = preload("res://scripts/iso/IsoPhysicsTestPlayer.gd")
 const PANEL_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubInteractionPanel.gd")
 const NPC_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubNPC.gd")
 const TRAINING_DUMMY_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubTrainingDummy.gd")
 const STATION_MARKER_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubStationMarker.gd")
+const PERMANENT_UPGRADE_SCRIPT: Script = preload("res://scripts/run/PermanentUpgradeData.gd")
+const SAVE_GAME_SCRIPT: Script = preload("res://scripts/run/SaveGameData.gd")
 
 @export var run_scene_path: String = "res://scenes/iso/rooms/circle0/combat_ash_intake_hall_01_iso.tscn"
 @export var marker_root_name: String = "Markers"
@@ -36,6 +38,9 @@ var status_text: String = "Hub ready. Walk to a station."
 var _e_down_previous: bool = false
 var _escape_down_previous: bool = false
 var _panel_close_armed: bool = false
+var _open_panel_kind: String = ""
+var _upgrade_purchase_message: String = ""
+var _upgrade_key_previous: Dictionary = {}
 
 var station_defs: Array[Dictionary] = [
 	{
@@ -153,6 +158,7 @@ var npc_defs: Array[Dictionary] = [
 ]
 
 func _ready() -> void:
+	SaveGameData.load_or_create()
 	_setup_hud()
 	_setup_interaction_panel()
 	if auto_spawn_station_markers:
@@ -298,6 +304,9 @@ func _panel_is_open() -> bool:
 	return interaction_panel != null and interaction_panel.is_open()
 
 func _update_panel_input() -> void:
+	if _open_panel_kind == "upgrade_altar":
+		_update_reliquary_purchase_input()
+
 	if not Input.is_physical_key_pressed(KEY_E):
 		_panel_close_armed = true
 
@@ -306,7 +315,37 @@ func _update_panel_input() -> void:
 	if escape_pressed or e_pressed:
 		interaction_panel.close_panel()
 		_panel_close_armed = false
+		_open_panel_kind = ""
 		status_text = "Hub ready. Walk to a station."
+
+func _update_reliquary_purchase_input() -> void:
+	var key_map: Dictionary = {
+		1: KEY_1,
+		2: KEY_2,
+		3: KEY_3,
+		4: KEY_4,
+		5: KEY_5,
+	}
+	for slot: int in key_map.keys():
+		var key_code: int = int(key_map[slot])
+		var is_down: bool = Input.is_physical_key_pressed(key_code)
+		var was_down: bool = bool(_upgrade_key_previous.get(slot, false))
+		if is_down and not was_down:
+			_try_purchase_reliquary_upgrade(slot)
+		_upgrade_key_previous[slot] = is_down
+
+func _try_purchase_reliquary_upgrade(slot: int) -> void:
+	var upgrade_id: String = PERMANENT_UPGRADE_SCRIPT.get_upgrade_id_for_slot(slot)
+	if upgrade_id == "":
+		return
+	var result: Dictionary = PERMANENT_UPGRADE_SCRIPT.purchase_upgrade(upgrade_id)
+	if bool(result.get("ok", false)):
+		SaveGameData.save_game("permanent_upgrade_purchase")
+	_upgrade_purchase_message = str(result.get("message", "Purchase checked."))
+	status_text = _upgrade_purchase_message
+	if interaction_panel != null:
+		interaction_panel.show_panel("Reliquary Altar", _build_reliquary_panel_text(), "Press 1–5 to buy · E or Esc to close")
+	_update_hud()
 
 func _get_nearest_interactable() -> Dictionary:
 	var nearest_station: Dictionary = _get_nearest_station()
@@ -416,7 +455,10 @@ func _activate_station(station: Dictionary) -> void:
 		return
 
 	if kind == "upgrade_altar" or kind == "patron_shrine":
-		_show_panel("Reliquary Altar", _build_reliquary_panel_text())
+		_open_panel_kind = "upgrade_altar"
+		_upgrade_purchase_message = ""
+		_upgrade_key_previous.clear()
+		_show_panel("Reliquary Altar", _build_reliquary_panel_text(), "Press 1–5 to buy · E or Esc to close")
 		return
 
 	if kind == "hub_forge" or kind == "weapon_altar":
@@ -438,7 +480,7 @@ func _activate_station(station: Dictionary) -> void:
 	_show_panel(title, "This station is not implemented yet.")
 
 func _build_reliquary_panel_text() -> String:
-	return "RELIQUARY ALTAR\n\nPermanent upgrades unlock in V27.\n\nCurrent currency:\n%s\n\nPlanned permanent upgrades:\n- Max HP\n- Starting damage\n- Dash cooldown efficiency\n- Starting Ash Sigil bonus\n- Better reward choice chance\n\nThis station is readable now, but purchasing is intentionally not implemented until the next milestone." % RunEconomyData.get_currency_summary_line()
+	return PERMANENT_UPGRADE_SCRIPT.build_upgrade_panel_text(_upgrade_purchase_message)
 
 func _build_hub_forge_panel_text() -> String:
 	var weapon_text: String = ""
@@ -451,12 +493,14 @@ func _build_hub_forge_panel_text() -> String:
 func _build_codex_panel_text() -> String:
 	return "CODEX LECTERN\n\nRecords are not implemented yet.\n\nPlanned demo entries:\n- Ash Grunt\n- Cinder Lunger\n- Ember Spitter\n- Chainbound Penitent\n- Furnace Imp\n- Bell Wretch\n- The Ash Warden\n- Circle 0 hazards\n\nThis station is intentionally a placeholder until the save/progression layer can record discoveries."
 
-func _show_panel(title: String, body: String) -> void:
+func _show_panel(title: String, body: String, footer: String = "Press E or Esc to close.") -> void:
 	if interaction_panel == null:
 		_setup_interaction_panel()
 
-	interaction_panel.show_panel(title, body, "Press E or Esc to close.")
+	interaction_panel.show_panel(title, body, footer)
 	_panel_close_armed = false
+	if _open_panel_kind != "upgrade_altar":
+		_open_panel_kind = ""
 	status_text = title + " opened."
 
 func _spawn_or_reset_training_dummy() -> void:
@@ -512,10 +556,11 @@ func _update_hud() -> void:
 
 	var last_run_line: String = "No recorded run result yet."
 	if RunSessionData.has_last_run():
-		last_run_line = "Last run recorded. Visit Memory Pool."
-	hud_label.text = "THRESHOLD NAVE\n%s\n%s\n%s" % [
+		last_run_line = "Last run saved. Visit Memory Pool."
+	hud_label.text = "THRESHOLD NAVE\n%s\n%s\n%s\n%s" % [
 		status_text,
-		RunEconomyData.get_currency_summary_line(),
+		RunEconomyData.get_currency_summary_line() + " | Save: " + ("OK" if SaveGameData.has_save_file() else "new"),
+		PERMANENT_UPGRADE_SCRIPT.build_summary_line(),
 		last_run_line
 	]
 

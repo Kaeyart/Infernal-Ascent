@@ -1,4 +1,6 @@
 extends Node2D
+const PERMANENT_UPGRADE_SCRIPT: Script = preload("res://scripts/run/PermanentUpgradeData.gd")
+const SAVE_GAME_SCRIPT: Script = preload("res://scripts/run/SaveGameData.gd")
 ## V14 — Run Flow Consistency Pass.
 ## V19 — Reward Consistency Pass extends the existing loop with a standardized temporary reward catalogue.
 ## V20 — Demo Run Length Lock makes the run reach a predictable boss-antechamber placeholder after four rooms.
@@ -7,6 +9,7 @@ extends Node2D
 ## V23 — Boss Arena V1 adds the Sentencing Furnace placeholder arena.
 ## V24 — Ash Warden Boss V1 replaces the placeholder seal with a playable boss fight.
 ## V25 — Demo Victory and Death Loop records clean victory/death outcomes and returns to hub.
+## V28 — Save System V1 persists economy, upgrades, last run, best depth, and boss flags.
 ## Owns the local Circle 0 demo run state machine. This script intentionally does not add
 ## new enemies, art, boss logic, sound, or save logic.
 
@@ -132,6 +135,8 @@ var boss_defeated_this_run: bool = false
 var last_run_summary: Dictionary = {}
 var _run_outcome_reason: String = ""
 var _phase_serial: int = 0
+var _base_reward_choices_per_room: int = 3
+var _base_starting_run_ash: int = 2
 var hud_layer: CanvasLayer = null
 var hud_label: Label = null
 var hud_controller: Circle0RunHUD = null
@@ -140,6 +145,9 @@ var last_status: String = "Run state initializing."
 var last_room_title: String = "Threshold Nave"
 
 func _ready() -> void:
+	SaveGameData.load_or_create()
+	_base_reward_choices_per_room = reward_choices_per_room
+	_base_starting_run_ash = starting_run_ash
 	_set_phase(RunPhase.HUB, "Local loop node created.")
 	_setup_hud()
 	_create_shared_manager()
@@ -180,7 +188,10 @@ func _reset_run_counters() -> void:
 	shop_rooms_seen = 0
 	run_bonus_ash_sigils = 0
 	heal_on_room_clear_amount = 0
-	run_ash_shards = maxi(0, starting_run_ash)
+	var permanent_modifiers: Dictionary = PERMANENT_UPGRADE_SCRIPT.get_run_start_modifiers()
+	run_bonus_ash_sigils += int(permanent_modifiers.get("bonus_outcome_sigils", 0))
+	run_ash_shards = maxi(0, _base_starting_run_ash + int(permanent_modifiers.get("bonus_starting_run_ash", 0)))
+	reward_choices_per_room = clampi(_base_reward_choices_per_room + int(permanent_modifiers.get("bonus_reward_choices", 0)), 3, 4)
 	shop_purchases = 0
 	active_forge_mark = ""
 	forge_marks_chosen.clear()
@@ -493,6 +504,8 @@ func _spawn_reward_choices() -> void:
 	var rewards: Array[Dictionary] = _build_reward_choices()
 	var center: Vector2 = _get_reward_position()
 	var offsets: Array[Vector2] = [Vector2(-128.0, 8.0), Vector2(0.0, -34.0), Vector2(128.0, 8.0)]
+	if reward_choices_per_room >= 4:
+		offsets = [Vector2(-168.0, 14.0), Vector2(-56.0, -36.0), Vector2(56.0, -36.0), Vector2(168.0, 14.0)]
 	var parent_node: Node = _get_runtime_parent()
 	for i: int in range(mini(reward_choices_per_room, rewards.size())):
 		var item: RunRoomInteractable = RunRoomInteractable.new()
@@ -1209,7 +1222,8 @@ func _record_run_results(victory: bool = true) -> void:
 	}
 	last_run_summary = summary.duplicate(true)
 	RunSessionData.record_completed_run(summary)
-	print("[IsoLocalLoop] Recorded V25 run results: " + str(summary))
+	SaveGameData.save_game("run_outcome")
+	print("[IsoLocalLoop] Recorded V25/V28 run results: " + str(summary))
 
 func _reward_display_summary() -> String:
 	if reward_display_history.is_empty():
@@ -1445,7 +1459,7 @@ func _update_hud() -> void:
 		"reward_names": reward_display_history.duplicate(true),
 		"fountains": fountain_rooms_completed,
 		"bonus_sigils": run_bonus_ash_sigils,
-		"currency": "%s | Run Ash: %d" % [RunEconomyData.get_currency_summary_line(), run_ash_shards],
+		"currency": "%s | Run Ash: %d | %s" % [RunEconomyData.get_currency_summary_line(), run_ash_shards, PERMANENT_UPGRADE_SCRIPT.build_summary_line()],
 		"player": _player_ui_state(),
 		"choices": _current_gate_choices.duplicate(true),
 		"hazards_active": current_phase == RunPhase.COMBAT,
