@@ -5,6 +5,7 @@ extends Node2D
 ## V21 — Fountain / Shop / Forge Functional Pass makes support rooms useful instead of placeholders.
 ## V22.2 — Presentation cleanup removes residual debug overlays and anchors route/boss gates inside the room.
 ## V23 — Boss Arena V1 adds the Sentencing Furnace placeholder arena.
+## V24 — Ash Warden Boss V1 replaces the placeholder seal with a playable boss fight.
 ## Owns the local Circle 0 demo run state machine. This script intentionally does not add
 ## new enemies, art, boss logic, sound, or save logic.
 
@@ -21,6 +22,7 @@ enum RunPhase {
 	FORGE,
 	BOSS_LOCKED_PLACEHOLDER,
 	BOSS_ARENA_PLACEHOLDER,
+	BOSS,
 	RUN_VICTORY,
 	RUN_DEATH,
 	RETURN_TO_HUB,
@@ -45,6 +47,12 @@ enum RunPhase {
 @export var boss_arena_variant: String = "sentencing_furnace"
 @export var boss_placeholder_max_health: int = 100
 @export var boss_exit_position_offset: Vector2 = Vector2(0.0, -170.0)
+
+@export_category("V24 Ash Warden Boss")
+@export var ash_warden_boss_enabled_v24: bool = true
+@export var ash_warden_boss_script_path: String = "res://scripts/iso/AshWardenBoss.gd"
+@export var ash_warden_max_health_v24: int = 100
+@export var ash_warden_boss_can_end_run_on_player_death: bool = true
 @export var force_demo_route_pattern: bool = true
 
 @export_category("V21 Support Rooms")
@@ -110,6 +118,9 @@ var _room_completion_pending: bool = false
 var _route_choice_spawn_pending: bool = false
 var _boss_placeholder: Node2D = null
 var _boss_exit: RunRoomInteractable = null
+var _active_ash_warden_boss: Node2D = null
+var _boss_health_current: int = 0
+var _boss_health_max: int = 1
 var _phase_serial: int = 0
 var hud_layer: CanvasLayer = null
 var hud_label: Label = null
@@ -176,6 +187,9 @@ func _reset_run_counters() -> void:
 	_return_input_armed = false
 	_boss_placeholder = null
 	_boss_exit = null
+	_active_ash_warden_boss = null
+	_boss_health_current = 0
+	_boss_health_max = 1
 
 func _create_shared_manager() -> void:
 	shared_patron_manager = PatronRunManager.new()
@@ -196,6 +210,7 @@ func _wire_room_deferred() -> void:
 	if not runtime_adapter.combat_room_cleared.is_connected(_on_combat_room_cleared):
 		runtime_adapter.combat_room_cleared.connect(_on_combat_room_cleared)
 	_wire_patron_flow_signals_for_compatibility()
+	_wire_player_death_signal()
 	if auto_start_run_on_ready:
 		start_new_local_run()
 	else:
@@ -288,7 +303,8 @@ func _phase_can_complete_room() -> bool:
 		or current_phase == RunPhase.FOUNTAIN \
 		or current_phase == RunPhase.SHOP \
 		or current_phase == RunPhase.FORGE \
-		or current_phase == RunPhase.BOSS_LOCKED_PLACEHOLDER
+		or current_phase == RunPhase.BOSS_LOCKED_PLACEHOLDER \
+		or current_phase == RunPhase.BOSS
 
 func _schedule_route_choice_spawn() -> void:
 	if _route_choice_spawn_pending:
@@ -712,20 +728,63 @@ func _enter_boss_arena_placeholder() -> void:
 	if runtime_adapter != null:
 		runtime_adapter.configure_room_presentation(current_room_type, current_depth, current_room_variant)
 		runtime_adapter.prepare_non_combat_room()
-	_show_intro(last_room_title, "Boss arena placeholder · door locked")
-	_spawn_boss_placeholder()
-	last_status = "The Ash Warden placeholder waits. Break the furnace seal to open the victory exit."
-	_set_phase(RunPhase.BOSS_ARENA_PLACEHOLDER, last_status)
+	_wire_player_death_signal()
+	_show_intro(last_room_title, "Boss arena · The Ash Warden")
+	if ash_warden_boss_enabled_v24:
+		_spawn_ash_warden_boss()
+		last_status = "The Ash Warden judges the descent. Defeat him to open the victory exit."
+		_set_phase(RunPhase.BOSS, last_status)
+	else:
+		_spawn_boss_placeholder()
+		last_status = "The Ash Warden placeholder waits. Break the furnace seal to open the victory exit."
+		_set_phase(RunPhase.BOSS_ARENA_PLACEHOLDER, last_status)
 	_debug(last_status)
+
+func _spawn_ash_warden_boss() -> void:
+	_clear_boss_placeholder_nodes()
+	var boss_script = load(ash_warden_boss_script_path)
+	if boss_script == null:
+		push_warning("[IsoLocalLoop] Missing AshWardenBoss.gd. Falling back to V23 seal placeholder.")
+		_spawn_boss_placeholder()
+		return
+	var boss_node: Node = boss_script.new()
+	if boss_node == null:
+		push_warning("[IsoLocalLoop] Could not instantiate Ash Warden boss. Falling back to V23 seal placeholder.")
+		_spawn_boss_placeholder()
+		return
+	_boss_health_current = ash_warden_max_health_v24
+	_boss_health_max = ash_warden_max_health_v24
+	boss_node.name = "AshWardenBoss"
+	boss_node.add_to_group("ash_warden_boss")
+	boss_node.add_to_group("boss_runtime")
+	_get_runtime_parent().add_child(boss_node)
+	if boss_node is Node2D:
+		_active_ash_warden_boss = boss_node as Node2D
+	else:
+		_active_ash_warden_boss = null
+	var spawn_position: Vector2 = _get_boss_spawn_position()
+	var arena_origin: Vector2 = _get_room_center_position()
+	if boss_node.has_method("setup_boss"):
+		boss_node.call("setup_boss", spawn_position, ash_warden_max_health_v24, arena_origin)
+	elif boss_node is Node2D:
+		(boss_node as Node2D).global_position = spawn_position
+	if boss_node.has_signal("health_changed"):
+		boss_node.connect("health_changed", Callable(self, "_on_ash_warden_health_changed"))
+	if boss_node.has_signal("phase_changed"):
+		boss_node.connect("phase_changed", Callable(self, "_on_ash_warden_phase_changed"))
+	if boss_node.has_signal("defeated"):
+		boss_node.connect("defeated", Callable(self, "_on_ash_warden_defeated"))
+	last_status = "The Ash Warden has awakened."
+	_update_hud()
 
 func _spawn_boss_placeholder() -> void:
 	_clear_boss_placeholder_nodes()
 	var data: Dictionary = {
 		"kind": "boss_placeholder",
 		"display_name": "Ash Warden Seal",
-		"description": "A chained furnace seal holds the Ash Warden in place until V24 replaces this placeholder with the real boss fight.",
-		"exact_effect": "Press E to break the placeholder seal and open the victory exit.",
-		"current_consequence": "V23 is arena-only. V24 implements the real Ash Warden AI and damage phases.",
+		"description": "Fallback placeholder. AshWardenBoss.gd could not be loaded.",
+		"exact_effect": "Press E to break the fallback seal and open the victory exit.",
+		"current_consequence": "This fallback should only appear if the V24 boss script is missing.",
 		"icon": "W",
 	}
 	var boss: RunRoomInteractable = RunRoomInteractable.new()
@@ -738,6 +797,26 @@ func _spawn_boss_placeholder() -> void:
 		boss.focus_changed.connect(_on_interactable_focus_changed)
 	_active_interactables.append(boss)
 	_boss_placeholder = boss
+
+func _on_ash_warden_health_changed(current_health: int, max_health: int) -> void:
+	_boss_health_current = current_health
+	_boss_health_max = maxi(1, max_health)
+	last_status = "Ash Warden HP: %d/%d." % [_boss_health_current, _boss_health_max]
+	_update_hud()
+
+func _on_ash_warden_phase_changed(phase_index: int) -> void:
+	last_status = "The Ash Warden enters Phase %d." % phase_index
+	_show_intro("Ash Warden", "Phase %d" % phase_index)
+	_update_hud()
+
+func _on_ash_warden_defeated() -> void:
+	if current_phase != RunPhase.BOSS:
+		return
+	last_status = "The Ash Warden has fallen. The exit has opened."
+	if runtime_adapter != null:
+		runtime_adapter.clear_runtime_dangers()
+	_spawn_boss_victory_exit()
+	_update_hud()
 
 func _on_boss_placeholder_interactable_used(_payload: Dictionary) -> void:
 	_on_boss_placeholder_defeated()
@@ -755,9 +834,9 @@ func _spawn_boss_victory_exit() -> void:
 	var data: Dictionary = {
 		"kind": "boss_exit",
 		"display_name": "Exit to Threshold Nave",
-		"description": "The boss arena placeholder is complete. Return with the current demo victory.",
+		"description": "The Ash Warden has fallen. Return with the current demo victory.",
 		"exact_effect": "Complete the demo route and return to the hub.",
-		"current_consequence": "V24 replaces this placeholder with the real Ash Warden fight.",
+		"current_consequence": "The demo victory loop will be finalized in V25.",
 		"icon": "X",
 	}
 	var item: RunRoomInteractable = RunRoomInteractable.new()
@@ -770,9 +849,9 @@ func _spawn_boss_victory_exit() -> void:
 	_boss_exit = item
 
 func _on_boss_victory_exit_used(_payload: Dictionary) -> void:
-	if current_phase != RunPhase.BOSS_ARENA_PLACEHOLDER:
+	if current_phase != RunPhase.BOSS_ARENA_PLACEHOLDER and current_phase != RunPhase.BOSS:
 		return
-	_finish_local_run(true, "The Sentencing Furnace placeholder is complete.")
+	_finish_local_run(true, "The Ash Warden has been defeated.")
 
 func _clear_boss_placeholder_nodes() -> void:
 	if _boss_placeholder != null and is_instance_valid(_boss_placeholder):
@@ -781,10 +860,11 @@ func _clear_boss_placeholder_nodes() -> void:
 	if _boss_exit != null and is_instance_valid(_boss_exit):
 		_boss_exit.queue_free()
 	_boss_exit = null
+	_active_ash_warden_boss = null
 	var nodes: Array[Node] = []
 	_collect_nodes(get_parent(), nodes)
 	for node: Node in nodes:
-		if node.is_in_group("boss_placeholder"):
+		if node.is_in_group("boss_placeholder") or node.is_in_group("ash_warden_boss") or node.is_in_group("boss_runtime"):
 			node.queue_free()
 
 func _build_gate_choices() -> Array[Dictionary]:
@@ -1087,7 +1167,7 @@ func _record_run_results(victory: bool = true) -> void:
 		"patron": "Local Route Loop",
 		"boon": _reward_display_summary(),
 		"victory": victory,
-		"notes": "V23 boss arena placeholder returned to the Threshold Nave.",
+		"notes": "V24 Ash Warden boss route returned to the Threshold Nave.",
 		"run_ash_remaining": run_ash_shards,
 		"forge_mark": active_forge_mark,
 		"shop_purchases": shop_purchases,
@@ -1229,6 +1309,14 @@ func _get_boss_gate_position() -> Vector2:
 				return fallback_pos
 	return _get_reward_position()
 
+
+func _get_room_center_position() -> Vector2:
+	if runtime_adapter != null and runtime_adapter.has_method("get_room_center_position"):
+		var adapter_pos: Variant = runtime_adapter.call("get_room_center_position")
+		if adapter_pos is Vector2:
+			return adapter_pos
+	return _get_boss_gate_position()
+
 func _get_runtime_parent() -> Node:
 	var parent_node: Node = get_parent()
 	if parent_node == null:
@@ -1240,6 +1328,23 @@ func _get_runtime_parent() -> Node:
 	if runtime != null:
 		return runtime
 	return parent_node
+
+func _wire_player_death_signal() -> void:
+	var player: Node = _find_player_node()
+	if player == null:
+		return
+	var callback: Callable = Callable(self, "_on_player_died")
+	if player.has_signal("died") and not player.is_connected("died", callback):
+		player.connect("died", callback)
+
+func _on_player_died() -> void:
+	if run_finished:
+		return
+	if current_phase == RunPhase.HUB or current_phase == RunPhase.RETURN_TO_HUB:
+		return
+	if current_phase == RunPhase.BOSS and not ash_warden_boss_can_end_run_on_player_death:
+		return
+	_finish_local_run(false, "The Penitent Knight fell in Circle 0.")
 
 func _find_player_node() -> Node:
 	var players: Array[Node] = get_tree().get_nodes_in_group("player")
@@ -1307,6 +1412,7 @@ func _update_hud() -> void:
 		"hazards_active": current_phase == RunPhase.COMBAT,
 		"run_finished": run_finished,
 		"victory": current_phase == RunPhase.RUN_VICTORY,
+		"boss": {"current_health": _boss_health_current, "max_health": _boss_health_max, "active": current_phase == RunPhase.BOSS},
 	}
 	if hud_controller != null and is_instance_valid(hud_controller):
 		if current_phase == RunPhase.HUB and not auto_start_run_on_ready:
@@ -1394,6 +1500,8 @@ func _phase_label() -> String:
 			return "BOSS LOCKED PLACEHOLDER"
 		RunPhase.BOSS_ARENA_PLACEHOLDER:
 			return "BOSS ARENA PLACEHOLDER"
+		RunPhase.BOSS:
+			return "BOSS"
 		RunPhase.RUN_VICTORY:
 			return "RUN VICTORY"
 		RunPhase.RUN_DEATH:
@@ -1430,6 +1538,8 @@ func _objective_text() -> String:
 			return "You reached the Ash Warden gate. Press E at the seal to enter the Sentencing Furnace placeholder."
 		RunPhase.BOSS_ARENA_PLACEHOLDER:
 			return "Break the Ash Warden placeholder seal, then use the exit marker."
+		RunPhase.BOSS:
+			return "Defeat the Ash Warden. Bait him into armed furnace seals to stagger him."
 		RunPhase.RUN_VICTORY:
 			return "Run complete. Press E to return to the Threshold Nave."
 		RunPhase.RUN_DEATH:
