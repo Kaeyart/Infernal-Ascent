@@ -1,21 +1,28 @@
 extends Node2D
 class_name IsoHubRuntimeController
 
+## V26 — Hub Stations V1.
+## Makes the hub readable and functional without adding permanent-upgrade purchasing,
+## save-system expansion, boss logic, enemy changes, or player-art changes.
+
 const PLAYER_SCRIPT: Script = preload("res://scripts/iso/IsoPhysicsTestPlayer.gd")
 const PANEL_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubInteractionPanel.gd")
 const NPC_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubNPC.gd")
 const TRAINING_DUMMY_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubTrainingDummy.gd")
+const STATION_MARKER_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubStationMarker.gd")
 
 @export var run_scene_path: String = "res://scenes/iso/rooms/circle0/combat_ash_intake_hall_01_iso.tscn"
 @export var marker_root_name: String = "Markers"
 @export var y_sorted_root_name: String = "L3_YSorted"
-@export var interact_radius: float = 82.0
+@export var interact_radius: float = 88.0
 @export var npc_interact_radius: float = 92.0
 @export var auto_spawn_player: bool = true
 @export var auto_spawn_npcs: bool = true
+@export var auto_spawn_station_markers: bool = true
 @export var camera_zoom: Vector2 = Vector2(1.0, 1.0)
 @export var camera_smoothing_speed: float = 8.0
 @export var training_dummy_health: int = 12
+@export var show_hub_station_markers: bool = true
 
 var player_node: Node2D = null
 var hud_layer: CanvasLayer = null
@@ -23,6 +30,7 @@ var hud_label: Label = null
 var interaction_panel: IsoHubInteractionPanel = null
 var training_dummy: IsoHubTrainingDummy = null
 var spawned_npcs: Array[IsoHubNPC] = []
+var spawned_station_markers: Array = []
 
 var status_text: String = "Hub ready. Walk to a station."
 var _e_down_previous: bool = false
@@ -30,47 +38,151 @@ var _escape_down_previous: bool = false
 var _panel_close_armed: bool = false
 
 var station_defs: Array[Dictionary] = [
-	{"marker": "HellGateStart", "title": "Hell Gate", "prompt": "Press E to descend into Circle 0.", "kind": "run_start", "body": "The gate opens into the current test descent: Ash Intake Hall. This starts the run loop."},
-	{"marker": "WeaponAltarMarker", "title": "Weapon Altar", "prompt": "Press E to inspect your current weapon.", "kind": "weapon_altar", "body": ""},
-	{"marker": "BoonShrineMarker", "title": "Patron Shrine", "prompt": "Press E to inspect patrons and relationships.", "kind": "patron_shrine", "body": ""},
-	{"marker": "TrainingDummyMarker", "title": "Training Yard", "prompt": "Press E to spawn or reset a training dummy.", "kind": "training_dummy", "body": "TRAINING YARD\n\nThe dummy has visible health and shows damage numbers when hit.\n\nHow to test:\n- Press E here to spawn or reset the dummy.\n- Use Space or left mouse to attack.\n- Watch the dummy HP bar and damage popups.\n- Press E here again to reset it.\n\nFuture training features:\n- DPS readout\n- weapon comparison\n- boon testing\n- enemy practice spawns\n- damage type breakdown"},
-	{"marker": "FountainMarker", "title": "Fountain", "prompt": "Press E to view last run results.", "kind": "fountain_results", "body": ""}
+	{
+		"marker": "HellGateStart",
+		"title": "Hell Gate",
+		"prompt": "Press E to begin the Circle 0 demo run.",
+		"action_label": "[E] Begin Descent",
+		"kind": "run_start",
+		"color": Color("#b94632"),
+		"fallback_position": Vector2(640.0, 315.0),
+		"body": "HELL GATE\n\nBegin the current demo descent.\n\nRoute target:\nHub → Circle 0 → rooms → Ash Warden → victory or death → hub.\n\nThis station starts the playable demo loop."
+	},
+	{
+		"marker": "TrainingDummyMarker",
+		"title": "Training Yard",
+		"prompt": "Press E to spawn or reset the training dummy.",
+		"action_label": "[E] Reset Dummy",
+		"kind": "training_dummy",
+		"color": Color("#d4a35e"),
+		"fallback_position": Vector2(470.0, 625.0),
+		"body": "TRAINING YARD\n\nUse this space to test movement, dash, light attack, heavy attack, damage timing, and hit feedback.\n\nControls:\n- WASD: move\n- Shift: dash\n- Space / left mouse: light attack\n- F / right mouse: heavy attack\n\nPress E here again to reset the dummy."
+	},
+	{
+		"marker": "FountainMarker",
+		"title": "Memory Pool",
+		"prompt": "Press E to inspect the last run result.",
+		"action_label": "[E] View Last Run",
+		"kind": "memory_pool",
+		"color": Color("#8fb6c8"),
+		"fallback_position": Vector2(765.0, 520.0),
+		"body": ""
+	},
+	{
+		"marker": "BoonShrineMarker",
+		"title": "Reliquary Altar",
+		"prompt": "Press E to inspect permanent progression.",
+		"action_label": "[E] Inspect Altar",
+		"kind": "upgrade_altar",
+		"color": Color("#c59254"),
+		"fallback_position": Vector2(525.0, 455.0),
+		"body": "RELIQUARY ALTAR\n\nPermanent upgrades unlock in V27.\n\nThis station will spend Ash Sigils on small permanent bonuses such as max HP, starting damage, dash efficiency, and reward-choice improvements.\n\nCurrent status: altar sealed until the next roadmap milestone."
+	},
+	{
+		"marker": "WeaponAltarMarker",
+		"title": "Hub Forge",
+		"prompt": "Press E to inspect weapon and forge status.",
+		"action_label": "[E] Inspect Forge",
+		"kind": "hub_forge",
+		"color": Color("#d17b3b"),
+		"fallback_position": Vector2(375.0, 500.0),
+		"body": "HUB FORGE\n\nThe forge records weapon state and future unlocks.\n\nRun-only forge marks already exist inside runs. Permanent weapon work is still locked.\n\nCurrent weapon: Penitent Blade."
+	},
+	{
+		"marker": "FountainMarker",
+		"offset": Vector2(158.0, -140.0),
+		"title": "Codex Lectern",
+		"prompt": "Press E to inspect enemy and lore records.",
+		"action_label": "[E] Open Codex",
+		"kind": "codex",
+		"color": Color("#bca98d"),
+		"fallback_position": Vector2(905.0, 382.0),
+		"body": "CODEX LECTERN\n\nRecords unlock later.\n\nPlanned demo records:\n- Circle 0 enemies\n- Ash Warden boss entry\n- room and hazard notes\n- institutional lore about Hell as a punishment machine\n\nCurrent status: placeholder station."
+	},
+	{
+		"marker": "HellGateStart",
+		"offset": Vector2(215.0, 48.0),
+		"title": "Sealed Descent Door",
+		"prompt": "Press E to inspect the sealed future route.",
+		"action_label": "[E] Inspect Seal",
+		"kind": "sealed_door",
+		"locked": true,
+		"color": Color("#6d5b4d"),
+		"fallback_position": Vector2(850.0, 360.0),
+		"body": "SEALED DESCENT DOOR\n\nThe route beyond Circle 0 is locked for the demo.\n\nFuture full-game path:\nCircle 0 → deeper circles → final descent toward Lucifer.\n\nCurrent status: locked future-content marker."
+	}
 ]
 
 var npc_defs: Array[Dictionary] = [
-	{"id": "weapon_keeper", "name": "Varric, Weapon Keeper", "role": "armory", "marker": "WeaponAltarMarker", "offset": Vector2(-82.0, -52.0), "color": Color("#d1a45b"), "body": "Weapon Keeper placeholder.\n\nThe Weapon Altar now shows your current weapon: Penitent Blade.\n\nNext planned step for this station:\n- choose between unlocked weapons\n- inspect weapon aspects\n- apply forge upgrades\n- compare weapon roles before starting a run"},
-	{"id": "shrine_attendant", "name": "The Veiled Attendant", "role": "patrons", "marker": "BoonShrineMarker", "offset": Vector2(78.0, -56.0), "color": Color("#9fd8ff"), "body": ""},
-	{"id": "archivist", "name": "Erem, Ash Archivist", "role": "codex", "marker": "FountainMarker", "offset": Vector2(155.0, -135.0), "color": Color("#bca98d"), "body": "Archivist placeholder.\n\nThis NPC will become the codex keeper.\n\nPlanned records:\n- enemies encountered\n- patron boons discovered\n- boss records\n- run history\n- institutional lore about Hell and the Circles"},
-	{"id": "toll_clerk", "name": "Marta, Toll Clerk", "role": "merchant", "marker": "TrainingDummyMarker", "offset": Vector2(-165.0, -98.0), "color": Color("#d8b866"), "body": ""}
+	{
+		"id": "weapon_keeper",
+		"name": "Varric, Weapon Keeper",
+		"role": "armory",
+		"marker": "WeaponAltarMarker",
+		"offset": Vector2(-82.0, -52.0),
+		"color": Color("#d1a45b"),
+		"body": "Weapon Keeper placeholder.\n\nThe Hub Forge now shows the current weapon state.\n\nNext planned weapon work comes after the demo foundation is stable."
+	},
+	{
+		"id": "shrine_attendant",
+		"name": "The Veiled Attendant",
+		"role": "reliquary",
+		"marker": "BoonShrineMarker",
+		"offset": Vector2(78.0, -56.0),
+		"color": Color("#9fd8ff"),
+		"body": ""
+	},
+	{
+		"id": "archivist",
+		"name": "Erem, Ash Archivist",
+		"role": "codex",
+		"marker": "FountainMarker",
+		"offset": Vector2(155.0, -135.0),
+		"color": Color("#bca98d"),
+		"body": "Archivist placeholder.\n\nThis NPC will become the codex keeper for enemies, bosses, rooms, hazards, and Hell's institutional lore."
+	},
+	{
+		"id": "toll_clerk",
+		"name": "Marta, Toll Clerk",
+		"role": "merchant",
+		"marker": "TrainingDummyMarker",
+		"offset": Vector2(-165.0, -98.0),
+		"color": Color("#d8b866"),
+		"body": ""
+	}
 ]
 
 func _ready() -> void:
 	_setup_hud()
 	_setup_interaction_panel()
+	if auto_spawn_station_markers:
+		call_deferred("_spawn_station_markers")
 	if auto_spawn_player:
 		call_deferred("_spawn_player_from_marker")
 	if auto_spawn_npcs:
 		call_deferred("_spawn_hub_npcs")
 	if RunSessionData.has_last_run():
-		status_text = "Returned from a run. Visit the Fountain to inspect Last Run Results."
+		status_text = "Returned from a run. Visit the Memory Pool to inspect the result."
 
 func _process(_delta: float) -> void:
 	if _panel_is_open():
 		_update_panel_input()
 		_update_hud()
+		_update_station_marker_focus({})
 		return
 
 	var nearest_interactable: Dictionary = _get_nearest_interactable()
 	if nearest_interactable.is_empty():
 		if RunSessionData.has_last_run():
-			status_text = "Hub ready. Last Run Results available at the Fountain."
+			status_text = "Hub ready. Last Run Results available at the Memory Pool."
 		else:
-			status_text = "Hub ready. Walk to a station or NPC."
+			status_text = "Hub ready. Walk to a station."
 	else:
 		status_text = "%s — %s" % [str(nearest_interactable.get("title", "Interact")), str(nearest_interactable.get("prompt", "Press E."))]
 		if _interact_pressed_once():
 			_activate_interactable(nearest_interactable)
 
+	_update_station_marker_focus(nearest_interactable)
 	_update_hud()
 
 func _spawn_player_from_marker() -> void:
@@ -88,6 +200,40 @@ func _spawn_player_from_marker() -> void:
 
 	player_node.global_position = spawn_position
 	_ensure_camera(player_node)
+
+func _spawn_station_markers() -> void:
+	_clear_station_markers()
+	if not show_hub_station_markers:
+		return
+	var parent_node: Node = _get_y_sorted_root()
+	for station: Dictionary in station_defs:
+		var marker_node = STATION_MARKER_SCRIPT.new()
+		marker_node.name = "Station_" + str(station.get("kind", "station"))
+		parent_node.add_child(marker_node)
+		var station_color: Color = station.get("color", Color("#c59254")) as Color
+		marker_node.global_position = _get_station_world_position(station)
+		marker_node.setup(
+			str(station.get("title", "Station")),
+			str(station.get("kind", "station")),
+			str(station.get("action_label", "[E] Inspect")),
+			station_color,
+			bool(station.get("locked", false))
+		)
+		spawned_station_markers.append(marker_node)
+
+func _clear_station_markers() -> void:
+	for marker_node in spawned_station_markers:
+		if marker_node != null and is_instance_valid(marker_node):
+			marker_node.queue_free()
+	spawned_station_markers.clear()
+
+func _update_station_marker_focus(nearest_interactable: Dictionary) -> void:
+	var focused_title: String = ""
+	if not nearest_interactable.is_empty() and str(nearest_interactable.get("_kind", "")) == "station":
+		focused_title = str(nearest_interactable.get("title", ""))
+	for marker_node in spawned_station_markers:
+		if marker_node != null and is_instance_valid(marker_node) and marker_node.has_method("set_focused"):
+			marker_node.set_focused(str(marker_node.get("station_title")) == focused_title)
 
 func _spawn_hub_npcs() -> void:
 	_clear_spawned_npcs()
@@ -160,7 +306,7 @@ func _update_panel_input() -> void:
 	if escape_pressed or e_pressed:
 		interaction_panel.close_panel()
 		_panel_close_armed = false
-		status_text = "Hub ready. Walk to a station or NPC."
+		status_text = "Hub ready. Walk to a station."
 
 func _get_nearest_interactable() -> Dictionary:
 	var nearest_station: Dictionary = _get_nearest_station()
@@ -185,18 +331,25 @@ func _get_nearest_station() -> Dictionary:
 	var best_distance: float = INF
 
 	for station: Dictionary in station_defs:
-		var marker: Node2D = _find_marker(str(station.get("marker", "")))
-		if marker == null:
-			continue
-
-		var distance: float = player_node.global_position.distance_to(marker.global_position)
+		var station_position: Vector2 = _get_station_world_position(station)
+		var distance: float = player_node.global_position.distance_to(station_position)
 		if distance <= interact_radius and distance < best_distance:
 			best_distance = distance
 			best_station = station.duplicate(true)
 			best_station["_kind"] = "station"
 			best_station["_distance"] = distance
+			best_station["_world_position"] = station_position
 
 	return best_station
+
+func _get_station_world_position(station: Dictionary) -> Vector2:
+	var fallback_position: Vector2 = station.get("fallback_position", Vector2(640.0, 520.0)) as Vector2
+	var marker: Node2D = _find_marker(str(station.get("marker", "")))
+	var position: Vector2 = fallback_position
+	if marker != null:
+		position = marker.global_position
+	var offset: Vector2 = station.get("offset", Vector2.ZERO) as Vector2
+	return position + offset
 
 func _get_nearest_npc() -> Dictionary:
 	if player_node == null or not is_instance_valid(player_node):
@@ -253,21 +406,29 @@ func _activate_station(station: Dictionary) -> void:
 		get_tree().change_scene_to_file(run_scene_path)
 		return
 
-	if kind == "weapon_altar":
-		_show_panel("Weapon Altar", PlayerWeaponData.build_weapon_panel_text())
-		return
-
-	if kind == "patron_shrine":
-		_show_panel("Patron Shrine", PatronShrineData.build_patron_shrine_panel_text())
-		return
-
-	if kind == "fountain_results":
-		_show_panel("Fountain", RunSessionData.build_fountain_panel_text())
-		return
-
 	if kind == "training_dummy":
 		_spawn_or_reset_training_dummy()
 		_show_panel(title, str(station.get("body", "Training dummy reset.")))
+		return
+
+	if kind == "memory_pool" or kind == "fountain_results":
+		_show_panel("Memory Pool", RunSessionData.build_fountain_panel_text())
+		return
+
+	if kind == "upgrade_altar" or kind == "patron_shrine":
+		_show_panel("Reliquary Altar", _build_reliquary_panel_text())
+		return
+
+	if kind == "hub_forge" or kind == "weapon_altar":
+		_show_panel("Hub Forge", _build_hub_forge_panel_text())
+		return
+
+	if kind == "codex":
+		_show_panel("Codex Lectern", _build_codex_panel_text())
+		return
+
+	if kind == "sealed_door":
+		_show_panel("Sealed Descent Door", str(station.get("body", "This door is sealed.")))
 		return
 
 	if kind == "panel":
@@ -275,6 +436,20 @@ func _activate_station(station: Dictionary) -> void:
 		return
 
 	_show_panel(title, "This station is not implemented yet.")
+
+func _build_reliquary_panel_text() -> String:
+	return "RELIQUARY ALTAR\n\nPermanent upgrades unlock in V27.\n\nCurrent currency:\n%s\n\nPlanned permanent upgrades:\n- Max HP\n- Starting damage\n- Dash cooldown efficiency\n- Starting Ash Sigil bonus\n- Better reward choice chance\n\nThis station is readable now, but purchasing is intentionally not implemented until the next milestone." % RunEconomyData.get_currency_summary_line()
+
+func _build_hub_forge_panel_text() -> String:
+	var weapon_text: String = ""
+	if Engine.has_singleton("PlayerWeaponData"):
+		weapon_text = ""
+	# PlayerWeaponData is an autoload in the project; direct call is kept for the current hub workflow.
+	weapon_text = PlayerWeaponData.build_weapon_panel_text()
+	return "HUB FORGE\n\n%s\n\nDemo note:\nRun-only forge marks are functional inside the descent. Permanent forge progression is reserved for later roadmap work." % weapon_text
+
+func _build_codex_panel_text() -> String:
+	return "CODEX LECTERN\n\nRecords are not implemented yet.\n\nPlanned demo entries:\n- Ash Grunt\n- Cinder Lunger\n- Ember Spitter\n- Chainbound Penitent\n- Furnace Imp\n- Bell Wretch\n- The Ash Warden\n- Circle 0 hazards\n\nThis station is intentionally a placeholder until the save/progression layer can record discoveries."
 
 func _show_panel(title: String, body: String) -> void:
 	if interaction_panel == null:
@@ -326,16 +501,22 @@ func _setup_hud() -> void:
 	hud_label = Label.new()
 	hud_label.name = "HubStatusLabel"
 	hud_label.position = Vector2(18.0, 18.0)
-	hud_label.size = Vector2(900.0, 165.0)
+	hud_label.size = Vector2(780.0, 120.0)
+	hud_label.add_theme_font_size_override("font_size", 16)
+	hud_label.add_theme_color_override("font_color", Color("#ead8b8"))
 	hud_layer.add_child(hud_label)
 
 func _update_hud() -> void:
 	if hud_label == null:
 		return
 
-	hud_label.text = "Infernal Ascent Hub V1\n%s\n%s\nHell Gate target: combat_ash_intake_hall_01_iso.tscn" % [
+	var last_run_line: String = "No recorded run result yet."
+	if RunSessionData.has_last_run():
+		last_run_line = "Last run recorded. Visit Memory Pool."
+	hud_label.text = "THRESHOLD NAVE\n%s\n%s\n%s" % [
 		status_text,
-		RunEconomyData.get_currency_summary_line()
+		RunEconomyData.get_currency_summary_line(),
+		last_run_line
 	]
 
 func _interact_pressed_once() -> bool:
