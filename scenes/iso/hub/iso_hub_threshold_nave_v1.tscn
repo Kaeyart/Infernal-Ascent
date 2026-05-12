@@ -740,27 +740,27 @@ position = Vector2(-479, 154)
 shape = SubResource("CapsuleShape2D_h8kbn")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=836769097]
-position = Vector2(-436, 150)
+position = Vector2(-470, 198)
 shape = SubResource("CapsuleShape2D_h8kbn")
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1650985610]
-position = Vector2(-396, 156)
+position = Vector2(-445, 196)
 shape = SubResource("CapsuleShape2D_h8kbn")
 
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1182762786]
-position = Vector2(-352, 173)
+position = Vector2(-406, 233)
 shape = SubResource("CapsuleShape2D_h8kbn")
 
 [node name="CollisionShape2D5" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1404828479]
-position = Vector2(-307, 195)
+position = Vector2(-323, 232)
 shape = SubResource("CapsuleShape2D_h8kbn")
 
 [node name="CollisionShape2D6" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=949488012]
-position = Vector2(-260, 216)
+position = Vector2(-288, 303)
 shape = SubResource("CapsuleShape2D_h8kbn")
 
 [node name="CollisionShape2D7" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1671473292]
-position = Vector2(-215, 242)
+position = Vector2(-233, 303)
 shape = SubResource("CapsuleShape2D_h8kbn")
 
 [node name="CollisionShape2D10" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=522245369]
@@ -823,10 +823,6 @@ shape = SubResource("CapsuleShape2D_h8kbn")
 position = Vector2(543, 661)
 shape = SubResource("CapsuleShape2D_h8kbn")
 
-[node name="CollisionShape2D25" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1903065510]
-position = Vector2(260, 29)
-shape = SubResource("CapsuleShape2D_h8kbn")
-
 [node name="CollisionShape2D26" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1469238348]
 position = Vector2(304, 46)
 shape = SubResource("CapsuleShape2D_h8kbn")
@@ -856,15 +852,15 @@ position = Vector2(-301, -70)
 shape = SubResource("CapsuleShape2D_h8kbn")
 
 [node name="CollisionShape2D58" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=970138089]
-position = Vector2(-317, 55)
+position = Vector2(-187, 26)
 shape = SubResource("CapsuleShape2D_h8kbn")
 
 [node name="CollisionShape2D59" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=622284204]
-position = Vector2(-273, 72)
+position = Vector2(-191, 28)
 shape = SubResource("CapsuleShape2D_h8kbn")
 
 [node name="CollisionShape2D60" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=2114158423]
-position = Vector2(-228, 94)
+position = Vector2(-167, 57)
 shape = SubResource("CapsuleShape2D_h8kbn")
 
 [node name="CollisionShape2D33" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1560268709]
@@ -1046,19 +1042,6 @@ shape = SubResource("CapsuleShape2D_wwmrd")
 position = Vector2(99, -696)
 shape = SubResource("CapsuleShape2D_wwmrd")
 
-[node name="CollisionShape2D32" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=2080446233]
-position = Vector2(-389, -609)
-shape = SubResource("CapsuleShape2D_wwmrd")
-
-[node name="CollisionShape2D33" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1343466813]
-position = Vector2(-330, -650)
-rotation = 1.1641346
-shape = SubResource("CapsuleShape2D_wwmrd")
-
-[node name="CollisionShape2D34" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=2048225753]
-position = Vector2(-147, -839)
-shape = SubResource("CapsuleShape2D_wwmrd")
-
 [node name="CollisionShape2D36" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=2097697890]
 position = Vector2(-1385, -636)
 shape = SubResource("CapsuleShape2D_wwmrd")
@@ -1080,7 +1063,7 @@ position = Vector2(-845, -522)
 shape = SubResource("CapsuleShape2D_wwmrd")
 
 [node name="CollisionShape2D40" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1434125655]
-position = Vector2(-907, -494)
+position = Vector2(-865, -539)
 shape = SubResource("CapsuleShape2D_wwmrd")
 
 [node name="CollisionShape2D11" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1229080742]
@@ -1096,7 +1079,7 @@ position = Vector2(-684, -595)
 shape = SubResource("CapsuleShape2D_wwmrd")
 
 [node name="CollisionShape2D14" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=349497078]
-position = Vector2(-625, -626)
+position = Vector2(-664, -700)
 shape = SubResource("CapsuleShape2D_wwmrd")
 
 [node name="CollisionShape2D15" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1971171518]
@@ -1104,19 +1087,19 @@ position = Vector2(-661, -622)
 shape = SubResource("CapsuleShape2D_wwmrd")
 
 [node name="CollisionShape2D16" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1300952191]
-position = Vector2(-608, -646)
+position = Vector2(-617, -689)
 shape = SubResource("CapsuleShape2D_wwmrd")
 
 [node name="CollisionShape2D17" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=811261772]
-position = Vector2(-571, -679)
+position = Vector2(-582, -717)
 shape = SubResource("CapsuleShape2D_wwmrd")
 
 [node name="CollisionShape2D18" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=748058770]
-position = Vector2(-531, -718)
+position = Vector2(-526, -741)
 shape = SubResource("CapsuleShape2D_wwmrd")
 
 [node name="CollisionShape2D19" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=858177911]
-position = Vector2(-476, -730)
+position = Vector2(-468, -786)
 shape = SubResource("CapsuleShape2D_wwmrd")
 
 [node name="CollisionShape2D6" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1563479812]
@@ -1174,7 +1157,7 @@ position = Vector2(327, -217)
 position = Vector2(876, -297)
 
 [node name="CameraAnchor" type="Marker2D" parent="Markers" unique_id=734220856]
-position = Vector2(432, 595)
+position = Vector2(432, 593)
 
 [node name="HubRuntime" type="Node2D" parent="." unique_id=1532305020]
 script = ExtResource("hub_runtime")
