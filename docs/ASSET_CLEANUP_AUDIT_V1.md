@@ -6,7 +6,7 @@
 - `unused_runtime_candidates`: **0**
 - `production_sources_not_runtime`: **0**
 - `total_art_assets_scanned`: **1144**
-- `text_files_scanned`: **339**
+- `text_files_scanned`: **340**
 
 ## Runtime-used assets that stay
 
@@ -86,16 +86,16 @@
 - `art/actors/enemies/circle0/gate_warden/gate_warden_up_02.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json, art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.csv`
 - `art/actors/enemies/circle0/gate_warden/gate_warden_up_03.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json, art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.csv`
 - `art/actors/enemies/circle0/gate_warden/gate_warden_up_04.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json, art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.csv`
-- `art/actors/enemies/circle0/source/ash_wretch_source_sheet.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/enemies/circle0/source/ash_wretch_source_sheet_photoroom.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/enemies/circle0/source/bell_hound_source_sheet.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/enemies/circle0/source/bell_hound_source_sheet_photoroom.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/enemies/circle0/source/cinder_scribe_source_sheet.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/enemies/circle0/source/cinder_scribe_source_sheet_photoroom.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/enemies/circle0/source/gate_warden_source_sheet.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/enemies/circle0/source/gate_warden_source_sheet_photoroom.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/enemies/circle0/source/vestibule_bailiff_source_sheet.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/enemies/circle0/source/vestibule_bailiff_source_sheet_photoroom.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/enemies/circle0/source/ash_wretch_source_sheet.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/enemies/circle0/source/ash_wretch_source_sheet_photoroom.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/enemies/circle0/source/bell_hound_source_sheet.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/enemies/circle0/source/bell_hound_source_sheet_photoroom.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/enemies/circle0/source/cinder_scribe_source_sheet.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/enemies/circle0/source/cinder_scribe_source_sheet_photoroom.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/enemies/circle0/source/gate_warden_source_sheet.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/enemies/circle0/source/gate_warden_source_sheet_photoroom.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/enemies/circle0/source/vestibule_bailiff_source_sheet.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/enemies/circle0/source/vestibule_bailiff_source_sheet_photoroom.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
 - `art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_down_01.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json, art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.csv`
 - `art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_down_02.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json, art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.csv`
 - `art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_down_03.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json, art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.csv`
@@ -113,23 +113,23 @@
 - `art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_up_03.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json, art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.csv`
 - `art/actors/enemies/circle0/vestibule_bailiff/vestibule_bailiff_up_04.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json, art/actors/enemies/circle0/manifest/circle0_enemy_sprites_manifest_v1_1_stabilized.csv`
 - `art/actors/player/penitent/_contact_sheet.png` — used by `docs/PENITENT_LOCOMOTION_SPRITE_PASS.md, docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_contact_sheet_fixed_cells.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_contact_sheet_idle_anchored.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_contact_sheet_idle_clean.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_contact_sheet_idle_only.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_debug_raw_idle_cells/raw_down_01.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_debug_raw_idle_cells/raw_down_02.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_debug_raw_idle_cells/raw_down_03.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_debug_raw_idle_cells/raw_down_04.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_debug_raw_idle_cells/raw_left_01.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_debug_raw_idle_cells/raw_left_02.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_debug_raw_idle_cells/raw_left_03.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_debug_raw_idle_cells/raw_left_04.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_debug_raw_idle_cells/raw_right_01.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_debug_raw_idle_cells/raw_right_02.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_debug_raw_idle_cells/raw_right_03.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_debug_raw_idle_cells/raw_right_04.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
-- `art/actors/player/penitent/_debug_raw_idle_cells/raw_up_01.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_contact_sheet_fixed_cells.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_contact_sheet_idle_anchored.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_contact_sheet_idle_clean.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_contact_sheet_idle_only.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_debug_raw_idle_cells/raw_down_01.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_debug_raw_idle_cells/raw_down_02.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_debug_raw_idle_cells/raw_down_03.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_debug_raw_idle_cells/raw_down_04.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_debug_raw_idle_cells/raw_left_01.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_debug_raw_idle_cells/raw_left_02.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_debug_raw_idle_cells/raw_left_03.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_debug_raw_idle_cells/raw_left_04.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_debug_raw_idle_cells/raw_right_01.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_debug_raw_idle_cells/raw_right_02.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_debug_raw_idle_cells/raw_right_03.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_debug_raw_idle_cells/raw_right_04.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
+- `art/actors/player/penitent/_debug_raw_idle_cells/raw_up_01.png` — used by `docs/ASSET_CLEANUP_AUDIT_V1.md, docs/ASSET_CLEANUP_AUDIT_V1.json`
 - ... plus 1024 more.
 
 ## Unused runtime candidates

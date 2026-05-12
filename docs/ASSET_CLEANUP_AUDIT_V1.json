@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-05-12T12:58:08",
+  "generated_at": "2026-05-12T12:59:25",
   "counts": {
     "used_runtime_assets": 1144,
     "unused_runtime_candidates": 0,
     "production_sources_not_runtime": 0,
     "total_art_assets_scanned": 1144,
-    "text_files_scanned": 339
+    "text_files_scanned": 340
   },
   "used_runtime_assets": [
     {
@@ -1209,7 +1209,6 @@
       "size_bytes": 1265684,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/enemies/circle0/source/ash_wretch_source_sheet.png.import"
@@ -1219,7 +1218,6 @@
       "size_bytes": 1265684,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/enemies/circle0/source/ash_wretch_source_sheet_photoroom.png.import"
@@ -1229,7 +1227,6 @@
       "size_bytes": 1149051,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/enemies/circle0/source/bell_hound_source_sheet.png.import"
@@ -1239,7 +1236,6 @@
       "size_bytes": 1149051,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/enemies/circle0/source/bell_hound_source_sheet_photoroom.png.import"
@@ -1249,7 +1245,6 @@
       "size_bytes": 1342986,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/enemies/circle0/source/cinder_scribe_source_sheet.png.import"
@@ -1259,7 +1254,6 @@
       "size_bytes": 1342986,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/enemies/circle0/source/cinder_scribe_source_sheet_photoroom.png.import"
@@ -1269,7 +1263,6 @@
       "size_bytes": 1289417,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/enemies/circle0/source/gate_warden_source_sheet.png.import"
@@ -1279,7 +1272,6 @@
       "size_bytes": 1289417,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/enemies/circle0/source/gate_warden_source_sheet_photoroom.png.import"
@@ -1289,7 +1281,6 @@
       "size_bytes": 1298915,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/enemies/circle0/source/vestibule_bailiff_source_sheet.png.import"
@@ -1299,7 +1290,6 @@
       "size_bytes": 1298915,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/enemies/circle0/source/vestibule_bailiff_source_sheet_photoroom.png.import"
@@ -1592,7 +1582,6 @@
       "size_bytes": 942850,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_contact_sheet_fixed_cells.png.import"
@@ -1602,7 +1591,6 @@
       "size_bytes": 264026,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_contact_sheet_idle_anchored.png.import"
@@ -1612,7 +1600,6 @@
       "size_bytes": 336306,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_contact_sheet_idle_clean.png.import"
@@ -1622,7 +1609,6 @@
       "size_bytes": 311625,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_contact_sheet_idle_only.png.import"
@@ -1632,7 +1618,6 @@
       "size_bytes": 74311,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_down_01.png.import"
@@ -1642,7 +1627,6 @@
       "size_bytes": 73401,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_down_02.png.import"
@@ -1652,7 +1636,6 @@
       "size_bytes": 74434,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_down_03.png.import"
@@ -1662,7 +1645,6 @@
       "size_bytes": 72824,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_down_04.png.import"
@@ -1672,7 +1654,6 @@
       "size_bytes": 53562,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_left_01.png.import"
@@ -1682,7 +1663,6 @@
       "size_bytes": 52637,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_left_02.png.import"
@@ -1692,7 +1672,6 @@
       "size_bytes": 53555,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_left_03.png.import"
@@ -1702,7 +1681,6 @@
       "size_bytes": 52660,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_left_04.png.import"
@@ -1712,7 +1690,6 @@
       "size_bytes": 53533,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_right_01.png.import"
@@ -1722,7 +1699,6 @@
       "size_bytes": 53214,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_right_02.png.import"
@@ -1732,7 +1708,6 @@
       "size_bytes": 53239,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_right_03.png.import"
@@ -1742,7 +1717,6 @@
       "size_bytes": 54036,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_right_04.png.import"
@@ -1752,7 +1726,6 @@
       "size_bytes": 63597,
       "referenced_by": [
         "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_up_01.png.import"
@@ -1761,8 +1734,6 @@
       "path": "art/actors/player/penitent/_debug_raw_idle_cells/raw_up_02.png",
       "size_bytes": 62956,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_up_02.png.import"
@@ -1771,8 +1742,6 @@
       "path": "art/actors/player/penitent/_debug_raw_idle_cells/raw_up_03.png",
       "size_bytes": 63172,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_up_03.png.import"
@@ -1781,8 +1750,6 @@
       "path": "art/actors/player/penitent/_debug_raw_idle_cells/raw_up_04.png",
       "size_bytes": 63165,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_debug_raw_idle_cells/raw_up_04.png.import"
@@ -1791,8 +1758,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_down_01.png",
       "size_bytes": 127554,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_down_01.png.import"
@@ -1801,8 +1766,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_down_02.png",
       "size_bytes": 131883,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_down_02.png.import"
@@ -1811,8 +1774,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_down_03.png",
       "size_bytes": 145646,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_down_03.png.import"
@@ -1821,8 +1782,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_down_04.png",
       "size_bytes": 147375,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_down_04.png.import"
@@ -1831,8 +1790,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_left_01.png",
       "size_bytes": 123175,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_left_01.png.import"
@@ -1841,8 +1798,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_left_02.png",
       "size_bytes": 131294,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_left_02.png.import"
@@ -1851,8 +1806,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_left_03.png",
       "size_bytes": 136093,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_left_03.png.import"
@@ -1861,8 +1814,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_left_04.png",
       "size_bytes": 143615,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_left_04.png.import"
@@ -1871,8 +1822,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_right_01.png",
       "size_bytes": 122609,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_right_01.png.import"
@@ -1881,8 +1830,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_right_02.png",
       "size_bytes": 129939,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_right_02.png.import"
@@ -1891,8 +1838,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_right_03.png",
       "size_bytes": 135959,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_right_03.png.import"
@@ -1901,8 +1846,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_right_04.png",
       "size_bytes": 141799,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_right_04.png.import"
@@ -1911,8 +1854,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_up_01.png",
       "size_bytes": 123914,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_up_01.png.import"
@@ -1921,8 +1862,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_up_02.png",
       "size_bytes": 120735,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_up_02.png.import"
@@ -1931,8 +1870,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_up_03.png",
       "size_bytes": 132683,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_up_03.png.import"
@@ -1941,8 +1878,6 @@
       "path": "art/actors/player/penitent/_raw_cells/dash/raw_dash_up_04.png",
       "size_bytes": 141508,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/dash/raw_dash_up_04.png.import"
@@ -1951,8 +1886,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_down_01.png",
       "size_bytes": 138103,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_down_01.png.import"
@@ -1961,8 +1894,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_down_02.png",
       "size_bytes": 143349,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_down_02.png.import"
@@ -1971,8 +1902,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_down_03.png",
       "size_bytes": 151230,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_down_03.png.import"
@@ -1981,8 +1910,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_down_04.png",
       "size_bytes": 129432,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_down_04.png.import"
@@ -1991,8 +1918,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_left_01.png",
       "size_bytes": 122052,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_left_01.png.import"
@@ -2001,8 +1926,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_left_02.png",
       "size_bytes": 122036,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_left_02.png.import"
@@ -2011,8 +1934,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_left_03.png",
       "size_bytes": 127120,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_left_03.png.import"
@@ -2021,8 +1942,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_left_04.png",
       "size_bytes": 117604,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_left_04.png.import"
@@ -2031,8 +1950,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_right_01.png",
       "size_bytes": 118905,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_right_01.png.import"
@@ -2041,8 +1958,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_right_02.png",
       "size_bytes": 123119,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_right_02.png.import"
@@ -2051,8 +1966,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_right_03.png",
       "size_bytes": 122508,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_right_03.png.import"
@@ -2061,8 +1974,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_right_04.png",
       "size_bytes": 119835,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_right_04.png.import"
@@ -2071,8 +1982,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_up_01.png",
       "size_bytes": 124526,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_up_01.png.import"
@@ -2081,8 +1990,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_up_02.png",
       "size_bytes": 134666,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_up_02.png.import"
@@ -2091,8 +1998,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_up_03.png",
       "size_bytes": 135743,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_up_03.png.import"
@@ -2101,8 +2006,6 @@
       "path": "art/actors/player/penitent/_raw_cells/idle/raw_idle_up_04.png",
       "size_bytes": 124207,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/idle/raw_idle_up_04.png.import"
@@ -2111,8 +2014,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_down_01.png",
       "size_bytes": 132950,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_down_01.png.import"
@@ -2121,8 +2022,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_down_02.png",
       "size_bytes": 142456,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_down_02.png.import"
@@ -2131,8 +2030,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_down_03.png",
       "size_bytes": 146405,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_down_03.png.import"
@@ -2141,8 +2038,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_down_04.png",
       "size_bytes": 133637,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_down_04.png.import"
@@ -2151,8 +2046,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_left_01.png",
       "size_bytes": 128841,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_left_01.png.import"
@@ -2161,8 +2054,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_left_02.png",
       "size_bytes": 145843,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_left_02.png.import"
@@ -2171,8 +2062,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_left_03.png",
       "size_bytes": 145445,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_left_03.png.import"
@@ -2181,8 +2070,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_left_04.png",
       "size_bytes": 132436,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_left_04.png.import"
@@ -2191,8 +2078,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_right_01.png",
       "size_bytes": 136684,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_right_01.png.import"
@@ -2201,8 +2086,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_right_02.png",
       "size_bytes": 148660,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_right_02.png.import"
@@ -2211,8 +2094,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_right_03.png",
       "size_bytes": 149277,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_right_03.png.import"
@@ -2221,8 +2102,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_right_04.png",
       "size_bytes": 136912,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_right_04.png.import"
@@ -2231,8 +2110,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_up_01.png",
       "size_bytes": 121642,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_up_01.png.import"
@@ -2241,8 +2118,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_up_02.png",
       "size_bytes": 136677,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_up_02.png.import"
@@ -2251,8 +2126,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_up_03.png",
       "size_bytes": 130507,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_up_03.png.import"
@@ -2261,8 +2134,6 @@
       "path": "art/actors/player/penitent/_raw_cells/run/raw_run_up_04.png",
       "size_bytes": 127111,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/_raw_cells/run/raw_run_up_04.png.import"
@@ -2271,8 +2142,6 @@
       "path": "art/actors/player/penitent/attack/attack_down_01.png",
       "size_bytes": 72991,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_down_01.png.import"
@@ -2281,8 +2150,6 @@
       "path": "art/actors/player/penitent/attack/attack_down_02.png",
       "size_bytes": 74657,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_down_02.png.import"
@@ -2291,8 +2158,6 @@
       "path": "art/actors/player/penitent/attack/attack_down_03.png",
       "size_bytes": 87664,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_down_03.png.import"
@@ -2301,8 +2166,6 @@
       "path": "art/actors/player/penitent/attack/attack_down_04.png",
       "size_bytes": 72231,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_down_04.png.import"
@@ -2311,8 +2174,6 @@
       "path": "art/actors/player/penitent/attack/attack_left_01.png",
       "size_bytes": 52405,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_left_01.png.import"
@@ -2321,8 +2182,6 @@
       "path": "art/actors/player/penitent/attack/attack_left_02.png",
       "size_bytes": 76065,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_left_02.png.import"
@@ -2331,8 +2190,6 @@
       "path": "art/actors/player/penitent/attack/attack_left_03.png",
       "size_bytes": 81443,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_left_03.png.import"
@@ -2341,8 +2198,6 @@
       "path": "art/actors/player/penitent/attack/attack_left_04.png",
       "size_bytes": 51663,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_left_04.png.import"
@@ -2351,8 +2206,6 @@
       "path": "art/actors/player/penitent/attack/attack_right_01.png",
       "size_bytes": 52279,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_right_01.png.import"
@@ -2361,8 +2214,6 @@
       "path": "art/actors/player/penitent/attack/attack_right_02.png",
       "size_bytes": 73876,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_right_02.png.import"
@@ -2371,8 +2222,6 @@
       "path": "art/actors/player/penitent/attack/attack_right_03.png",
       "size_bytes": 79126,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_right_03.png.import"
@@ -2381,8 +2230,6 @@
       "path": "art/actors/player/penitent/attack/attack_right_04.png",
       "size_bytes": 52031,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_right_04.png.import"
@@ -2391,8 +2238,6 @@
       "path": "art/actors/player/penitent/attack/attack_up_01.png",
       "size_bytes": 62469,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_up_01.png.import"
@@ -2401,8 +2246,6 @@
       "path": "art/actors/player/penitent/attack/attack_up_02.png",
       "size_bytes": 66141,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_up_02.png.import"
@@ -2411,8 +2254,6 @@
       "path": "art/actors/player/penitent/attack/attack_up_03.png",
       "size_bytes": 76365,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_up_03.png.import"
@@ -2421,8 +2262,6 @@
       "path": "art/actors/player/penitent/attack/attack_up_04.png",
       "size_bytes": 61951,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack/attack_up_04.png.import"
@@ -2431,7 +2270,6 @@
       "path": "art/actors/player/penitent/attack_down_01.png",
       "size_bytes": 72991,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/PLAYER_WEAPON_ARCHITECTURE_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "infernal_ascent_godot_scaffold/docs/PLAYER_WEAPON_ARCHITECTURE_V1.md"
@@ -2442,8 +2280,6 @@
       "path": "art/actors/player/penitent/attack_down_02.png",
       "size_bytes": 74657,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_down_02.png.import"
@@ -2452,8 +2288,6 @@
       "path": "art/actors/player/penitent/attack_down_03.png",
       "size_bytes": 87664,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_down_03.png.import"
@@ -2462,8 +2296,6 @@
       "path": "art/actors/player/penitent/attack_down_04.png",
       "size_bytes": 72231,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_down_04.png.import"
@@ -2472,8 +2304,6 @@
       "path": "art/actors/player/penitent/attack_left_01.png",
       "size_bytes": 52405,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_left_01.png.import"
@@ -2482,8 +2312,6 @@
       "path": "art/actors/player/penitent/attack_left_02.png",
       "size_bytes": 76065,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_left_02.png.import"
@@ -2492,8 +2320,6 @@
       "path": "art/actors/player/penitent/attack_left_03.png",
       "size_bytes": 81443,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_left_03.png.import"
@@ -2502,8 +2328,6 @@
       "path": "art/actors/player/penitent/attack_left_04.png",
       "size_bytes": 51663,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_left_04.png.import"
@@ -2512,8 +2336,6 @@
       "path": "art/actors/player/penitent/attack_right_01.png",
       "size_bytes": 52279,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_right_01.png.import"
@@ -2522,8 +2344,6 @@
       "path": "art/actors/player/penitent/attack_right_02.png",
       "size_bytes": 73876,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_right_02.png.import"
@@ -2532,8 +2352,6 @@
       "path": "art/actors/player/penitent/attack_right_03.png",
       "size_bytes": 79126,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_right_03.png.import"
@@ -2542,8 +2360,6 @@
       "path": "art/actors/player/penitent/attack_right_04.png",
       "size_bytes": 52031,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_right_04.png.import"
@@ -2552,8 +2368,6 @@
       "path": "art/actors/player/penitent/attack_up_01.png",
       "size_bytes": 62469,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_up_01.png.import"
@@ -2562,8 +2376,6 @@
       "path": "art/actors/player/penitent/attack_up_02.png",
       "size_bytes": 66141,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_up_02.png.import"
@@ -2572,8 +2384,6 @@
       "path": "art/actors/player/penitent/attack_up_03.png",
       "size_bytes": 76365,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_up_03.png.import"
@@ -2582,8 +2392,6 @@
       "path": "art/actors/player/penitent/attack_up_04.png",
       "size_bytes": 61951,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/attack_up_04.png.import"
@@ -2592,7 +2400,6 @@
       "path": "art/actors/player/penitent/contact_sheets/PENITENT_ANIMATION_V1_CONTACT_SHEET.png",
       "size_bytes": 1148287,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "docs/PENITENT_ANIMATION_ART_PASS_V1.md",
         "infernal_ascent_godot_scaffold/docs/PENITENT_ANIMATION_ART_PASS_V1.md"
@@ -2603,7 +2410,6 @@
       "path": "art/actors/player/penitent/dash/dash_down_01.png",
       "size_bytes": 74081,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2614,7 +2420,6 @@
       "path": "art/actors/player/penitent/dash/dash_down_02.png",
       "size_bytes": 75392,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2625,7 +2430,6 @@
       "path": "art/actors/player/penitent/dash/dash_down_03.png",
       "size_bytes": 88118,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2636,7 +2440,6 @@
       "path": "art/actors/player/penitent/dash/dash_down_04.png",
       "size_bytes": 89032,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2647,7 +2450,6 @@
       "path": "art/actors/player/penitent/dash/dash_left_01.png",
       "size_bytes": 69847,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2658,7 +2460,6 @@
       "path": "art/actors/player/penitent/dash/dash_left_02.png",
       "size_bytes": 76734,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2669,7 +2470,6 @@
       "path": "art/actors/player/penitent/dash/dash_left_03.png",
       "size_bytes": 81959,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2680,7 +2480,6 @@
       "path": "art/actors/player/penitent/dash/dash_left_04.png",
       "size_bytes": 83992,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2691,7 +2490,6 @@
       "path": "art/actors/player/penitent/dash/dash_right_01.png",
       "size_bytes": 68753,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2702,7 +2500,6 @@
       "path": "art/actors/player/penitent/dash/dash_right_02.png",
       "size_bytes": 74358,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2713,7 +2510,6 @@
       "path": "art/actors/player/penitent/dash/dash_right_03.png",
       "size_bytes": 79348,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2724,7 +2520,6 @@
       "path": "art/actors/player/penitent/dash/dash_right_04.png",
       "size_bytes": 81678,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2735,7 +2530,6 @@
       "path": "art/actors/player/penitent/dash/dash_up_01.png",
       "size_bytes": 68748,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2746,7 +2540,6 @@
       "path": "art/actors/player/penitent/dash/dash_up_02.png",
       "size_bytes": 65708,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2757,7 +2550,6 @@
       "path": "art/actors/player/penitent/dash/dash_up_03.png",
       "size_bytes": 75841,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2768,7 +2560,6 @@
       "path": "art/actors/player/penitent/dash/dash_up_04.png",
       "size_bytes": 84800,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2779,7 +2570,6 @@
       "path": "art/actors/player/penitent/dash_down_01.png",
       "size_bytes": 74081,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/PLAYER_WEAPON_ARCHITECTURE_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
@@ -2792,7 +2582,6 @@
       "path": "art/actors/player/penitent/dash_down_02.png",
       "size_bytes": 75392,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2803,7 +2592,6 @@
       "path": "art/actors/player/penitent/dash_down_03.png",
       "size_bytes": 88118,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2814,7 +2602,6 @@
       "path": "art/actors/player/penitent/dash_down_04.png",
       "size_bytes": 89032,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2825,7 +2612,6 @@
       "path": "art/actors/player/penitent/dash_left_01.png",
       "size_bytes": 69847,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2836,7 +2622,6 @@
       "path": "art/actors/player/penitent/dash_left_02.png",
       "size_bytes": 76734,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2847,7 +2632,6 @@
       "path": "art/actors/player/penitent/dash_left_03.png",
       "size_bytes": 81959,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2858,7 +2642,6 @@
       "path": "art/actors/player/penitent/dash_left_04.png",
       "size_bytes": 83992,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2869,7 +2652,6 @@
       "path": "art/actors/player/penitent/dash_right_01.png",
       "size_bytes": 68753,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2880,7 +2662,6 @@
       "path": "art/actors/player/penitent/dash_right_02.png",
       "size_bytes": 74358,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2891,7 +2672,6 @@
       "path": "art/actors/player/penitent/dash_right_03.png",
       "size_bytes": 79348,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2902,7 +2682,6 @@
       "path": "art/actors/player/penitent/dash_right_04.png",
       "size_bytes": 81678,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2913,7 +2692,6 @@
       "path": "art/actors/player/penitent/dash_up_01.png",
       "size_bytes": 68748,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2924,7 +2702,6 @@
       "path": "art/actors/player/penitent/dash_up_02.png",
       "size_bytes": 65708,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2935,7 +2712,6 @@
       "path": "art/actors/player/penitent/dash_up_03.png",
       "size_bytes": 75841,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2946,7 +2722,6 @@
       "path": "art/actors/player/penitent/dash_up_04.png",
       "size_bytes": 84800,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -2957,8 +2732,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_down_01.png",
       "size_bytes": 64409,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_down_01.png.import"
@@ -2967,8 +2740,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_down_02.png",
       "size_bytes": 68953,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_down_02.png.import"
@@ -2977,8 +2748,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_down_03.png",
       "size_bytes": 64409,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_down_03.png.import"
@@ -2987,8 +2756,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_down_04.png",
       "size_bytes": 68953,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_down_04.png.import"
@@ -2997,8 +2764,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_left_01.png",
       "size_bytes": 46323,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_left_01.png.import"
@@ -3007,8 +2772,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_left_02.png",
       "size_bytes": 49443,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_left_02.png.import"
@@ -3017,8 +2780,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_left_03.png",
       "size_bytes": 46325,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_left_03.png.import"
@@ -3027,8 +2788,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_left_04.png",
       "size_bytes": 49437,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_left_04.png.import"
@@ -3037,8 +2796,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_right_01.png",
       "size_bytes": 46258,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_right_01.png.import"
@@ -3047,8 +2804,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_right_02.png",
       "size_bytes": 49784,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_right_02.png.import"
@@ -3057,8 +2812,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_right_03.png",
       "size_bytes": 46260,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_right_03.png.import"
@@ -3067,8 +2820,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_right_04.png",
       "size_bytes": 49815,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_right_04.png.import"
@@ -3077,8 +2828,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_up_01.png",
       "size_bytes": 54800,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_up_01.png.import"
@@ -3087,8 +2836,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_up_02.png",
       "size_bytes": 59185,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_up_02.png.import"
@@ -3097,8 +2844,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_up_03.png",
       "size_bytes": 54800,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_up_03.png.import"
@@ -3107,8 +2852,6 @@
       "path": "art/actors/player/penitent/hurt/hurt_up_04.png",
       "size_bytes": 59185,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt/hurt_up_04.png.import"
@@ -3117,7 +2860,6 @@
       "path": "art/actors/player/penitent/hurt_down_01.png",
       "size_bytes": 64409,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/PLAYER_WEAPON_ARCHITECTURE_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "infernal_ascent_godot_scaffold/docs/PLAYER_WEAPON_ARCHITECTURE_V1.md"
@@ -3128,8 +2870,6 @@
       "path": "art/actors/player/penitent/hurt_down_02.png",
       "size_bytes": 68953,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_down_02.png.import"
@@ -3138,8 +2878,6 @@
       "path": "art/actors/player/penitent/hurt_down_03.png",
       "size_bytes": 64409,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_down_03.png.import"
@@ -3148,8 +2886,6 @@
       "path": "art/actors/player/penitent/hurt_down_04.png",
       "size_bytes": 68953,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_down_04.png.import"
@@ -3158,8 +2894,6 @@
       "path": "art/actors/player/penitent/hurt_left_01.png",
       "size_bytes": 46323,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_left_01.png.import"
@@ -3168,8 +2902,6 @@
       "path": "art/actors/player/penitent/hurt_left_02.png",
       "size_bytes": 49443,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_left_02.png.import"
@@ -3178,8 +2910,6 @@
       "path": "art/actors/player/penitent/hurt_left_03.png",
       "size_bytes": 46325,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_left_03.png.import"
@@ -3188,8 +2918,6 @@
       "path": "art/actors/player/penitent/hurt_left_04.png",
       "size_bytes": 49437,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_left_04.png.import"
@@ -3198,8 +2926,6 @@
       "path": "art/actors/player/penitent/hurt_right_01.png",
       "size_bytes": 46258,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_right_01.png.import"
@@ -3208,8 +2934,6 @@
       "path": "art/actors/player/penitent/hurt_right_02.png",
       "size_bytes": 49784,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_right_02.png.import"
@@ -3218,8 +2942,6 @@
       "path": "art/actors/player/penitent/hurt_right_03.png",
       "size_bytes": 46260,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_right_03.png.import"
@@ -3228,8 +2950,6 @@
       "path": "art/actors/player/penitent/hurt_right_04.png",
       "size_bytes": 49815,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_right_04.png.import"
@@ -3238,8 +2958,6 @@
       "path": "art/actors/player/penitent/hurt_up_01.png",
       "size_bytes": 54800,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_up_01.png.import"
@@ -3248,8 +2966,6 @@
       "path": "art/actors/player/penitent/hurt_up_02.png",
       "size_bytes": 59185,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_up_02.png.import"
@@ -3258,8 +2974,6 @@
       "path": "art/actors/player/penitent/hurt_up_03.png",
       "size_bytes": 54800,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_up_03.png.import"
@@ -3268,8 +2982,6 @@
       "path": "art/actors/player/penitent/hurt_up_04.png",
       "size_bytes": 59185,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/hurt_up_04.png.import"
@@ -3278,7 +2990,6 @@
       "path": "art/actors/player/penitent/idle/idle_down_01.png",
       "size_bytes": 72956,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "scripts/player/PlayerSpriteAnimator.gd",
@@ -3292,7 +3003,6 @@
       "path": "art/actors/player/penitent/idle/idle_down_02.png",
       "size_bytes": 72114,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -3303,7 +3013,6 @@
       "path": "art/actors/player/penitent/idle/idle_down_03.png",
       "size_bytes": 72536,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -3314,7 +3023,6 @@
       "path": "art/actors/player/penitent/idle/idle_down_04.png",
       "size_bytes": 71482,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json",
         "art/actors/player/penitent/_manifest.json",
         "infernal_ascent_godot_scaffold/art/actors/player/penitent/_manifest.json"
@@ -3928,8 +3636,6 @@
       "path": "art/actors/player/penitent/walk/walk_down_01.png",
       "size_bytes": 72956,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_down_01.png.import"
@@ -3938,8 +3644,6 @@
       "path": "art/actors/player/penitent/walk/walk_down_02.png",
       "size_bytes": 76067,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_down_02.png.import"
@@ -3948,8 +3652,6 @@
       "path": "art/actors/player/penitent/walk/walk_down_03.png",
       "size_bytes": 73809,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_down_03.png.import"
@@ -3958,8 +3660,6 @@
       "path": "art/actors/player/penitent/walk/walk_down_04.png",
       "size_bytes": 74280,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_down_04.png.import"
@@ -3968,8 +3668,6 @@
       "path": "art/actors/player/penitent/walk/walk_left_01.png",
       "size_bytes": 52187,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_left_01.png.import"
@@ -3978,8 +3676,6 @@
       "path": "art/actors/player/penitent/walk/walk_left_02.png",
       "size_bytes": 54277,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_left_02.png.import"
@@ -3988,8 +3684,6 @@
       "path": "art/actors/player/penitent/walk/walk_left_03.png",
       "size_bytes": 52698,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_left_03.png.import"
@@ -3998,8 +3692,6 @@
       "path": "art/actors/player/penitent/walk/walk_left_04.png",
       "size_bytes": 53754,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_left_04.png.import"
@@ -4008,8 +3700,6 @@
       "path": "art/actors/player/penitent/walk/walk_right_01.png",
       "size_bytes": 52054,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_right_01.png.import"
@@ -4018,8 +3708,6 @@
       "path": "art/actors/player/penitent/walk/walk_right_02.png",
       "size_bytes": 54347,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_right_02.png.import"
@@ -4028,8 +3716,6 @@
       "path": "art/actors/player/penitent/walk/walk_right_03.png",
       "size_bytes": 52750,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_right_03.png.import"
@@ -4038,8 +3724,6 @@
       "path": "art/actors/player/penitent/walk/walk_right_04.png",
       "size_bytes": 54875,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_right_04.png.import"
@@ -4048,8 +3732,6 @@
       "path": "art/actors/player/penitent/walk/walk_up_01.png",
       "size_bytes": 62370,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_up_01.png.import"
@@ -4058,8 +3740,6 @@
       "path": "art/actors/player/penitent/walk/walk_up_02.png",
       "size_bytes": 64764,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_up_02.png.import"
@@ -4068,8 +3748,6 @@
       "path": "art/actors/player/penitent/walk/walk_up_03.png",
       "size_bytes": 62694,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_up_03.png.import"
@@ -4078,8 +3756,6 @@
       "path": "art/actors/player/penitent/walk/walk_up_04.png",
       "size_bytes": 63915,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk/walk_up_04.png.import"
@@ -4098,8 +3774,6 @@
       "path": "art/actors/player/penitent/walk_down_02.png",
       "size_bytes": 76067,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_down_02.png.import"
@@ -4108,8 +3782,6 @@
       "path": "art/actors/player/penitent/walk_down_03.png",
       "size_bytes": 73809,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_down_03.png.import"
@@ -4118,8 +3790,6 @@
       "path": "art/actors/player/penitent/walk_down_04.png",
       "size_bytes": 74280,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_down_04.png.import"
@@ -4128,8 +3798,6 @@
       "path": "art/actors/player/penitent/walk_left_01.png",
       "size_bytes": 52187,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_left_01.png.import"
@@ -4138,8 +3806,6 @@
       "path": "art/actors/player/penitent/walk_left_02.png",
       "size_bytes": 54277,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_left_02.png.import"
@@ -4148,8 +3814,6 @@
       "path": "art/actors/player/penitent/walk_left_03.png",
       "size_bytes": 52698,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_left_03.png.import"
@@ -4158,8 +3822,6 @@
       "path": "art/actors/player/penitent/walk_left_04.png",
       "size_bytes": 53754,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_left_04.png.import"
@@ -4168,8 +3830,6 @@
       "path": "art/actors/player/penitent/walk_right_01.png",
       "size_bytes": 52054,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_right_01.png.import"
@@ -4178,8 +3838,6 @@
       "path": "art/actors/player/penitent/walk_right_02.png",
       "size_bytes": 54347,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_right_02.png.import"
@@ -4188,8 +3846,6 @@
       "path": "art/actors/player/penitent/walk_right_03.png",
       "size_bytes": 52750,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_right_03.png.import"
@@ -4198,8 +3854,6 @@
       "path": "art/actors/player/penitent/walk_right_04.png",
       "size_bytes": 54875,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_right_04.png.import"
@@ -4208,8 +3862,6 @@
       "path": "art/actors/player/penitent/walk_up_01.png",
       "size_bytes": 62370,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_up_01.png.import"
@@ -4218,8 +3870,6 @@
       "path": "art/actors/player/penitent/walk_up_02.png",
       "size_bytes": 64764,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_up_02.png.import"
@@ -4228,8 +3878,6 @@
       "path": "art/actors/player/penitent/walk_up_03.png",
       "size_bytes": 62694,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_up_03.png.import"
@@ -4238,8 +3886,6 @@
       "path": "art/actors/player/penitent/walk_up_04.png",
       "size_bytes": 63915,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/actors/player/penitent/walk_up_04.png.import"
@@ -4248,8 +3894,6 @@
       "path": "art/bosses/big_demon/big_demon_idle_anim_f0.png",
       "size_bytes": 497,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/bosses/big_demon/big_demon_idle_anim_f0.png.import"
@@ -4258,8 +3902,6 @@
       "path": "art/bosses/big_demon/big_demon_idle_anim_f1.png",
       "size_bytes": 510,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/bosses/big_demon/big_demon_idle_anim_f1.png.import"
@@ -4268,8 +3910,6 @@
       "path": "art/bosses/big_demon/big_demon_idle_anim_f2.png",
       "size_bytes": 496,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/bosses/big_demon/big_demon_idle_anim_f2.png.import"
@@ -4278,8 +3918,6 @@
       "path": "art/bosses/big_demon/big_demon_idle_anim_f3.png",
       "size_bytes": 481,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/bosses/big_demon/big_demon_idle_anim_f3.png.import"
@@ -4288,8 +3926,6 @@
       "path": "art/bosses/big_demon/big_demon_run_anim_f0.png",
       "size_bytes": 478,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/bosses/big_demon/big_demon_run_anim_f0.png.import"
@@ -4298,8 +3934,6 @@
       "path": "art/bosses/big_demon/big_demon_run_anim_f1.png",
       "size_bytes": 515,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/bosses/big_demon/big_demon_run_anim_f1.png.import"
@@ -4308,8 +3942,6 @@
       "path": "art/bosses/big_demon/big_demon_run_anim_f2.png",
       "size_bytes": 531,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/bosses/big_demon/big_demon_run_anim_f2.png.import"
@@ -4318,8 +3950,6 @@
       "path": "art/bosses/big_demon/big_demon_run_anim_f3.png",
       "size_bytes": 499,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/bosses/big_demon/big_demon_run_anim_f3.png.import"
@@ -4328,8 +3958,6 @@
       "path": "art/enemies/big_zombie/big_zombie_idle_anim_f0.png",
       "size_bytes": 489,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/big_zombie/big_zombie_idle_anim_f0.png.import"
@@ -4338,8 +3966,6 @@
       "path": "art/enemies/big_zombie/big_zombie_idle_anim_f1.png",
       "size_bytes": 475,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/big_zombie/big_zombie_idle_anim_f1.png.import"
@@ -4348,8 +3974,6 @@
       "path": "art/enemies/big_zombie/big_zombie_idle_anim_f2.png",
       "size_bytes": 472,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/big_zombie/big_zombie_idle_anim_f2.png.import"
@@ -4358,8 +3982,6 @@
       "path": "art/enemies/big_zombie/big_zombie_idle_anim_f3.png",
       "size_bytes": 444,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/big_zombie/big_zombie_idle_anim_f3.png.import"
@@ -4368,8 +3990,6 @@
       "path": "art/enemies/big_zombie/big_zombie_run_anim_f0.png",
       "size_bytes": 462,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/big_zombie/big_zombie_run_anim_f0.png.import"
@@ -4378,8 +3998,6 @@
       "path": "art/enemies/big_zombie/big_zombie_run_anim_f1.png",
       "size_bytes": 513,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/big_zombie/big_zombie_run_anim_f1.png.import"
@@ -4388,8 +4006,6 @@
       "path": "art/enemies/big_zombie/big_zombie_run_anim_f2.png",
       "size_bytes": 530,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/big_zombie/big_zombie_run_anim_f2.png.import"
@@ -4398,8 +4014,6 @@
       "path": "art/enemies/big_zombie/big_zombie_run_anim_f3.png",
       "size_bytes": 510,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/big_zombie/big_zombie_run_anim_f3.png.import"
@@ -4408,8 +4022,6 @@
       "path": "art/enemies/chort/chort_idle_anim_f0.png",
       "size_bytes": 284,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/chort/chort_idle_anim_f0.png.import"
@@ -4418,8 +4030,6 @@
       "path": "art/enemies/chort/chort_idle_anim_f1.png",
       "size_bytes": 242,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/chort/chort_idle_anim_f1.png.import"
@@ -4428,8 +4038,6 @@
       "path": "art/enemies/chort/chort_idle_anim_f2.png",
       "size_bytes": 261,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/chort/chort_idle_anim_f2.png.import"
@@ -4438,8 +4046,6 @@
       "path": "art/enemies/chort/chort_idle_anim_f3.png",
       "size_bytes": 308,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/chort/chort_idle_anim_f3.png.import"
@@ -4448,8 +4054,6 @@
       "path": "art/enemies/chort/chort_run_anim_f0.png",
       "size_bytes": 298,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/chort/chort_run_anim_f0.png.import"
@@ -4458,8 +4062,6 @@
       "path": "art/enemies/chort/chort_run_anim_f1.png",
       "size_bytes": 300,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/chort/chort_run_anim_f1.png.import"
@@ -4468,8 +4070,6 @@
       "path": "art/enemies/chort/chort_run_anim_f2.png",
       "size_bytes": 310,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/chort/chort_run_anim_f2.png.import"
@@ -4478,8 +4078,6 @@
       "path": "art/enemies/chort/chort_run_anim_f3.png",
       "size_bytes": 285,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/chort/chort_run_anim_f3.png.import"
@@ -4488,8 +4086,6 @@
       "path": "art/enemies/goblin/goblin_idle_anim_f0.png",
       "size_bytes": 204,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/goblin/goblin_idle_anim_f0.png.import"
@@ -4498,8 +4094,6 @@
       "path": "art/enemies/goblin/goblin_idle_anim_f1.png",
       "size_bytes": 203,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/goblin/goblin_idle_anim_f1.png.import"
@@ -4508,8 +4102,6 @@
       "path": "art/enemies/goblin/goblin_idle_anim_f2.png",
       "size_bytes": 178,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/goblin/goblin_idle_anim_f2.png.import"
@@ -4518,8 +4110,6 @@
       "path": "art/enemies/goblin/goblin_idle_anim_f3.png",
       "size_bytes": 203,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/goblin/goblin_idle_anim_f3.png.import"
@@ -4528,8 +4118,6 @@
       "path": "art/enemies/goblin/goblin_run_anim_f0.png",
       "size_bytes": 215,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/goblin/goblin_run_anim_f0.png.import"
@@ -4538,8 +4126,6 @@
       "path": "art/enemies/goblin/goblin_run_anim_f1.png",
       "size_bytes": 216,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/goblin/goblin_run_anim_f1.png.import"
@@ -4548,8 +4134,6 @@
       "path": "art/enemies/goblin/goblin_run_anim_f2.png",
       "size_bytes": 237,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/goblin/goblin_run_anim_f2.png.import"
@@ -4558,8 +4142,6 @@
       "path": "art/enemies/goblin/goblin_run_anim_f3.png",
       "size_bytes": 232,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/goblin/goblin_run_anim_f3.png.import"
@@ -4568,8 +4150,6 @@
       "path": "art/enemies/imp/imp_idle_anim_f0.png",
       "size_bytes": 234,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/imp/imp_idle_anim_f0.png.import"
@@ -4578,8 +4158,6 @@
       "path": "art/enemies/imp/imp_idle_anim_f1.png",
       "size_bytes": 221,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/imp/imp_idle_anim_f1.png.import"
@@ -4588,8 +4166,6 @@
       "path": "art/enemies/imp/imp_idle_anim_f2.png",
       "size_bytes": 196,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/imp/imp_idle_anim_f2.png.import"
@@ -4598,8 +4174,6 @@
       "path": "art/enemies/imp/imp_idle_anim_f3.png",
       "size_bytes": 221,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/imp/imp_idle_anim_f3.png.import"
@@ -4608,8 +4182,6 @@
       "path": "art/enemies/imp/imp_run_anim_f0.png",
       "size_bytes": 230,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/imp/imp_run_anim_f0.png.import"
@@ -4618,8 +4190,6 @@
       "path": "art/enemies/imp/imp_run_anim_f1.png",
       "size_bytes": 218,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/imp/imp_run_anim_f1.png.import"
@@ -4628,8 +4198,6 @@
       "path": "art/enemies/imp/imp_run_anim_f2.png",
       "size_bytes": 227,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/imp/imp_run_anim_f2.png.import"
@@ -4638,8 +4206,6 @@
       "path": "art/enemies/imp/imp_run_anim_f3.png",
       "size_bytes": 233,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/imp/imp_run_anim_f3.png.import"
@@ -4648,8 +4214,6 @@
       "path": "art/enemies/masked_orc/masked_orc_idle_anim_f0.png",
       "size_bytes": 316,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/masked_orc/masked_orc_idle_anim_f0.png.import"
@@ -4658,8 +4222,6 @@
       "path": "art/enemies/masked_orc/masked_orc_idle_anim_f1.png",
       "size_bytes": 313,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/masked_orc/masked_orc_idle_anim_f1.png.import"
@@ -4668,8 +4230,6 @@
       "path": "art/enemies/masked_orc/masked_orc_idle_anim_f2.png",
       "size_bytes": 283,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/masked_orc/masked_orc_idle_anim_f2.png.import"
@@ -4678,8 +4238,6 @@
       "path": "art/enemies/masked_orc/masked_orc_idle_anim_f3.png",
       "size_bytes": 303,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/masked_orc/masked_orc_idle_anim_f3.png.import"
@@ -4688,8 +4246,6 @@
       "path": "art/enemies/masked_orc/masked_orc_run_anim_f0.png",
       "size_bytes": 316,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/masked_orc/masked_orc_run_anim_f0.png.import"
@@ -4698,8 +4254,6 @@
       "path": "art/enemies/masked_orc/masked_orc_run_anim_f1.png",
       "size_bytes": 316,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/masked_orc/masked_orc_run_anim_f1.png.import"
@@ -4708,8 +4262,6 @@
       "path": "art/enemies/masked_orc/masked_orc_run_anim_f2.png",
       "size_bytes": 324,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/masked_orc/masked_orc_run_anim_f2.png.import"
@@ -4718,8 +4270,6 @@
       "path": "art/enemies/masked_orc/masked_orc_run_anim_f3.png",
       "size_bytes": 315,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/masked_orc/masked_orc_run_anim_f3.png.import"
@@ -4728,8 +4278,6 @@
       "path": "art/enemies/ogre/ogre_idle_anim_f0.png",
       "size_bytes": 512,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/ogre/ogre_idle_anim_f0.png.import"
@@ -4738,7 +4286,6 @@
       "path": "art/enemies/ogre/ogre_idle_anim_f1.png",
       "size_bytes": 508,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/ogre/ogre_idle_anim_f1.png.import"
@@ -4747,7 +4294,6 @@
       "path": "art/enemies/ogre/ogre_idle_anim_f2.png",
       "size_bytes": 494,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/ogre/ogre_idle_anim_f2.png.import"
@@ -4756,7 +4302,6 @@
       "path": "art/enemies/ogre/ogre_idle_anim_f3.png",
       "size_bytes": 502,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/ogre/ogre_idle_anim_f3.png.import"
@@ -4765,7 +4310,6 @@
       "path": "art/enemies/ogre/ogre_run_anim_f0.png",
       "size_bytes": 507,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/ogre/ogre_run_anim_f0.png.import"
@@ -4774,7 +4318,6 @@
       "path": "art/enemies/ogre/ogre_run_anim_f1.png",
       "size_bytes": 533,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/ogre/ogre_run_anim_f1.png.import"
@@ -4783,7 +4326,6 @@
       "path": "art/enemies/ogre/ogre_run_anim_f2.png",
       "size_bytes": 529,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/ogre/ogre_run_anim_f2.png.import"
@@ -4792,7 +4334,6 @@
       "path": "art/enemies/ogre/ogre_run_anim_f3.png",
       "size_bytes": 494,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/ogre/ogre_run_anim_f3.png.import"
@@ -4801,7 +4342,6 @@
       "path": "art/enemies/skelet/skelet_idle_anim_f0.png",
       "size_bytes": 235,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/skelet/skelet_idle_anim_f0.png.import"
@@ -4810,7 +4350,6 @@
       "path": "art/enemies/skelet/skelet_idle_anim_f1.png",
       "size_bytes": 214,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/skelet/skelet_idle_anim_f1.png.import"
@@ -4819,7 +4358,6 @@
       "path": "art/enemies/skelet/skelet_idle_anim_f2.png",
       "size_bytes": 200,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/skelet/skelet_idle_anim_f2.png.import"
@@ -4828,7 +4366,6 @@
       "path": "art/enemies/skelet/skelet_idle_anim_f3.png",
       "size_bytes": 215,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/skelet/skelet_idle_anim_f3.png.import"
@@ -4837,7 +4374,6 @@
       "path": "art/enemies/skelet/skelet_run_anim_f0.png",
       "size_bytes": 233,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/skelet/skelet_run_anim_f0.png.import"
@@ -4846,7 +4382,6 @@
       "path": "art/enemies/skelet/skelet_run_anim_f1.png",
       "size_bytes": 231,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/skelet/skelet_run_anim_f1.png.import"
@@ -4855,7 +4390,6 @@
       "path": "art/enemies/skelet/skelet_run_anim_f2.png",
       "size_bytes": 231,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/skelet/skelet_run_anim_f2.png.import"
@@ -4864,7 +4398,6 @@
       "path": "art/enemies/skelet/skelet_run_anim_f3.png",
       "size_bytes": 216,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/enemies/skelet/skelet_run_anim_f3.png.import"
@@ -4885,7 +4418,6 @@
       "path": "art/hub_generated/contact_sheets/landmarks__gates_large_doors.png",
       "size_bytes": 163853,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/landmarks__gates_large_doors.png.import"
@@ -4894,7 +4426,6 @@
       "path": "art/hub_generated/contact_sheets/props__archive_bookcases_codex.png",
       "size_bytes": 151319,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/props__archive_bookcases_codex.png.import"
@@ -4903,7 +4434,6 @@
       "path": "art/hub_generated/contact_sheets/props__banners_chains_lights.png",
       "size_bytes": 115306,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/props__banners_chains_lights.png.import"
@@ -4912,7 +4442,6 @@
       "path": "art/hub_generated/contact_sheets/props__doors_wall_modules.png",
       "size_bytes": 141984,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/props__doors_wall_modules.png.import"
@@ -4921,7 +4450,6 @@
       "path": "art/hub_generated/contact_sheets/props__forge_smithing.png",
       "size_bytes": 124484,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/props__forge_smithing.png.import"
@@ -4930,7 +4458,6 @@
       "path": "art/hub_generated/contact_sheets/props__ritual_statues_pillars.png",
       "size_bytes": 134530,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/props__ritual_statues_pillars.png.import"
@@ -4939,7 +4466,6 @@
       "path": "art/hub_generated/contact_sheets/props__storage_furniture.png",
       "size_bytes": 129879,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/props__storage_furniture.png.import"
@@ -4948,7 +4474,6 @@
       "path": "art/hub_generated/contact_sheets/props__training_weapons_chests.png",
       "size_bytes": 132020,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/props__training_weapons_chests.png.import"
@@ -4957,7 +4482,6 @@
       "path": "art/hub_generated/contact_sheets/structural__carpets_platforms.png",
       "size_bytes": 164706,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/structural__carpets_platforms.png.import"
@@ -4966,7 +4490,6 @@
       "path": "art/hub_generated/contact_sheets/structural__doors_arches_pillars.png",
       "size_bytes": 194341,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/structural__doors_arches_pillars.png.import"
@@ -4975,7 +4498,6 @@
       "path": "art/hub_generated/contact_sheets/structural__floors.png",
       "size_bytes": 402660,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/structural__floors.png.import"
@@ -4984,7 +4506,6 @@
       "path": "art/hub_generated/contact_sheets/structural__lava_ember_channels.png",
       "size_bytes": 137971,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/structural__lava_ember_channels.png.import"
@@ -4993,7 +4514,6 @@
       "path": "art/hub_generated/contact_sheets/structural__lights_small_props.png",
       "size_bytes": 104985,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/structural__lights_small_props.png.import"
@@ -5002,7 +4522,6 @@
       "path": "art/hub_generated/contact_sheets/structural__trims_stairs_railings.png",
       "size_bytes": 96042,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/structural__trims_stairs_railings.png.import"
@@ -5011,7 +4530,6 @@
       "path": "art/hub_generated/contact_sheets/structural__walls_corners_banners.png",
       "size_bytes": 145341,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/contact_sheets/structural__walls_corners_banners.png.import"
@@ -8425,7 +7943,6 @@
       "path": "art/hub_generated/source/props_clean.png",
       "size_bytes": 1357741,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/source/props_clean.png.import"
@@ -8434,7 +7951,6 @@
       "path": "art/hub_generated/source/structural_clean.png",
       "size_bytes": 1536849,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/hub_generated/source/structural_clean.png.import"
@@ -8443,7 +7959,6 @@
       "path": "art/iso/circle0/ash_intake_hall_01/contact_sheets/contact_sheet_padded_32.png",
       "size_bytes": 582467,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/circle0/ash_intake_hall_01/contact_sheets/contact_sheet_padded_32.png.import"
@@ -8452,7 +7967,6 @@
       "path": "art/iso/circle0/ash_intake_hall_01/contact_sheets/contact_sheet_trimmed.png",
       "size_bytes": 657733,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/circle0/ash_intake_hall_01/contact_sheets/contact_sheet_trimmed.png.import"
@@ -8461,7 +7975,6 @@
       "path": "art/iso/circle0/ash_intake_hall_01/contact_sheets/source_bbox_debug.png",
       "size_bytes": 1125404,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/circle0/ash_intake_hall_01/contact_sheets/source_bbox_debug.png.import"
@@ -8985,7 +8498,6 @@
       "path": "art/iso/circle0/ash_intake_hall_01/source/ash_intake_hall_01_iso_clean_source.png",
       "size_bytes": 1373116,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/circle0/ash_intake_hall_01/source/ash_intake_hall_01_iso_clean_source.png.import"
@@ -8994,7 +8506,6 @@
       "path": "art/iso/circle0/ash_intake_hall_01/tiles_scaled_64x32_preview/tile_floor_border_lane_01_64x32_preview.png",
       "size_bytes": 3677,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/circle0/ash_intake_hall_01/tiles_scaled_64x32_preview/tile_floor_border_lane_01_64x32_preview.png.import"
@@ -9003,7 +8514,6 @@
       "path": "art/iso/circle0/ash_intake_hall_01/tiles_scaled_64x32_preview/tile_floor_cracked_01_64x32_preview.png",
       "size_bytes": 3777,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/circle0/ash_intake_hall_01/tiles_scaled_64x32_preview/tile_floor_cracked_01_64x32_preview.png.import"
@@ -9012,7 +8522,6 @@
       "path": "art/iso/circle0/ash_intake_hall_01/tiles_scaled_64x32_preview/tile_floor_grate_ash_vent_01_64x32_preview.png",
       "size_bytes": 4125,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/circle0/ash_intake_hall_01/tiles_scaled_64x32_preview/tile_floor_grate_ash_vent_01_64x32_preview.png.import"
@@ -9021,7 +8530,6 @@
       "path": "art/iso/circle0/ash_intake_hall_01/tiles_scaled_64x32_preview/tile_floor_plain_01_64x32_preview.png",
       "size_bytes": 3465,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/circle0/ash_intake_hall_01/tiles_scaled_64x32_preview/tile_floor_plain_01_64x32_preview.png.import"
@@ -9030,7 +8538,6 @@
       "path": "art/iso/circle0/ash_intake_hall_01/tiles_scaled_64x32_preview/tile_floor_sigil_judgment_01_64x32_preview.png",
       "size_bytes": 4118,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/circle0/ash_intake_hall_01/tiles_scaled_64x32_preview/tile_floor_sigil_judgment_01_64x32_preview.png.import"
@@ -9039,7 +8546,6 @@
       "path": "art/iso/hub/threshold_nave_v1/contact_sheets/contact_sheet_01.jpg",
       "size_bytes": 158006,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/hub/threshold_nave_v1/contact_sheets/contact_sheet_01.jpg.import"
@@ -9048,7 +8554,6 @@
       "path": "art/iso/hub/threshold_nave_v1/contact_sheets/contact_sheet_02.jpg",
       "size_bytes": 189638,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/hub/threshold_nave_v1/contact_sheets/contact_sheet_02.jpg.import"
@@ -9057,7 +8562,6 @@
       "path": "art/iso/hub/threshold_nave_v1/contact_sheets/contact_sheet_03.jpg",
       "size_bytes": 199192,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/hub/threshold_nave_v1/contact_sheets/contact_sheet_03.jpg.import"
@@ -9066,7 +8570,6 @@
       "path": "art/iso/hub/threshold_nave_v1/contact_sheets/contact_sheet_all_assets.jpg",
       "size_bytes": 541675,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/hub/threshold_nave_v1/contact_sheets/contact_sheet_all_assets.jpg.import"
@@ -11225,7 +10728,6 @@
       "path": "art/iso/hub/threshold_nave_v1/source_sheets/hub_sheet_01_structural.png",
       "size_bytes": 1643916,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/hub/threshold_nave_v1/source_sheets/hub_sheet_01_structural.png.import"
@@ -11234,7 +10736,6 @@
       "path": "art/iso/hub/threshold_nave_v1/source_sheets/hub_sheet_02_hero_stations.png",
       "size_bytes": 1644937,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/hub/threshold_nave_v1/source_sheets/hub_sheet_02_hero_stations.png.import"
@@ -11243,7 +10744,6 @@
       "path": "art/iso/hub/threshold_nave_v1/source_sheets/hub_sheet_03_props_fx.png",
       "size_bytes": 1312731,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_AUDIT_V1.md",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/iso/hub/threshold_nave_v1/source_sheets/hub_sheet_03_props_fx.png.import"
@@ -11252,7 +10752,6 @@
       "path": "art/props/hell_gate/_hell_gate_contact_sheet.png",
       "size_bytes": 188244,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/hell_gate/_hell_gate_contact_sheet.png.import"
@@ -11261,7 +10760,6 @@
       "path": "art/props/hell_gate/hell_gate_extract.png",
       "size_bytes": 468589,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/hell_gate/hell_gate_extract.png.import"
@@ -11280,7 +10778,6 @@
       "path": "art/props/hell_gate/hell_gate_extract_01_626x525.png",
       "size_bytes": 477725,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/hell_gate/hell_gate_extract_01_626x525.png.import"
@@ -11289,7 +10786,6 @@
       "path": "art/props/hell_gate/hell_gate_extract_02_308x407.png",
       "size_bytes": 193698,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/hell_gate/hell_gate_extract_02_308x407.png.import"
@@ -11307,7 +10803,6 @@
       "path": "art/props/hell_gate/hell_gate_extract_04_274x348.png",
       "size_bytes": 143445,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/hell_gate/hell_gate_extract_04_274x348.png.import"
@@ -11316,7 +10811,6 @@
       "path": "art/props/hell_gate/hell_gate_extract_05_259x297.png",
       "size_bytes": 113821,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/hell_gate/hell_gate_extract_05_259x297.png.import"
@@ -11325,7 +10819,6 @@
       "path": "art/props/hell_gate/hell_gate_open.png",
       "size_bytes": 2306020,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/hell_gate/hell_gate_open.png.import"
@@ -11334,7 +10827,6 @@
       "path": "art/props/room_doors/_contact_sheet_correct.png",
       "size_bytes": 418955,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_contact_sheet_correct.png.import"
@@ -11343,7 +10835,6 @@
       "path": "art/props/room_doors/_raw_circle_01_east.png",
       "size_bytes": 135531,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_01_east.png.import"
@@ -11352,7 +10843,6 @@
       "path": "art/props/room_doors/_raw_circle_01_north.png",
       "size_bytes": 158067,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_01_north.png.import"
@@ -11361,7 +10851,6 @@
       "path": "art/props/room_doors/_raw_circle_01_west.png",
       "size_bytes": 132758,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_01_west.png.import"
@@ -11370,7 +10859,6 @@
       "path": "art/props/room_doors/_raw_circle_02_east.png",
       "size_bytes": 136457,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_02_east.png.import"
@@ -11379,7 +10867,6 @@
       "path": "art/props/room_doors/_raw_circle_02_north.png",
       "size_bytes": 155818,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_02_north.png.import"
@@ -11388,7 +10875,6 @@
       "path": "art/props/room_doors/_raw_circle_02_west.png",
       "size_bytes": 134705,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_02_west.png.import"
@@ -11397,7 +10883,6 @@
       "path": "art/props/room_doors/_raw_circle_03_east.png",
       "size_bytes": 132231,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_03_east.png.import"
@@ -11406,7 +10891,6 @@
       "path": "art/props/room_doors/_raw_circle_03_north.png",
       "size_bytes": 157170,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_03_north.png.import"
@@ -11415,7 +10899,6 @@
       "path": "art/props/room_doors/_raw_circle_03_west.png",
       "size_bytes": 127332,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_03_west.png.import"
@@ -11424,7 +10907,6 @@
       "path": "art/props/room_doors/_raw_circle_04_east.png",
       "size_bytes": 149859,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_04_east.png.import"
@@ -11433,7 +10915,6 @@
       "path": "art/props/room_doors/_raw_circle_04_north.png",
       "size_bytes": 167414,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_04_north.png.import"
@@ -11442,7 +10923,6 @@
       "path": "art/props/room_doors/_raw_circle_04_west.png",
       "size_bytes": 147770,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_04_west.png.import"
@@ -11451,7 +10931,6 @@
       "path": "art/props/room_doors/_raw_circle_05_east.png",
       "size_bytes": 139233,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_05_east.png.import"
@@ -11460,7 +10939,6 @@
       "path": "art/props/room_doors/_raw_circle_05_north.png",
       "size_bytes": 165761,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_05_north.png.import"
@@ -11469,7 +10947,6 @@
       "path": "art/props/room_doors/_raw_circle_05_west.png",
       "size_bytes": 137011,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/_raw_circle_05_west.png.import"
@@ -11478,7 +10955,6 @@
       "path": "art/props/room_doors/circle_01_east.png",
       "size_bytes": 126677,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_01_east.png.import"
@@ -11499,7 +10975,6 @@
       "path": "art/props/room_doors/circle_01_south.png",
       "size_bytes": 152726,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_01_south.png.import"
@@ -11508,7 +10983,6 @@
       "path": "art/props/room_doors/circle_01_west.png",
       "size_bytes": 114696,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_01_west.png.import"
@@ -11517,7 +10991,6 @@
       "path": "art/props/room_doors/circle_02_east.png",
       "size_bytes": 120899,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_02_east.png.import"
@@ -11526,7 +10999,6 @@
       "path": "art/props/room_doors/circle_02_north.png",
       "size_bytes": 149441,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_02_north.png.import"
@@ -11535,7 +11007,6 @@
       "path": "art/props/room_doors/circle_02_south.png",
       "size_bytes": 149441,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_02_south.png.import"
@@ -11544,7 +11015,6 @@
       "path": "art/props/room_doors/circle_02_west.png",
       "size_bytes": 117412,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_02_west.png.import"
@@ -11553,7 +11023,6 @@
       "path": "art/props/room_doors/circle_03_east.png",
       "size_bytes": 120097,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_03_east.png.import"
@@ -11562,7 +11031,6 @@
       "path": "art/props/room_doors/circle_03_north.png",
       "size_bytes": 156591,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_03_north.png.import"
@@ -11571,7 +11039,6 @@
       "path": "art/props/room_doors/circle_03_south.png",
       "size_bytes": 156591,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_03_south.png.import"
@@ -11580,7 +11047,6 @@
       "path": "art/props/room_doors/circle_03_west.png",
       "size_bytes": 106412,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_03_west.png.import"
@@ -11589,7 +11055,6 @@
       "path": "art/props/room_doors/circle_04_east.png",
       "size_bytes": 141169,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_04_east.png.import"
@@ -11598,7 +11063,6 @@
       "path": "art/props/room_doors/circle_04_north.png",
       "size_bytes": 162932,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_04_north.png.import"
@@ -11607,7 +11071,6 @@
       "path": "art/props/room_doors/circle_04_south.png",
       "size_bytes": 162932,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_04_south.png.import"
@@ -11616,7 +11079,6 @@
       "path": "art/props/room_doors/circle_04_west.png",
       "size_bytes": 131352,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_04_west.png.import"
@@ -11625,7 +11087,6 @@
       "path": "art/props/room_doors/circle_05_east.png",
       "size_bytes": 124770,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_05_east.png.import"
@@ -11634,7 +11095,6 @@
       "path": "art/props/room_doors/circle_05_north.png",
       "size_bytes": 160788,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_05_north.png.import"
@@ -11643,7 +11103,6 @@
       "path": "art/props/room_doors/circle_05_south.png",
       "size_bytes": 160788,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_05_south.png.import"
@@ -11652,7 +11111,6 @@
       "path": "art/props/room_doors/circle_05_west.png",
       "size_bytes": 116821,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors/circle_05_west.png.import"
@@ -11661,7 +11119,6 @@
       "path": "art/props/room_doors_v2/_contact_sheet.png",
       "size_bytes": 312650,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors_v2/_contact_sheet.png.import"
@@ -11670,7 +11127,6 @@
       "path": "art/props/room_doors_v2/_raw_cells/raw_r01_c01.png",
       "size_bytes": 220436,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors_v2/_raw_cells/raw_r01_c01.png.import"
@@ -11679,7 +11135,6 @@
       "path": "art/props/room_doors_v2/_raw_cells/raw_r01_c02.png",
       "size_bytes": 220722,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors_v2/_raw_cells/raw_r01_c02.png.import"
@@ -11688,7 +11143,6 @@
       "path": "art/props/room_doors_v2/_raw_cells/raw_r01_c03.png",
       "size_bytes": 231711,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors_v2/_raw_cells/raw_r01_c03.png.import"
@@ -11697,7 +11151,6 @@
       "path": "art/props/room_doors_v2/_raw_cells/raw_r02_c01.png",
       "size_bytes": 177777,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors_v2/_raw_cells/raw_r02_c01.png.import"
@@ -11706,7 +11159,6 @@
       "path": "art/props/room_doors_v2/_raw_cells/raw_r02_c02.png",
       "size_bytes": 169469,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors_v2/_raw_cells/raw_r02_c02.png.import"
@@ -11715,7 +11167,6 @@
       "path": "art/props/room_doors_v2/_raw_cells/raw_r02_c03.png",
       "size_bytes": 175581,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors_v2/_raw_cells/raw_r02_c03.png.import"
@@ -11724,7 +11175,6 @@
       "path": "art/props/room_doors_v2/_raw_cells/raw_r03_c01.png",
       "size_bytes": 161801,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors_v2/_raw_cells/raw_r03_c01.png.import"
@@ -11733,7 +11183,6 @@
       "path": "art/props/room_doors_v2/_raw_cells/raw_r03_c02.png",
       "size_bytes": 155390,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors_v2/_raw_cells/raw_r03_c02.png.import"
@@ -11742,7 +11191,6 @@
       "path": "art/props/room_doors_v2/_raw_cells/raw_r03_c03.png",
       "size_bytes": 175012,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors_v2/_raw_cells/raw_r03_c03.png.import"
@@ -11751,7 +11199,6 @@
       "path": "art/props/room_doors_v2/_raw_cells/raw_r04_c01.png",
       "size_bytes": 161120,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors_v2/_raw_cells/raw_r04_c01.png.import"
@@ -11760,7 +11207,6 @@
       "path": "art/props/room_doors_v2/_raw_cells/raw_r04_c02.png",
       "size_bytes": 155123,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors_v2/_raw_cells/raw_r04_c02.png.import"
@@ -11769,7 +11215,6 @@
       "path": "art/props/room_doors_v2/_raw_cells/raw_r04_c03.png",
       "size_bytes": 168360,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/room_doors_v2/_raw_cells/raw_r04_c03.png.import"
@@ -11898,7 +11343,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_forge_01.png",
       "size_bytes": 135455,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_forge_01.png.import"
@@ -11907,7 +11351,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_forge_02.png",
       "size_bytes": 135436,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_forge_02.png.import"
@@ -11916,7 +11359,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_forge_03.png",
       "size_bytes": 136718,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_forge_03.png.import"
@@ -11925,7 +11367,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_forge_04.png",
       "size_bytes": 136498,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_forge_04.png.import"
@@ -11934,7 +11375,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_fountain_01.png",
       "size_bytes": 135643,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_fountain_01.png.import"
@@ -11943,7 +11383,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_fountain_02.png",
       "size_bytes": 137070,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_fountain_02.png.import"
@@ -11952,7 +11391,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_fountain_03.png",
       "size_bytes": 137604,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_fountain_03.png.import"
@@ -11961,7 +11399,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_fountain_04.png",
       "size_bytes": 136989,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_fountain_04.png.import"
@@ -11970,7 +11407,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_reward_01.png",
       "size_bytes": 133009,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_reward_01.png.import"
@@ -11979,7 +11415,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_reward_02.png",
       "size_bytes": 133953,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_reward_02.png.import"
@@ -11988,7 +11423,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_reward_03.png",
       "size_bytes": 133933,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_reward_03.png.import"
@@ -11997,7 +11431,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_reward_04.png",
       "size_bytes": 133110,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_reward_04.png.import"
@@ -12006,7 +11439,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_shop_01.png",
       "size_bytes": 140143,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_shop_01.png.import"
@@ -12015,7 +11447,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_shop_02.png",
       "size_bytes": 141030,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_shop_02.png.import"
@@ -12024,7 +11455,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_shop_03.png",
       "size_bytes": 144269,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_shop_03.png.import"
@@ -12033,7 +11463,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_shop_04.png",
       "size_bytes": 149173,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_shop_04.png.import"
@@ -12042,7 +11471,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_shrine_01.png",
       "size_bytes": 143354,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_shrine_01.png.import"
@@ -12051,7 +11479,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_shrine_02.png",
       "size_bytes": 145865,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_shrine_02.png.import"
@@ -12060,7 +11487,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_shrine_03.png",
       "size_bytes": 146057,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_shrine_03.png.import"
@@ -12069,7 +11495,6 @@
       "path": "art/props/special_rooms/_raw_cells/raw_shrine_04.png",
       "size_bytes": 145143,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_raw_cells/raw_shrine_04.png.import"
@@ -12078,7 +11503,6 @@
       "path": "art/props/special_rooms/_special_rooms_contact_sheet.png",
       "size_bytes": 876843,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/_special_rooms_contact_sheet.png.import"
@@ -12087,7 +11511,6 @@
       "path": "art/props/special_rooms/forge.png",
       "size_bytes": 135455,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/forge.png.import"
@@ -12096,7 +11519,6 @@
       "path": "art/props/special_rooms/forge_01.png",
       "size_bytes": 135455,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/forge_01.png.import"
@@ -12105,7 +11527,6 @@
       "path": "art/props/special_rooms/forge_02.png",
       "size_bytes": 135436,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/forge_02.png.import"
@@ -12114,7 +11535,6 @@
       "path": "art/props/special_rooms/forge_03.png",
       "size_bytes": 136718,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/forge_03.png.import"
@@ -12123,7 +11543,6 @@
       "path": "art/props/special_rooms/forge_04.png",
       "size_bytes": 136498,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/forge_04.png.import"
@@ -12132,7 +11551,6 @@
       "path": "art/props/special_rooms/fountain.png",
       "size_bytes": 135643,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/fountain.png.import"
@@ -12141,7 +11559,6 @@
       "path": "art/props/special_rooms/fountain_01.png",
       "size_bytes": 135643,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/fountain_01.png.import"
@@ -12150,7 +11567,6 @@
       "path": "art/props/special_rooms/fountain_02.png",
       "size_bytes": 137070,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/fountain_02.png.import"
@@ -12159,7 +11575,6 @@
       "path": "art/props/special_rooms/fountain_03.png",
       "size_bytes": 137604,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/fountain_03.png.import"
@@ -12168,7 +11583,6 @@
       "path": "art/props/special_rooms/fountain_04.png",
       "size_bytes": 136989,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/fountain_04.png.import"
@@ -12187,7 +11601,6 @@
       "path": "art/props/special_rooms/reward_01.png",
       "size_bytes": 133009,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/reward_01.png.import"
@@ -12196,7 +11609,6 @@
       "path": "art/props/special_rooms/reward_02.png",
       "size_bytes": 133953,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/reward_02.png.import"
@@ -12205,7 +11617,6 @@
       "path": "art/props/special_rooms/reward_03.png",
       "size_bytes": 133933,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/reward_03.png.import"
@@ -12214,7 +11625,6 @@
       "path": "art/props/special_rooms/reward_04.png",
       "size_bytes": 133110,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/reward_04.png.import"
@@ -12223,7 +11633,6 @@
       "path": "art/props/special_rooms/shop.png",
       "size_bytes": 140143,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/shop.png.import"
@@ -12232,7 +11641,6 @@
       "path": "art/props/special_rooms/shop_01.png",
       "size_bytes": 140143,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/shop_01.png.import"
@@ -12241,7 +11649,6 @@
       "path": "art/props/special_rooms/shop_02.png",
       "size_bytes": 141030,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/shop_02.png.import"
@@ -12250,7 +11657,6 @@
       "path": "art/props/special_rooms/shop_03.png",
       "size_bytes": 144269,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/shop_03.png.import"
@@ -12259,7 +11665,6 @@
       "path": "art/props/special_rooms/shop_04.png",
       "size_bytes": 149173,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/shop_04.png.import"
@@ -12268,7 +11673,6 @@
       "path": "art/props/special_rooms/shrine.png",
       "size_bytes": 143354,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/shrine.png.import"
@@ -12277,7 +11681,6 @@
       "path": "art/props/special_rooms/shrine_01.png",
       "size_bytes": 143354,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/shrine_01.png.import"
@@ -12286,7 +11689,6 @@
       "path": "art/props/special_rooms/shrine_02.png",
       "size_bytes": 145865,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/shrine_02.png.import"
@@ -12295,7 +11697,6 @@
       "path": "art/props/special_rooms/shrine_03.png",
       "size_bytes": 146057,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/shrine_03.png.import"
@@ -12304,7 +11705,6 @@
       "path": "art/props/special_rooms/shrine_04.png",
       "size_bytes": 145143,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/props/special_rooms/shrine_04.png.import"
@@ -12313,7 +11713,6 @@
       "path": "art/ui/hud/_backup_before_hud_clean/armor_fill.png",
       "size_bytes": 997957,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/_backup_before_hud_clean/armor_fill.png.import"
@@ -12322,7 +11721,6 @@
       "path": "art/ui/hud/_backup_before_hud_clean/armor_frame.png",
       "size_bytes": 1462112,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/_backup_before_hud_clean/armor_frame.png.import"
@@ -12331,7 +11729,6 @@
       "path": "art/ui/hud/_backup_before_hud_clean/hp_fill.png",
       "size_bytes": 914288,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/_backup_before_hud_clean/hp_fill.png.import"
@@ -12340,7 +11737,6 @@
       "path": "art/ui/hud/_backup_before_hud_clean/hp_frame.png",
       "size_bytes": 1158761,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/_backup_before_hud_clean/hp_frame.png.import"
@@ -12349,7 +11745,6 @@
       "path": "art/ui/hud/_backup_before_hud_clean/room_panel.png",
       "size_bytes": 1117909,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/_backup_before_hud_clean/room_panel.png.import"
@@ -12358,7 +11753,6 @@
       "path": "art/ui/hud/_backup_before_hud_clean/skill_slot.png",
       "size_bytes": 1409715,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/_backup_before_hud_clean/skill_slot.png.import"
@@ -12367,7 +11761,6 @@
       "path": "art/ui/hud/_backup_before_hud_clean/ultimate_ring_bg.png",
       "size_bytes": 1125270,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/_backup_before_hud_clean/ultimate_ring_bg.png.import"
@@ -12376,7 +11769,6 @@
       "path": "art/ui/hud/_backup_before_hud_clean/ultimate_ring_fill.png",
       "size_bytes": 966107,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/_backup_before_hud_clean/ultimate_ring_fill.png.import"
@@ -12385,7 +11777,6 @@
       "path": "art/ui/hud/_backup_before_hud_clean/upgrade_panel.png",
       "size_bytes": 1937324,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/_backup_before_hud_clean/upgrade_panel.png.import"
@@ -12394,7 +11785,6 @@
       "path": "art/ui/hud/_backup_before_hud_clean/weapon_panel.png",
       "size_bytes": 1371570,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/_backup_before_hud_clean/weapon_panel.png.import"
@@ -12403,7 +11793,6 @@
       "path": "art/ui/hud/armor_fill.png",
       "size_bytes": 678054,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/armor_fill.png.import"
@@ -12412,7 +11801,6 @@
       "path": "art/ui/hud/armor_frame.png",
       "size_bytes": 861732,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/armor_frame.png.import"
@@ -12421,7 +11809,6 @@
       "path": "art/ui/hud/hp_fill.png",
       "size_bytes": 677005,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/hp_fill.png.import"
@@ -12430,7 +11817,6 @@
       "path": "art/ui/hud/hp_frame.png",
       "size_bytes": 796787,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/hp_frame.png.import"
@@ -12439,7 +11825,6 @@
       "path": "art/ui/hud/room_panel.png",
       "size_bytes": 729175,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/room_panel.png.import"
@@ -12448,7 +11833,6 @@
       "path": "art/ui/hud/skill_slot.png",
       "size_bytes": 1052676,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/skill_slot.png.import"
@@ -12457,7 +11841,6 @@
       "path": "art/ui/hud/ultimate_ring_bg.png",
       "size_bytes": 999799,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/ultimate_ring_bg.png.import"
@@ -12466,7 +11849,6 @@
       "path": "art/ui/hud/ultimate_ring_fill.png",
       "size_bytes": 756078,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/ultimate_ring_fill.png.import"
@@ -12475,7 +11857,6 @@
       "path": "art/ui/hud/upgrade_panel.png",
       "size_bytes": 1786482,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/upgrade_panel.png.import"
@@ -12484,7 +11865,6 @@
       "path": "art/ui/hud/weapon_panel.png",
       "size_bytes": 950183,
       "referenced_by": [
-        "docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv",
         "docs/ASSET_CLEANUP_AUDIT_V1.json"
       ],
       "import_companion": "art/ui/hud/weapon_panel.png.import"
