@@ -45,10 +45,10 @@ var station_defs: Array[Dictionary] = [
 	},
 	{
 		"marker": "BoonShrineMarker",
-		"title": "Boon Shrine",
-		"prompt": "Press E to inspect patron relationships.",
-		"kind": "panel",
-		"body": "Patron relationship placeholder.\n\nCurrent patrons:\n- Francesca: speed and wind attacks\n- Ugolino: survive by hurting enemies\n- Minos: mark and execute enemies\n\nPlanned function:\n- view patron ranks\n- inspect discovered boons\n- unlock starting patron choice"
+		"title": "Patron Shrine",
+		"prompt": "Press E to inspect patrons and relationships.",
+		"kind": "patron_shrine",
+		"body": ""
 	},
 	{
 		"marker": "TrainingDummyMarker",
@@ -83,7 +83,7 @@ var npc_defs: Array[Dictionary] = [
 		"marker": "BoonShrineMarker",
 		"offset": Vector2(78.0, -56.0),
 		"color": Color("#9fd8ff"),
-		"body": "Shrine Attendant placeholder.\n\nShe will eventually track patron relationships, discovered boons, and starting patron privileges.\n\nCurrent patrons:\n- Francesca: speed and wind attacks\n- Ugolino: survive by hurting enemies\n- Minos: mark and execute enemies"
+		"body": ""
 	},
 	{
 		"id": "archivist",
@@ -313,7 +313,12 @@ func _activate_interactable(interactable: Dictionary) -> void:
 
 func _activate_npc(npc_def: Dictionary) -> void:
 	var title: String = str(npc_def.get("name", "Hub NPC"))
+	var npc_id: String = str(npc_def.get("id", ""))
 	var body: String = str(npc_def.get("body", "This NPC is a placeholder."))
+
+	if npc_id == "shrine_attendant":
+		body = PatronShrineData.build_attendant_panel_text()
+
 	_show_panel(title, body)
 
 func _activate_station(station: Dictionary) -> void:
@@ -331,6 +336,10 @@ func _activate_station(station: Dictionary) -> void:
 		_show_weapon_altar_panel()
 		return
 
+	if kind == "patron_shrine":
+		_show_patron_shrine_panel()
+		return
+
 	if kind == "training_dummy":
 		_spawn_or_reset_training_dummy()
 		_show_panel(title, str(station.get("body", "Training dummy reset.")))
@@ -345,6 +354,9 @@ func _activate_station(station: Dictionary) -> void:
 
 func _show_weapon_altar_panel() -> void:
 	_show_panel("Weapon Altar", PlayerWeaponData.build_weapon_panel_text())
+
+func _show_patron_shrine_panel() -> void:
+	_show_panel("Patron Shrine", PatronShrineData.build_patron_shrine_panel_text())
 
 func _show_panel(title: String, body: String) -> void:
 	if interaction_panel == null:
