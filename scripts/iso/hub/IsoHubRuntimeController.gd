@@ -172,14 +172,14 @@ func _setup_hud() -> void:
 	hud_label = Label.new()
 	hud_label.name = "HubStatusLabel"
 	hud_label.position = Vector2(18.0, 18.0)
-	hud_label.size = Vector2(780.0, 120.0)
+	hud_label.size = Vector2(820.0, 130.0)
 	hud_layer.add_child(hud_label)
 
 func _update_hud() -> void:
 	if hud_label == null:
 		return
 
-	hud_label.text = "Infernal Ascent Hub V1\n%s\nActive run room: combat_ash_intake_hall_01_iso.tscn" % status_text
+	hud_label.text = "Infernal Ascent Hub V1\n%s\nHell Gate target: combat_ash_intake_hall_01_iso.tscn" % status_text
 
 func _interact_pressed_once() -> bool:
 	if InputMap.has_action("interact") and Input.is_action_just_pressed("interact"):
