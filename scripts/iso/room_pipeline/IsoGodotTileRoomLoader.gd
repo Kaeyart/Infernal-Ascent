@@ -9,6 +9,7 @@ extends Node2D
 @export var show_debug_labels: bool = false
 @export var show_socket_markers: bool = true
 @export var show_prop_markers: bool = true
+@export var show_internal_hud: bool = true
 
 const TILE_SIZE: Vector2i = Vector2i(96, 48)
 const TILESET_SOURCE_ID: int = 0
@@ -107,13 +108,14 @@ func _build_node_tree() -> void:
 	_label_layer.z_index = 100
 	add_child(_label_layer)
 
-	_hud_layer = CanvasLayer.new()
-	_hud_layer.name = "RoomLoaderHUD"
-	add_child(_hud_layer)
-	_hud_label = Label.new()
-	_hud_label.position = Vector2(24.0, 20.0)
-	_hud_label.add_theme_font_size_override("font_size", 14)
-	_hud_layer.add_child(_hud_label)
+	if show_internal_hud:
+		_hud_layer = CanvasLayer.new()
+		_hud_layer.name = "RoomLoaderHUD"
+		add_child(_hud_layer)
+		_hud_label = Label.new()
+		_hud_label.position = Vector2(24.0, 20.0)
+		_hud_label.add_theme_font_size_override("font_size", 14)
+		_hud_layer.add_child(_hud_label)
 
 func _build_debug_tileset() -> TileSet:
 	var image: Image = Image.new()
