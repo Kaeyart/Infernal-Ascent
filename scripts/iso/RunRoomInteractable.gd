@@ -136,12 +136,28 @@ func _draw_shop(base_color: Color, pulse: float) -> void:
 
 func _draw_prompt(title: String, base_color: Color) -> void:
 	var font: Font = ThemeDB.fallback_font
-	var rect: Rect2 = Rect2(Vector2(-100.0, 30.0), Vector2(200.0, 42.0))
-	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.80), true)
-	draw_rect(rect, Color(base_color.r, base_color.g, base_color.b, 0.72), false, 1.5)
-	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 17.0), title, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 13, Color(1.0, 0.90, 0.68, 1.0))
-	var prompt: String = "USED" if _used else ("[E] USE" if _player_in_range else "APPROACH")
-	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 36.0), prompt, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 11, Color(0.72, 0.94, 1.0, 1.0 if _player_in_range else 0.68))
+	var rect: Rect2 = Rect2(Vector2(-104.0, 30.0), Vector2(208.0, 46.0))
+	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.84), true)
+	draw_rect(rect, Color(base_color.r, base_color.g, base_color.b, 0.78), false, 1.5)
+	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 17.0), title.to_upper(), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 12, Color(1.0, 0.90, 0.68, 1.0))
+	var prompt: String = _prompt_text_for_kind(str(payload.get("kind", "object")))
+	if _used:
+		prompt = "USED"
+	elif not _player_in_range:
+		prompt = "APPROACH"
+	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 38.0), prompt, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 11, Color(0.72, 0.94, 1.0, 1.0 if _player_in_range else 0.68))
+
+func _prompt_text_for_kind(kind: String) -> String:
+	match kind:
+		"reward":
+			return "[E] CLAIM"
+		"fountain":
+			return "[E] DRINK"
+		"forge":
+			return "[E] INSPECT"
+		"shop":
+			return "[E] INSPECT"
+	return "[E] USE"
 
 func _color_for_kind(kind: String) -> Color:
 	match kind:

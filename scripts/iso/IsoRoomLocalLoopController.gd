@@ -797,6 +797,8 @@ func _update_hud() -> void:
 		"player": _player_ui_state(),
 		"choices": _current_gate_choices.duplicate(true),
 		"hazards_active": current_phase == RunPhase.COMBAT,
+		"run_finished": run_finished,
+		"victory": current_phase == RunPhase.RUN_VICTORY,
 	}
 	if hud_controller != null and is_instance_valid(hud_controller):
 		if current_phase == RunPhase.HUB and not auto_start_run_on_ready:
