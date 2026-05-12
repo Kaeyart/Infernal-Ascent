@@ -1,0 +1,1175 @@
+[gd_scene format=3 uid="uid://di680crwnnvtm"]
+
+[ext_resource type="Texture2D" uid="uid://mdtw33a3o52e" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_01_018_inner_corner_wall_lantern.png" id="1_0fpdn"]
+[ext_resource type="Texture2D" uid="uid://c6agm4thgrdh2" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_01_006_floor_tile_broken_ember.png" id="2_ikn0k"]
+[ext_resource type="Texture2D" uid="uid://bdjcp5mraq4nx" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_02_006_platform_tile_brass_corner.png" id="3_0snej"]
+[ext_resource type="Texture2D" uid="uid://doxwlvtoj1p2" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_02_026_tall_hanging_post.png" id="6_hslv6"]
+[ext_resource type="Texture2D" uid="uid://dh0jibuggdqvi" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_02_030_small_fountain_round.png" id="7_5f045"]
+[ext_resource type="Texture2D" uid="uid://d07cnvknthav8" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_01_003_floor_tile_clean_variant.png" id="10_sedwr"]
+[ext_resource type="Texture2D" uid="uid://cev6sjvjs4ndh" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_02_017_small_brazier_single.png" id="11_5f045"]
+[ext_resource type="Texture2D" uid="uid://cs73dv1ryj37q" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_01_001_floor_tile_clean_large.png" id="11_ov1as"]
+[ext_resource type="Texture2D" uid="uid://d33ov6wn007kf" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_02_014_weapon_altar_counter.png" id="12_5tj6b"]
+[ext_resource type="Texture2D" uid="uid://bu06wua2ap0oo" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_01_002_floor_tile_cracked_large.png" id="12_6lwc6"]
+[ext_resource type="Texture2D" uid="uid://bgchoyavwvkxu" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_01_016_plain_back_wall_long.png" id="12_h8kbn"]
+[ext_resource type="Texture2D" uid="uid://b6aa2q8a8u7v1" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_02_032_stair_set_medium.png" id="12_v0qtm"]
+[ext_resource type="Texture2D" uid="uid://cw8hne4njix3p" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_02_011_loose_hanging_chain.png" id="13_8q1h4"]
+[ext_resource type="Texture2D" uid="uid://c2vt1n2fliuga" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_02_025_weapon_rack_spears.png" id="13_842ym"]
+[ext_resource type="Texture2D" uid="uid://2j8b6fllmt08" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_01_005_floor_tile_grate_ember.png" id="13_h8kbn"]
+[ext_resource type="Texture2D" uid="uid://2rsg2hhlm6h3" path="res://art/iso/circle0/ash_intake_hall_01/sliced_trimmed/walls/wall_north_segment_01.png" id="13_tahml"]
+[ext_resource type="Texture2D" uid="uid://dqajes6tkv32d" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_01_023_heavy_square_pillar.png" id="14_ikn0k"]
+[ext_resource type="Texture2D" uid="uid://cfdb4pxucw4tu" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_02_024_training_dummy.png" id="14_wi642"]
+[ext_resource type="Texture2D" uid="uid://do2pxdpav27uk" path="res://art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/wall_west_segment_01.png" id="14_wtrr1"]
+[ext_resource type="Texture2D" uid="uid://nama3ekfn57o" path="res://art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/wall_north_segment_01.png" id="16_5wilc"]
+[ext_resource type="Texture2D" uid="uid://chk2rwg5ncrki" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_03_003_merchant_toll_counter.png" id="16_842ym"]
+[ext_resource type="Texture2D" uid="uid://ddefd3ssaicne" path="res://art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/corner_inner_back_01.png" id="17_fsvh4"]
+[ext_resource type="Texture2D" uid="uid://bww2dqq7tm71m" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_01_017_short_wall_banner_section.png" id="17_wwmrd"]
+[ext_resource type="Texture2D" uid="uid://br33mvmc48ou3" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_03_013_statue_robed_candles.png" id="22_0fpdn"]
+[ext_resource type="Texture2D" uid="uid://blubtgdwssa44" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_01_021_low_parapet_arched.png" id="22_8lvao"]
+[ext_resource type="Texture2D" uid="uid://cw01t1qej1mca" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_02_013_boon_shrine_arch_station.png" id="24_8lvao"]
+[ext_resource type="Texture2D" uid="uid://cj8h8lspakvjp" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_02_022_candle_cluster_square.png" id="25_k0fu3"]
+[ext_resource type="Texture2D" uid="uid://jpa33pqehoeh" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_03_002_archive_lectern_open_book.png" id="27_ov1as"]
+[ext_resource type="Texture2D" uid="uid://4m22ome6crxi" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_03_008_chain_barrier_straight.png" id="28_6lwc6"]
+[ext_resource type="Texture2D" uid="uid://bq4exxgsr20lq" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_03_014_judgment_plaque.png" id="29_h8kbn"]
+[ext_resource type="Texture2D" uid="uid://7v6al2xmctyp" path="res://art/iso/circle0/ash_intake_hall_01/sliced_padded_32/props/plaque_judgment_tablet_01.png" id="30_wwmrd"]
+[ext_resource type="Texture2D" uid="uid://c55g6v75ajpjy" path="res://art/hub_generated/sliced/props/training_weapons_chests/props_props_training_weapons_chests_015.png" id="36_ygprv"]
+[ext_resource type="Texture2D" uid="uid://bou8vk5epjsse" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_01_001_floor_tile_clean_large.png" id="floor_clean"]
+[ext_resource type="Texture2D" uid="uid://dnp7vtj1opxqc" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_01_003_floor_tile_clean_variant.png" id="floor_variant"]
+[ext_resource type="Texture2D" uid="uid://cix4d3wpm76e7" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_02_005_stair_set_large.png" id="gate_stairs"]
+[ext_resource type="Texture2D" uid="uid://cttaqdxpry35j" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_02_002_hell_gate_lit_hero.png" id="hell_gate"]
+[ext_resource type="Script" uid="uid://ctog6kr3tetwn" path="res://scripts/iso/hub/IsoHubRuntimeController.gd" id="hub_runtime"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_h8kbn"]
+radius = 24.0
+height = 112.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wwmrd"]
+radius = 5.0
+height = 104.0
+
+[node name="IsoHubThresholdNaveV1" type="Node2D" unique_id=609381602]
+
+[node name="L0_Background" type="Node2D" parent="." unique_id=1866675742]
+
+[node name="DarkBackground" type="ColorRect" parent="L0_Background" unique_id=2146314746]
+offset_left = -1436.0
+offset_top = -976.0
+offset_right = 2551.0
+offset_bottom = 1265.0
+color = Color(0.025, 0.022, 0.02, 1)
+
+[node name="Hub01018InnerCornerWallLantern" type="Sprite2D" parent="L0_Background" unique_id=1775888254]
+position = Vector2(918, 134)
+texture = ExtResource("1_0fpdn")
+
+[node name="L1_IsoFloor" type="Node2D" parent="." unique_id=415598763]
+
+[node name="Hub01003FloorTileCleanVariant8" type="Sprite2D" parent="L1_IsoFloor" unique_id=759338280]
+position = Vector2(315, 210)
+texture = ExtResource("floor_variant")
+
+[node name="Hub01003FloorTileCleanVariant7" type="Sprite2D" parent="L1_IsoFloor" unique_id=997406558]
+position = Vector2(211, 269)
+scale = Vector2(0.99999994, 0.99999994)
+texture = ExtResource("floor_variant")
+
+[node name="Hub01003FloorTileCleanVariant4" type="Sprite2D" parent="L1_IsoFloor" unique_id=1575129258]
+position = Vector2(104, 330)
+scale = Vector2(0.99999994, 0.99999994)
+texture = ExtResource("floor_variant")
+
+[node name="Hub01003FloorTileCleanVariant5" type="Sprite2D" parent="L1_IsoFloor" unique_id=1382113305]
+position = Vector2(-5, 387)
+scale = Vector2(0.9999999, 0.9999999)
+texture = ExtResource("floor_variant")
+
+[node name="Hub01001FloorTileCleanLarge6" type="Sprite2D" parent="L1_IsoFloor" unique_id=2038021023]
+position = Vector2(202, 385)
+scale = Vector2(0.99999994, 0.99999994)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01003FloorTileCleanVariant3" type="Sprite2D" parent="L1_IsoFloor" unique_id=520862297]
+position = Vector2(311, 446)
+scale = Vector2(0.9999999, 0.9999999)
+texture = ExtResource("floor_variant")
+
+[node name="Hub01001FloorTileCleanLarge8" type="Sprite2D" parent="L1_IsoFloor" unique_id=2136475213]
+position = Vector2(-114, 447)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge7" type="Sprite2D" parent="L1_IsoFloor" unique_id=1153380916]
+position = Vector2(99, 444)
+scale = Vector2(0.99999994, 0.99999994)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01003FloorTileCleanVariant2" type="Sprite2D" parent="L1_IsoFloor" unique_id=751417157]
+position = Vector2(201.00002, 505)
+scale = Vector2(0.9999998, 0.9999998)
+texture = ExtResource("floor_variant")
+
+[node name="Hub01003FloorTileCleanVariant6" type="Sprite2D" parent="L1_IsoFloor" unique_id=1466882123]
+position = Vector2(-5, 504)
+texture = ExtResource("floor_variant")
+
+[node name="Hub01001FloorTileCleanLarge4" type="Sprite2D" parent="L1_IsoFloor" unique_id=2108137267]
+position = Vector2(421, 506)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge5" type="Sprite2D" parent="L1_IsoFloor" unique_id=329816865]
+position = Vector2(535, 564)
+scale = Vector2(1.0464286, 1.0306122)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge" type="Sprite2D" parent="L1_IsoFloor" unique_id=788310826]
+position = Vector2(313, 564)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge3" type="Sprite2D" parent="L1_IsoFloor" unique_id=290330055]
+position = Vector2(101, 564)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge2" type="Sprite2D" parent="L1_IsoFloor" unique_id=593776552]
+position = Vector2(424.5, 624)
+scale = Vector2(1.0464286, 1.0306122)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01003FloorTileCleanVariant" type="Sprite2D" parent="L1_IsoFloor" unique_id=1612951312]
+position = Vector2(208, 622)
+texture = ExtResource("floor_variant")
+
+[node name="Hub01001FloorTileCleanLarge10" type="Sprite2D" parent="L1_IsoFloor" unique_id=1737850399]
+position = Vector2(644, 624)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge9" type="Sprite2D" parent="L1_IsoFloor" unique_id=873143833]
+position = Vector2(534, 682)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge11" type="Sprite2D" parent="L1_IsoFloor" unique_id=1089283443]
+position = Vector2(748, 684)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge32" type="Sprite2D" parent="L1_IsoFloor" unique_id=1923867067]
+position = Vector2(917, 242)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge28" type="Sprite2D" parent="L1_IsoFloor" unique_id=532220221]
+position = Vector2(808, 298)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge24" type="Sprite2D" parent="L1_IsoFloor" unique_id=1126805610]
+position = Vector2(703, 357)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge33" type="Sprite2D" parent="L1_IsoFloor" unique_id=743954212]
+position = Vector2(1031.0001, 302)
+scale = Vector2(1.0464286, 1.0306122)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge29" type="Sprite2D" parent="L1_IsoFloor" unique_id=1842108170]
+position = Vector2(920.00006, 358)
+scale = Vector2(1.0464286, 1.0306122)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge25" type="Sprite2D" parent="L1_IsoFloor" unique_id=1571684722]
+position = Vector2(814, 417)
+scale = Vector2(1.0464286, 1.0306122)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge34" type="Sprite2D" parent="L1_IsoFloor" unique_id=430602386]
+position = Vector2(1141, 360)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge30" type="Sprite2D" parent="L1_IsoFloor" unique_id=1744376230]
+position = Vector2(1030, 416)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge26" type="Sprite2D" parent="L1_IsoFloor" unique_id=370135728]
+position = Vector2(924, 476)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge35" type="Sprite2D" parent="L1_IsoFloor" unique_id=639949951]
+position = Vector2(1248, 417)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge31" type="Sprite2D" parent="L1_IsoFloor" unique_id=818767847]
+position = Vector2(1139, 475)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge27" type="Sprite2D" parent="L1_IsoFloor" unique_id=741786226]
+position = Vector2(1032, 534)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge12" type="Sprite2D" parent="L1_IsoFloor" unique_id=267612740]
+position = Vector2(638, 742)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge13" type="Sprite2D" parent="L1_IsoFloor" unique_id=865573455]
+position = Vector2(856, 744)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge14" type="Sprite2D" parent="L1_IsoFloor" unique_id=1014313283]
+position = Vector2(746, 802)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01003FloorTileCleanVariant9" type="Sprite2D" parent="L1_IsoFloor" unique_id=611486699]
+position = Vector2(-219.00002, 500.5)
+scale = Vector2(0.9999999, 0.9999999)
+texture = ExtResource("floor_variant")
+
+[node name="Hub01001FloorTileCleanLarge15" type="Sprite2D" parent="L1_IsoFloor" unique_id=2009774182]
+position = Vector2(-115, 557.5)
+scale = Vector2(0.99999994, 0.99999994)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01003FloorTileCleanVariant10" type="Sprite2D" parent="L1_IsoFloor" unique_id=33960223]
+position = Vector2(-7.9999857, 615.5)
+scale = Vector2(0.9999998, 0.9999998)
+texture = ExtResource("floor_variant")
+
+[node name="Hub01001FloorTileCleanLarge54" type="Sprite2D" parent="L1_IsoFloor" unique_id=320622999]
+position = Vector2(317, 684)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge23" type="Sprite2D" parent="L1_IsoFloor" unique_id=1644781266]
+position = Vector2(428, 740)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge22" type="Sprite2D" parent="L1_IsoFloor" unique_id=524216009]
+position = Vector2(531, 803)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge16" type="Sprite2D" parent="L1_IsoFloor" unique_id=1067068802]
+position = Vector2(98.999985, 677.5)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge17" type="Sprite2D" parent="L1_IsoFloor" unique_id=1879667574]
+position = Vector2(210.5, 737.5)
+scale = Vector2(1.0464286, 1.0306122)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge18" type="Sprite2D" parent="L1_IsoFloor" unique_id=587444677]
+position = Vector2(317, 800.5)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge19" type="Sprite2D" parent="L1_IsoFloor" unique_id=344786977]
+position = Vector2(424, 859)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge21" type="Sprite2D" parent="L1_IsoFloor" unique_id=635627667]
+position = Vector2(639, 863)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge20" type="Sprite2D" parent="L1_IsoFloor" unique_id=620810581]
+position = Vector2(532, 919)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01003FloorTileCleanVariant13" type="Sprite2D" parent="L1_IsoFloor" unique_id=559595989]
+position = Vector2(-404, 228)
+texture = ExtResource("10_sedwr")
+
+[node name="Hub01003FloorTileCleanVariant12" type="Sprite2D" parent="L1_IsoFloor" unique_id=1714758882]
+position = Vector2(-511, 288)
+texture = ExtResource("10_sedwr")
+
+[node name="Hub02017SmallBrazierSingle" type="Sprite2D" parent="L1_IsoFloor" unique_id=486352731]
+position = Vector2(791, 509)
+texture = ExtResource("11_5f045")
+
+[node name="Hub01003FloorTileCleanVariant11" type="Sprite2D" parent="L1_IsoFloor" unique_id=2132342425]
+position = Vector2(-622, 347)
+texture = ExtResource("10_sedwr")
+
+[node name="Hub01001FloorTileCleanLarge37" type="Sprite2D" parent="L1_IsoFloor" unique_id=1597993621]
+position = Vector2(-308, 294)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge36" type="Sprite2D" parent="L1_IsoFloor" unique_id=1082111972]
+position = Vector2(-410, 353)
+texture = ExtResource("floor_clean")
+
+[node name="Hub01001FloorTileCleanLarge38" type="Sprite2D" parent="L1_IsoFloor" unique_id=851599424]
+position = Vector2(-516, 409)
+texture = ExtResource("floor_clean")
+
+[node name="Hub02006PlatformTileBrassCorner" type="Sprite2D" parent="L1_IsoFloor" unique_id=188153648]
+position = Vector2(-316, 403)
+texture = ExtResource("3_0snej")
+
+[node name="Hub01001FloorTileCleanLarge49" type="Sprite2D" parent="L1_IsoFloor" unique_id=623364792]
+position = Vector2(831, -375)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01001FloorTileCleanLarge45" type="Sprite2D" parent="L1_IsoFloor" unique_id=913507662]
+position = Vector2(938, -320)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01001FloorTileCleanLarge53" type="Sprite2D" parent="L1_IsoFloor" unique_id=1235814253]
+position = Vector2(612, -379)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01001FloorTileCleanLarge46" type="Sprite2D" parent="L1_IsoFloor" unique_id=367978911]
+position = Vector2(719, -321)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01003FloorTileCleanVariant16" type="Sprite2D" parent="L1_IsoFloor" unique_id=198947392]
+position = Vector2(510, -320)
+texture = ExtResource("10_sedwr")
+
+[node name="Hub01003FloorTileCleanVariant14" type="Sprite2D" parent="L1_IsoFloor" unique_id=1888744725]
+position = Vector2(826, -263)
+texture = ExtResource("10_sedwr")
+
+[node name="Hub01005FloorTileGrateEmber" type="Sprite2D" parent="L1_IsoFloor" unique_id=1560940696]
+position = Vector2(618, -262)
+texture = ExtResource("13_h8kbn")
+
+[node name="Hub01006FloorTileBrokenEmber" type="Sprite2D" parent="L1_IsoFloor" unique_id=1823643786]
+position = Vector2(396, -257)
+texture = ExtResource("2_ikn0k")
+
+[node name="Hub01001FloorTileCleanLarge47" type="Sprite2D" parent="L1_IsoFloor" unique_id=1538293547]
+position = Vector2(721, -200)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01003FloorTileCleanVariant17" type="Sprite2D" parent="L1_IsoFloor" unique_id=1609829063]
+position = Vector2(288, -195)
+texture = ExtResource("10_sedwr")
+
+[node name="Hub01003FloorTileCleanVariant18" type="Sprite2D" parent="L1_IsoFloor" unique_id=1996561669]
+position = Vector2(191, -140)
+texture = ExtResource("10_sedwr")
+
+[node name="Hub01002FloorTileCrackedLarge" type="Sprite2D" parent="L1_IsoFloor" unique_id=433903837]
+position = Vector2(512, -200)
+texture = ExtResource("12_6lwc6")
+
+[node name="Hub01001FloorTileCleanLarge48" type="Sprite2D" parent="L1_IsoFloor" unique_id=1288518988]
+position = Vector2(618, -139)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01001FloorTileCleanLarge51" type="Sprite2D" parent="L1_IsoFloor" unique_id=1406267975]
+position = Vector2(404, -139)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01003FloorTileCleanVariant15" type="Sprite2D" parent="L1_IsoFloor" unique_id=1685042475]
+position = Vector2(510, -80)
+texture = ExtResource("10_sedwr")
+
+[node name="Hub01001FloorTileCleanLarge43" type="Sprite2D" parent="L1_IsoFloor" unique_id=165566776]
+position = Vector2(1042, -261)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01001FloorTileCleanLarge44" type="Sprite2D" parent="L1_IsoFloor" unique_id=870637798]
+position = Vector2(936, -202)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01001FloorTileCleanLarge41" type="Sprite2D" parent="L1_IsoFloor" unique_id=2059142804]
+position = Vector2(829, -143)
+scale = Vector2(0.9953704, 1)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01001FloorTileCleanLarge42" type="Sprite2D" parent="L1_IsoFloor" unique_id=2092878106]
+position = Vector2(723, -82)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01001FloorTileCleanLarge40" type="Sprite2D" parent="L1_IsoFloor" unique_id=887715605]
+position = Vector2(619, -21)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01001FloorTileCleanLarge52" type="Sprite2D" parent="L1_IsoFloor" unique_id=569877266]
+position = Vector2(299, -79)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01001FloorTileCleanLarge50" type="Sprite2D" parent="L1_IsoFloor" unique_id=740732083]
+position = Vector2(405, -20)
+texture = ExtResource("11_ov1as")
+
+[node name="Hub01001FloorTileCleanLarge39" type="Sprite2D" parent="L1_IsoFloor" unique_id=875745317]
+position = Vector2(513, 38)
+texture = ExtResource("11_ov1as")
+
+[node name="L2_StructuralWalls" type="Node2D" parent="." unique_id=965429395]
+
+[node name="WallNorthSegment28" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1012739609]
+position = Vector2(188.00003, -265.00003)
+scale = Vector2(0.8759767, 0.9934739)
+texture = ExtResource("13_tahml")
+
+[node name="WallNorthSegment29" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1337031880]
+position = Vector2(180, -154)
+scale = Vector2(0.8769532, 0.9909638)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="WallNorthSegment30" type="Sprite2D" parent="L2_StructuralWalls" unique_id=831127710]
+position = Vector2(323, -73)
+scale = Vector2(0.8769532, 0.9909638)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="Hub01016PlainBackWallLong" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1553019424]
+position = Vector2(627, -469)
+texture = ExtResource("12_h8kbn")
+
+[node name="WallNorthSegment23" type="Sprite2D" parent="L2_StructuralWalls" unique_id=494946161]
+position = Vector2(396, -384)
+scale = Vector2(0.8759767, 0.9934739)
+texture = ExtResource("13_tahml")
+
+[node name="Hub01018InnerCornerWallLantern2" type="Sprite2D" parent="L2_StructuralWalls" unique_id=2104723912]
+position = Vector2(881, -463)
+texture = ExtResource("1_0fpdn")
+
+[node name="WallNorthSegment27" type="Sprite2D" parent="L2_StructuralWalls" unique_id=513321516]
+position = Vector2(1052, -388)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="WallNorthSegment26" type="Sprite2D" parent="L2_StructuralWalls" unique_id=441382296]
+position = Vector2(1088, -282)
+scale = Vector2(0.8759767, 0.9934739)
+texture = ExtResource("13_tahml")
+
+[node name="WallNorthSegment21" type="Sprite2D" parent="L2_StructuralWalls" unique_id=505897469]
+position = Vector2(318.875, 90.6875)
+scale = Vector2(0.8759767, 0.9934739)
+texture = ExtResource("13_tahml")
+
+[node name="WallNorthSegment25" type="Sprite2D" parent="L2_StructuralWalls" unique_id=977942259]
+position = Vector2(894.00006, -169.00002)
+scale = Vector2(0.8759767, 0.9934739)
+texture = ExtResource("13_tahml")
+
+[node name="WallNorthSegment24" type="Sprite2D" parent="L2_StructuralWalls" unique_id=33840430]
+position = Vector2(693, -58.000015)
+scale = Vector2(0.8759767, 0.9934739)
+texture = ExtResource("13_tahml")
+
+[node name="Hub02005StairSetLarge" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1753693980]
+position = Vector2(404, 114.00001)
+scale = Vector2(1.1163793, 1.1339285)
+texture = ExtResource("gate_stairs")
+
+[node name="Hub02032StairSetMedium2" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1732567880]
+position = Vector2(-247, 451)
+texture = ExtResource("12_v0qtm")
+flip_h = true
+
+[node name="WallNorthSegment19" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1421267238]
+position = Vector2(-351, 428)
+scale = Vector2(0.8525392, 0.93323255)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="Hub01021LowParapetArched2" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1335003924]
+position = Vector2(-281, 277)
+scale = Vector2(0.6618378, 1.3776507)
+skew = -0.034906626
+texture = ExtResource("22_8lvao")
+
+[node name="WallNorthSegment12" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1636536576]
+position = Vector2(116, 207)
+scale = Vector2(0.8769532, 0.9909638)
+texture = ExtResource("13_tahml")
+
+[node name="WallNorthSegment11" type="Sprite2D" parent="L2_StructuralWalls" unique_id=99904069]
+position = Vector2(-80.875, 310.3125)
+scale = Vector2(0.8369141, 0.98544174)
+texture = ExtResource("13_tahml")
+
+[node name="WallNorthSegment07" type="Sprite2D" parent="L2_StructuralWalls" unique_id=436460141]
+position = Vector2(-158, 527.99994)
+scale = Vector2(0.87695324, 0.9909638)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="WallNorthSegment08" type="Sprite2D" parent="L2_StructuralWalls" unique_id=2104216694]
+position = Vector2(44.999996, 640)
+scale = Vector2(0.87695324, 0.9909638)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="WallNorthSegment09" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1633736481]
+position = Vector2(245.99998, 755)
+scale = Vector2(0.87695324, 0.9909638)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="WallNorthSegment10" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1359692377]
+position = Vector2(444, 863)
+scale = Vector2(0.87695324, 0.9909638)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="WallNorthSegment20" type="Sprite2D" parent="L2_StructuralWalls" unique_id=292897856]
+position = Vector2(-264, 331.00003)
+scale = Vector2(0.8525392, 0.93323255)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="Hub01017ShortWallBannerSection" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1809398819]
+position = Vector2(762, -462)
+texture = ExtResource("17_wwmrd")
+
+[node name="WallNorthSegment22" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1371911635]
+position = Vector2(501, 101)
+scale = Vector2(0.8769532, 0.9909638)
+texture = ExtResource("13_tahml")
+
+[node name="WallNorthSegment13" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1352834549]
+position = Vector2(310, 211)
+scale = Vector2(0.8769532, 0.9909638)
+texture = ExtResource("13_tahml")
+
+[node name="WallNorthSegment14" type="Sprite2D" parent="L2_StructuralWalls" unique_id=927313714]
+position = Vector2(326, 327)
+scale = Vector2(0.8769532, 0.9909638)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="WallNorthSegment15" type="Sprite2D" parent="L2_StructuralWalls" unique_id=2123247687]
+position = Vector2(530, 441)
+scale = Vector2(0.8769532, 0.9909638)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="WallNorthSegment18" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1516417874]
+position = Vector2(860, 530)
+scale = Vector2(0.6522287, 0.95166904)
+skew = -0.029670596
+texture = ExtResource("13_tahml")
+
+[node name="WallNorthSegment16" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1749584347]
+position = Vector2(885, 638)
+scale = Vector2(0.8769532, 0.9909638)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="WallNorthSegment03" type="Sprite2D" parent="L2_StructuralWalls" unique_id=655462077]
+position = Vector2(763, 195)
+scale = Vector2(0.9079628, 1.0183002)
+skew = -0.029670596
+texture = ExtResource("13_tahml")
+
+[node name="WallNorthSegment04" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1459747961]
+position = Vector2(698, 227.99998)
+scale = Vector2(0.9079628, 1.0183002)
+skew = -0.029670596
+texture = ExtResource("13_tahml")
+
+[node name="WallNorthSegment05" type="Sprite2D" parent="L2_StructuralWalls" unique_id=2031000286]
+position = Vector2(673.37506, 333.31247)
+scale = Vector2(0.7939452, 0.9452812)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="WallNorthSegment17" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1172248533]
+position = Vector2(701.9956, 456.43066)
+scale = Vector2(0.6522287, 0.951669)
+skew = -0.029670596
+texture = ExtResource("13_tahml")
+
+[node name="Hub02032StairSetMedium" type="Sprite2D" parent="L2_StructuralWalls" unique_id=401542876]
+position = Vector2(712, 557)
+texture = ExtResource("12_v0qtm")
+
+[node name="WallNorthSegment02" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1911799580]
+position = Vector2(1092, 232)
+texture = ExtResource("13_tahml")
+flip_h = true
+
+[node name="Hub01023HeavySquarePillar" type="Sprite2D" parent="L2_StructuralWalls" unique_id=2143486256]
+position = Vector2(549, 9)
+texture = ExtResource("14_ikn0k")
+
+[node name="WallWestSegment01" type="Sprite2D" parent="L2_StructuralWalls" unique_id=192177280]
+position = Vector2(1275, 318)
+texture = ExtResource("14_wtrr1")
+
+[node name="WallNorthSegment01" type="Sprite2D" parent="L2_StructuralWalls" unique_id=758184202]
+position = Vector2(1219.7, 412)
+scale = Vector2(0.9195304, 1)
+skew = -0.029670598
+texture = ExtResource("16_5wilc")
+
+[node name="WallNorthSegment32" type="Sprite2D" parent="L2_StructuralWalls/WallNorthSegment01" unique_id=1935069511]
+position = Vector2(-414.97607, 333.14667)
+scale = Vector2(1.0594976, 1)
+texture = ExtResource("16_5wilc")
+
+[node name="WallNorthSegment31" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1931287958]
+position = Vector2(635, 853.00006)
+scale = Vector2(0.9195304, 1)
+skew = -0.029670598
+texture = ExtResource("16_5wilc")
+
+[node name="CornerInnerBack01" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1143266015]
+position = Vector2(1032, 484)
+texture = ExtResource("17_fsvh4")
+
+[node name="WallNorthSegment06" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1616813923]
+position = Vector2(-582.50006, 177.5)
+scale = Vector2(1.4335939, 1.3476563)
+texture = ExtResource("16_5wilc")
+
+[node name="Hub03008ChainBarrierStraight" type="Sprite2D" parent="L2_StructuralWalls" unique_id=187459692]
+position = Vector2(-511, 236)
+scale = Vector2(0.3478259, 0.30988017)
+texture = ExtResource("28_6lwc6")
+
+[node name="Hub03002ArchiveLecternOpenBook" type="Sprite2D" parent="L2_StructuralWalls" unique_id=978282691]
+position = Vector2(-604, 255.24998)
+scale = Vector2(0.5652175, 0.62990195)
+texture = ExtResource("27_ov1as")
+flip_h = true
+
+[node name="Hub02022CandleClusterSquare" type="Sprite2D" parent="L2_StructuralWalls" unique_id=436872851]
+position = Vector2(-542, 331)
+texture = ExtResource("25_k0fu3")
+
+[node name="WallWestSegment02" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1458521578]
+position = Vector2(-625, 300.00003)
+scale = Vector2(1.3125, 1.3794643)
+texture = ExtResource("14_wtrr1")
+
+[node name="Hub01023HeavySquarePillar2" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1915782189]
+position = Vector2(-508, 364)
+scale = Vector2(0.9851485, 1)
+texture = ExtResource("14_ikn0k")
+
+[node name="WallWestSegment03" type="Sprite2D" parent="L2_StructuralWalls" unique_id=201777349]
+position = Vector2(-307.00003, 152)
+scale = Vector2(1.4687505, 1.3794643)
+texture = ExtResource("14_wtrr1")
+
+[node name="Hub02013BoonShrineArchStation" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1686109004]
+position = Vector2(-408, 224.99997)
+scale = Vector2(0.80275226, 0.90882355)
+texture = ExtResource("24_8lvao")
+
+[node name="Hub02030SmallFountainRound" type="Sprite2D" parent="L2_StructuralWalls" unique_id=2016762257]
+position = Vector2(518.5, 683)
+texture = ExtResource("7_5f045")
+
+[node name="Hub02026TallHangingPost" type="Sprite2D" parent="L2_StructuralWalls" unique_id=822638027]
+position = Vector2(516.5, 673)
+texture = ExtResource("6_hslv6")
+
+[node name="L3_YSorted" type="Node2D" parent="." unique_id=499320819]
+y_sort_enabled = true
+
+[node name="Hub02002HellGateLitHero" type="Sprite2D" parent="L3_YSorted" unique_id=1213133414]
+position = Vector2(656, -479)
+texture = ExtResource("hell_gate")
+flip_h = true
+
+[node name="Hub02011LooseHangingChain" type="Sprite2D" parent="L3_YSorted" unique_id=582526136]
+position = Vector2(601.00006, 518)
+scale = Vector2(0.88461536, 0.9680851)
+texture = ExtResource("13_8q1h4")
+
+[node name="Hub02011LooseHangingChain2" type="Sprite2D" parent="L3_YSorted" unique_id=2010629211]
+position = Vector2(765.00006, 607.00006)
+scale = Vector2(0.88461536, 0.9680851)
+texture = ExtResource("13_8q1h4")
+
+[node name="Hub02024TrainingDummy" type="Sprite2D" parent="L3_YSorted" unique_id=1624460984]
+position = Vector2(822, 225)
+texture = ExtResource("14_wi642")
+
+[node name="Hub02014WeaponAltarCounter" type="Sprite2D" parent="L3_YSorted" unique_id=1748634267]
+position = Vector2(966, 231)
+texture = ExtResource("12_5tj6b")
+
+[node name="Hub02025WeaponRackSpears" type="Sprite2D" parent="L3_YSorted" unique_id=1445635358]
+position = Vector2(1101, 297)
+texture = ExtResource("13_842ym")
+
+[node name="Hub03003MerchantTollCounter" type="Sprite2D" parent="L3_YSorted" unique_id=312122707]
+position = Vector2(943.00006, 320.00003)
+scale = Vector2(0.86878455, 0.8882254)
+texture = ExtResource("16_842ym")
+
+[node name="Hub03013StatueRobedCandles" type="Sprite2D" parent="L3_YSorted" unique_id=241338278]
+position = Vector2(435, 444)
+texture = ExtResource("22_0fpdn")
+
+[node name="Hub03014JudgmentPlaque" type="Sprite2D" parent="L3_YSorted" unique_id=1408619709]
+position = Vector2(-124, 344)
+texture = ExtResource("29_h8kbn")
+flip_h = true
+
+[node name="PlaqueJudgmentTablet01" type="Sprite2D" parent="L3_YSorted" unique_id=1136151263]
+position = Vector2(-35.000004, 326)
+scale = Vector2(0.46875, 0.51339287)
+texture = ExtResource("30_wwmrd")
+
+[node name="PlaqueJudgmentTablet02" type="Sprite2D" parent="L3_YSorted" unique_id=1507884226]
+position = Vector2(3.5188742, 299.6406)
+scale = Vector2(0.3822317, 0.50765145)
+skew = -0.08726646
+texture = ExtResource("30_wwmrd")
+
+[node name="PlaqueJudgmentTablet03" type="Sprite2D" parent="L3_YSorted" unique_id=1645528168]
+position = Vector2(48, 276)
+scale = Vector2(0.46875, 0.51339287)
+texture = ExtResource("30_wwmrd")
+
+[node name="PropsPropsTrainingWeaponsChests015" type="Sprite2D" parent="L3_YSorted" unique_id=1900683959]
+position = Vector2(342, -245.99998)
+scale = Vector2(1.1777787, 1.0802468)
+texture = ExtResource("36_ygprv")
+
+[node name="L4_Foreground" type="Node2D" parent="." unique_id=1118818204]
+
+[node name="Collision" type="Node2D" parent="." unique_id=112647473]
+
+[node name="BackBoundary" type="StaticBody2D" parent="Collision" unique_id=1739849890]
+position = Vector2(962, -438)
+
+[node name="LeftBoundary" type="StaticBody2D" parent="Collision" unique_id=137361609]
+position = Vector2(-27, 246)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1086547637]
+position = Vector2(-479, 154)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=836769097]
+position = Vector2(-436, 150)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1650985610]
+position = Vector2(-396, 156)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1182762786]
+position = Vector2(-352, 173)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1404828479]
+position = Vector2(-307, 195)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=949488012]
+position = Vector2(-260, 216)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1671473292]
+position = Vector2(-215, 242)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D10" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=522245369]
+position = Vector2(-80, 325)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D11" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1072762433]
+position = Vector2(-36, 342)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D12" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=246263020]
+position = Vector2(9, 364)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D13" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=2011409560]
+position = Vector2(56, 385)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D14" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=946263880]
+position = Vector2(101, 411)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D15" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1501564517]
+position = Vector2(143, 449)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D16" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1285987661]
+position = Vector2(187, 466)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D17" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=596856353]
+position = Vector2(232, 488)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D18" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=2082638835]
+position = Vector2(279, 509)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D19" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=836929301]
+position = Vector2(324, 535)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D20" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=260692054]
+position = Vector2(362, 575)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D21" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=341906364]
+position = Vector2(406, 592)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D22" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1593439011]
+position = Vector2(451, 614)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D23" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=931762487]
+position = Vector2(498, 635)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D24" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1662105672]
+position = Vector2(543, 661)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D25" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1903065510]
+position = Vector2(260, 29)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D26" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1469238348]
+position = Vector2(304, 46)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D27" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1282955040]
+position = Vector2(349, 68)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D28" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=172442023]
+position = Vector2(396, 89)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D29" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1337762607]
+position = Vector2(441, 115)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D30" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1816216023]
+position = Vector2(-390, -109)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D31" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1211079007]
+position = Vector2(-346, -92)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D32" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1515460182]
+position = Vector2(-301, -70)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D58" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=970138089]
+position = Vector2(-317, 55)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D59" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=622284204]
+position = Vector2(-273, 72)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D60" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=2114158423]
+position = Vector2(-228, 94)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D33" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1560268709]
+position = Vector2(-254, -49)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D34" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=647522232]
+position = Vector2(-209, -23)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D35" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1254398287]
+position = Vector2(-698, 43)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D36" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=684690927]
+position = Vector2(-654, 60)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D37" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=618718323]
+position = Vector2(-609, 82)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D38" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1966356753]
+position = Vector2(-562, 103)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D39" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=2028579779]
+position = Vector2(-517, 129)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D40" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=487321705]
+position = Vector2(1120, -14)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D41" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=328652632]
+position = Vector2(1164, 3)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D42" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=563339955]
+position = Vector2(1209, 25)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D43" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1371536188]
+position = Vector2(1256, 46)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D44" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1414880288]
+position = Vector2(1301, 72)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D45" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1430313524]
+position = Vector2(907, -119)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D46" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=675606625]
+position = Vector2(951, -102)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D47" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=324108762]
+position = Vector2(996, -80)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D48" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=849934451]
+position = Vector2(1043, -59)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D49" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=110536496]
+position = Vector2(1088, -33)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D50" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=862015197]
+position = Vector2(621, 18)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D51" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1707836448]
+position = Vector2(625, 47)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D52" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1369279054]
+position = Vector2(670, 69)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D53" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=358666030]
+position = Vector2(717, 90)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D54" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=480638516]
+position = Vector2(762, 116)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D55" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=14427104]
+position = Vector2(971, 244)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D56" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=561958887]
+position = Vector2(1015, 261)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D57" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1506056490]
+position = Vector2(1060, 283)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=1391461882]
+position = Vector2(-168, 270)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="CollisionShape2D9" type="CollisionShape2D" parent="Collision/LeftBoundary" unique_id=128013947]
+position = Vector2(-122, 300)
+shape = SubResource("CapsuleShape2D_h8kbn")
+
+[node name="RightBoundary" type="StaticBody2D" parent="Collision" unique_id=517748346]
+position = Vector2(707, 848)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1351960413]
+position = Vector2(-142, 52)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=833592687]
+position = Vector2(-89, 28)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=333816458]
+position = Vector2(-33, 5)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1660695441]
+position = Vector2(19, -21)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=403678720]
+position = Vector2(78, -52)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D20" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=2044575813]
+position = Vector2(361, -339)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D21" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=927250690]
+position = Vector2(417, -362)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D22" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=783180744]
+position = Vector2(469, -388)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D23" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=805163559]
+position = Vector2(528, -419)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D24" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=714732333]
+position = Vector2(477, -420)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D25" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=348661332]
+position = Vector2(533, -443)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D26" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=241810037]
+position = Vector2(585, -469)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D27" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=395650320]
+position = Vector2(644, -500)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D28" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1856532629]
+position = Vector2(-68, -616)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D29" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=736198002]
+position = Vector2(-12, -639)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D30" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=608257158]
+position = Vector2(40, -665)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D31" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1562054672]
+position = Vector2(99, -696)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D32" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=2080446233]
+position = Vector2(-389, -609)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D33" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1343466813]
+position = Vector2(-330, -650)
+rotation = 1.1641346
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D34" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=2048225753]
+position = Vector2(-147, -839)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D36" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=2097697890]
+position = Vector2(-1385, -636)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D37" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1904452894]
+position = Vector2(-1329, -659)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D38" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=708167206]
+position = Vector2(-1277, -685)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D39" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1125861175]
+position = Vector2(-1218, -716)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D10" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=393274875]
+position = Vector2(-845, -522)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D40" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1434125655]
+position = Vector2(-907, -494)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D11" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1229080742]
+position = Vector2(-792, -546)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D12" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1273804619]
+position = Vector2(-736, -569)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D13" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1419299558]
+position = Vector2(-684, -595)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D14" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=349497078]
+position = Vector2(-625, -626)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D15" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1971171518]
+position = Vector2(-661, -622)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D16" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1300952191]
+position = Vector2(-608, -646)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D17" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=811261772]
+position = Vector2(-571, -679)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D18" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=748058770]
+position = Vector2(-531, -718)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D19" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=858177911]
+position = Vector2(-476, -730)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1563479812]
+position = Vector2(129, -89)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=2049705221]
+position = Vector2(170, -107)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1116119446]
+position = Vector2(226, -136)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="CollisionShape2D9" type="CollisionShape2D" parent="Collision/RightBoundary" unique_id=1984690035]
+position = Vector2(266, -158)
+shape = SubResource("CapsuleShape2D_wwmrd")
+
+[node name="HellGateBaseBlocker" type="StaticBody2D" parent="Collision" unique_id=1721467514]
+position = Vector2(651, -416)
+
+[node name="WeaponAltarBlocker" type="StaticBody2D" parent="Collision" unique_id=1713114676]
+position = Vector2(392, 440)
+
+[node name="BoonShrineBlocker" type="StaticBody2D" parent="Collision" unique_id=651231240]
+position = Vector2(915, 440)
+
+[node name="FountainBlocker" type="StaticBody2D" parent="Collision" unique_id=1934407839]
+position = Vector2(1990, 734)
+
+[node name="TrainingDummyBlocker" type="StaticBody2D" parent="Collision" unique_id=1073477775]
+position = Vector2(340, -208)
+
+[node name="Markers" type="Node2D" parent="." unique_id=394416734]
+
+[node name="PlayerSpawn" type="Marker2D" parent="Markers" unique_id=1449151177]
+position = Vector2(504, 663)
+
+[node name="PlayerSpawn2" type="Marker2D" parent="Markers" unique_id=1818267435]
+position = Vector2(525, 681)
+
+[node name="HellGateStart" type="Marker2D" parent="Markers" unique_id=1275638971]
+position = Vector2(654, -425)
+
+[node name="WeaponAltarMarker" type="Marker2D" parent="Markers" unique_id=508612904]
+position = Vector2(923, 313)
+
+[node name="BoonShrineMarker" type="Marker2D" parent="Markers" unique_id=132309981]
+position = Vector2(-421, 217)
+
+[node name="TrainingDummyMarker" type="Marker2D" parent="Markers" unique_id=154666436]
+position = Vector2(327, -217)
+
+[node name="FountainMarker" type="Marker2D" parent="Markers" unique_id=505869145]
+position = Vector2(800, 710)
+
+[node name="CameraAnchor" type="Marker2D" parent="Markers" unique_id=734220856]
+position = Vector2(432, 595)
+
+[node name="HubRuntime" type="Node2D" parent="." unique_id=1532305020]
+script = ExtResource("hub_runtime")

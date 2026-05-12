@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://bhplbpnnpl8ra"
+
+[deps]
+
+files=["res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.name.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.category.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.source.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.source.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.row.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.bbox.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.bbox.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.bbox.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.bbox.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.trimmed.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.trimmed.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.padded.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.padded.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.trimmed.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.padded.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.notes.translation"]
+
+source_file="res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.csv"
+dest_files=["res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.name.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.category.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.source.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.source.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.row.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.bbox.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.bbox.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.bbox.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.bbox.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.trimmed.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.trimmed.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.padded.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.padded.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.trimmed.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.padded.translation", "res://art/iso/hub/threshold_nave_v1/hub_asset_manifest.notes.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true
