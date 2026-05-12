@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://cjn4prbn4ewse"
+
+[deps]
+
+files=["res://docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.en.translation", "res://docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.en.translation", "res://docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.en.translation"]
+
+source_file="res://docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.csv"
+dest_files=["res://docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.en.translation", "res://docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.en.translation", "res://docs/ASSET_CLEANUP_UNUSED_CANDIDATES_V1.en.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

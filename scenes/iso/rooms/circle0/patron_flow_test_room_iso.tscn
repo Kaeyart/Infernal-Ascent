@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://h6k2lvlbfn51"]
+
+[ext_resource type="Script" uid="uid://b6yn8nd25rie3" path="res://scripts/iso/IsoPatronFlowController.gd" id="1"]
+
+[node name="PatronFlowTestRoomIso" type="Node2D" unique_id=1152910476]
+script = ExtResource("1")
