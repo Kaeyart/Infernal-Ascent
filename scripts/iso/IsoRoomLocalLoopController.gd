@@ -6,6 +6,7 @@ extends Node2D
 ## V22.2 — Presentation cleanup removes residual debug overlays and anchors route/boss gates inside the room.
 ## V23 — Boss Arena V1 adds the Sentencing Furnace placeholder arena.
 ## V24 — Ash Warden Boss V1 replaces the placeholder seal with a playable boss fight.
+## V25 — Demo Victory and Death Loop records clean victory/death outcomes and returns to hub.
 ## Owns the local Circle 0 demo run state machine. This script intentionally does not add
 ## new enemies, art, boss logic, sound, or save logic.
 
@@ -54,6 +55,12 @@ enum RunPhase {
 @export var ash_warden_max_health_v24: int = 100
 @export var ash_warden_boss_can_end_run_on_player_death: bool = true
 @export var force_demo_route_pattern: bool = true
+
+@export_category("V25 Demo Victory / Death")
+@export var demo_victory_ash_sigils: int = 3
+@export var demo_death_base_ash_sigils: int = 0
+@export var death_keeps_bonus_sigils: bool = true
+@export var show_outcome_intro_panel: bool = true
 
 @export_category("V21 Support Rooms")
 @export var support_rooms_functional: bool = true
@@ -121,6 +128,9 @@ var _boss_exit: RunRoomInteractable = null
 var _active_ash_warden_boss: Node2D = null
 var _boss_health_current: int = 0
 var _boss_health_max: int = 1
+var boss_defeated_this_run: bool = false
+var last_run_summary: Dictionary = {}
+var _run_outcome_reason: String = ""
 var _phase_serial: int = 0
 var hud_layer: CanvasLayer = null
 var hud_label: Label = null
@@ -190,6 +200,9 @@ func _reset_run_counters() -> void:
 	_active_ash_warden_boss = null
 	_boss_health_current = 0
 	_boss_health_max = 1
+	boss_defeated_this_run = false
+	last_run_summary.clear()
+	_run_outcome_reason = ""
 
 func _create_shared_manager() -> void:
 	shared_patron_manager = PatronRunManager.new()
@@ -812,6 +825,7 @@ func _on_ash_warden_phase_changed(phase_index: int) -> void:
 func _on_ash_warden_defeated() -> void:
 	if current_phase != RunPhase.BOSS:
 		return
+	boss_defeated_this_run = true
 	last_status = "The Ash Warden has fallen. The exit has opened."
 	if runtime_adapter != null:
 		runtime_adapter.clear_runtime_dangers()
@@ -851,7 +865,8 @@ func _spawn_boss_victory_exit() -> void:
 func _on_boss_victory_exit_used(_payload: Dictionary) -> void:
 	if current_phase != RunPhase.BOSS_ARENA_PLACEHOLDER and current_phase != RunPhase.BOSS:
 		return
-	_finish_local_run(true, "The Ash Warden has been defeated.")
+	boss_defeated_this_run = true
+	_finish_local_run(true, "The Ash Warden has been defeated. The descent returns with proof of victory.")
 
 func _clear_boss_placeholder_nodes() -> void:
 	if _boss_placeholder != null and is_instance_valid(_boss_placeholder):
@@ -1142,38 +1157,59 @@ func _finish_local_run(victory: bool = true, reason: String = "") -> void:
 	_room_completion_pending = false
 	_route_choice_spawn_pending = false
 	_return_input_armed = false
+	_run_outcome_reason = reason if reason.strip_edges() != "" else ("The Ash Warden has been defeated." if victory else "The Penitent Knight fell.")
 	_boss_placeholder = null
 	_boss_exit = null
 	_clear_route_runtime_nodes()
 	if runtime_adapter != null:
 		runtime_adapter.clear_runtime_dangers()
 	if victory:
-		_set_phase(RunPhase.RUN_VICTORY, reason if reason.strip_edges() != "" else "Run complete.")
-		last_status = "Run complete. Press E to return to the Threshold Nave."
+		_set_phase(RunPhase.RUN_VICTORY, _run_outcome_reason)
+		last_status = "Demo victory. Press E to return to the Threshold Nave."
+		if show_outcome_intro_panel:
+			_show_intro("DEMO VICTORY", "The Ash Warden has fallen · Press E to return")
 	else:
-		_set_phase(RunPhase.RUN_DEATH, reason if reason.strip_edges() != "" else "The Penitent Knight fell.")
-		last_status = "Run failed. Press E to return to the Threshold Nave."
+		_set_phase(RunPhase.RUN_DEATH, _run_outcome_reason)
+		last_status = "Run ended in death. Press E to return to the Threshold Nave."
+		if show_outcome_intro_panel:
+			_show_intro("YOU DIED", "The descent rejects the Penitent · Press E to return")
 	_record_run_results(victory)
 	_update_hud()
 	_debug(last_status)
 
 func _record_run_results(victory: bool = true) -> void:
-	var total_sigils: int = ash_sigils_per_completed_run + run_bonus_ash_sigils
-	if not victory:
-		total_sigils = max(0, run_bonus_ash_sigils)
+	var total_sigils: int = 0
+	if victory:
+		total_sigils = maxi(0, demo_victory_ash_sigils + run_bonus_ash_sigils)
+	else:
+		total_sigils = maxi(0, demo_death_base_ash_sigils + (run_bonus_ash_sigils if death_keeps_bonus_sigils else 0))
+	var ash_gained: int = RunEconomyData.add_ash_sigils(total_sigils)
 	var summary: Dictionary = {
-		"ash_sigils_earned": total_sigils,
+		"status": "Demo Victory" if victory else "Run Failed",
+		"outcome": "victory" if victory else "death",
+		"reason": _run_outcome_reason,
+		"ash_sigils_earned": ash_gained,
+		"ash_sigils_total": RunEconomyData.get_ash_sigils(),
 		"rooms_cleared": rooms_completed,
+		"rooms_required": rooms_until_run_end,
+		"combat_rooms_cleared": combat_rooms_cleared,
+		"reward_rooms_completed": reward_rooms_completed,
+		"fountain_rooms_completed": fountain_rooms_completed,
+		"shop_purchases": shop_purchases,
+		"forge_mark": active_forge_mark,
+		"boss_defeated": boss_defeated_this_run and victory,
 		"patron": "Local Route Loop",
 		"boon": _reward_display_summary(),
-		"victory": victory,
-		"notes": "V24 Ash Warden boss route returned to the Threshold Nave.",
+		"boons": reward_display_history.duplicate(true),
+		"route_history": route_history.duplicate(true),
+		"room_variant_history": room_variant_history.duplicate(true),
 		"run_ash_remaining": run_ash_shards,
-		"forge_mark": active_forge_mark,
-		"shop_purchases": shop_purchases,
+		"reward_text": "Ash Sigils +%d" % ash_gained,
+		"notes": "V25 demo victory/death loop returned to the Threshold Nave.",
 	}
+	last_run_summary = summary.duplicate(true)
 	RunSessionData.record_completed_run(summary)
-	print("[IsoLocalLoop] Recorded V21 run results: " + str(summary))
+	print("[IsoLocalLoop] Recorded V25 run results: " + str(summary))
 
 func _reward_display_summary() -> String:
 	if reward_display_history.is_empty():
@@ -1344,10 +1380,13 @@ func _on_player_died() -> void:
 		return
 	if current_phase == RunPhase.BOSS and not ash_warden_boss_can_end_run_on_player_death:
 		return
-	_finish_local_run(false, "The Penitent Knight fell in Circle 0.")
+	var death_reason: String = "The Penitent Knight fell in Circle 0."
+	if current_phase == RunPhase.BOSS:
+		death_reason = "The Ash Warden delivered judgment. The run ends in death."
+	_finish_local_run(false, death_reason)
 
 func _find_player_node() -> Node:
-	var players: Array[Node] = get_tree().get_nodes_in_group("player")
+	var players: Array = get_tree().get_nodes_in_group("player")
 	for node: Node in players:
 		if node != null:
 			return node
@@ -1412,7 +1451,10 @@ func _update_hud() -> void:
 		"hazards_active": current_phase == RunPhase.COMBAT,
 		"run_finished": run_finished,
 		"victory": current_phase == RunPhase.RUN_VICTORY,
-		"boss": {"current_health": _boss_health_current, "max_health": _boss_health_max, "active": current_phase == RunPhase.BOSS},
+		"outcome": last_run_summary.duplicate(true),
+		"ash_sigils_earned": int(last_run_summary.get("ash_sigils_earned", 0)),
+		"ash_sigils_total": int(last_run_summary.get("ash_sigils_total", RunEconomyData.get_ash_sigils())),
+		"boss": {"current_health": _boss_health_current, "max_health": _boss_health_max, "active": current_phase == RunPhase.BOSS, "defeated": boss_defeated_this_run},
 	}
 	if hud_controller != null and is_instance_valid(hud_controller):
 		if current_phase == RunPhase.HUB and not auto_start_run_on_ready:

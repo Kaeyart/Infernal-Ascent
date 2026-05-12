@@ -3,6 +3,7 @@ extends CanvasLayer
 class_name InfernalUIRoot
 ## V15 — UI Consistency Pass.
 ## V21 support-room focus text for fountain/shop/forge functional rooms.
+## V25 outcome panels show victory/death results, earned Ash Sigils, boss result, and return prompt.
 ## Single CanvasLayer + Control presentation layer for the demo run.
 ## Gameplay scripts send state. This script owns the screen UI language.
 
@@ -265,15 +266,42 @@ func _update_summary(data: Dictionary, phase: String, objective: String) -> void
 		_summary_panel.visible = false
 		return
 	_summary_panel.visible = true
-	_summary_title.text = "RUN COMPLETE" if is_victory else "RUN ENDED"
-	var outcome: String = "The descent route is complete." if is_victory else "The Penitent Knight fell."
-	_summary_body.text = "%s\n\nRooms cleared: %d / %d\nBoons claimed: %s\nBonus Ash Sigils: %d\n\n%s\n\n[E] Return to the Threshold Nave" % [
-		outcome,
+	var outcome_data: Dictionary = {}
+	if data.get("outcome", {}) is Dictionary:
+		outcome_data = data.get("outcome", {}) as Dictionary
+	var boss_defeated: bool = bool(outcome_data.get("boss_defeated", is_victory))
+	var earned: int = int(outcome_data.get("ash_sigils_earned", data.get("ash_sigils_earned", 0)))
+	var total: int = int(outcome_data.get("ash_sigils_total", data.get("ash_sigils_total", 0)))
+	var reason: String = str(outcome_data.get("reason", objective))
+	var forge_mark: String = str(outcome_data.get("forge_mark", ""))
+	var shop_count: int = int(outcome_data.get("shop_purchases", 0))
+	_summary_title.text = "ASH WARDEN DEFEATED" if is_victory else "DESCENT FAILED"
+	_apply_panel_style(_summary_panel, Color(0.018, 0.014, 0.012, 0.97), Color(0.96, 0.66, 0.24, 0.92) if is_victory else Color(0.82, 0.16, 0.10, 0.94), 3, 12)
+	var outcome_text: String = "The Ash Warden has fallen. The Penitent Knight returns with proof of victory." if is_victory else "The Penitent Knight falls. The hub receives only what was carried back through ash."
+	var boss_line: String = "Ash Warden: defeated" if boss_defeated else "Ash Warden: survived"
+	var forge_line: String = "Forge mark: %s" % (forge_mark if forge_mark.strip_edges() != "" else "None")
+	_summary_body.text = "%s
+
+%s
+Rooms cleared: %d / %d
+Boons: %s
+%s
+Shop purchases: %d
+Ash Sigils gained: +%d  |  Total: %d
+
+%s
+
+[E] Return to the Threshold Nave" % [
+		outcome_text,
+		boss_line,
 		int(data.get("completed", 0)),
 		int(data.get("total", 0)),
 		_reward_names_text(data.get("reward_names", data.get("rewards", []))),
-		int(data.get("bonus_sigils", 0)),
-		objective,
+		forge_line,
+		shop_count,
+		earned,
+		total,
+		reason,
 	]
 
 func _reward_names_text(value: Variant) -> String:
