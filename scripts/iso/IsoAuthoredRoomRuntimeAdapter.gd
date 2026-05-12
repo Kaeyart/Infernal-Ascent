@@ -35,6 +35,7 @@ signal combat_room_cleared()
 @export var enable_room_hazards: bool = true
 @export var use_variant_enemy_spawn_positions: bool = true
 @export var room_presentation_debug_labels: bool = false
+@export var enforce_v17_layout_positions: bool = true
 @export var hazard_damage: int = 1
 @export var hazard_player_knockback_force: float = 155.0
 @export var hazard_debug_draw_radius: bool = false
@@ -197,8 +198,11 @@ func _find_or_create_player(player_spawn: Node2D) -> Node2D:
 		physics_player.add_to_group("player")
 		found_player = physics_player
 		print("[IsoRuntimeAdapter] Created IsoPhysicsTestPlayer.")
-	if found_player != null and player_spawn != null and move_existing_nodes_to_markers:
-		found_player.global_position = player_spawn.global_position
+	if found_player != null and move_existing_nodes_to_markers:
+		if player_spawn != null:
+			found_player.global_position = player_spawn.global_position
+		elif enforce_v17_layout_positions:
+			found_player.global_position = _get_variant_player_spawn_position()
 	return found_player
 
 func _find_or_create_patron_flow(reward_socket: Node2D, door_left: Node2D, door_center: Node2D, door_right: Node2D) -> IsoPatronFlowController:
@@ -273,15 +277,17 @@ func _get_variant_enemy_spawn_positions() -> Array[Vector2]:
 	var positions: Array[Vector2] = []
 	match _active_room_variant:
 		"cinder_drain":
-			positions = [c + Vector2(-190.0, -70.0), c + Vector2(190.0, -70.0), c + Vector2(0.0, -145.0), c + Vector2(0.0, 55.0)]
+			positions = [c + Vector2(-215.0, -82.0), c + Vector2(215.0, -82.0), c + Vector2(-82.0, -162.0), c + Vector2(82.0, -162.0)]
 		"furnace_vestibule":
-			positions = [c + Vector2(-170.0, -115.0), c + Vector2(170.0, -115.0), c + Vector2(-95.0, 35.0), c + Vector2(95.0, 35.0)]
+			positions = [c + Vector2(-210.0, -132.0), c + Vector2(210.0, -132.0), c + Vector2(-130.0, -12.0), c + Vector2(130.0, -12.0)]
 		"chain_reservoir":
-			positions = [c + Vector2(-205.0, -30.0), c + Vector2(205.0, -30.0), c + Vector2(-95.0, -135.0), c + Vector2(95.0, -135.0)]
+			positions = [c + Vector2(-230.0, -35.0), c + Vector2(230.0, -35.0), c + Vector2(-120.0, -158.0), c + Vector2(120.0, -158.0)]
 		"ember_sorting_floor":
-			positions = [c + Vector2(-155.0, -50.0), c + Vector2(155.0, -50.0), c + Vector2(-40.0, -155.0), c + Vector2(115.0, 35.0)]
+			positions = [c + Vector2(-190.0, -58.0), c + Vector2(190.0, -58.0), c + Vector2(-42.0, -176.0), c + Vector2(130.0, 18.0)]
+		"penitent_crossing":
+			positions = [c + Vector2(-208.0, -112.0), c + Vector2(208.0, -112.0), c + Vector2(-74.0, -188.0), c + Vector2(74.0, -188.0)]
 		_:
-			positions = [c + Vector2(-150.0, -95.0), c + Vector2(150.0, -95.0), c + Vector2(0.0, -155.0), c + Vector2(0.0, 30.0)]
+			positions = [c + Vector2(-175.0, -112.0), c + Vector2(175.0, -112.0), c + Vector2(-65.0, -172.0), c + Vector2(65.0, -172.0)]
 	if _active_room_type == "elite_combat":
 		positions.append(c + Vector2(0.0, -210.0))
 	return positions
@@ -351,18 +357,21 @@ func _build_hazard_specs(center: Vector2) -> Array[Dictionary]:
 		return specs
 	match _active_room_variant:
 		"cinder_drain":
-			specs.append(_hazard_spec("ash_vent", center + Vector2(-90.0, -48.0), 60.0, 1.25, 0.40, 2.8))
-			specs.append(_hazard_spec("ash_vent", center + Vector2(96.0, -45.0), 60.0, 1.35, 0.40, 3.2))
+			specs.append(_hazard_spec("ash_vent", center + Vector2(-118.0, -58.0), 62.0, 1.45, 0.45, 3.0))
+			specs.append(_hazard_spec("ash_vent", center + Vector2(118.0, -58.0), 62.0, 1.55, 0.45, 3.2))
 		"furnace_vestibule":
-			specs.append(_hazard_spec("ember_grate", center + Vector2(0.0, -56.0), 78.0, 1.00, 1.00, 3.0))
+			specs.append(_hazard_spec("ember_grate", center + Vector2(0.0, -70.0), 86.0, 1.25, 1.05, 3.1))
 		"chain_reservoir":
-			specs.append(_hazard_spec("falling_cinder", center + Vector2(-135.0, -72.0), 62.0, 1.35, 0.28, 3.4))
-			specs.append(_hazard_spec("falling_cinder", center + Vector2(135.0, -72.0), 62.0, 1.55, 0.28, 3.9))
+			specs.append(_hazard_spec("falling_cinder", center + Vector2(-150.0, -86.0), 64.0, 1.55, 0.32, 3.5))
+			specs.append(_hazard_spec("falling_cinder", center + Vector2(150.0, -86.0), 64.0, 1.70, 0.32, 3.8))
 		"ember_sorting_floor":
-			specs.append(_hazard_spec("ember_grate", center + Vector2(-70.0, -42.0), 68.0, 1.00, 0.88, 2.7))
-			specs.append(_hazard_spec("ash_vent", center + Vector2(92.0, -20.0), 58.0, 1.25, 0.38, 2.6))
+			specs.append(_hazard_spec("ember_grate", center + Vector2(-82.0, -52.0), 72.0, 1.20, 0.92, 2.9))
+			specs.append(_hazard_spec("ash_vent", center + Vector2(116.0, -24.0), 60.0, 1.45, 0.42, 2.9))
+		"penitent_crossing":
+			specs.append(_hazard_spec("falling_cinder", center + Vector2(0.0, -122.0), 70.0, 1.60, 0.32, 3.4))
+			specs.append(_hazard_spec("ash_vent", center + Vector2(0.0, 6.0), 58.0, 1.45, 0.40, 3.1))
 		_:
-			specs.append(_hazard_spec("ash_vent", center + Vector2(0.0, -70.0), 58.0, 1.25, 0.38, 3.1))
+			specs.append(_hazard_spec("ash_vent", center + Vector2(0.0, -82.0), 60.0, 1.45, 0.42, 3.1))
 	if _active_room_type == "elite_combat" and elite_extra_hazard:
 		specs.append(_hazard_spec("falling_cinder", center + Vector2(0.0, -155.0), 70.0, 1.25, 0.30, 2.9))
 	return specs
@@ -411,7 +420,7 @@ func _select_variant_for_room_type(room_type: String, depth: int) -> String:
 			return "silent_shop"
 		"choice":
 			return "route_gate_crossing"
-	var variants: Array[String] = ["ash_intake_hall", "cinder_drain", "furnace_vestibule", "chain_reservoir", "ember_sorting_floor"]
+	var variants: Array[String] = ["ash_intake_hall", "cinder_drain", "furnace_vestibule", "chain_reservoir", "ember_sorting_floor", "penitent_crossing"]
 	return variants[(maxi(1, depth) + _encounter_cycle_index - 2) % variants.size()]
 
 func _clear_existing_test_enemies() -> void:
@@ -574,7 +583,7 @@ func _normalize_marker_name(value: String) -> String:
 func get_choice_gate_positions() -> Array[Vector2]:
 	var origin: Vector2 = _fallback_room_center()
 	if _active_room_variant == "route_gate_crossing":
-		return [origin + Vector2(-185.0, -105.0), origin + Vector2(0.0, -150.0), origin + Vector2(185.0, -105.0)]
+		return [origin + Vector2(-220.0, -122.0), origin + Vector2(0.0, -182.0), origin + Vector2(220.0, -122.0)]
 	var result: Array[Vector2] = []
 	var door_left: Node2D = _find_marker(["DoorL", "Door L", "Door_Left", "DoorLeft", "LeftDoor", "DoorSocketLeft", "DoorSocket_L"])
 	var door_center: Node2D = _find_marker(["DoorC", "Door C", "Door_C", "DoorCenter", "CenterDoor", "DoorSocketCenter", "DoorSocket_C"])
@@ -601,7 +610,14 @@ func get_reward_socket_position() -> Vector2:
 			return origin + Vector2(0.0, -72.0)
 		"shop":
 			return origin + Vector2(0.0, -72.0)
-	return origin + Vector2(0.0, -60.0)
+	return origin + Vector2(0.0, -68.0)
+
+func _get_variant_player_spawn_position() -> Vector2:
+	var c: Vector2 = _fallback_room_center()
+	match _active_room_variant:
+		"reward_altar", "ash_fountain", "cold_forge", "silent_shop", "route_gate_crossing":
+			return c + Vector2(0.0, 100.0)
+	return c + Vector2(0.0, 112.0)
 
 func get_room_center_position() -> Vector2:
 	return _fallback_room_center()

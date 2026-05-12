@@ -43,7 +43,7 @@ enum RunPhase {
 @export var show_room_intro_toast: bool = true
 @export var use_v12_run_hud: bool = true # Compatibility flag: true instantiates Circle0RunHUD / InfernalUIRoot.
 @export var route_gate_room_variant: String = "route_gate_crossing"
-@export var combat_variants: Array[String] = ["ash_intake_hall", "cinder_drain", "furnace_vestibule", "chain_reservoir", "ember_sorting_floor"]
+@export var combat_variants: Array[String] = ["ash_intake_hall", "cinder_drain", "furnace_vestibule", "chain_reservoir", "ember_sorting_floor", "penitent_crossing"]
 @export var elite_combat_variant_offset: int = 2
 
 var shared_patron_manager: PatronRunManager = null
