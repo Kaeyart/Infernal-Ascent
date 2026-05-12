@@ -16,6 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://c2vt1n2fliuga" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_02_025_weapon_rack_spears.png" id="13_842ym"]
 [ext_resource type="Texture2D" uid="uid://2j8b6fllmt08" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_01_005_floor_tile_grate_ember.png" id="13_h8kbn"]
 [ext_resource type="Texture2D" uid="uid://2rsg2hhlm6h3" path="res://art/iso/circle0/ash_intake_hall_01/sliced_trimmed/walls/wall_north_segment_01.png" id="13_tahml"]
+[ext_resource type="Texture2D" uid="uid://dmhic64b8p5xv" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_02_031_empty_round_platform.png" id="13_wwmrd"]
 [ext_resource type="Texture2D" uid="uid://dqajes6tkv32d" path="res://art/iso/hub/threshold_nave_v1/sliced_trimmed/hub_01_023_heavy_square_pillar.png" id="14_ikn0k"]
 [ext_resource type="Texture2D" uid="uid://cfdb4pxucw4tu" path="res://art/iso/hub/threshold_nave_v1/sliced_padded_32/hub_02_024_training_dummy.png" id="14_wi642"]
 [ext_resource type="Texture2D" uid="uid://do2pxdpav27uk" path="res://art/iso/circle0/ash_intake_hall_01/sliced_padded_32/walls/wall_west_segment_01.png" id="14_wtrr1"]
@@ -419,6 +420,10 @@ texture = ExtResource("13_tahml")
 [node name="Hub01018InnerCornerWallLantern2" type="Sprite2D" parent="L2_StructuralWalls" unique_id=2104723912]
 position = Vector2(881, -463)
 texture = ExtResource("1_0fpdn")
+
+[node name="Hub02031EmptyRoundPlatform" type="Sprite2D" parent="L2_StructuralWalls" unique_id=1689421628]
+position = Vector2(893, -319)
+texture = ExtResource("13_wwmrd")
 
 [node name="WallNorthSegment27" type="Sprite2D" parent="L2_StructuralWalls" unique_id=513321516]
 position = Vector2(1052, -388)
@@ -1166,7 +1171,7 @@ position = Vector2(-421, 217)
 position = Vector2(327, -217)
 
 [node name="FountainMarker" type="Marker2D" parent="Markers" unique_id=505869145]
-position = Vector2(800, 710)
+position = Vector2(876, -297)
 
 [node name="CameraAnchor" type="Marker2D" parent="Markers" unique_id=734220856]
 position = Vector2(432, 595)
