@@ -3,12 +3,15 @@ class_name IsoHubRuntimeController
 
 const PLAYER_SCRIPT: Script = preload("res://scripts/iso/IsoPhysicsTestPlayer.gd")
 const PANEL_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubInteractionPanel.gd")
+const NPC_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubNPC.gd")
 
 @export var run_scene_path: String = "res://scenes/iso/rooms/circle0/combat_ash_intake_hall_01_iso.tscn"
 @export var marker_root_name: String = "Markers"
 @export var y_sorted_root_name: String = "L3_YSorted"
 @export var interact_radius: float = 82.0
+@export var npc_interact_radius: float = 92.0
 @export var auto_spawn_player: bool = true
+@export var auto_spawn_npcs: bool = true
 @export var camera_zoom: Vector2 = Vector2(1.0, 1.0)
 @export var camera_smoothing_speed: float = 8.0
 @export var training_dummy_health: int = 8
@@ -18,6 +21,7 @@ var hud_layer: CanvasLayer = null
 var hud_label: Label = null
 var interaction_panel: IsoHubInteractionPanel = null
 var training_dummy: IsoTestEnemy = null
+var spawned_npcs: Array[IsoHubNPC] = []
 
 var status_text: String = "Hub ready. Walk to a station."
 var _e_down_previous: bool = false
@@ -35,9 +39,9 @@ var station_defs: Array[Dictionary] = [
 	{
 		"marker": "WeaponAltarMarker",
 		"title": "Weapon Altar",
-		"prompt": "Press E to inspect the weapon altar.",
-		"kind": "panel",
-		"body": "Weapon system placeholder.\n\nPlanned function:\n- choose starting weapon\n- inspect weapon stats\n- upgrade base weapon power\n- choose weapon aspects that change the playstyle\n\nCurrent weapon: Penitent Blade.\nCurrent state: placeholder only."
+		"prompt": "Press E to inspect your current weapon.",
+		"kind": "weapon_altar",
+		"body": ""
 	},
 	{
 		"marker": "BoonShrineMarker",
@@ -62,11 +66,52 @@ var station_defs: Array[Dictionary] = [
 	}
 ]
 
+var npc_defs: Array[Dictionary] = [
+	{
+		"id": "weapon_keeper",
+		"name": "Varric, Weapon Keeper",
+		"role": "armory",
+		"marker": "WeaponAltarMarker",
+		"offset": Vector2(-82.0, -52.0),
+		"color": Color("#d1a45b"),
+		"body": "Weapon Keeper placeholder.\n\nThe Weapon Altar now shows your current weapon: Penitent Blade.\n\nNext planned step for this station:\n- choose between unlocked weapons\n- inspect weapon aspects\n- apply forge upgrades\n- compare weapon roles before starting a run"
+	},
+	{
+		"id": "shrine_attendant",
+		"name": "The Veiled Attendant",
+		"role": "patrons",
+		"marker": "BoonShrineMarker",
+		"offset": Vector2(78.0, -56.0),
+		"color": Color("#9fd8ff"),
+		"body": "Shrine Attendant placeholder.\n\nShe will eventually track patron relationships, discovered boons, and starting patron privileges.\n\nCurrent patrons:\n- Francesca: speed and wind attacks\n- Ugolino: survive by hurting enemies\n- Minos: mark and execute enemies"
+	},
+	{
+		"id": "archivist",
+		"name": "Erem, Ash Archivist",
+		"role": "codex",
+		"marker": "FountainMarker",
+		"offset": Vector2(155.0, -135.0),
+		"color": Color("#bca98d"),
+		"body": "Archivist placeholder.\n\nThis NPC will become the codex keeper.\n\nPlanned records:\n- enemies encountered\n- patron boons discovered\n- boss records\n- run history\n- institutional lore about Hell and the Circles"
+	},
+	{
+		"id": "toll_clerk",
+		"name": "Marta, Toll Clerk",
+		"role": "merchant",
+		"marker": "TrainingDummyMarker",
+		"offset": Vector2(-165.0, -98.0),
+		"color": Color("#d8b866"),
+		"body": "Toll Clerk placeholder.\n\nThis NPC will become the shop/economy contact.\n\nPlanned function:\n- spend run currency\n- buy starting supplies\n- exchange resources\n- explain harder-run modifiers and rewards"
+	}
+]
+
 func _ready() -> void:
 	_setup_hud()
 	_setup_interaction_panel()
 	if auto_spawn_player:
 		call_deferred("_spawn_player_from_marker")
+	if auto_spawn_npcs:
+		call_deferred("_spawn_hub_npcs")
 
 func _process(_delta: float) -> void:
 	if _panel_is_open():
@@ -74,18 +119,18 @@ func _process(_delta: float) -> void:
 		_update_hud()
 		return
 
-	var nearest_station: Dictionary = _get_nearest_station()
+	var nearest_interactable: Dictionary = _get_nearest_interactable()
 
-	if nearest_station.is_empty():
-		status_text = "Hub ready. Walk to a station."
+	if nearest_interactable.is_empty():
+		status_text = "Hub ready. Walk to a station or NPC."
 	else:
 		status_text = "%s — %s" % [
-			str(nearest_station.get("title", "Station")),
-			str(nearest_station.get("prompt", "Press E."))
+			str(nearest_interactable.get("title", "Interact")),
+			str(nearest_interactable.get("prompt", "Press E."))
 		]
 
 		if _interact_pressed_once():
-			_activate_station(nearest_station)
+			_activate_interactable(nearest_interactable)
 
 	_update_hud()
 
@@ -105,6 +150,46 @@ func _spawn_player_from_marker() -> void:
 
 	player_node.global_position = spawn_position
 	_ensure_camera(player_node)
+
+func _spawn_hub_npcs() -> void:
+	_clear_spawned_npcs()
+
+	var parent_node: Node = _get_y_sorted_root()
+
+	for npc_def: Dictionary in npc_defs:
+		var npc: IsoHubNPC = NPC_SCRIPT.new()
+		npc.name = "NPC_" + str(npc_def.get("id", "unknown"))
+		parent_node.add_child(npc)
+
+		var marker_name: String = str(npc_def.get("marker", ""))
+		var marker: Node2D = _find_marker(marker_name)
+		var base_position: Vector2 = Vector2(640.0, 520.0)
+		if marker != null:
+			base_position = marker.global_position
+
+		var offset_value: Variant = npc_def.get("offset", Vector2.ZERO)
+		var offset: Vector2 = offset_value if offset_value is Vector2 else Vector2.ZERO
+		npc.global_position = base_position + offset
+
+		var color_value: Variant = npc_def.get("color", Color("#c59254"))
+		var npc_color: Color = color_value if color_value is Color else Color("#c59254")
+
+		npc.setup(
+			str(npc_def.get("id", "npc")),
+			str(npc_def.get("name", "Hub NPC")),
+			str(npc_def.get("role", "placeholder")),
+			npc_color
+		)
+
+		spawned_npcs.append(npc)
+
+	print("[IsoHubRuntime] Spawned %d hub NPC placeholders." % spawned_npcs.size())
+
+func _clear_spawned_npcs() -> void:
+	for npc: IsoHubNPC in spawned_npcs:
+		if npc != null and is_instance_valid(npc):
+			npc.queue_free()
+	spawned_npcs.clear()
 
 func _find_existing_player() -> Node2D:
 	var grouped_players: Array[Node] = get_tree().get_nodes_in_group("player")
@@ -151,7 +236,23 @@ func _update_panel_input() -> void:
 	if escape_pressed or e_pressed:
 		interaction_panel.close_panel()
 		_panel_close_armed = false
-		status_text = "Hub ready. Walk to a station."
+		status_text = "Hub ready. Walk to a station or NPC."
+
+func _get_nearest_interactable() -> Dictionary:
+	var nearest_station: Dictionary = _get_nearest_station()
+	var nearest_npc: Dictionary = _get_nearest_npc()
+
+	if nearest_station.is_empty():
+		return nearest_npc
+	if nearest_npc.is_empty():
+		return nearest_station
+
+	var station_distance: float = float(nearest_station.get("_distance", INF))
+	var npc_distance: float = float(nearest_npc.get("_distance", INF))
+
+	if npc_distance <= station_distance:
+		return nearest_npc
+	return nearest_station
 
 func _get_nearest_station() -> Dictionary:
 	if player_node == null or not is_instance_valid(player_node):
@@ -171,9 +272,49 @@ func _get_nearest_station() -> Dictionary:
 		var distance: float = player_node.global_position.distance_to(marker.global_position)
 		if distance <= interact_radius and distance < best_distance:
 			best_distance = distance
-			best_station = station
+			best_station = station.duplicate(true)
+			best_station["_kind"] = "station"
+			best_station["_distance"] = distance
 
 	return best_station
+
+func _get_nearest_npc() -> Dictionary:
+	if player_node == null or not is_instance_valid(player_node):
+		player_node = _find_existing_player()
+		if player_node == null:
+			return {}
+
+	var best_npc: Dictionary = {}
+	var best_distance: float = INF
+
+	for i: int in range(spawned_npcs.size()):
+		var npc: IsoHubNPC = spawned_npcs[i]
+		if npc == null or not is_instance_valid(npc):
+			continue
+
+		var distance: float = player_node.global_position.distance_to(npc.global_position)
+		if distance <= npc_interact_radius and distance < best_distance:
+			best_distance = distance
+			var npc_def: Dictionary = npc_defs[i].duplicate(true)
+			npc_def["_kind"] = "npc"
+			npc_def["_distance"] = distance
+			npc_def["title"] = str(npc_def.get("name", "NPC"))
+			npc_def["prompt"] = "Press E to talk."
+			best_npc = npc_def
+
+	return best_npc
+
+func _activate_interactable(interactable: Dictionary) -> void:
+	var kind: String = str(interactable.get("_kind", "station"))
+	if kind == "npc":
+		_activate_npc(interactable)
+		return
+	_activate_station(interactable)
+
+func _activate_npc(npc_def: Dictionary) -> void:
+	var title: String = str(npc_def.get("name", "Hub NPC"))
+	var body: String = str(npc_def.get("body", "This NPC is a placeholder."))
+	_show_panel(title, body)
 
 func _activate_station(station: Dictionary) -> void:
 	var kind: String = str(station.get("kind", "placeholder"))
@@ -184,6 +325,10 @@ func _activate_station(station: Dictionary) -> void:
 		status_text = "Opening the Hell Gate..."
 		_update_hud()
 		get_tree().change_scene_to_file(run_scene_path)
+		return
+
+	if kind == "weapon_altar":
+		_show_weapon_altar_panel()
 		return
 
 	if kind == "training_dummy":
@@ -197,6 +342,9 @@ func _activate_station(station: Dictionary) -> void:
 
 	print("[IsoHubRuntime] Placeholder station used: " + title)
 	_show_panel(title, "This station is not implemented yet.")
+
+func _show_weapon_altar_panel() -> void:
+	_show_panel("Weapon Altar", PlayerWeaponData.build_weapon_panel_text())
 
 func _show_panel(title: String, body: String) -> void:
 	if interaction_panel == null:
@@ -248,7 +396,7 @@ func _setup_hud() -> void:
 	hud_label = Label.new()
 	hud_label.name = "HubStatusLabel"
 	hud_label.position = Vector2(18.0, 18.0)
-	hud_label.size = Vector2(860.0, 140.0)
+	hud_label.size = Vector2(900.0, 150.0)
 	hud_layer.add_child(hud_label)
 
 func _update_hud() -> void:
