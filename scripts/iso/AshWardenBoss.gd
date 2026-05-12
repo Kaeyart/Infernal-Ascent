@@ -1,5 +1,7 @@
 extends Node2D
 
+const INFERNAL_AUDIO_SCRIPT: Script = preload("res://scripts/audio/InfernalAudio.gd")
+
 ## V24 — Ash Warden Boss V1.
 ## Self-contained boss runtime for the demo slice. It avoids static type dependencies so it
 ## can be loaded safely by IsoRoomLocalLoopController after the V23 parser hotfixes.
@@ -7,10 +9,11 @@ extends Node2D
 signal defeated()
 signal health_changed(current_health: int, max_health: int)
 signal phase_changed(phase: int)
+signal feel_event(event_name: String, strength: float, world_position: Vector2)
 
 enum BossState { INTRO, IDLE, WINDUP, ACTIVE, RECOVERY, STAGGERED, DEAD }
 
-@export var max_health: int = 100
+@export var max_health: int = 90
 @export var contact_radius: float = 52.0
 @export var idle_step_speed: float = 22.0
 @export var boss_collision_clamp_radius: float = 310.0
@@ -36,21 +39,21 @@ enum BossState { INTRO, IDLE, WINDUP, ACTIVE, RECOVERY, STAGGERED, DEAD }
 
 @export_category("Timing")
 @export var intro_duration: float = 1.05
-@export var idle_duration_min: float = 0.72
-@export var idle_duration_max: float = 1.05
-@export var sweep_windup: float = 0.72
+@export var idle_duration_min: float = 0.82
+@export var idle_duration_max: float = 1.18
+@export var sweep_windup: float = 0.80
 @export var sweep_active: float = 0.26
 @export var sweep_recovery: float = 0.62
-@export var chain_windup: float = 0.86
+@export var chain_windup: float = 0.96
 @export var chain_active: float = 0.34
 @export var chain_recovery: float = 0.74
-@export var lunge_windup: float = 0.76
+@export var lunge_windup: float = 0.86
 @export var lunge_active: float = 0.38
 @export var lunge_recovery: float = 0.82
-@export var cinder_windup: float = 0.88
+@export var cinder_windup: float = 0.98
 @export var cinder_active: float = 0.26
 @export var cinder_recovery: float = 0.66
-@export var verdict_windup: float = 1.05
+@export var verdict_windup: float = 1.18
 @export var verdict_active: float = 0.78
 @export var verdict_recovery: float = 1.00
 @export var stagger_duration: float = 2.10
@@ -59,13 +62,20 @@ enum BossState { INTRO, IDLE, WINDUP, ACTIVE, RECOVERY, STAGGERED, DEAD }
 @export var seal_mechanic_enabled: bool = true
 @export var seal_radius: float = 46.0
 @export var seal_cycle_duration: float = 5.8
-@export var seal_stagger_damage: int = 8
-@export var stagger_damage_multiplier: float = 1.40
+@export var seal_stagger_damage: int = 10
+@export var stagger_damage_multiplier: float = 1.55
 
 @export_category("Summons")
 @export var summons_enabled: bool = true
-@export var max_summons_per_fight: int = 4
-@export var summon_count_per_cast: int = 2
+@export var max_summons_per_fight: int = 3
+@export var summon_count_per_cast: int = 1
+
+@export_category("Feel Polish")
+@export var boss_hit_burst_duration: float = 0.18
+@export var phase_transition_burst_duration: float = 0.70
+@export var boss_death_burst_duration: float = 1.10
+@export var show_boss_feel_rings: bool = true
+@export var feel_event_hooks_enabled: bool = true
 
 @export_category("Readability")
 @export var show_boss_nameplate: bool = true
@@ -87,6 +97,10 @@ var _arena_origin: Vector2 = Vector2.ZERO
 var _setup_done: bool = false
 var _hit_flash_remaining: float = 0.0
 var _damage_numbers: Array[Dictionary] = []
+var _hit_burst_remaining: float = 0.0
+var _phase_burst_remaining: float = 0.0
+var _death_burst_remaining: float = 0.0
+var _visual_time: float = 0.0
 
 var _seal_offsets: Array[Vector2] = [Vector2(-150.0, 34.0), Vector2(150.0, 34.0), Vector2(0.0, -132.0)]
 var _armed_seal_index: int = 0
@@ -127,9 +141,16 @@ func _initialize_runtime() -> void:
 	queue_redraw()
 
 func _process(delta: float) -> void:
+	_visual_time += delta
 	_update_damage_numbers(delta)
 	if _hit_flash_remaining > 0.0:
 		_hit_flash_remaining = maxf(0.0, _hit_flash_remaining - delta)
+	if _hit_burst_remaining > 0.0:
+		_hit_burst_remaining = maxf(0.0, _hit_burst_remaining - delta)
+	if _phase_burst_remaining > 0.0:
+		_phase_burst_remaining = maxf(0.0, _phase_burst_remaining - delta)
+	if _death_burst_remaining > 0.0:
+		_death_burst_remaining = maxf(0.0, _death_burst_remaining - delta)
 	if is_dead:
 		queue_redraw()
 		return
@@ -171,6 +192,8 @@ func take_damage(amount: int = 1, source_global_position: Vector2 = Vector2.ZERO
 		final_amount = maxi(1, int(ceil(float(final_amount) * stagger_damage_multiplier)))
 	current_health = max(0, current_health - final_amount)
 	_hit_flash_remaining = 0.16
+	_hit_burst_remaining = boss_hit_burst_duration
+	_emit_feel_event("boss_hit", 0.65)
 	_spawn_damage_number(final_amount)
 	emit_signal("health_changed", current_health, max_health)
 	_update_phase_from_health()
@@ -185,6 +208,8 @@ func _die() -> void:
 	_state = BossState.DEAD
 	_current_attack = ""
 	remove_from_group("attack_target")
+	_death_burst_remaining = boss_death_burst_duration
+	_emit_feel_event("boss_death", 1.0)
 	emit_signal("health_changed", 0, max_health)
 	emit_signal("defeated")
 	queue_redraw()
@@ -200,6 +225,8 @@ func _update_phase_from_health() -> void:
 		new_phase = 2
 	if new_phase != current_phase:
 		current_phase = new_phase
+		_phase_burst_remaining = phase_transition_burst_duration
+		_emit_feel_event("boss_phase_changed", 0.85)
 		emit_signal("phase_changed", current_phase)
 
 func _enter_idle() -> void:
@@ -224,6 +251,7 @@ func _start_next_attack() -> void:
 	_start_attack(next_attack)
 
 func _start_attack(kind: String) -> void:
+	_audio_event("boss_attack")
 	_current_attack = kind
 	_attack_hit_player = false
 	_face_player()
@@ -247,6 +275,7 @@ func _start_attack(kind: String) -> void:
 			_state_timer = sweep_windup
 
 func _enter_active_attack() -> void:
+	_audio_event("boss_attack")
 	_state = BossState.ACTIVE
 	match _current_attack:
 		"sweep":
@@ -283,6 +312,7 @@ func _enter_recovery() -> void:
 			_state_timer = 0.55
 
 func _enter_staggered() -> void:
+	_audio_event("boss_phase_changed")
 	_state = BossState.STAGGERED
 	_current_attack = "staggered"
 	_attack_hit_player = false
@@ -433,7 +463,7 @@ func _is_point_in_attack_lane(point: Vector2, a: Vector2, b: Vector2, width: flo
 	return point.distance_to(nearest) <= width
 
 func _find_player() -> Node2D:
-	var players: Array[Node] = get_tree().get_nodes_in_group("player")
+	var players: Array = get_tree().get_nodes_in_group("player")
 	for node: Node in players:
 		if node is Node2D:
 			return node as Node2D
@@ -460,6 +490,7 @@ func _draw() -> void:
 	_draw_seals()
 	_draw_attack_telegraph()
 	_draw_body()
+	_draw_boss_feel_rings()
 	if show_boss_nameplate:
 		_draw_nameplate()
 	_draw_damage_numbers()
@@ -582,6 +613,32 @@ func _draw_filled_ellipse(rect: Rect2, color: Color, segments: int = 32) -> void
 		var angle: float = TAU * float(i) / float(segments)
 		points.append(center + Vector2(cos(angle) * radius.x, sin(angle) * radius.y))
 	draw_colored_polygon(points, color)
+
+func _draw_boss_feel_rings() -> void:
+	if not show_boss_feel_rings:
+		return
+	if _hit_burst_remaining > 0.0:
+		var ratio: float = _hit_burst_remaining / maxf(boss_hit_burst_duration, 0.01)
+		draw_arc(Vector2(0.0, -38.0), 72.0 + (1.0 - ratio) * 20.0, 0.0, TAU, 64, Color(1.0, 0.86, 0.46, 0.62 * ratio), 4.0)
+	if _phase_burst_remaining > 0.0:
+		var phase_ratio: float = _phase_burst_remaining / maxf(phase_transition_burst_duration, 0.01)
+		draw_arc(Vector2(0.0, -40.0), 110.0 + (1.0 - phase_ratio) * 46.0, 0.0, TAU, 80, Color(1.0, 0.35, 0.12, 0.75 * phase_ratio), 5.0)
+		draw_string(ThemeDB.fallback_font, Vector2(-88.0, -196.0), "PHASE %d" % current_phase, HORIZONTAL_ALIGNMENT_CENTER, 176.0, 16, Color(1.0, 0.72, 0.32, 0.94 * phase_ratio))
+	if _death_burst_remaining > 0.0:
+		var death_ratio: float = _death_burst_remaining / maxf(boss_death_burst_duration, 0.01)
+		draw_arc(Vector2(0.0, -26.0), 92.0 + (1.0 - death_ratio) * 118.0, 0.0, TAU, 96, Color(0.95, 0.18, 0.08, 0.88 * death_ratio), 7.0)
+		draw_arc(Vector2(0.0, -26.0), 46.0 + (1.0 - death_ratio) * 58.0, 0.0, TAU, 64, Color(0.20, 0.06, 0.04, 0.72 * death_ratio), 4.0)
+
+func _emit_feel_event(event_name: String, strength: float = 0.5) -> void:
+	if not feel_event_hooks_enabled:
+		return
+	_audio_event(event_name)
+	emit_signal("feel_event", event_name, strength, global_position)
+
+func _audio_event(event_name: String) -> void:
+	if INFERNAL_AUDIO_SCRIPT == null:
+		return
+	INFERNAL_AUDIO_SCRIPT.play_event_from_node(self, event_name, global_position)
 
 func _draw_nameplate() -> void:
 	var ratio: float = clampf(float(current_health) / float(maxi(1, max_health)), 0.0, 1.0)

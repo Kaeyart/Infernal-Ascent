@@ -1,6 +1,8 @@
 extends Node2D
 
 class_name IsoRoomHazard
+
+const INFERNAL_AUDIO_SCRIPT: Script = preload("res://scripts/audio/InfernalAudio.gd")
 ## V16 combat readability hazard marker.
 ## All hazards now use the shared WARNING -> ACTIVE -> COOLDOWN language.
 ## This pass does not change room flow or add new hazards; it only makes existing danger readable.
@@ -10,12 +12,12 @@ signal hazard_fired(hazard_kind: String)
 enum HazardState { WINDUP, ACTIVE, COOLDOWN }
 
 @export_enum("ash_vent", "ember_grate", "falling_cinder") var hazard_kind: String = "ash_vent"
-@export var radius: float = 56.0
+@export var radius: float = 54.0
 @export var damage: int = 1
-@export var windup_duration: float = 1.35
-@export var active_duration: float = 0.42
-@export var cooldown_duration: float = 2.8
-@export var player_knockback_force: float = 155.0
+@export var windup_duration: float = 1.55
+@export var active_duration: float = 0.38
+@export var cooldown_duration: float = 3.15
+@export var player_knockback_force: float = 130.0
 @export var affects_player: bool = true
 @export var affects_enemies: bool = true
 @export var enabled: bool = true
@@ -45,6 +47,7 @@ func setup(data: Dictionary, spawn_position: Vector2) -> void:
 	draw_warning_label = bool(data.get("draw_warning_label", draw_warning_label))
 	_state = HazardState.WINDUP
 	_timer = windup_duration + randf_range(0.0, 0.25)
+	_audio_event("hazard_warning")
 	z_index = 35
 	z_as_relative = false
 	add_to_group("circle0_room_hazard")
@@ -56,6 +59,7 @@ func _ready() -> void:
 	add_to_group("circle0_room_hazard")
 	if _timer <= 0.0:
 		_timer = windup_duration + randf_range(0.0, 0.25)
+		_audio_event("hazard_warning")
 
 func _process(delta: float) -> void:
 	if not enabled:
@@ -74,9 +78,11 @@ func _process(delta: float) -> void:
 			if _timer <= 0.0:
 				_state = HazardState.WINDUP
 				_timer = windup_duration
+				_audio_event("hazard_warning")
 	queue_redraw()
 
 func _start_active() -> void:
+	_audio_event("hazard_active")
 	_state = HazardState.ACTIVE
 	_timer = active_duration
 	_active_hits.clear()
@@ -112,6 +118,12 @@ func _try_damage_node(target: Node2D, is_player: bool) -> void:
 	else:
 		if target.has_method("take_damage"):
 			target.call("take_damage", damage)
+
+
+func _audio_event(event_name: String) -> void:
+	if INFERNAL_AUDIO_SCRIPT == null:
+		return
+	INFERNAL_AUDIO_SCRIPT.play_event_from_node(self, event_name, global_position)
 
 func _draw() -> void:
 	_draw_ground_readability_plate()

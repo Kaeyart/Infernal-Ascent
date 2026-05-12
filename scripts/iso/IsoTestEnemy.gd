@@ -2,12 +2,15 @@ extends Node2D
 
 class_name IsoTestEnemy
 
+const INFERNAL_AUDIO_SCRIPT: Script = preload("res://scripts/audio/InfernalAudio.gd")
+
 signal died(enemy: IsoTestEnemy)
 signal damaged(amount: int, remaining_health: int)
+signal feel_event(event_name: String, strength: float, world_position: Vector2)
 
 enum EnemyState { IDLE, CHASE, WINDUP, ACTIVE, RECOVERY }
 
-@export_enum("ash_grunt", "cinder_lunger", "ember_spitter") var enemy_type: String = "ash_grunt"
+@export_enum("ash_grunt", "cinder_lunger", "ember_spitter", "chainbound_penitent", "furnace_imp", "bell_wretch") var enemy_type: String = "ash_grunt"
 @export var max_health: int = 3
 @export var move_enabled: bool = true
 @export var move_speed: float = 55.0
@@ -62,6 +65,21 @@ enum EnemyState { IDLE, CHASE, WINDUP, ACTIVE, RECOVERY }
 @export var telegraph_line_width: float = 4.0
 @export var telegraph_lane_width: float = 32.0
 @export var telegraph_label_font_size: int = 11
+@export var role_marker_enabled: bool = true
+
+@export_category("Support Role")
+@export var support_pulse_enabled: bool = false
+@export var support_pulse_range: float = 190.0
+@export var support_pulse_strength: float = 0.35
+
+@export_category("Feel Polish")
+@export var spawn_intro_enabled: bool = true
+@export var spawn_intro_duration: float = 0.34
+@export var hit_burst_duration: float = 0.18
+@export var death_burst_duration: float = 0.34
+@export var attack_commit_flash_duration: float = 0.10
+@export var telegraph_pulse_speed: float = 11.0
+@export var feel_event_hooks_enabled: bool = true
 
 @export_category("Debug")
 @export var show_debug_contact_radius: bool = false
@@ -85,44 +103,54 @@ var _knockback_remaining: float = 0.0
 var _knockback_velocity: Vector2 = Vector2.ZERO
 var _damage_numbers: Array[Dictionary] = []
 var _death_free_remaining: float = -1.0
+var _support_pulse_remaining: float = 0.0
+var _spawn_intro_remaining: float = 0.0
+var _hit_burst_remaining: float = 0.0
+var _death_burst_remaining: float = 0.0
+var _attack_commit_flash_remaining: float = 0.0
+var _visual_time: float = 0.0
 
 func _ready() -> void:
 	_spawn_position = global_position
 	apply_encounter_profile(enemy_type)
 	health = max_health
 	add_to_group("iso_test_enemy")
+	_spawn_intro_remaining = spawn_intro_duration if spawn_intro_enabled else 0.0
+	_emit_feel_event("enemy_spawn", 0.35)
 	queue_redraw()
 
 func configure_for_encounter_type(profile_name: String, wave_index: int = 1) -> void:
 	enemy_type = profile_name
 	apply_encounter_profile(enemy_type)
 	# Small per-cycle scaling without turning this into a balance problem.
-	if wave_index >= 3:
+	if wave_index >= 4:
 		max_health += 1
 		health = max_health
 		attack_cooldown = maxf(0.48, attack_cooldown - 0.05)
 
 func apply_encounter_profile(profile_name: String) -> void:
-	# Default: Ash Grunt. Slow readable melee enemy.
+	# V18 enemy roster rule: every enemy has one clear role, one readable attack, and one visual identity marker.
+	support_pulse_enabled = false
+	_support_pulse_remaining = 0.0
 	if profile_name == "cinder_lunger":
 		enemy_type = "cinder_lunger"
 		max_health = 3
 		move_enabled = true
-		move_speed = 70.0
+		move_speed = 66.0
 		aggro_radius = 420.0
 		attack_damage = 1
 		attack_range = 185.0
 		attack_hit_radius = 54.0
 		attack_arc_degrees = 90.0
-		attack_windup_duration = 0.58
+		attack_windup_duration = 0.64
 		attack_active_duration = 0.20
-		attack_recovery_duration = 0.72
-		attack_cooldown = 1.02
+		attack_recovery_duration = 0.80
+		attack_cooldown = 1.12
 		attack_player_knockback_force = 230.0
 		lunge_enabled = true
 		lunge_range = 230.0
-		lunge_speed = 380.0
-		lunge_duration = 0.20
+		lunge_speed = 345.0
+		lunge_duration = 0.18
 		projectile_enabled = false
 		contact_damage_enabled = false
 		return
@@ -136,39 +164,108 @@ func apply_encounter_profile(profile_name: String) -> void:
 		attack_range = 300.0
 		attack_hit_radius = 30.0
 		attack_arc_degrees = 35.0
-		attack_windup_duration = 0.68
+		attack_windup_duration = 0.78
 		attack_active_duration = 0.10
-		attack_recovery_duration = 0.82
-		attack_cooldown = 1.25
+		attack_recovery_duration = 0.92
+		attack_cooldown = 1.38
 		attack_player_knockback_force = 155.0
 		lunge_enabled = false
 		projectile_enabled = true
 		projectile_range = 330.0
-		projectile_speed = 185.0
-		projectile_radius = 13.0
+		projectile_speed = 165.0
+		projectile_radius = 12.0
 		desired_spacing = 225.0
 		spacing_dead_zone = 40.0
 		contact_damage_enabled = false
 		return
+	if profile_name == "chainbound_penitent":
+		enemy_type = "chainbound_penitent"
+		max_health = 5
+		move_enabled = true
+		move_speed = 34.0
+		aggro_radius = 380.0
+		attack_damage = 2
+		attack_range = 82.0
+		attack_hit_radius = 72.0
+		attack_arc_degrees = 135.0
+		attack_windup_duration = 1.02
+		attack_active_duration = 0.20
+		attack_recovery_duration = 1.06
+		attack_cooldown = 1.52
+		attack_player_knockback_force = 255.0
+		lunge_enabled = false
+		projectile_enabled = false
+		contact_damage_enabled = false
+		light_knockback_speed = 80.0
+		heavy_knockback_speed = 135.0
+		return
+	if profile_name == "furnace_imp":
+		enemy_type = "furnace_imp"
+		max_health = 1
+		move_enabled = true
+		move_speed = 100.0
+		aggro_radius = 400.0
+		attack_damage = 1
+		attack_range = 44.0
+		attack_hit_radius = 42.0
+		attack_arc_degrees = 95.0
+		attack_windup_duration = 0.36
+		attack_active_duration = 0.10
+		attack_recovery_duration = 0.42
+		attack_cooldown = 0.68
+		attack_player_knockback_force = 120.0
+		lunge_enabled = false
+		projectile_enabled = false
+		contact_damage_enabled = false
+		light_knockback_speed = 210.0
+		heavy_knockback_speed = 285.0
+		return
+	if profile_name == "bell_wretch":
+		enemy_type = "bell_wretch"
+		max_health = 2
+		move_enabled = true
+		move_speed = 44.0
+		aggro_radius = 470.0
+		attack_damage = 0
+		attack_range = 285.0
+		attack_hit_radius = 190.0
+		attack_arc_degrees = 360.0
+		attack_windup_duration = 0.86
+		attack_active_duration = 0.16
+		attack_recovery_duration = 1.10
+		attack_cooldown = 1.90
+		attack_player_knockback_force = 90.0
+		lunge_enabled = false
+		projectile_enabled = false
+		contact_damage_enabled = false
+		support_pulse_enabled = true
+		support_pulse_range = 190.0
+		support_pulse_strength = 0.32
+		desired_spacing = 245.0
+		spacing_dead_zone = 52.0
+		return
 	enemy_type = "ash_grunt"
 	max_health = 3
 	move_enabled = true
-	move_speed = 58.0
+	move_speed = 54.0
 	aggro_radius = 360.0
 	attack_damage = 1
 	attack_range = 62.0
 	attack_hit_radius = 54.0
 	attack_arc_degrees = 115.0
-	attack_windup_duration = 0.44
+	attack_windup_duration = 0.52
 	attack_active_duration = 0.14
-	attack_recovery_duration = 0.58
-	attack_cooldown = 0.75
+	attack_recovery_duration = 0.66
+	attack_cooldown = 0.86
 	attack_player_knockback_force = 170.0
 	lunge_enabled = false
 	projectile_enabled = false
 	contact_damage_enabled = false
+	light_knockback_speed = 145.0
+	heavy_knockback_speed = 230.0
 
 func _process(delta: float) -> void:
+	_visual_time += delta
 	_update_timers(delta)
 	_update_damage_numbers(delta)
 
@@ -177,6 +274,10 @@ func _process(delta: float) -> void:
 			_death_free_remaining -= delta
 			if _death_free_remaining <= 0.0:
 				queue_free()
+		queue_redraw()
+		return
+
+	if _spawn_intro_remaining > 0.0:
 		queue_redraw()
 		return
 
@@ -197,6 +298,16 @@ func _update_timers(delta: float) -> void:
 		_contact_cooldown_remaining = maxf(0.0, _contact_cooldown_remaining - delta)
 	if _cooldown_remaining > 0.0:
 		_cooldown_remaining = maxf(0.0, _cooldown_remaining - delta)
+	if _support_pulse_remaining > 0.0:
+		_support_pulse_remaining = maxf(0.0, _support_pulse_remaining - delta)
+	if _spawn_intro_remaining > 0.0:
+		_spawn_intro_remaining = maxf(0.0, _spawn_intro_remaining - delta)
+	if _hit_burst_remaining > 0.0:
+		_hit_burst_remaining = maxf(0.0, _hit_burst_remaining - delta)
+	if _death_burst_remaining > 0.0:
+		_death_burst_remaining = maxf(0.0, _death_burst_remaining - delta)
+	if _attack_commit_flash_remaining > 0.0:
+		_attack_commit_flash_remaining = maxf(0.0, _attack_commit_flash_remaining - delta)
 
 func _update_enemy_brain(delta: float) -> void:
 	if not attack_enabled:
@@ -248,6 +359,7 @@ func _can_start_attack(distance: float) -> bool:
 	return distance <= attack_range
 
 func _start_windup(to_player: Vector2) -> void:
+	_audio_event("enemy_attack_warning")
 	_state = EnemyState.WINDUP
 	_state_timer = attack_windup_duration
 	_attack_has_hit_player = false
@@ -256,6 +368,8 @@ func _start_windup(to_player: Vector2) -> void:
 
 func _start_active() -> void:
 	_state = EnemyState.ACTIVE
+	_attack_commit_flash_remaining = attack_commit_flash_duration
+	_emit_feel_event("enemy_attack_active", 0.42)
 	_state_timer = lunge_duration if lunge_enabled else attack_active_duration
 	_attack_has_hit_player = false
 	if projectile_enabled:
@@ -270,6 +384,9 @@ func _start_recovery() -> void:
 func _update_active_attack(delta: float, player_2d: Node2D) -> void:
 	if lunge_enabled:
 		global_position += _attack_direction * lunge_speed * delta
+	if support_pulse_enabled:
+		_apply_support_pulse()
+		return
 	if projectile_enabled:
 		return
 	if _attack_has_hit_player:
@@ -309,10 +426,38 @@ func _fire_projectile() -> void:
 	get_parent().add_child(bolt)
 	bolt.setup(global_position + _attack_direction * 22.0, _attack_direction, projectile_speed, attack_damage, projectile_lifetime, projectile_radius, attack_player_knockback_force)
 
+func _apply_support_pulse() -> void:
+	if _attack_has_hit_player:
+		return
+	_attack_has_hit_player = true
+	_support_pulse_remaining = 0.24
+	var enemies: Array = get_tree().get_nodes_in_group("iso_test_enemy")
+	for node: Node in enemies:
+		if node == self:
+			continue
+		if not (node is IsoTestEnemy):
+			continue
+		var enemy: IsoTestEnemy = node as IsoTestEnemy
+		if enemy.is_dead:
+			continue
+		if global_position.distance_to(enemy.global_position) <= support_pulse_range:
+			enemy.receive_support_pulse(global_position, support_pulse_strength)
+	_audio_event("enemy_attack_active")
+	_spawn_damage_number("BELL", Color("#d8b66a"))
+
+func receive_support_pulse(source_global_position: Vector2, strength: float = 0.35) -> void:
+	if is_dead:
+		return
+	_cooldown_remaining = maxf(0.0, _cooldown_remaining - strength)
+	if _state == EnemyState.IDLE:
+		_state = EnemyState.CHASE
+	_hit_flash_remaining = maxf(_hit_flash_remaining, 0.08)
+	_spawn_damage_number("Roused", Color("#d8b66a"))
+
 func _update_chase_or_spacing(delta: float, player_2d: Node2D, to_player: Vector2, distance: float) -> void:
 	if not move_enabled:
 		return
-	if projectile_enabled:
+	if projectile_enabled or support_pulse_enabled:
 		if distance < desired_spacing - spacing_dead_zone and distance > 0.01:
 			global_position -= to_player.normalized() * move_speed * delta
 		elif distance > desired_spacing + spacing_dead_zone and distance <= aggro_radius:
@@ -346,6 +491,8 @@ func take_damage(amount: int) -> void:
 		return
 	health = max(0, health - final_amount)
 	_hit_flash_remaining = hit_flash_duration
+	_hit_burst_remaining = hit_burst_duration
+	_emit_feel_event("enemy_hit", 0.55)
 	_spawn_damage_number("-" + str(final_amount), Color("#f2d27b"))
 	emit_signal("damaged", final_amount, health)
 	if health <= 0:
@@ -374,7 +521,11 @@ func _die() -> void:
 		return
 	is_dead = true
 	_hit_flash_remaining = hit_flash_duration
+	_hit_burst_remaining = hit_burst_duration
+	_emit_feel_event("enemy_hit", 0.55)
+	_death_burst_remaining = death_burst_duration
 	_spawn_damage_number("SLAIN", Color("#d06b4c"))
+	_emit_feel_event("enemy_death", 0.75)
 	emit_signal("died", self)
 	_death_free_remaining = death_free_delay
 	queue_redraw()
@@ -414,6 +565,7 @@ func _update_simple_chase(delta: float) -> void:
 
 func _draw() -> void:
 	_draw_filled_ellipse(Rect2(Vector2(-20.0, 12.0), Vector2(40.0, 13.0)), Color(0.0, 0.0, 0.0, 0.34))
+	_draw_spawn_intro()
 
 	var body_color: Color = Color("#34201e")
 	var outline_color: Color = Color("#c76b3a")
@@ -426,6 +578,18 @@ func _draw() -> void:
 		body_color = Color("#251b30")
 		outline_color = Color("#b06cff")
 		eye_color = Color("#ffb25a")
+	elif enemy_type == "chainbound_penitent":
+		body_color = Color("#2a2723")
+		outline_color = Color("#a98a55")
+		eye_color = Color("#f05f34")
+	elif enemy_type == "furnace_imp":
+		body_color = Color("#2d1511")
+		outline_color = Color("#ff8f35")
+		eye_color = Color("#ffe08a")
+	elif enemy_type == "bell_wretch":
+		body_color = Color("#2c2418")
+		outline_color = Color("#d8b66a")
+		eye_color = Color("#ffd27a")
 	if is_dead:
 		body_color = Color("#211512")
 		outline_color = Color("#6f382a")
@@ -433,13 +597,7 @@ func _draw() -> void:
 		body_color = Color("#f2d0a0")
 		outline_color = Color("#ffffff")
 
-	var body: PackedVector2Array = PackedVector2Array([
-		Vector2(0.0, -32.0),
-		Vector2(18.0, -8.0),
-		Vector2(12.0, 18.0),
-		Vector2(-12.0, 18.0),
-		Vector2(-18.0, -8.0),
-	])
+	var body: PackedVector2Array = _get_body_shape()
 	draw_colored_polygon(body, body_color)
 	draw_polyline(PackedVector2Array([body[0], body[1], body[2], body[3], body[4], body[0]]), outline_color, 2.0)
 	draw_circle(Vector2(0.0, -35.0), 7.0, Color("#120c0b"))
@@ -452,10 +610,31 @@ func _draw() -> void:
 	elif enemy_type == "ember_spitter":
 		draw_arc(Vector2(0.0, -8.0), 18.0, deg_to_rad(210.0), deg_to_rad(330.0), 18, Color("#e58dff"), 2.0)
 		draw_circle(Vector2(0.0, -12.0), 4.0, Color("#ffad4a"))
+	elif enemy_type == "chainbound_penitent":
+		draw_line(Vector2(-24.0, -6.0), Vector2(24.0, -6.0), Color("#b99b66"), 3.0)
+		draw_line(Vector2(-18.0, 4.0), Vector2(18.0, 4.0), Color("#6f5a3a"), 2.0)
+	elif enemy_type == "furnace_imp":
+		draw_line(Vector2(-13.0, -34.0), Vector2(-24.0, -47.0), Color("#ff8f35"), 2.0)
+		draw_line(Vector2(13.0, -34.0), Vector2(24.0, -47.0), Color("#ff8f35"), 2.0)
+		draw_circle(Vector2(0.0, 11.0), 5.0, Color("#ff5a1f"))
+	elif enemy_type == "bell_wretch":
+		draw_arc(Vector2(0.0, -15.0), 19.0, deg_to_rad(25.0), deg_to_rad(155.0), 16, Color("#d8b66a"), 3.0)
+		draw_line(Vector2(-16.0, 12.0), Vector2(16.0, 12.0), Color("#d8b66a"), 2.5)
+		if _support_pulse_remaining > 0.0:
+			draw_arc(Vector2.ZERO, support_pulse_range, 0.0, TAU, 64, Color(0.95, 0.72, 0.25, 0.38), 4.0)
+
+	if _attack_commit_flash_remaining > 0.0 and not is_dead:
+		var attack_flash_ratio: float = _attack_commit_flash_remaining / maxf(attack_commit_flash_duration, 0.01)
+		draw_arc(Vector2.ZERO, attack_hit_radius + 8.0, 0.0, TAU, 42, Color(1.0, 0.58, 0.18, 0.18 * attack_flash_ratio), 3.0)
+
+	if role_marker_enabled and show_readability_labels and not is_dead:
+		_draw_role_marker()
 
 	if is_dead:
 		draw_line(Vector2(-18.0, -8.0), Vector2(18.0, 12.0), Color("#d06b4c"), 2.5)
 		draw_line(Vector2(18.0, -8.0), Vector2(-18.0, 12.0), Color("#d06b4c"), 2.5)
+
+	_draw_feel_bursts()
 
 	_draw_telegraphs()
 	_draw_health_bar()
@@ -475,13 +654,18 @@ func _draw_telegraphs() -> void:
 		var t: float = 1.0
 		if attack_windup_duration > 0.0:
 			t = clampf(1.0 - (_state_timer / attack_windup_duration), 0.0, 1.0)
-		if projectile_enabled:
+		if support_pulse_enabled:
+			_draw_support_warning(t)
+		elif projectile_enabled:
 			_draw_projectile_warning(t)
 		elif lunge_enabled:
 			_draw_lunge_warning(t)
 		else:
 			_draw_melee_warning(t)
 	elif _state == EnemyState.ACTIVE:
+		if support_pulse_enabled:
+			_draw_support_active()
+			return
 		if projectile_enabled:
 			return
 		if lunge_enabled:
@@ -490,11 +674,17 @@ func _draw_telegraphs() -> void:
 			_draw_melee_active()
 
 func _draw_melee_warning(progress: float) -> void:
-	var fill: Color = Color(1.0, 0.44, 0.10, 0.22 + telegraph_warning_alpha * 0.36 * progress)
+	var pulse: float = 0.5 + 0.5 * sin(_visual_time * telegraph_pulse_speed)
+	var fill: Color = Color(1.0, 0.44, 0.10, 0.22 + telegraph_warning_alpha * 0.36 * progress + 0.08 * pulse)
 	_draw_warning_cone(attack_hit_radius, attack_arc_degrees, fill, Color(1.0, 0.80, 0.28, 0.82), telegraph_line_width)
 	_draw_tick_ring(attack_hit_radius + 9.0, progress, Color(1.0, 0.72, 0.24, 0.78))
 	if show_readability_labels:
-		_draw_telegraph_label("SWIPE", _attack_direction.normalized() * (attack_hit_radius + 22.0), Color(1.0, 0.82, 0.36, 0.95))
+		var label: String = "SWIPE"
+		if enemy_type == "chainbound_penitent":
+			label = "HEAVY"
+		elif enemy_type == "furnace_imp":
+			label = "NIP"
+		_draw_telegraph_label(label, _attack_direction.normalized() * (attack_hit_radius + 22.0), Color(1.0, 0.82, 0.36, 0.95))
 
 func _draw_melee_active() -> void:
 	_draw_warning_cone(attack_hit_radius, attack_arc_degrees, Color(1.0, 0.04, 0.02, 0.48), Color(1.0, 0.92, 0.40, telegraph_active_alpha), telegraph_line_width + 1.0)
@@ -506,7 +696,8 @@ func _draw_lunge_warning(progress: float) -> void:
 	var side: Vector2 = Vector2(-dir.y, dir.x)
 	var end_point: Vector2 = dir * length
 	var pts: PackedVector2Array = PackedVector2Array([side * half_width, end_point + side * half_width, end_point - side * half_width, -side * half_width])
-	draw_colored_polygon(pts, Color(1.0, 0.16, 0.06, 0.18 + 0.26 * progress))
+	var pulse: float = 0.5 + 0.5 * sin(_visual_time * telegraph_pulse_speed)
+	draw_colored_polygon(pts, Color(1.0, 0.16, 0.06, 0.18 + 0.26 * progress + 0.08 * pulse))
 	draw_line(side * half_width, end_point + side * half_width, Color(1.0, 0.58, 0.18, 0.80), telegraph_line_width)
 	draw_line(-side * half_width, end_point - side * half_width, Color(1.0, 0.58, 0.18, 0.80), telegraph_line_width)
 	draw_line(Vector2.ZERO, end_point, Color(1.0, 0.28, 0.12, 0.55 + 0.25 * progress), maxf(2.0, telegraph_line_width - 1.0))
@@ -533,7 +724,8 @@ func _draw_projectile_warning(progress: float) -> void:
 	var end_point: Vector2 = dir * length
 	draw_line(side * half_width, end_point + side * half_width, Color(1.0, 0.48, 0.14, 0.34 + 0.26 * progress), 2.5)
 	draw_line(-side * half_width, end_point - side * half_width, Color(1.0, 0.48, 0.14, 0.34 + 0.26 * progress), 2.5)
-	draw_line(Vector2.ZERO, end_point, Color(1.0, 0.82, 0.36, 0.30 + 0.40 * progress), telegraph_line_width)
+	var pulse: float = 0.5 + 0.5 * sin(_visual_time * telegraph_pulse_speed)
+	draw_line(Vector2.ZERO, end_point, Color(1.0, 0.82, 0.36, 0.30 + 0.40 * progress + 0.10 * pulse), telegraph_line_width)
 	draw_arc(Vector2.ZERO, 22.0 + 14.0 * progress, 0.0, TAU, 28, Color(1.0, 0.65, 0.22, 0.86), 3.0)
 	draw_circle(Vector2.ZERO, 7.0 + 4.0 * progress, Color(1.0, 0.38, 0.10, 0.72))
 	if show_readability_labels:
@@ -570,6 +762,50 @@ func _draw_telegraph_label(text: String, pos: Vector2, color: Color) -> void:
 	draw_rect(bg, Color(color.r, color.g, color.b, 0.70), false, 1.0)
 	draw_string(font, pos + Vector2(-34.0, -4.0), text, HORIZONTAL_ALIGNMENT_CENTER, 68.0, telegraph_label_font_size, color)
 
+func _get_body_shape() -> PackedVector2Array:
+	if enemy_type == "chainbound_penitent":
+		return PackedVector2Array([Vector2(0.0, -39.0), Vector2(25.0, -9.0), Vector2(20.0, 24.0), Vector2(-20.0, 24.0), Vector2(-25.0, -9.0)])
+	if enemy_type == "furnace_imp":
+		return PackedVector2Array([Vector2(0.0, -29.0), Vector2(14.0, -5.0), Vector2(9.0, 14.0), Vector2(-9.0, 14.0), Vector2(-14.0, -5.0)])
+	if enemy_type == "bell_wretch":
+		return PackedVector2Array([Vector2(0.0, -34.0), Vector2(21.0, -10.0), Vector2(16.0, 22.0), Vector2(-16.0, 22.0), Vector2(-21.0, -10.0)])
+	return PackedVector2Array([Vector2(0.0, -32.0), Vector2(18.0, -8.0), Vector2(12.0, 18.0), Vector2(-12.0, 18.0), Vector2(-18.0, -8.0)])
+
+func _get_role_text() -> String:
+	match enemy_type:
+		"ash_grunt":
+			return "GRUNT"
+		"cinder_lunger":
+			return "LUNGER"
+		"ember_spitter":
+			return "SPITTER"
+		"chainbound_penitent":
+			return "ARMORED"
+		"furnace_imp":
+			return "IMP"
+		"bell_wretch":
+			return "SUPPORT"
+	return "ENEMY"
+
+func _draw_role_marker() -> void:
+	var font: Font = ThemeDB.fallback_font
+	var text: String = _get_role_text()
+	var pos: Vector2 = Vector2(-34.0, -76.0)
+	draw_rect(Rect2(pos, Vector2(68.0, 15.0)), Color(0.03, 0.018, 0.012, 0.62), true)
+	draw_string(font, pos + Vector2(0.0, 12.0), text, HORIZONTAL_ALIGNMENT_CENTER, 68.0, 9, Color(0.92, 0.72, 0.42, 0.88))
+
+func _draw_support_warning(progress: float) -> void:
+	var radius: float = support_pulse_range
+	draw_arc(Vector2.ZERO, radius, 0.0, TAU, 80, Color(1.0, 0.70, 0.20, 0.34 + 0.24 * progress), telegraph_line_width)
+	draw_arc(Vector2.ZERO, radius * 0.62, 0.0, TAU, 64, Color(1.0, 0.52, 0.12, 0.18 + 0.25 * progress), 2.0)
+	_draw_tick_ring(24.0 + 12.0 * progress, progress, Color(1.0, 0.76, 0.24, 0.82))
+	if show_readability_labels:
+		_draw_telegraph_label("BELL", Vector2(-34.0, -support_pulse_range - 12.0), Color(1.0, 0.82, 0.36, 0.96))
+
+func _draw_support_active() -> void:
+	draw_arc(Vector2.ZERO, support_pulse_range, 0.0, TAU, 88, Color(1.0, 0.86, 0.24, telegraph_active_alpha), telegraph_line_width + 2.0)
+	draw_circle(Vector2.ZERO, 28.0, Color(1.0, 0.68, 0.20, 0.22))
+
 func _draw_health_bar() -> void:
 	var hp_width: float = 42.0
 	var health_ratio: float = clampf(float(health) / float(max_health), 0.0, 1.0) if max_health > 0 else 0.0
@@ -594,6 +830,35 @@ func _spawn_damage_number(text: String, color: Color) -> void:
 		"offset": Vector2(randf_range(-8.0, 8.0), 0.0),
 		"color": color,
 	})
+
+func _draw_spawn_intro() -> void:
+	if _spawn_intro_remaining <= 0.0 or not spawn_intro_enabled:
+		return
+	var ratio: float = clampf(_spawn_intro_remaining / maxf(spawn_intro_duration, 0.01), 0.0, 1.0)
+	var expand: float = 1.0 - ratio
+	draw_arc(Vector2.ZERO, 18.0 + 36.0 * expand, 0.0, TAU, 48, Color(1.0, 0.58, 0.18, 0.78 * ratio), 3.0)
+	draw_line(Vector2(-24.0, 18.0), Vector2(24.0, 18.0), Color(1.0, 0.38, 0.12, 0.45 * ratio), 2.0)
+
+func _draw_feel_bursts() -> void:
+	if _hit_burst_remaining > 0.0:
+		var hit_ratio: float = _hit_burst_remaining / maxf(hit_burst_duration, 0.01)
+		draw_arc(Vector2(0.0, -18.0), 26.0 + (1.0 - hit_ratio) * 18.0, 0.0, TAU, 36, Color(1.0, 0.86, 0.46, 0.72 * hit_ratio), 3.0)
+		draw_line(Vector2(-26.0, -18.0), Vector2(26.0, -18.0), Color(1.0, 0.92, 0.66, 0.45 * hit_ratio), 2.0)
+	if _death_burst_remaining > 0.0:
+		var death_ratio: float = _death_burst_remaining / maxf(death_burst_duration, 0.01)
+		draw_arc(Vector2.ZERO, 34.0 + (1.0 - death_ratio) * 42.0, 0.0, TAU, 56, Color(0.95, 0.25, 0.10, 0.70 * death_ratio), 4.0)
+		draw_arc(Vector2.ZERO, 22.0 + (1.0 - death_ratio) * 28.0, 0.0, TAU, 40, Color(0.35, 0.12, 0.08, 0.48 * death_ratio), 2.0)
+
+func _emit_feel_event(event_name: String, strength: float = 0.35) -> void:
+	if not feel_event_hooks_enabled:
+		return
+	_audio_event(event_name)
+	emit_signal("feel_event", event_name, strength, global_position)
+
+func _audio_event(event_name: String) -> void:
+	if INFERNAL_AUDIO_SCRIPT == null:
+		return
+	INFERNAL_AUDIO_SCRIPT.play_event_from_node(self, event_name, global_position)
 
 func _draw_filled_ellipse(rect: Rect2, color: Color) -> void:
 	var points: PackedVector2Array = PackedVector2Array()

@@ -1,6 +1,7 @@
 extends Node2D
 const PERMANENT_UPGRADE_SCRIPT: Script = preload("res://scripts/run/PermanentUpgradeData.gd")
 const SAVE_GAME_SCRIPT: Script = preload("res://scripts/run/SaveGameData.gd")
+const INFERNAL_AUDIO_SCRIPT: Script = preload("res://scripts/audio/InfernalAudio.gd")
 ## V14 — Run Flow Consistency Pass.
 ## V19 — Reward Consistency Pass extends the existing loop with a standardized temporary reward catalogue.
 ## V20 — Demo Run Length Lock makes the run reach a predictable boss-antechamber placeholder after four rooms.
@@ -55,19 +56,19 @@ enum RunPhase {
 @export_category("V24 Ash Warden Boss")
 @export var ash_warden_boss_enabled_v24: bool = true
 @export var ash_warden_boss_script_path: String = "res://scripts/iso/AshWardenBoss.gd"
-@export var ash_warden_max_health_v24: int = 100
+@export var ash_warden_max_health_v24: int = 90
 @export var ash_warden_boss_can_end_run_on_player_death: bool = true
 @export var force_demo_route_pattern: bool = true
 
 @export_category("V25 Demo Victory / Death")
-@export var demo_victory_ash_sigils: int = 3
-@export var demo_death_base_ash_sigils: int = 0
+@export var demo_victory_ash_sigils: int = 4
+@export var demo_death_base_ash_sigils: int = 1
 @export var death_keeps_bonus_sigils: bool = true
 @export var show_outcome_intro_panel: bool = true
 
 @export_category("V21 Support Rooms")
 @export var support_rooms_functional: bool = true
-@export var fountain_heal_ratio_v21: float = 0.60
+@export var fountain_heal_ratio_v21: float = 0.65
 @export var starting_run_ash: int = 2
 @export var run_ash_per_completed_combat: int = 1
 @export var shop_heal_cost: int = 1
@@ -149,6 +150,7 @@ func _ready() -> void:
 	_base_reward_choices_per_room = reward_choices_per_room
 	_base_starting_run_ash = starting_run_ash
 	_set_phase(RunPhase.HUB, "Local loop node created.")
+	_audio_context("combat")
 	_setup_hud()
 	_create_shared_manager()
 	call_deferred("_wire_room_deferred")
@@ -166,6 +168,7 @@ func _process(_delta: float) -> void:
 
 func start_new_local_run() -> void:
 	_reset_run_counters()
+	_audio_context("combat")
 	_set_phase(RunPhase.RUN_START, "Circle 0 run restarted.")
 	if shared_patron_manager != null:
 		shared_patron_manager.reset_run()
@@ -372,6 +375,7 @@ func _spawn_choice_gates_deferred(expected_phase_serial: int) -> void:
 		if gate.has_signal("gate_focus_changed"):
 			gate.gate_focus_changed.connect(_on_gate_focus_changed)
 		_active_gates.append(gate)
+	_audio_event("gate_open")
 	last_status = "Choose one of the three physical gates. The bottom route cards match left, center, and right."
 	_room_completion_pending = false
 	_show_intro("Route Gate Crossing", "Choose the next chamber")
@@ -384,6 +388,7 @@ func _on_route_gate_chosen(choice_data: Dictionary) -> void:
 		_debug("Ignored gate choice outside ROUTE_CHOICE phase.")
 		return
 	_advance_in_progress = true
+	_audio_event("gate_open")
 	_last_selected_gate_name = str(choice_data.get("display_name", "Unknown Gate"))
 	_clear_route_runtime_nodes()
 	_current_gate_choices.clear()
@@ -533,6 +538,7 @@ func _on_reward_chosen(payload: Dictionary) -> void:
 	for item: RunRoomInteractable in _active_interactables:
 		if item != null and is_instance_valid(item):
 			item.mark_used()
+	_audio_event("reward_claim")
 	_apply_reward(payload)
 	reward_rooms_completed += 1
 	_complete_current_room("Reward claimed: %s" % str(payload.get("display_name", "Unknown")))
@@ -542,6 +548,7 @@ func _on_fountain_used(_payload: Dictionary) -> void:
 		return
 	if _room_completion_pending:
 		return
+	_audio_event("fountain_use")
 	fountain_rooms_completed += 1
 	_heal_player_ratio(fountain_heal_ratio_v21)
 	_complete_current_room("Fountain used: recovered 60% HP")
@@ -604,6 +611,7 @@ func _on_forge_mark_chosen(payload: Dictionary) -> void:
 	for item: RunRoomInteractable in _active_interactables:
 		if item != null and is_instance_valid(item):
 			item.mark_used()
+	_audio_event("forge_use")
 	_apply_forge_mark(payload)
 	_complete_current_room("Forge mark chosen: %s" % str(payload.get("display_name", "Unknown")))
 
@@ -677,6 +685,7 @@ func _on_shop_item_bought(payload: Dictionary) -> void:
 	for item: RunRoomInteractable in _active_interactables:
 		if item != null and is_instance_valid(item):
 			item.mark_used()
+	_audio_event("shop_buy")
 	_apply_shop_item(payload)
 	shop_purchases += 1
 	_complete_current_room("Shop purchase: %s" % str(payload.get("display_name", "Unknown")))
@@ -756,6 +765,7 @@ func _enter_boss_arena_placeholder() -> void:
 		runtime_adapter.prepare_non_combat_room()
 	_wire_player_death_signal()
 	_show_intro(last_room_title, "Boss arena · The Ash Warden")
+	_audio_context("boss")
 	if ash_warden_boss_enabled_v24:
 		_spawn_ash_warden_boss()
 		last_status = "The Ash Warden judges the descent. Defeat him to open the victory exit."
@@ -831,6 +841,7 @@ func _on_ash_warden_health_changed(current_health: int, max_health: int) -> void
 	_update_hud()
 
 func _on_ash_warden_phase_changed(phase_index: int) -> void:
+	_audio_event("boss_phase_changed")
 	last_status = "The Ash Warden enters Phase %d." % phase_index
 	_show_intro("Ash Warden", "Phase %d" % phase_index)
 	_update_hud()
@@ -839,6 +850,7 @@ func _on_ash_warden_defeated() -> void:
 	if current_phase != RunPhase.BOSS:
 		return
 	boss_defeated_this_run = true
+	_audio_event("boss_death")
 	last_status = "The Ash Warden has fallen. The exit has opened."
 	if runtime_adapter != null:
 		runtime_adapter.clear_runtime_dangers()
@@ -1177,11 +1189,15 @@ func _finish_local_run(victory: bool = true, reason: String = "") -> void:
 	if runtime_adapter != null:
 		runtime_adapter.clear_runtime_dangers()
 	if victory:
+		_audio_context("victory")
+		_audio_event("victory_sting")
 		_set_phase(RunPhase.RUN_VICTORY, _run_outcome_reason)
 		last_status = "Demo victory. Press E to return to the Threshold Nave."
 		if show_outcome_intro_panel:
 			_show_intro("DEMO VICTORY", "The Ash Warden has fallen · Press E to return")
 	else:
+		_audio_context("death")
+		_audio_event("death_sting")
 		_set_phase(RunPhase.RUN_DEATH, _run_outcome_reason)
 		last_status = "Run ended in death. Press E to return to the Threshold Nave."
 		if show_outcome_intro_panel:
@@ -1647,6 +1663,16 @@ func _interact_pressed_once() -> bool:
 	if InputMap.has_action("interact") and Input.is_action_just_pressed("interact"):
 		return true
 	return Input.is_physical_key_pressed(KEY_E) and not _e_down_previous
+
+func _audio_event(event_name: String) -> void:
+	if INFERNAL_AUDIO_SCRIPT == null:
+		return
+	INFERNAL_AUDIO_SCRIPT.play_event_from_node(self, event_name, _get_room_center_position())
+
+func _audio_context(context_name: String) -> void:
+	if INFERNAL_AUDIO_SCRIPT == null:
+		return
+	INFERNAL_AUDIO_SCRIPT.set_context_from_node(self, context_name)
 
 func _debug(message: String) -> void:
 	if print_debug:

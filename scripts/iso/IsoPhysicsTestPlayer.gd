@@ -2,24 +2,27 @@ extends CharacterBody2D
 
 class_name IsoPhysicsTestPlayer
 
+const PERMANENT_UPGRADE_SCRIPT: Script = preload("res://scripts/run/PermanentUpgradeData.gd")
+const INFERNAL_AUDIO_SCRIPT: Script = preload("res://scripts/audio/InfernalAudio.gd")
+
 signal damaged(amount: int, remaining_health: int)
 signal died
 signal respawned
 
 @export var move_speed: float = 260.0
-@export var attack_radius: float = 82.0
+@export var attack_radius: float = 86.0
 @export var attack_damage: int = 1
 @export var attack_cooldown: float = 0.28
 @export var heavy_attack_damage: int = 2
 @export var heavy_attack_cooldown: float = 0.52
-@export var heavy_attack_radius_multiplier: float = 1.15
+@export var heavy_attack_radius_multiplier: float = 1.18
 
 @export_category("Player Health")
-@export var max_health: int = 6
-@export var contact_damage_iframe_duration: float = 0.55
+@export var max_health: int = 7
+@export var contact_damage_iframe_duration: float = 0.68
 @export var hit_flash_duration: float = 0.16
 @export var enemy_hit_knockback_speed: float = 185.0
-@export var enemy_hit_knockback_duration: float = 0.10
+@export var enemy_hit_knockback_duration: float = 0.12
 @export var show_player_health_bar: bool = true
 @export var show_readability_hit_feedback: bool = true
 
@@ -33,7 +36,7 @@ signal respawned
 @export var enable_dash: bool = true
 @export var dash_speed_multiplier: float = 3.0
 @export var dash_duration: float = 0.13
-@export var dash_cooldown: float = 0.48
+@export var dash_cooldown: float = 0.46
 
 @export_category("Visuals")
 @export var use_sprite_visuals: bool = true
@@ -81,14 +84,33 @@ signal respawned
 @export var heavy_attack_active_start_frame: int = 3
 @export var heavy_attack_active_end_frame: int = 4
 @export var attack_uses_directional_cone: bool = true
-@export var light_attack_arc_degrees: float = 115.0
-@export var heavy_attack_arc_degrees: float = 145.0
+@export var light_attack_arc_degrees: float = 122.0
+@export var heavy_attack_arc_degrees: float = 152.0
 @export var show_debug_combat_hitbox: bool = false
 
 @export_category("Dash Timing")
 @export var dash_invulnerable_start_frame: int = 0
 @export var dash_invulnerable_end_frame: int = 2
 @export var show_debug_dash_invulnerability: bool = false
+
+@export_category("Feel Polish")
+@export var movement_acceleration: float = 1900.0
+@export var movement_deceleration: float = 2500.0
+@export var attack_movement_multiplier: float = 0.66
+@export var heavy_attack_movement_multiplier: float = 0.42
+@export var hit_movement_multiplier: float = 0.28
+@export var dash_exit_speed_retention: float = 0.35
+@export var hit_pause_duration_light: float = 0.045
+@export var hit_pause_duration_heavy: float = 0.065
+@export var screen_shake_enabled: bool = true
+@export var attack_hit_shake_strength: float = 4.0
+@export var heavy_attack_hit_shake_strength: float = 6.0
+@export var dash_shake_strength: float = 2.5
+@export var player_damage_shake_strength: float = 7.0
+@export var death_shake_strength: float = 10.0
+@export var screen_shake_duration: float = 0.10
+@export var show_dash_streak: bool = true
+@export var show_death_respawn_bursts: bool = true
 
 
 var facing: Vector2 = Vector2(1.0, 1.0).normalized()
@@ -113,6 +135,15 @@ var _active_attack_radius: float = 0.0
 var _active_attack_arc_degrees: float = 0.0
 var _active_attack_hit_targets: Dictionary = {}
 var _active_attack_was_active_last_frame: bool = false
+
+var _feel_hit_pause_remaining: float = 0.0
+var _screen_shake_remaining: float = 0.0
+var _screen_shake_total_duration: float = 0.0
+var _screen_shake_strength: float = 0.0
+var _screen_shake_camera: Camera2D = null
+var _screen_shake_base_offset: Vector2 = Vector2.ZERO
+var _death_burst_remaining: float = 0.0
+var _respawn_burst_remaining: float = 0.0
 
 
 var _space_previous: bool = false
@@ -164,6 +195,7 @@ func _ready() -> void:
 	add_to_group("player")
 	if current_health <= 0:
 		current_health = max_health
+	PERMANENT_UPGRADE_SCRIPT.apply_to_player(self)
 	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
 	safe_margin = physics_safe_margin
 	if auto_create_collision_shape:
@@ -176,13 +208,16 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	_update_timers(delta)
-	var was_moving: bool = _update_movement()
+	var was_moving: bool = _update_movement(delta)
 	_update_attack_input()
-	_update_visual_animation(delta, was_moving)
+	var visual_delta: float = 0.0 if _feel_hit_pause_remaining > 0.0 else delta
+	_update_visual_animation(visual_delta, was_moving)
 	_update_combat_timing()
+	_update_screen_shake(delta)
 	queue_redraw()
 
 func _update_timers(delta: float) -> void:
+	var dash_was_active: bool = _dash_remaining > 0.0
 	if _attack_cooldown_remaining > 0.0:
 		_attack_cooldown_remaining = maxf(0.0, _attack_cooldown_remaining - delta)
 	if _heavy_attack_cooldown_remaining > 0.0:
@@ -201,8 +236,16 @@ func _update_timers(delta: float) -> void:
 		_hit_flash_remaining = maxf(0.0, _hit_flash_remaining - delta)
 	if _enemy_knockback_remaining > 0.0:
 		_enemy_knockback_remaining = maxf(0.0, _enemy_knockback_remaining - delta)
+	if _feel_hit_pause_remaining > 0.0:
+		_feel_hit_pause_remaining = maxf(0.0, _feel_hit_pause_remaining - delta)
+	if _death_burst_remaining > 0.0:
+		_death_burst_remaining = maxf(0.0, _death_burst_remaining - delta)
+	if _respawn_burst_remaining > 0.0:
+		_respawn_burst_remaining = maxf(0.0, _respawn_burst_remaining - delta)
+	if dash_was_active and _dash_remaining <= 0.0 and dash_exit_speed_retention > 0.0:
+		velocity *= clampf(dash_exit_speed_retention, 0.0, 1.0)
 
-func _update_movement() -> bool:
+func _update_movement(delta: float) -> bool:
 	if _is_dead:
 		velocity = Vector2.ZERO
 		move_and_slide()
@@ -230,13 +273,22 @@ func _update_movement() -> bool:
 		_moving_this_frame = true
 		return true
 
-	if moving:
-		velocity = input_vector * move_speed
-	else:
-		velocity = Vector2.ZERO
+	var movement_multiplier: float = _get_current_movement_multiplier()
+	var target_velocity: Vector2 = input_vector * move_speed * movement_multiplier if moving else Vector2.ZERO
+	var approach_speed: float = movement_acceleration if moving else movement_deceleration
+	velocity = velocity.move_toward(target_velocity, maxf(approach_speed, 0.0) * delta)
 	move_and_slide()
 	_moving_this_frame = moving
 	return moving
+
+func _get_current_movement_multiplier() -> float:
+	if _locked_anim == "heavy_attack" and _animation_lock_remaining > 0.0:
+		return clampf(heavy_attack_movement_multiplier, 0.0, 1.0)
+	if _locked_anim == "attack" and _animation_lock_remaining > 0.0:
+		return clampf(attack_movement_multiplier, 0.0, 1.0)
+	if _locked_anim == "hit" and _animation_lock_remaining > 0.0:
+		return clampf(hit_movement_multiplier, 0.0, 1.0)
+	return 1.0
 
 func _update_dash_input(direction: Vector2) -> void:
 	if not enable_dash:
@@ -258,6 +310,8 @@ func _start_dash(direction: Vector2) -> void:
 	_set_facing_from_vector(_dash_direction)
 	_dash_remaining = dash_duration
 	_dash_cooldown_remaining = dash_cooldown
+	_play_audio_event("player_dash")
+	_start_screen_shake(dash_shake_strength, screen_shake_duration * 0.75)
 	_lock_animation("dash", _PRIORITY_DASH, _get_animation_duration("dash"), false, false)
 
 func _update_attack_input() -> void:
@@ -314,6 +368,7 @@ func _perform_attack(anim_name: String = "attack", damage_amount: int = 1, coold
 	if not locked:
 		return
 
+	_play_audio_event("player_heavy_attack" if anim_name == "heavy_attack" else "player_light_attack")
 	_active_attack_anim = anim_name
 	_active_attack_damage = damage_amount
 	_active_attack_radius = attack_radius * radius_multiplier
@@ -363,6 +418,7 @@ func _apply_active_attack_hit() -> void:
 			continue
 		_active_attack_hit_targets[target_id] = true
 		_deliver_attack_damage_to_target(target)
+		_register_successful_attack_hit(_active_attack_anim)
 
 
 func _deliver_attack_damage_to_target(target: Node2D) -> void:
@@ -370,6 +426,15 @@ func _deliver_attack_damage_to_target(target: Node2D) -> void:
 		target.call("receive_player_hit", _active_attack_damage, global_position, facing, _active_attack_anim)
 		return
 	target.call("take_damage", _active_attack_damage)
+
+func _register_successful_attack_hit(anim_name: String) -> void:
+	var pause_duration: float = hit_pause_duration_heavy if anim_name == "heavy_attack" else hit_pause_duration_light
+	_feel_hit_pause_remaining = maxf(_feel_hit_pause_remaining, pause_duration)
+	var shake_strength: float = heavy_attack_hit_shake_strength if anim_name == "heavy_attack" else attack_hit_shake_strength
+	_start_screen_shake(shake_strength, screen_shake_duration)
+	_play_audio_event("player_heavy_hit" if anim_name == "heavy_attack" else "player_light_hit")
+	_attack_flash_remaining = maxf(_attack_flash_remaining, 0.08)
+	queue_redraw()
 
 func _is_target_inside_attack_hitbox(target: Node2D, active_radius: float, arc_degrees: float) -> bool:
 	var to_target: Vector2 = target.global_position - global_position
@@ -434,6 +499,8 @@ func take_damage(amount: int = 1, source_global_position: Vector2 = Vector2.ZERO
 		return false
 
 	current_health = max(0, current_health - amount)
+	_play_audio_event("player_hit")
+	_start_screen_shake(player_damage_shake_strength, screen_shake_duration * 1.15)
 	_apply_enemy_hit_knockback(source_global_position, knockback_direction, knockback_force)
 	_damage_iframe_remaining = contact_damage_iframe_duration
 	_hit_flash_remaining = hit_flash_duration
@@ -479,6 +546,9 @@ func play_death_animation() -> void:
 	_enemy_knockback_velocity = Vector2.ZERO
 	_damage_iframe_remaining = 0.0
 	_clear_active_attack()
+	_death_burst_remaining = 0.52
+	_play_audio_event("player_death")
+	_start_screen_shake(death_shake_strength, screen_shake_duration * 1.6)
 	emit_signal("died")
 	_lock_animation("death", _PRIORITY_DEATH, _get_animation_duration("death"), true, true)
 
@@ -490,8 +560,53 @@ func play_respawn_animation() -> void:
 	_enemy_knockback_remaining = 0.0
 	_enemy_knockback_velocity = Vector2.ZERO
 	_clear_active_attack()
+	_respawn_burst_remaining = 0.55
+	_play_audio_event("player_respawn")
+	_start_screen_shake(dash_shake_strength, screen_shake_duration)
 	emit_signal("respawned")
 	_lock_animation("respawn", _PRIORITY_RESPAWN, _get_animation_duration("respawn"), false, true)
+
+func _play_audio_event(event_name: String) -> void:
+	if INFERNAL_AUDIO_SCRIPT == null:
+		return
+	INFERNAL_AUDIO_SCRIPT.play_event_from_node(self, event_name, global_position)
+
+func _start_screen_shake(strength: float, duration: float) -> void:
+	if not screen_shake_enabled:
+		return
+	if strength <= 0.0 or duration <= 0.0:
+		return
+	_screen_shake_strength = maxf(_screen_shake_strength, strength)
+	_screen_shake_remaining = maxf(_screen_shake_remaining, duration)
+	_screen_shake_total_duration = maxf(_screen_shake_total_duration, duration)
+
+func _update_screen_shake(delta: float) -> void:
+	if not screen_shake_enabled:
+		_restore_screen_shake_camera()
+		return
+	var camera: Camera2D = get_viewport().get_camera_2d()
+	if camera != _screen_shake_camera:
+		_restore_screen_shake_camera()
+		_screen_shake_camera = camera
+		_screen_shake_base_offset = camera.offset if camera != null else Vector2.ZERO
+	if _screen_shake_remaining <= 0.0:
+		_restore_screen_shake_camera()
+		return
+	_screen_shake_remaining = maxf(0.0, _screen_shake_remaining - delta)
+	if _screen_shake_camera == null:
+		return
+	var ratio: float = clampf(_screen_shake_remaining / maxf(_screen_shake_total_duration, 0.01), 0.0, 1.0)
+	var offset: Vector2 = Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * _screen_shake_strength * ratio
+	_screen_shake_camera.offset = _screen_shake_base_offset + offset
+	if _screen_shake_remaining <= 0.0:
+		_restore_screen_shake_camera()
+
+func _restore_screen_shake_camera() -> void:
+	if _screen_shake_camera != null and is_instance_valid(_screen_shake_camera):
+		_screen_shake_camera.offset = _screen_shake_base_offset
+	_screen_shake_camera = null
+	_screen_shake_strength = 0.0
+	_screen_shake_total_duration = 0.0
 
 func _update_visual_animation(delta: float, moving: bool) -> void:
 	if not use_sprite_visuals or _sprite == null:
@@ -721,6 +836,10 @@ func _load_texture_if_exists(path: String) -> Texture2D:
 
 func _draw() -> void:
 	_draw_filled_ellipse(Rect2(Vector2(-20.0, 10.0), Vector2(40.0, 13.0)), Color(0.0, 0.0, 0.0, 0.34))
+	if show_dash_streak and _dash_remaining > 0.0:
+		_draw_dash_streak()
+	if show_death_respawn_bursts:
+		_draw_death_respawn_bursts()
 	if show_readability_hit_feedback:
 		_draw_readability_damage_state()
 	else:
@@ -743,6 +862,29 @@ func _draw() -> void:
 		draw_arc(collision_offset, collision_radius, 0.0, TAU, 24, Color(0.3, 0.75, 1.0, 0.65), 1.0)
 	if show_fallback_drawn_body or not use_sprite_visuals or _idle_texture == null:
 		_draw_fallback_body()
+
+func _draw_dash_streak() -> void:
+	var dash_back: Vector2 = -_dash_direction.normalized()
+	if dash_back.length() <= 0.01:
+		dash_back = -facing.normalized()
+	for i: int in range(3):
+		var distance: float = 16.0 + float(i) * 12.0
+		var alpha: float = 0.26 - float(i) * 0.06
+		var start: Vector2 = dash_back * distance + Vector2(0.0, -16.0 + float(i) * 7.0)
+		var end: Vector2 = start + dash_back * 18.0
+		draw_line(start, end, Color(0.80, 0.82, 0.92, alpha), 3.0 - float(i) * 0.45)
+
+func _draw_death_respawn_bursts() -> void:
+	if _death_burst_remaining > 0.0:
+		var t: float = clampf(_death_burst_remaining / 0.52, 0.0, 1.0)
+		var radius: float = 22.0 + (1.0 - t) * 32.0
+		draw_arc(Vector2.ZERO, radius, 0.0, TAU, 36, Color(0.92, 0.16, 0.08, 0.52 * t), 3.0)
+		draw_circle(Vector2.ZERO, radius * 0.45, Color(0.16, 0.02, 0.02, 0.12 * t))
+	if _respawn_burst_remaining > 0.0:
+		var rt: float = clampf(_respawn_burst_remaining / 0.55, 0.0, 1.0)
+		var rr: float = 18.0 + (1.0 - rt) * 28.0
+		draw_arc(Vector2.ZERO, rr, 0.0, TAU, 36, Color(0.95, 0.62, 0.28, 0.46 * rt), 2.5)
+		draw_arc(Vector2.ZERO, rr + 8.0, 0.0, TAU, 36, Color(0.55, 0.42, 0.22, 0.24 * rt), 1.5)
 
 func _draw_readability_damage_state() -> void:
 	if _hit_flash_remaining > 0.0:

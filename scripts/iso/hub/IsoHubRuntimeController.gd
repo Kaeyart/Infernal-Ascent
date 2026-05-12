@@ -12,6 +12,7 @@ const TRAINING_DUMMY_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubTrain
 const STATION_MARKER_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubStationMarker.gd")
 const PERMANENT_UPGRADE_SCRIPT: Script = preload("res://scripts/run/PermanentUpgradeData.gd")
 const SAVE_GAME_SCRIPT: Script = preload("res://scripts/run/SaveGameData.gd")
+const INFERNAL_AUDIO_SCRIPT: Script = preload("res://scripts/audio/InfernalAudio.gd")
 
 @export var run_scene_path: String = "res://scenes/iso/rooms/circle0/combat_ash_intake_hall_01_iso.tscn"
 @export var marker_root_name: String = "Markers"
@@ -158,6 +159,7 @@ var npc_defs: Array[Dictionary] = [
 ]
 
 func _ready() -> void:
+	_audio_context("hub")
 	SaveGameData.load_or_create()
 	_setup_hud()
 	_setup_interaction_panel()
@@ -341,6 +343,7 @@ func _try_purchase_reliquary_upgrade(slot: int) -> void:
 	var result: Dictionary = PERMANENT_UPGRADE_SCRIPT.purchase_upgrade(upgrade_id)
 	if bool(result.get("ok", false)):
 		SaveGameData.save_game("permanent_upgrade_purchase")
+	_audio_event("reliquary_purchase" if bool(result.get("success", false)) else "hazard_warning")
 	_upgrade_purchase_message = str(result.get("message", "Purchase checked."))
 	status_text = _upgrade_purchase_message
 	if interaction_panel != null:
@@ -439,6 +442,8 @@ func _activate_station(station: Dictionary) -> void:
 	var title: String = str(station.get("title", "Station"))
 
 	if kind == "run_start":
+		_audio_event("gate_open")
+		_audio_context("combat")
 		print("[IsoHubRuntime] Starting run: " + run_scene_path)
 		status_text = "Opening the Hell Gate..."
 		_update_hud()
@@ -446,15 +451,18 @@ func _activate_station(station: Dictionary) -> void:
 		return
 
 	if kind == "training_dummy":
+		_audio_event("reward_claim")
 		_spawn_or_reset_training_dummy()
 		_show_panel(title, str(station.get("body", "Training dummy reset.")))
 		return
 
 	if kind == "memory_pool" or kind == "fountain_results":
+		_audio_event("hub_ui_select")
 		_show_panel("Memory Pool", RunSessionData.build_fountain_panel_text())
 		return
 
 	if kind == "upgrade_altar" or kind == "patron_shrine":
+		_audio_event("hub_ui_select")
 		_open_panel_kind = "upgrade_altar"
 		_upgrade_purchase_message = ""
 		_upgrade_key_previous.clear()
@@ -462,14 +470,17 @@ func _activate_station(station: Dictionary) -> void:
 		return
 
 	if kind == "hub_forge" or kind == "weapon_altar":
+		_audio_event("hub_ui_select")
 		_show_panel("Hub Forge", _build_hub_forge_panel_text())
 		return
 
 	if kind == "codex":
+		_audio_event("hub_ui_select")
 		_show_panel("Codex Lectern", _build_codex_panel_text())
 		return
 
 	if kind == "sealed_door":
+		_audio_event("hazard_warning")
 		_show_panel("Sealed Descent Door", str(station.get("body", "This door is sealed.")))
 		return
 
@@ -536,6 +547,17 @@ func _get_y_sorted_root() -> Node:
 	if found != null:
 		return found
 	return get_parent()
+
+func _audio_event(event_name: String) -> void:
+	if INFERNAL_AUDIO_SCRIPT == null:
+		return
+	var pos: Vector2 = player_node.global_position if player_node != null and is_instance_valid(player_node) else Vector2.ZERO
+	INFERNAL_AUDIO_SCRIPT.play_event_from_node(self, event_name, pos)
+
+func _audio_context(context_name: String) -> void:
+	if INFERNAL_AUDIO_SCRIPT == null:
+		return
+	INFERNAL_AUDIO_SCRIPT.set_context_from_node(self, context_name)
 
 func _setup_hud() -> void:
 	hud_layer = CanvasLayer.new()
