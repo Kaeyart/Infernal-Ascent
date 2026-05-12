@@ -21,6 +21,7 @@ signal respawned
 @export var enemy_hit_knockback_speed: float = 185.0
 @export var enemy_hit_knockback_duration: float = 0.10
 @export var show_player_health_bar: bool = true
+@export var show_readability_hit_feedback: bool = true
 
 @export_category("Collision")
 @export var auto_create_collision_shape: bool = true
@@ -720,10 +721,13 @@ func _load_texture_if_exists(path: String) -> Texture2D:
 
 func _draw() -> void:
 	_draw_filled_ellipse(Rect2(Vector2(-20.0, 10.0), Vector2(40.0, 13.0)), Color(0.0, 0.0, 0.0, 0.34))
-	if _hit_flash_remaining > 0.0:
-		draw_arc(Vector2.ZERO, collision_radius + 14.0, 0.0, TAU, 28, Color(1.0, 0.35, 0.22, 0.78), 3.0)
-	elif _damage_iframe_remaining > 0.0:
-		draw_arc(Vector2.ZERO, collision_radius + 12.0, 0.0, TAU, 28, Color(0.55, 0.75, 1.0, 0.42), 2.0)
+	if show_readability_hit_feedback:
+		_draw_readability_damage_state()
+	else:
+		if _hit_flash_remaining > 0.0:
+			draw_arc(Vector2.ZERO, collision_radius + 14.0, 0.0, TAU, 28, Color(1.0, 0.35, 0.22, 0.78), 3.0)
+		elif _damage_iframe_remaining > 0.0:
+			draw_arc(Vector2.ZERO, collision_radius + 12.0, 0.0, TAU, 28, Color(0.55, 0.75, 1.0, 0.42), 2.0)
 	if show_player_health_bar:
 		_draw_player_health_bar()
 	if _attack_flash_remaining > 0.0:
@@ -740,6 +744,16 @@ func _draw() -> void:
 	if show_fallback_drawn_body or not use_sprite_visuals or _idle_texture == null:
 		_draw_fallback_body()
 
+func _draw_readability_damage_state() -> void:
+	if _hit_flash_remaining > 0.0:
+		var t: float = clampf(_hit_flash_remaining / maxf(hit_flash_duration, 0.01), 0.0, 1.0)
+		draw_circle(Vector2.ZERO, collision_radius + 17.0, Color(1.0, 0.08, 0.02, 0.10 + 0.18 * t))
+		draw_arc(Vector2.ZERO, collision_radius + 18.0, 0.0, TAU, 30, Color(1.0, 0.34, 0.18, 0.88), 4.0)
+		draw_line(Vector2(-18.0, -34.0), Vector2(18.0, 12.0), Color(1.0, 0.72, 0.38, 0.72), 2.0)
+		draw_line(Vector2(18.0, -34.0), Vector2(-18.0, 12.0), Color(1.0, 0.72, 0.38, 0.72), 2.0)
+	elif _damage_iframe_remaining > 0.0:
+		var iframe_ratio: float = clampf(_damage_iframe_remaining / maxf(contact_damage_iframe_duration, 0.01), 0.0, 1.0)
+		draw_arc(Vector2.ZERO, collision_radius + 14.0, 0.0, TAU, 28, Color(0.55, 0.75, 1.0, 0.30 + 0.28 * iframe_ratio), 2.0)
 
 func _draw_player_health_bar() -> void:
 	if max_health <= 0:

@@ -55,6 +55,14 @@ enum EnemyState { IDLE, CHASE, WINDUP, ACTIVE, RECOVERY }
 @export var knockback_duration: float = 0.10
 @export var death_free_delay: float = 0.20
 
+@export_category("Readability")
+@export var show_readability_labels: bool = true
+@export var telegraph_warning_alpha: float = 0.62
+@export var telegraph_active_alpha: float = 0.88
+@export var telegraph_line_width: float = 4.0
+@export var telegraph_lane_width: float = 32.0
+@export var telegraph_label_font_size: int = 11
+
 @export_category("Debug")
 @export var show_debug_contact_radius: bool = false
 @export var show_debug_aggro_radius: bool = false
@@ -467,30 +475,100 @@ func _draw_telegraphs() -> void:
 		var t: float = 1.0
 		if attack_windup_duration > 0.0:
 			t = clampf(1.0 - (_state_timer / attack_windup_duration), 0.0, 1.0)
-		var danger_color: Color = Color(1.0, 0.28, 0.12, 0.20 + 0.35 * t)
 		if projectile_enabled:
-			draw_line(Vector2.ZERO, _attack_direction.normalized() * projectile_range, Color(1.0, 0.42, 0.12, 0.28 + 0.35 * t), 4.0)
-			draw_arc(Vector2.ZERO, 24.0 + 10.0 * t, 0.0, TAU, 28, Color(1.0, 0.55, 0.20, 0.7), 2.0)
+			_draw_projectile_warning(t)
 		elif lunge_enabled:
-			draw_line(Vector2.ZERO, _attack_direction.normalized() * lunge_range, Color(1.0, 0.18, 0.12, 0.32 + 0.35 * t), 6.0)
-			draw_circle(_attack_direction.normalized() * minf(lunge_range, 90.0), 10.0 + 6.0 * t, danger_color)
+			_draw_lunge_warning(t)
 		else:
-			_draw_warning_cone(attack_hit_radius, attack_arc_degrees, danger_color)
-	elif _state == EnemyState.ACTIVE and not projectile_enabled:
-		_draw_warning_cone(attack_hit_radius, attack_arc_degrees, Color(1.0, 0.08, 0.04, 0.48))
+			_draw_melee_warning(t)
+	elif _state == EnemyState.ACTIVE:
+		if projectile_enabled:
+			return
+		if lunge_enabled:
+			_draw_lunge_active()
+		else:
+			_draw_melee_active()
 
-func _draw_warning_cone(radius: float, arc_degrees: float, color: Color) -> void:
+func _draw_melee_warning(progress: float) -> void:
+	var fill: Color = Color(1.0, 0.44, 0.10, 0.22 + telegraph_warning_alpha * 0.36 * progress)
+	_draw_warning_cone(attack_hit_radius, attack_arc_degrees, fill, Color(1.0, 0.80, 0.28, 0.82), telegraph_line_width)
+	_draw_tick_ring(attack_hit_radius + 9.0, progress, Color(1.0, 0.72, 0.24, 0.78))
+	if show_readability_labels:
+		_draw_telegraph_label("SWIPE", _attack_direction.normalized() * (attack_hit_radius + 22.0), Color(1.0, 0.82, 0.36, 0.95))
+
+func _draw_melee_active() -> void:
+	_draw_warning_cone(attack_hit_radius, attack_arc_degrees, Color(1.0, 0.04, 0.02, 0.48), Color(1.0, 0.92, 0.40, telegraph_active_alpha), telegraph_line_width + 1.0)
+
+func _draw_lunge_warning(progress: float) -> void:
+	var dir: Vector2 = _attack_direction.normalized()
+	var length: float = lunge_range
+	var half_width: float = telegraph_lane_width * 0.5
+	var side: Vector2 = Vector2(-dir.y, dir.x)
+	var end_point: Vector2 = dir * length
+	var pts: PackedVector2Array = PackedVector2Array([side * half_width, end_point + side * half_width, end_point - side * half_width, -side * half_width])
+	draw_colored_polygon(pts, Color(1.0, 0.16, 0.06, 0.18 + 0.26 * progress))
+	draw_line(side * half_width, end_point + side * half_width, Color(1.0, 0.58, 0.18, 0.80), telegraph_line_width)
+	draw_line(-side * half_width, end_point - side * half_width, Color(1.0, 0.58, 0.18, 0.80), telegraph_line_width)
+	draw_line(Vector2.ZERO, end_point, Color(1.0, 0.28, 0.12, 0.55 + 0.25 * progress), maxf(2.0, telegraph_line_width - 1.0))
+	_draw_tick_ring(22.0 + 10.0 * progress, progress, Color(1.0, 0.72, 0.24, 0.82))
+	draw_circle(end_point, 10.0 + 6.0 * progress, Color(1.0, 0.30, 0.10, 0.30 + 0.25 * progress))
+	if show_readability_labels:
+		_draw_telegraph_label("LUNGE", dir * minf(length, 116.0) + Vector2(0.0, -18.0), Color(1.0, 0.78, 0.28, 0.96))
+
+func _draw_lunge_active() -> void:
+	var dir: Vector2 = _attack_direction.normalized()
+	var length: float = maxf(attack_hit_radius, 64.0)
+	var half_width: float = telegraph_lane_width * 0.5
+	var side: Vector2 = Vector2(-dir.y, dir.x)
+	var end_point: Vector2 = dir * length
+	var pts: PackedVector2Array = PackedVector2Array([side * half_width, end_point + side * half_width, end_point - side * half_width, -side * half_width])
+	draw_colored_polygon(pts, Color(1.0, 0.04, 0.02, 0.42))
+	draw_polyline(PackedVector2Array([pts[0], pts[1], pts[2], pts[3], pts[0]]), Color(1.0, 0.92, 0.36, telegraph_active_alpha), telegraph_line_width + 1.0)
+
+func _draw_projectile_warning(progress: float) -> void:
+	var dir: Vector2 = _attack_direction.normalized()
+	var length: float = projectile_range
+	var side: Vector2 = Vector2(-dir.y, dir.x)
+	var half_width: float = 11.0
+	var end_point: Vector2 = dir * length
+	draw_line(side * half_width, end_point + side * half_width, Color(1.0, 0.48, 0.14, 0.34 + 0.26 * progress), 2.5)
+	draw_line(-side * half_width, end_point - side * half_width, Color(1.0, 0.48, 0.14, 0.34 + 0.26 * progress), 2.5)
+	draw_line(Vector2.ZERO, end_point, Color(1.0, 0.82, 0.36, 0.30 + 0.40 * progress), telegraph_line_width)
+	draw_arc(Vector2.ZERO, 22.0 + 14.0 * progress, 0.0, TAU, 28, Color(1.0, 0.65, 0.22, 0.86), 3.0)
+	draw_circle(Vector2.ZERO, 7.0 + 4.0 * progress, Color(1.0, 0.38, 0.10, 0.72))
+	if show_readability_labels:
+		_draw_telegraph_label("SHOT", dir * 88.0 + Vector2(0.0, -18.0), Color(1.0, 0.82, 0.36, 0.96))
+
+func _draw_warning_cone(radius: float, arc_degrees: float, fill_color: Color, outline_color: Color = Color(1.0, 0.78, 0.22, 0.88), outline_width: float = 3.0) -> void:
 	var facing_angle: float = _attack_direction.angle()
 	var half_arc: float = deg_to_rad(arc_degrees * 0.5)
 	var points: PackedVector2Array = PackedVector2Array()
 	points.append(Vector2.ZERO)
-	var steps: int = 12
+	var steps: int = 18
 	for i: int in range(steps + 1):
 		var ratio: float = float(i) / float(steps)
 		var angle: float = facing_angle - half_arc + (half_arc * 2.0 * ratio)
 		points.append(Vector2(cos(angle), sin(angle)) * radius)
-	draw_colored_polygon(points, color)
-	draw_polyline(points, Color(color.r, color.g, color.b, minf(1.0, color.a + 0.25)), 1.5)
+	draw_colored_polygon(points, fill_color)
+	draw_polyline(points, outline_color, outline_width)
+	draw_line(Vector2.ZERO, _attack_direction.normalized() * radius, Color(outline_color.r, outline_color.g, outline_color.b, minf(1.0, outline_color.a + 0.10)), maxf(1.0, outline_width - 1.0))
+
+func _draw_tick_ring(radius: float, progress: float, color: Color) -> void:
+	var total: int = 10
+	var lit: int = int(ceil(float(total) * clampf(progress, 0.0, 1.0)))
+	for i: int in range(total):
+		var a: float = TAU * float(i) / float(total)
+		var p1: Vector2 = Vector2(cos(a), sin(a)) * radius
+		var p2: Vector2 = Vector2(cos(a), sin(a)) * (radius + 8.0)
+		var c: Color = color if i < lit else Color(0.45, 0.18, 0.10, 0.42)
+		draw_line(p1, p2, c, 2.0)
+
+func _draw_telegraph_label(text: String, pos: Vector2, color: Color) -> void:
+	var font: Font = ThemeDB.fallback_font
+	var bg: Rect2 = Rect2(pos + Vector2(-34.0, -telegraph_label_font_size - 5.0), Vector2(68.0, float(telegraph_label_font_size + 8)))
+	draw_rect(bg, Color(0.05, 0.025, 0.015, 0.74), true)
+	draw_rect(bg, Color(color.r, color.g, color.b, 0.70), false, 1.0)
+	draw_string(font, pos + Vector2(-34.0, -4.0), text, HORIZONTAL_ALIGNMENT_CENTER, 68.0, telegraph_label_font_size, color)
 
 func _draw_health_bar() -> void:
 	var hp_width: float = 42.0
