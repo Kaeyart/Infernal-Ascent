@@ -27,7 +27,7 @@ class_name IsoPhysicsTestPlayer
 @export var show_debug_footprint: bool = false
 @export var show_fallback_drawn_body: bool = false
 @export var visual_offset: Vector2 = Vector2(0.0, -30.0)
-@export var visual_scale: Vector2 = Vector2(0.40, 0.40)
+@export var visual_scale: Vector2 = Vector2(0.42, 0.42)
 @export var auto_detect_sprite_frame_size: bool = true
 @export var frame_size: Vector2i = Vector2i(320, 320)
 @export var direction_row_count: int = 4
@@ -48,6 +48,13 @@ class_name IsoPhysicsTestPlayer
 @export var respawn_animation_fps: float = 8.0
 
 @export_category("Animation Row Mapping")
+# V6 uses deterministic screen-input facing:
+#   D / Right        -> northeast row by default
+#   A / Left         -> southwest row by default
+#   W / Up           -> northwest row by default
+#   S / Down         -> southeast row by default
+# Diagonal input maps to the matching isometric quadrant.
+# If a row still looks wrong in-game, change only these exported row values.
 @export var row_for_southeast: int = 0
 @export var row_for_southwest: int = 1
 @export var row_for_northwest: int = 2
@@ -416,8 +423,14 @@ func _get_frame_size_for_texture(texture: Texture2D, anim_name: String) -> Vecto
 func _set_facing_from_vector(direction: Vector2) -> void:
 	if direction.length() <= 0.01:
 		return
+	var previous_dir_name: String = _facing_dir_name
 	facing = direction.normalized()
 	_facing_dir_name = _direction_name_from_vector(facing)
+	# Direction changes must update the sprite row immediately, even if the
+	# animation state itself did not restart. This is what makes A/D/W/S feel
+	# correct while walking, and makes the idle row persist after releasing input.
+	if previous_dir_name != _facing_dir_name:
+		_apply_sprite_frame()
 
 func _direction_name_from_vector(direction: Vector2) -> String:
 	var x_abs: float = absf(direction.x)
@@ -425,19 +438,20 @@ func _direction_name_from_vector(direction: Vector2) -> String:
 	if x_abs <= 0.05 and y_abs <= 0.05:
 		return _facing_dir_name
 
-	if x_abs > 0.05 and y_abs > 0.05:
-		if direction.y >= 0.0:
-			return "se" if direction.x >= 0.0 else "sw"
-		return "ne" if direction.x >= 0.0 else "nw"
+	# V6: deterministic screen-direction mapping.
+	# The V5 version used the previous facing to decide pure left/right/up/down.
+	# That made D sometimes select the down-right row and sometimes the up-right row.
+	# Here, the same input always selects the same row:
+	#   right -> ne, left -> sw, up -> nw, down -> se.
+	if x_abs > y_abs * 1.25:
+		return "ne" if direction.x >= 0.0 else "sw"
+	if y_abs > x_abs * 1.25:
+		return "se" if direction.y >= 0.0 else "nw"
 
-	if x_abs > 0.05:
-		if direction.x >= 0.0:
-			return "se" if _facing_dir_name == "se" or _facing_dir_name == "sw" else "ne"
-		return "sw" if _facing_dir_name == "se" or _facing_dir_name == "sw" else "nw"
-
+	# True diagonal movement keeps the expected isometric quadrant.
 	if direction.y >= 0.0:
-		return "se" if _facing_dir_name == "se" or _facing_dir_name == "ne" else "sw"
-	return "ne" if _facing_dir_name == "se" or _facing_dir_name == "ne" else "nw"
+		return "se" if direction.x >= 0.0 else "sw"
+	return "ne" if direction.x >= 0.0 else "nw"
 
 func _get_direction_row() -> int:
 	# V4/V5 sheet row order is normally: 0=southeast, 1=southwest, 2=northwest, 3=northeast.

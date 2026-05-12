@@ -1,0 +1,17 @@
+Penitent Knight Isometric Sprite Manifest V4
+
+V4 is re-sliced with detected row/column bands, alpha-tight crops, and stable body anchors.
+Frame size: 320x320 px.
+Direction row order for all full sheets:
+0 = southeast, 1 = southwest, 2 = northwest, 3 = northeast
+
+Godot display scale defaults to 0.22 so the gameplay read is around 64 px high while preserving detail.
+
+- idle: penitent_idle_iso_4x4.png | grid 4x4 | fps 7 | source-scale 0.7972
+- walk: penitent_walk_iso_6x4.png | grid 6x4 | fps 10 | source-scale 1.0736
+- dash: penitent_dash_iso_4x4.png | grid 4x4 | fps 16 | source-scale 0.9241
+- hit: penitent_hit_iso_3x4.png | grid 3x4 | fps 12 | source-scale 0.729
+- death: penitent_death_iso_6x4.png | grid 6x4 | fps 8 | source-scale 0.972
+- respawn: penitent_respawn_iso_6x4.png | grid 6x4 | fps 8 | source-scale 1.0343
+- light_attack: penitent_light_attack_iso_5x4.png | grid 5x4 | fps 12 | source-scale 1.0439
+- heavy_attack: penitent_heavy_attack_iso_6x4.png | grid 6x4 | fps 10 | source-scale 1.1633

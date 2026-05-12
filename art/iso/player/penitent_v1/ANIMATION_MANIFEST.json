@@ -1,0 +1,98 @@
+[
+  {
+    "anim": "idle",
+    "sheet": "penitent_idle_iso_4x4.png",
+    "cols": 4,
+    "rows": 4,
+    "frame_size": [
+      320,
+      320
+    ],
+    "fps": 7,
+    "scale": 0.7972
+  },
+  {
+    "anim": "walk",
+    "sheet": "penitent_walk_iso_6x4.png",
+    "cols": 6,
+    "rows": 4,
+    "frame_size": [
+      320,
+      320
+    ],
+    "fps": 10,
+    "scale": 1.0736
+  },
+  {
+    "anim": "dash",
+    "sheet": "penitent_dash_iso_4x4.png",
+    "cols": 4,
+    "rows": 4,
+    "frame_size": [
+      320,
+      320
+    ],
+    "fps": 16,
+    "scale": 0.9241
+  },
+  {
+    "anim": "hit",
+    "sheet": "penitent_hit_iso_3x4.png",
+    "cols": 3,
+    "rows": 4,
+    "frame_size": [
+      320,
+      320
+    ],
+    "fps": 12,
+    "scale": 0.729
+  },
+  {
+    "anim": "death",
+    "sheet": "penitent_death_iso_6x4.png",
+    "cols": 6,
+    "rows": 4,
+    "frame_size": [
+      320,
+      320
+    ],
+    "fps": 8,
+    "scale": 0.972
+  },
+  {
+    "anim": "respawn",
+    "sheet": "penitent_respawn_iso_6x4.png",
+    "cols": 6,
+    "rows": 4,
+    "frame_size": [
+      320,
+      320
+    ],
+    "fps": 8,
+    "scale": 1.0343
+  },
+  {
+    "anim": "light_attack",
+    "sheet": "penitent_light_attack_iso_5x4.png",
+    "cols": 5,
+    "rows": 4,
+    "frame_size": [
+      320,
+      320
+    ],
+    "fps": 12,
+    "scale": 1.0439
+  },
+  {
+    "anim": "heavy_attack",
+    "sheet": "penitent_heavy_attack_iso_6x4.png",
+    "cols": 6,
+    "rows": 4,
+    "frame_size": [
+      320,
+      320
+    ],
+    "fps": 10,
+    "scale": 1.1633
+  }
+]
