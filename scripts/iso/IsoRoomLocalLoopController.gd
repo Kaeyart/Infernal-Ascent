@@ -4,6 +4,7 @@ class_name IsoRoomLocalLoopController
 ## V14 — Run Flow Consistency Pass.
 ## V19 — Reward Consistency Pass extends the existing loop with a standardized temporary reward catalogue.
 ## V20 — Demo Run Length Lock makes the run reach a predictable boss-antechamber placeholder after four rooms.
+## V21 — Fountain / Shop / Forge Functional Pass makes support rooms useful instead of placeholders.
 ## Owns the local Circle 0 demo run state machine. This script intentionally does not add
 ## new enemies, art, boss logic, sound, or save logic.
 
@@ -39,6 +40,15 @@ enum RunPhase {
 @export var boss_placeholder_completes_run: bool = true
 @export var force_demo_route_pattern: bool = true
 
+@export_category("V21 Support Rooms")
+@export var support_rooms_functional: bool = true
+@export var fountain_heal_ratio_v21: float = 0.60
+@export var starting_run_ash: int = 2
+@export var run_ash_per_completed_combat: int = 1
+@export var shop_heal_cost: int = 1
+@export var shop_damage_cost: int = 2
+@export var shop_mystery_boon_cost: int = 2
+
 @export_category("V10 Route Loop")
 @export var route_choice_enabled: bool = true
 @export var gate_spawn_delay: float = 0.35
@@ -69,6 +79,10 @@ var forge_rooms_seen: int = 0
 var shop_rooms_seen: int = 0
 var run_bonus_ash_sigils: int = 0
 var heal_on_room_clear_amount: int = 0
+var run_ash_shards: int = 0
+var shop_purchases: int = 0
+var active_forge_mark: String = ""
+var forge_marks_chosen: Array[String] = []
 var route_history: Array[Dictionary] = []
 var reward_history: Array[String] = []
 var reward_display_history: Array[String] = []
@@ -136,6 +150,10 @@ func _reset_run_counters() -> void:
 	shop_rooms_seen = 0
 	run_bonus_ash_sigils = 0
 	heal_on_room_clear_amount = 0
+	run_ash_shards = maxi(0, starting_run_ash)
+	shop_purchases = 0
+	active_forge_mark = ""
+	forge_marks_chosen.clear()
 	route_history.clear()
 	_current_gate_choices.clear()
 	_last_selected_gate_name = ""
@@ -208,6 +226,9 @@ func _on_combat_room_cleared() -> void:
 	if _room_completion_pending or run_finished:
 		return
 	combat_rooms_cleared += 1
+	run_ash_shards += maxi(0, run_ash_per_completed_combat)
+	if current_room_type == "elite_combat":
+		run_ash_shards += 1
 	if heal_on_room_clear_amount > 0:
 		_heal_player_flat(heal_on_room_clear_amount)
 	_complete_current_room("Combat cleared in %s" % _display_variant(current_room_variant))
@@ -379,7 +400,9 @@ func _enter_fountain_room() -> void:
 	var data: Dictionary = {
 		"kind": "fountain",
 		"display_name": "Ashen Fountain",
-		"description": "Restore HP once",
+		"description": "Restore 60% of max HP once.",
+		"exact_effect": "Heal 60% of maximum HP now.",
+		"current_consequence": "One safe recovery before the next route choice.",
 	}
 	_spawn_single_interactable(data, _get_reward_position(), _on_fountain_used)
 	_show_intro(last_room_title, "Recovery room")
@@ -398,14 +421,9 @@ func _enter_forge_room() -> void:
 	if runtime_adapter != null:
 		runtime_adapter.configure_room_presentation(current_room_type, current_depth, current_room_variant)
 		runtime_adapter.prepare_non_combat_room()
-	var data: Dictionary = {
-		"kind": "forge",
-		"display_name": "Cold Forge",
-		"description": "Weapon system reserved",
-	}
-	_spawn_single_interactable(data, _get_reward_position(), _on_forge_used)
-	_show_intro(last_room_title, "The forge is cold")
-	last_status = "Forge room placeholder. Use the cold forge to continue. Full weapon mutation comes later."
+	_spawn_forge_marks()
+	_show_intro(last_room_title, "Choose one run-only sword mark")
+	last_status = "Forge room. Choose one sword mark for this run."
 	_set_phase(RunPhase.FORGE, last_status)
 	_debug(last_status)
 
@@ -420,14 +438,9 @@ func _enter_shop_room() -> void:
 	if runtime_adapter != null:
 		runtime_adapter.configure_room_presentation(current_room_type, current_depth, current_room_variant)
 		runtime_adapter.prepare_non_combat_room()
-	var data: Dictionary = {
-		"kind": "shop",
-		"display_name": "Silent Merchant",
-		"description": "Economy reserved",
-	}
-	_spawn_single_interactable(data, _get_reward_position(), _on_shop_used)
-	_show_intro(last_room_title, "The merchant watches")
-	last_status = "Shop room placeholder. Use the merchant marker to continue. Economy comes later."
+	_spawn_shop_items()
+	_show_intro(last_room_title, "Buy one useful item with Run Ash")
+	last_status = "Shop room. Buy one item with Run Ash, then continue."
 	_set_phase(RunPhase.SHOP, last_status)
 	_debug(last_status)
 
@@ -472,22 +485,170 @@ func _on_fountain_used(_payload: Dictionary) -> void:
 	if _room_completion_pending:
 		return
 	fountain_rooms_completed += 1
-	_heal_player_ratio(heal_on_fountain_ratio)
-	_complete_current_room("Fountain used")
+	_heal_player_ratio(fountain_heal_ratio_v21)
+	_complete_current_room("Fountain used: recovered 60% HP")
 
 func _on_forge_used(_payload: Dictionary) -> void:
+	# Legacy fallback path. V21 uses _on_forge_mark_chosen.
 	if current_phase != RunPhase.FORGE:
 		return
 	if _room_completion_pending:
 		return
-	_complete_current_room("The forge is cold")
+	_complete_current_room("Forge inspected")
 
 func _on_shop_used(_payload: Dictionary) -> void:
+	# Legacy fallback path. V21 uses _on_shop_item_bought.
 	if current_phase != RunPhase.SHOP:
 		return
 	if _room_completion_pending:
 		return
-	_complete_current_room("The silent merchant has nothing yet")
+	_complete_current_room("Merchant inspected")
+
+func _spawn_forge_marks() -> void:
+	var marks: Array[Dictionary] = _forge_mark_catalogue()
+	var center: Vector2 = _get_reward_position()
+	var offsets: Array[Vector2] = [Vector2(-132.0, 4.0), Vector2(0.0, -38.0), Vector2(132.0, 4.0)]
+	var parent_node: Node = _get_runtime_parent()
+	for i: int in range(marks.size()):
+		var item: RunRoomInteractable = RunRoomInteractable.new()
+		parent_node.add_child(item)
+		item.setup(marks[i], center + offsets[i % offsets.size()])
+		item.activated.connect(_on_forge_mark_chosen)
+		if item.has_signal("focus_changed"):
+			item.focus_changed.connect(_on_interactable_focus_changed)
+		_active_interactables.append(item)
+
+func _forge_mark_catalogue() -> Array[Dictionary]:
+	return [
+		_forge_mark_data("serrated_edge", "Serrated Edge", "Light attacks cut deeper", "Light attack damage +1 and attack arc +8°. Run-only forge mark."),
+		_forge_mark_data("grave_weight", "Grave Weight", "Heavy attacks hit harder but recover slower", "Heavy attack damage +2, heavy cooldown +0.12s. Run-only forge mark."),
+		_forge_mark_data("ash_step", "Ash Step", "Dash becomes safer and more mobile", "Dash cooldown -0.06s and dash duration +0.02s. Run-only forge mark."),
+	]
+
+func _forge_mark_data(mark_id: String, display_name: String, description: String, exact_effect: String) -> Dictionary:
+	return {
+		"kind": "forge_mark",
+		"mark_id": mark_id,
+		"display_name": display_name,
+		"rarity": "forge",
+		"category": "Weapon Mark",
+		"description": description,
+		"exact_effect": exact_effect,
+		"current_consequence": "Only one forge mark can be chosen in this room.",
+		"icon": "G",
+	}
+
+func _on_forge_mark_chosen(payload: Dictionary) -> void:
+	if current_phase != RunPhase.FORGE:
+		return
+	if _room_completion_pending:
+		return
+	for item: RunRoomInteractable in _active_interactables:
+		if item != null and is_instance_valid(item):
+			item.mark_used()
+	_apply_forge_mark(payload)
+	_complete_current_room("Forge mark chosen: %s" % str(payload.get("display_name", "Unknown")))
+
+func _apply_forge_mark(payload: Dictionary) -> void:
+	var player: Node = _find_player_node()
+	var mark_id: String = str(payload.get("mark_id", ""))
+	var display_name: String = str(payload.get("display_name", mark_id))
+	active_forge_mark = mark_id
+	forge_marks_chosen.append(mark_id)
+	reward_display_history.append("Forge: " + display_name)
+	if player == null:
+		return
+	match mark_id:
+		"serrated_edge":
+			_add_player_int(player, "attack_damage", 1)
+			_add_player_float_clamped(player, "light_attack_arc_degrees", 8.0, 45.0, 175.0)
+		"grave_weight":
+			_add_player_int(player, "heavy_attack_damage", 2)
+			_add_player_float_clamped(player, "heavy_attack_cooldown", 0.12, 0.24, 9.0)
+		"ash_step":
+			_add_player_float_clamped(player, "dash_cooldown", -0.06, 0.20, 9.0)
+			_add_player_float_clamped(player, "dash_duration", 0.02, 0.05, 0.28)
+	if player is CanvasItem:
+		(player as CanvasItem).queue_redraw()
+
+func _spawn_shop_items() -> void:
+	var items: Array[Dictionary] = _shop_catalogue()
+	var center: Vector2 = _get_reward_position()
+	var offsets: Array[Vector2] = [Vector2(-132.0, 4.0), Vector2(0.0, -38.0), Vector2(132.0, 4.0)]
+	var parent_node: Node = _get_runtime_parent()
+	for i: int in range(items.size()):
+		var item: RunRoomInteractable = RunRoomInteractable.new()
+		parent_node.add_child(item)
+		item.setup(items[i], center + offsets[i % offsets.size()])
+		item.activated.connect(_on_shop_item_bought)
+		if item.has_signal("focus_changed"):
+			item.focus_changed.connect(_on_interactable_focus_changed)
+		_active_interactables.append(item)
+
+func _shop_catalogue() -> Array[Dictionary]:
+	return [
+		_shop_item_data("shop_heal", "Blood Poultice", shop_heal_cost, "Heal 3 HP now", "Recover 3 HP immediately. Does not increase max HP."),
+		_shop_item_data("shop_edge", "Pilgrim's Edge", shop_damage_cost, "Light attack damage +1", "Your light attacks deal 1 additional damage for this run."),
+		_shop_item_data("shop_mystery", "Sealed Boon", shop_mystery_boon_cost, "Claim a mystery boon", "Gain one deterministic reward from the current run catalogue."),
+	]
+
+func _shop_item_data(item_id: String, display_name: String, cost: int, description: String, exact_effect: String) -> Dictionary:
+	return {
+		"kind": "shop_item",
+		"item_id": item_id,
+		"display_name": display_name,
+		"rarity": "shop",
+		"category": "Merchant",
+		"cost": maxi(0, cost),
+		"description": description,
+		"exact_effect": exact_effect,
+		"current_consequence": "Costs %d Run Ash. Current Run Ash: %d." % [maxi(0, cost), run_ash_shards],
+		"icon": "S",
+	}
+
+func _on_shop_item_bought(payload: Dictionary) -> void:
+	if current_phase != RunPhase.SHOP:
+		return
+	if _room_completion_pending:
+		return
+	var cost: int = int(payload.get("cost", 0))
+	if not _spend_run_ash(cost):
+		last_status = "Not enough Run Ash for %s. Current Run Ash: %d." % [str(payload.get("display_name", "item")), run_ash_shards]
+		_update_hud()
+		return
+	for item: RunRoomInteractable in _active_interactables:
+		if item != null and is_instance_valid(item):
+			item.mark_used()
+	_apply_shop_item(payload)
+	shop_purchases += 1
+	_complete_current_room("Shop purchase: %s" % str(payload.get("display_name", "Unknown")))
+
+func _spend_run_ash(cost: int) -> bool:
+	var safe_cost: int = maxi(0, cost)
+	if run_ash_shards < safe_cost:
+		return false
+	run_ash_shards -= safe_cost
+	return true
+
+func _apply_shop_item(payload: Dictionary) -> void:
+	var player: Node = _find_player_node()
+	var item_id: String = str(payload.get("item_id", ""))
+	var display_name: String = str(payload.get("display_name", item_id))
+	reward_display_history.append("Shop: " + display_name)
+	if item_id == "shop_mystery":
+		var rewards: Array[Dictionary] = _build_reward_choices()
+		if not rewards.is_empty():
+			_apply_reward(rewards[0])
+		return
+	if player == null:
+		return
+	match item_id:
+		"shop_heal":
+			_heal_player_flat(3)
+		"shop_edge":
+			_add_player_int(player, "attack_damage", 1)
+	if player is CanvasItem:
+		(player as CanvasItem).queue_redraw()
 
 func _enter_boss_antechamber_placeholder() -> void:
 	current_room_type = "boss_antechamber"
@@ -602,9 +763,9 @@ func _room_choice(room_type: String) -> Dictionary:
 		"fountain":
 			return {"room_type": "fountain", "display_name": "Fountain", "description": "Restore health", "icon": "F", "rarity": "safe"}
 		"forge":
-			return {"room_type": "forge", "display_name": "Forge", "description": "Reserved weapon system", "icon": "G", "rarity": "rare"}
+			return {"room_type": "forge", "display_name": "Forge", "description": "Choose one run-only sword mark", "icon": "G", "rarity": "rare"}
 		"shop":
-			return {"room_type": "shop", "display_name": "Shop", "description": "Reserved economy", "icon": "S", "rarity": "rare"}
+			return {"room_type": "shop", "display_name": "Shop", "description": "Buy one item with Run Ash", "icon": "S", "rarity": "rare"}
 		"boss_antechamber":
 			return {"room_type": "boss_antechamber", "display_name": "Boss Antechamber", "description": "The Ash Warden gate", "icon": "B", "rarity": "boss"}
 	return {"room_type": "combat", "display_name": "Combat", "description": "More ash-born enemies", "icon": "C", "rarity": "common"}
@@ -817,10 +978,13 @@ func _record_run_results(victory: bool = true) -> void:
 		"patron": "Local Route Loop",
 		"boon": _reward_display_summary(),
 		"victory": victory,
-		"notes": "V20 demo route length lock returned to the Threshold Nave.",
+		"notes": "V21 support rooms functional pass returned to the Threshold Nave.",
+		"run_ash_remaining": run_ash_shards,
+		"forge_mark": active_forge_mark,
+		"shop_purchases": shop_purchases,
 	}
 	RunSessionData.record_completed_run(summary)
-	print("[IsoLocalLoop] Recorded V20 run results: " + str(summary))
+	print("[IsoLocalLoop] Recorded V21 run results: " + str(summary))
 
 func _reward_display_summary() -> String:
 	if reward_display_history.is_empty():
@@ -997,7 +1161,7 @@ func _update_hud() -> void:
 		"reward_names": reward_display_history.duplicate(true),
 		"fountains": fountain_rooms_completed,
 		"bonus_sigils": run_bonus_ash_sigils,
-		"currency": RunEconomyData.get_currency_summary_line(),
+		"currency": "%s | Run Ash: %d" % [RunEconomyData.get_currency_summary_line(), run_ash_shards],
 		"player": _player_ui_state(),
 		"choices": _current_gate_choices.duplicate(true),
 		"hazards_active": current_phase == RunPhase.COMBAT,
@@ -1117,9 +1281,9 @@ func _objective_text() -> String:
 		RunPhase.FOUNTAIN:
 			return "Use the fountain once to recover health."
 		RunPhase.FORGE:
-			return "Use the cold forge marker to continue. Full forge mechanics come later."
+			return "Choose one forge mark for this run."
 		RunPhase.SHOP:
-			return "Use the silent merchant marker to continue. Full economy comes later."
+			return "Buy one merchant item with Run Ash."
 		RunPhase.BOSS_LOCKED_PLACEHOLDER:
 			return "You reached the Ash Warden gate. Press E at the seal to complete the locked demo route."
 		RunPhase.RUN_VICTORY:

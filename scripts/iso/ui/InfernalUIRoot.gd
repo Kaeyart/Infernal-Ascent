@@ -2,6 +2,7 @@ extends CanvasLayer
 
 class_name InfernalUIRoot
 ## V15 — UI Consistency Pass.
+## V21 support-room focus text for fountain/shop/forge functional rooms.
 ## Single CanvasLayer + Control presentation layer for the demo run.
 ## Gameplay scripts send state. This script owns the screen UI language.
 
@@ -295,9 +296,13 @@ func _focus_meta_text(kind: String, reward_id: String) -> String:
 		"fountain":
 			return "RECOVERY · ONE USE"
 		"forge":
-			return "FORGE · PLACEHOLDER"
+			return "FORGE · ROOM"
+		"forge_mark":
+			return "FORGE MARK · RUN ONLY"
 		"shop":
-			return "MERCHANT · PLACEHOLDER"
+			return "MERCHANT · ROOM"
+		"shop_item":
+			return "MERCHANT ITEM · RUN ASH"
 	return "INTERACTABLE"
 
 func _focus_body_text(kind: String, description: String, payload: Dictionary) -> String:
@@ -311,9 +316,18 @@ func _focus_body_text(kind: String, description: String, payload: Dictionary) ->
 		"fountain":
 			return "%s\n\nRestores health once, then opens the next route choice.\n\n[E] Drink" % description
 		"forge":
-			return "%s\n\nForge mechanics are reserved for V21. This marker currently advances the run.\n\n[E] Inspect" % description
+			return "%s\n\nChoose one forge mark in this chamber.\n\n[E] Inspect" % description
+		"forge_mark":
+			var forge_exact: String = str(payload.get("exact_effect", description))
+			var forge_consequence: String = str(payload.get("current_consequence", "Run-only weapon change."))
+			return "%s\n\n%s\n\n%s\n\n[E] Forge this mark" % [description, forge_exact, forge_consequence]
 		"shop":
-			return "%s\n\nShop economy is reserved for V21. This marker currently advances the run.\n\n[E] Inspect" % description
+			return "%s\n\nBuy one item in this chamber.\n\n[E] Inspect" % description
+		"shop_item":
+			var cost: int = int(payload.get("cost", 0))
+			var shop_exact: String = str(payload.get("exact_effect", description))
+			var shop_consequence: String = str(payload.get("current_consequence", "Run-only purchase."))
+			return "%s\n\nCost: %d Run Ash\n%s\n\n%s\n\n[E] Buy this item" % [description, cost, shop_exact, shop_consequence]
 	return "%s\n\n[E] Use" % description
 
 func _route_description(choice: Dictionary) -> String:
@@ -328,9 +342,9 @@ func _route_description(choice: Dictionary) -> String:
 		"fountain":
 			return "Recover before descending."
 		"forge":
-			return "Reserved weapon chamber."
+			return "Choose one sword mark."
 		"shop":
-			return "Reserved merchant chamber."
+			return "Buy one useful item."
 	return str(choice.get("description", "Continue the run."))
 
 func _risk_text(room_type: String, rarity: String) -> String:
@@ -396,9 +410,9 @@ func _color_for_kind(kind: String) -> Color:
 			return Color(0.52, 0.72, 0.34, 0.96)
 		"fountain":
 			return Color(0.28, 0.62, 0.86, 0.96)
-		"forge":
+		"forge", "forge_mark":
 			return Color(0.90, 0.36, 0.12, 0.96)
-		"shop":
+		"shop", "shop_item":
 			return Color(0.62, 0.36, 0.86, 0.96)
 	return Color(0.75, 0.68, 0.56, 0.96)
 

@@ -102,9 +102,9 @@ func _draw_object(kind: String, base_color: Color, pulse: float) -> void:
 	match kind:
 		"fountain":
 			_draw_fountain(base_color, pulse)
-		"forge":
+		"forge", "forge_mark":
 			_draw_forge(base_color, pulse)
-		"shop":
+		"shop", "shop_item":
 			_draw_shop(base_color, pulse)
 		_:
 			_draw_reward(base_color, pulse)
@@ -137,19 +137,22 @@ func _draw_shop(base_color: Color, pulse: float) -> void:
 func _draw_prompt(title: String, base_color: Color) -> void:
 	var font: Font = ThemeDB.fallback_font
 	var kind: String = str(payload.get("kind", "object"))
-	var rect: Rect2 = Rect2(Vector2(-112.0, 30.0), Vector2(224.0, 58.0 if kind == "reward" else 46.0))
+	var has_meta: bool = kind == "reward" or kind == "forge_mark" or kind == "shop_item"
+	var rect: Rect2 = Rect2(Vector2(-112.0, 30.0), Vector2(224.0, 58.0 if has_meta else 46.0))
 	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.88), true)
 	draw_rect(rect, Color(base_color.r, base_color.g, base_color.b, 0.82), false, 1.5)
 	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 16.0), title.to_upper(), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 12, Color(1.0, 0.90, 0.68, 1.0))
-	if kind == "reward":
+	if has_meta:
 		var meta: String = "%s · %s" % [str(payload.get("rarity", "common")).to_upper(), str(payload.get("category", "Boon")).to_upper()]
+		if kind == "shop_item":
+			meta = "COST %d RUN ASH" % int(payload.get("cost", 0))
 		draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 34.0), meta, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 10, Color(0.80, 0.72, 0.58, 0.96))
 	var prompt: String = _prompt_text_for_kind(kind)
 	if _used:
 		prompt = "USED"
 	elif not _player_in_range:
 		prompt = "APPROACH"
-	var prompt_y: float = rect.position.y + (52.0 if kind == "reward" else 38.0)
+	var prompt_y: float = rect.position.y + (52.0 if has_meta else 38.0)
 	draw_string(font, Vector2(rect.position.x + 8.0, prompt_y), prompt, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 11, Color(0.72, 0.94, 1.0, 1.0 if _player_in_range else 0.68))
 
 func _prompt_text_for_kind(kind: String) -> String:
@@ -160,8 +163,12 @@ func _prompt_text_for_kind(kind: String) -> String:
 			return "[E] DRINK"
 		"forge":
 			return "[E] INSPECT"
+		"forge_mark":
+			return "[E] FORGE"
 		"shop":
 			return "[E] INSPECT"
+		"shop_item":
+			return "[E] BUY"
 	return "[E] USE"
 
 func _color_for_kind(kind: String) -> Color:
@@ -170,9 +177,9 @@ func _color_for_kind(kind: String) -> Color:
 			return _color_for_reward_category(str(payload.get("category", "Utility")))
 		"fountain":
 			return Color(0.28, 0.62, 0.86, 1.0)
-		"forge":
+		"forge", "forge_mark":
 			return Color(0.90, 0.36, 0.12, 1.0)
-		"shop":
+		"shop", "shop_item":
 			return Color(0.62, 0.36, 0.86, 1.0)
 	return Color(0.78, 0.72, 0.62, 1.0)
 
