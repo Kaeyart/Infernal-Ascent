@@ -49,6 +49,11 @@ signal combat_room_cleared()
 @export var use_safe_route_gate_sockets: bool = true
 @export var strip_authoring_overlay_text_in_play: bool = true
 
+@export_category("V23 Boss Arena")
+@export var boss_arena_player_entry_offset: Vector2 = Vector2(0.0, 132.0)
+@export var boss_arena_boss_spawn_offset: Vector2 = Vector2(0.0, -126.0)
+@export var boss_arena_exit_offset: Vector2 = Vector2(0.0, -210.0)
+
 var room_root: Node = null
 var player_node: Node2D = null
 var patron_flow_node: IsoPatronFlowController = null
@@ -215,7 +220,9 @@ func _find_or_create_player(player_spawn: Node2D) -> Node2D:
 		found_player = physics_player
 		print("[IsoRuntimeAdapter] Created IsoPhysicsTestPlayer.")
 	if found_player != null and move_existing_nodes_to_markers:
-		if player_spawn != null:
+		if _active_room_type == "boss_arena":
+			found_player.global_position = _get_variant_player_spawn_position()
+		elif player_spawn != null:
 			found_player.global_position = player_spawn.global_position
 		elif enforce_v17_layout_positions:
 			found_player.global_position = _get_variant_player_spawn_position()
@@ -477,6 +484,8 @@ func _select_variant_for_room_type(room_type: String, depth: int) -> String:
 			return "cold_forge"
 		"shop":
 			return "silent_shop"
+		"boss_arena":
+			return "sentencing_furnace"
 		"choice":
 			return "route_gate_crossing"
 	var variants: Array[String] = ["ash_intake_hall", "cinder_drain", "furnace_vestibule", "chain_reservoir", "ember_sorting_floor", "penitent_crossing"]
@@ -687,6 +696,8 @@ func get_reward_socket_position() -> Vector2:
 	match _active_room_type:
 		"boss_antechamber":
 			return _clamp_to_demo_floor(origin + Vector2(0.0, -72.0))
+		"boss_arena":
+			return get_boss_spawn_position()
 		"fountain":
 			return _clamp_to_demo_floor(origin + Vector2(0.0, -66.0))
 		"forge":
@@ -694,6 +705,14 @@ func get_reward_socket_position() -> Vector2:
 		"shop":
 			return _clamp_to_demo_floor(origin + Vector2(0.0, -72.0))
 	return _clamp_to_demo_floor(origin + Vector2(0.0, -68.0))
+
+func get_boss_spawn_position() -> Vector2:
+	var origin: Vector2 = _fallback_room_center()
+	return _clamp_to_demo_floor(origin + boss_arena_boss_spawn_offset)
+
+func get_boss_exit_position() -> Vector2:
+	var origin: Vector2 = _fallback_room_center()
+	return _clamp_to_demo_floor(origin + boss_arena_exit_offset)
 
 func get_boss_gate_position() -> Vector2:
 	# V22.3: dedicated safe socket for the sealed Ash Warden gate.
@@ -708,6 +727,8 @@ func _get_variant_player_spawn_position() -> Vector2:
 	match _active_room_variant:
 		"reward_altar", "ash_fountain", "cold_forge", "silent_shop", "route_gate_crossing", "boss_antechamber":
 			return c + Vector2(0.0, 100.0)
+		"sentencing_furnace":
+			return _clamp_to_demo_floor(c + boss_arena_player_entry_offset)
 	return c + Vector2(0.0, 112.0)
 
 func get_room_center_position() -> Vector2:

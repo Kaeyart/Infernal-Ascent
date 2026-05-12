@@ -102,6 +102,8 @@ func _draw_object(kind: String, base_color: Color, pulse: float) -> void:
 	match kind:
 		"boss_antechamber":
 			_draw_sealed_gate(base_color, pulse)
+		"boss_exit":
+			_draw_boss_exit(base_color, pulse)
 		"fountain":
 			_draw_fountain(base_color, pulse)
 		"forge", "forge_mark":
@@ -145,10 +147,17 @@ func _draw_sealed_gate(base_color: Color, pulse: float) -> void:
 	draw_line(Vector2(-22.0, -52.0), Vector2(22.0, -52.0), Color(1.0, 0.86, 0.52, 0.95), 2.0)
 	draw_arc(Vector2(0.0, -92.0), 36.0, PI, TAU, 24, Color(0.86, 0.70, 0.42, 0.76), 2.0)
 
+func _draw_boss_exit(base_color: Color, pulse: float) -> void:
+	draw_circle(Vector2(0.0, -44.0), 34.0 + pulse * 4.0, Color(0.35, 0.72, 1.0, 0.14 + pulse * 0.08))
+	draw_rect(Rect2(Vector2(-30.0, -78.0), Vector2(60.0, 68.0)), Color(0.020, 0.030, 0.040, 0.94), true)
+	draw_rect(Rect2(Vector2(-30.0, -78.0), Vector2(60.0, 68.0)), base_color, false, 2.0)
+	draw_line(Vector2(-18.0, -44.0), Vector2(18.0, -44.0), Color(0.76, 0.94, 1.0, 0.92), 2.0)
+	draw_line(Vector2(0.0, -62.0), Vector2(0.0, -26.0), Color(0.76, 0.94, 1.0, 0.92), 2.0)
+
 func _draw_prompt(title: String, base_color: Color) -> void:
 	var font: Font = ThemeDB.fallback_font
 	var kind: String = str(payload.get("kind", "object"))
-	if kind == "boss_antechamber":
+	if kind == "boss_antechamber" or kind == "boss_exit":
 		_draw_boss_gate_name(title, base_color)
 		return
 	var has_meta: bool = kind == "reward" or kind == "forge_mark" or kind == "shop_item"
@@ -185,6 +194,8 @@ func _prompt_text_for_kind(kind: String) -> String:
 	match kind:
 		"boss_antechamber":
 			return "[E] APPROACH"
+		"boss_exit":
+			return "[E] RETURN"
 		"reward":
 			return "[E] CLAIM"
 		"fountain":
@@ -203,6 +214,8 @@ func _color_for_kind(kind: String) -> Color:
 	match kind:
 		"boss_antechamber":
 			return Color(0.86, 0.70, 0.42, 1.0)
+		"boss_exit":
+			return Color(0.35, 0.70, 0.95, 1.0)
 		"reward":
 			return _color_for_reward_category(str(payload.get("category", "Utility")))
 		"fountain":

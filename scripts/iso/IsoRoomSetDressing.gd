@@ -63,6 +63,8 @@ func _draw() -> void:
 			_draw_route_crossing()
 		"boss_antechamber":
 			_draw_boss_antechamber_placeholder()
+		"sentencing_furnace":
+			_draw_sentencing_furnace()
 		_:
 			_draw_ash_intake_hall()
 	if debug_labels:
@@ -217,6 +219,27 @@ func _draw_boss_antechamber_placeholder() -> void:
 	_draw_gate_socket(Vector2(0.0, -92.0), Color(0.86, 0.70, 0.42, 0.20))
 	_draw_hanging_chain(Vector2(-74.0, -158.0), 62.0)
 	_draw_hanging_chain(Vector2(74.0, -158.0), 62.0)
+
+
+func _draw_sentencing_furnace() -> void:
+	# V23 boss arena placeholder: clear arena composition without boss AI.
+	_draw_room_title_sigil(Vector2(0.0, -226.0), "W")
+	_draw_sigil_circle(Vector2(0.0, -118.0), 168.0, Color(0.90, 0.54, 0.18, 0.22))
+	_draw_sigil_circle(Vector2(0.0, -118.0), 92.0, Color(0.86, 0.70, 0.42, 0.16))
+	_draw_gate_socket(Vector2(0.0, -214.0), Color(0.86, 0.70, 0.42, 0.28))
+	_draw_gate_socket(Vector2(0.0, 132.0), Color(0.32, 0.58, 0.72, 0.18))
+	_draw_furnace(Vector2(-238.0, -158.0))
+	_draw_furnace(Vector2(238.0, -158.0))
+	_draw_hanging_chain(Vector2(-178.0, -252.0), 142.0)
+	_draw_hanging_chain(Vector2(178.0, -252.0), 142.0)
+	_draw_chain_on_floor(Vector2(-224.0, -10.0), Vector2(-40.0, 88.0))
+	_draw_chain_on_floor(Vector2(224.0, -10.0), Vector2(40.0, 88.0))
+	_draw_grate(Vector2(0.0, -38.0), 176.0, 52.0)
+	_draw_pedestal_socket(Vector2(-138.0, -112.0), Color(0.92, 0.38, 0.14, 0.24))
+	_draw_pedestal_socket(Vector2(138.0, -112.0), Color(0.92, 0.38, 0.14, 0.24))
+	_draw_pedestal_socket(Vector2(0.0, -176.0), Color(0.92, 0.38, 0.14, 0.24))
+	_draw_ash_pile(Vector2(-260.0, 70.0), 44.0)
+	_draw_ash_pile(Vector2(260.0, 70.0), 44.0)
 
 func _draw_route_crossing() -> void:
 	# V22.2: route choice uses the authored room as the scene. We draw only subtle sockets.

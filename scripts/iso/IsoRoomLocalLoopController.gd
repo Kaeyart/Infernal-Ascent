@@ -1,11 +1,10 @@
 extends Node2D
-
-class_name IsoRoomLocalLoopController
 ## V14 — Run Flow Consistency Pass.
 ## V19 — Reward Consistency Pass extends the existing loop with a standardized temporary reward catalogue.
 ## V20 — Demo Run Length Lock makes the run reach a predictable boss-antechamber placeholder after four rooms.
 ## V21 — Fountain / Shop / Forge Functional Pass makes support rooms useful instead of placeholders.
 ## V22.2 — Presentation cleanup removes residual debug overlays and anchors route/boss gates inside the room.
+## V23 — Boss Arena V1 adds the Sentencing Furnace placeholder arena.
 ## Owns the local Circle 0 demo run state machine. This script intentionally does not add
 ## new enemies, art, boss logic, sound, or save logic.
 
@@ -21,6 +20,7 @@ enum RunPhase {
 	SHOP,
 	FORGE,
 	BOSS_LOCKED_PLACEHOLDER,
+	BOSS_ARENA_PLACEHOLDER,
 	RUN_VICTORY,
 	RUN_DEATH,
 	RETURN_TO_HUB,
@@ -39,6 +39,12 @@ enum RunPhase {
 @export var demo_rooms_before_boss: int = 4
 @export var boss_antechamber_variant: String = "boss_antechamber"
 @export var boss_placeholder_completes_run: bool = true
+
+@export_category("V23 Boss Arena")
+@export var boss_arena_enabled_v23: bool = true
+@export var boss_arena_variant: String = "sentencing_furnace"
+@export var boss_placeholder_max_health: int = 100
+@export var boss_exit_position_offset: Vector2 = Vector2(0.0, -170.0)
 @export var force_demo_route_pattern: bool = true
 
 @export_category("V21 Support Rooms")
@@ -102,6 +108,8 @@ var _current_gate_choices: Array[Dictionary] = []
 var _last_selected_gate_name: String = ""
 var _room_completion_pending: bool = false
 var _route_choice_spawn_pending: bool = false
+var _boss_placeholder: Node2D = null
+var _boss_exit: RunRoomInteractable = null
 var _phase_serial: int = 0
 var hud_layer: CanvasLayer = null
 var hud_label: Label = null
@@ -166,6 +174,8 @@ func _reset_run_counters() -> void:
 	_room_completion_pending = false
 	_route_choice_spawn_pending = false
 	_return_input_armed = false
+	_boss_placeholder = null
+	_boss_exit = null
 
 func _create_shared_manager() -> void:
 	shared_patron_manager = PatronRunManager.new()
@@ -682,11 +692,100 @@ func _enter_boss_antechamber_placeholder() -> void:
 func _on_boss_antechamber_used(_payload: Dictionary) -> void:
 	if current_phase != RunPhase.BOSS_LOCKED_PLACEHOLDER:
 		return
-	if not boss_placeholder_completes_run:
-		last_status = "The Ash Warden gate is sealed until the boss milestone."
-		_update_hud()
+	if not boss_arena_enabled_v23:
+		if not boss_placeholder_completes_run:
+			last_status = "The Ash Warden gate is sealed until the boss milestone."
+			_update_hud()
+			return
+		_complete_current_room("Sealed Ash Warden gate reached")
 		return
-	_complete_current_room("Sealed Ash Warden gate reached")
+	_enter_boss_arena_placeholder()
+
+func _enter_boss_arena_placeholder() -> void:
+	current_room_type = "boss_arena"
+	current_room_variant = boss_arena_variant
+	last_room_title = "The Sentencing Furnace"
+	_room_completion_pending = false
+	_route_choice_spawn_pending = false
+	_clear_route_runtime_nodes()
+	_set_phase(RunPhase.ROOM_INTRO, "Entering the Sentencing Furnace.")
+	if runtime_adapter != null:
+		runtime_adapter.configure_room_presentation(current_room_type, current_depth, current_room_variant)
+		runtime_adapter.prepare_non_combat_room()
+	_show_intro(last_room_title, "Boss arena placeholder · door locked")
+	_spawn_boss_placeholder()
+	last_status = "The Ash Warden placeholder waits. Break the furnace seal to open the victory exit."
+	_set_phase(RunPhase.BOSS_ARENA_PLACEHOLDER, last_status)
+	_debug(last_status)
+
+func _spawn_boss_placeholder() -> void:
+	_clear_boss_placeholder_nodes()
+	var data: Dictionary = {
+		"kind": "boss_placeholder",
+		"display_name": "Ash Warden Seal",
+		"description": "A chained furnace seal holds the Ash Warden in place until V24 replaces this placeholder with the real boss fight.",
+		"exact_effect": "Press E to break the placeholder seal and open the victory exit.",
+		"current_consequence": "V23 is arena-only. V24 implements the real Ash Warden AI and damage phases.",
+		"icon": "W",
+	}
+	var boss: RunRoomInteractable = RunRoomInteractable.new()
+	boss.name = "AshWardenBossPlaceholder"
+	boss.add_to_group("boss_placeholder")
+	_get_runtime_parent().add_child(boss)
+	boss.setup(data, _get_boss_spawn_position())
+	boss.activated.connect(_on_boss_placeholder_interactable_used)
+	if boss.has_signal("focus_changed"):
+		boss.focus_changed.connect(_on_interactable_focus_changed)
+	_active_interactables.append(boss)
+	_boss_placeholder = boss
+
+func _on_boss_placeholder_interactable_used(_payload: Dictionary) -> void:
+	_on_boss_placeholder_defeated()
+
+func _on_boss_placeholder_defeated() -> void:
+	if current_phase != RunPhase.BOSS_ARENA_PLACEHOLDER:
+		return
+	last_status = "The Ash Warden placeholder seal breaks. The exit has opened."
+	_spawn_boss_victory_exit()
+	_update_hud()
+
+func _spawn_boss_victory_exit() -> void:
+	if _boss_exit != null and is_instance_valid(_boss_exit):
+		return
+	var data: Dictionary = {
+		"kind": "boss_exit",
+		"display_name": "Exit to Threshold Nave",
+		"description": "The boss arena placeholder is complete. Return with the current demo victory.",
+		"exact_effect": "Complete the demo route and return to the hub.",
+		"current_consequence": "V24 replaces this placeholder with the real Ash Warden fight.",
+		"icon": "X",
+	}
+	var item: RunRoomInteractable = RunRoomInteractable.new()
+	_get_runtime_parent().add_child(item)
+	item.setup(data, _get_boss_exit_position())
+	item.activated.connect(_on_boss_victory_exit_used)
+	if item.has_signal("focus_changed"):
+		item.focus_changed.connect(_on_interactable_focus_changed)
+	_active_interactables.append(item)
+	_boss_exit = item
+
+func _on_boss_victory_exit_used(_payload: Dictionary) -> void:
+	if current_phase != RunPhase.BOSS_ARENA_PLACEHOLDER:
+		return
+	_finish_local_run(true, "The Sentencing Furnace placeholder is complete.")
+
+func _clear_boss_placeholder_nodes() -> void:
+	if _boss_placeholder != null and is_instance_valid(_boss_placeholder):
+		_boss_placeholder.queue_free()
+	_boss_placeholder = null
+	if _boss_exit != null and is_instance_valid(_boss_exit):
+		_boss_exit.queue_free()
+	_boss_exit = null
+	var nodes: Array[Node] = []
+	_collect_nodes(get_parent(), nodes)
+	for node: Node in nodes:
+		if node.is_in_group("boss_placeholder"):
+			node.queue_free()
 
 func _build_gate_choices() -> Array[Dictionary]:
 	_choice_generation_index += 1
@@ -774,6 +873,8 @@ func _room_choice(room_type: String) -> Dictionary:
 			return {"room_type": "shop", "display_name": "Shop", "description": "Buy one item with Run Ash", "icon": "S", "rarity": "rare"}
 		"boss_antechamber":
 			return {"room_type": "boss_antechamber", "display_name": "Boss Antechamber", "description": "The Ash Warden gate", "icon": "B", "rarity": "boss"}
+		"boss_arena":
+			return {"room_type": "boss_arena", "display_name": "The Sentencing Furnace", "description": "Ash Warden boss arena", "icon": "W", "rarity": "boss"}
 	return {"room_type": "combat", "display_name": "Combat", "description": "More ash-born enemies", "icon": "C", "rarity": "common"}
 
 func _reward_catalogue() -> Array[Dictionary]:
@@ -961,6 +1062,8 @@ func _finish_local_run(victory: bool = true, reason: String = "") -> void:
 	_room_completion_pending = false
 	_route_choice_spawn_pending = false
 	_return_input_armed = false
+	_boss_placeholder = null
+	_boss_exit = null
 	_clear_route_runtime_nodes()
 	if runtime_adapter != null:
 		runtime_adapter.clear_runtime_dangers()
@@ -984,7 +1087,7 @@ func _record_run_results(victory: bool = true) -> void:
 		"patron": "Local Route Loop",
 		"boon": _reward_display_summary(),
 		"victory": victory,
-		"notes": "V21 support rooms functional pass returned to the Threshold Nave.",
+		"notes": "V23 boss arena placeholder returned to the Threshold Nave.",
 		"run_ash_remaining": run_ash_shards,
 		"forge_mark": active_forge_mark,
 		"shop_purchases": shop_purchases,
@@ -1069,6 +1172,8 @@ func _display_room_type(room_type: String) -> String:
 			return "Route Choice"
 		"boss_antechamber":
 			return "Boss Antechamber"
+		"boss_arena":
+			return "Boss Arena"
 	return room_type.capitalize()
 
 func _show_intro(title: String, subtitle: String) -> void:
@@ -1095,6 +1200,20 @@ func _get_reward_position() -> Vector2:
 	if runtime_adapter != null:
 		return runtime_adapter.get_reward_socket_position()
 	return Vector2.ZERO
+
+func _get_boss_spawn_position() -> Vector2:
+	if runtime_adapter != null and runtime_adapter.has_method("get_boss_spawn_position"):
+		var adapter_pos: Variant = runtime_adapter.call("get_boss_spawn_position")
+		if adapter_pos is Vector2:
+			return adapter_pos
+	return _get_boss_gate_position()
+
+func _get_boss_exit_position() -> Vector2:
+	if runtime_adapter != null and runtime_adapter.has_method("get_boss_exit_position"):
+		var adapter_pos: Variant = runtime_adapter.call("get_boss_exit_position")
+		if adapter_pos is Vector2:
+			return adapter_pos
+	return _get_boss_gate_position() + boss_exit_position_offset
 
 func _get_boss_gate_position() -> Vector2:
 	# V22.3 parser hotfix: V22.2 called this helper but did not define it.
@@ -1131,6 +1250,7 @@ func _find_player_node() -> Node:
 
 func _clear_route_runtime_nodes() -> void:
 	_clear_focus_panel()
+	_clear_boss_placeholder_nodes()
 	for gate: RunChoiceGate in _active_gates:
 		if gate != null and is_instance_valid(gate):
 			gate.queue_free()
@@ -1272,6 +1392,8 @@ func _phase_label() -> String:
 			return "FORGE"
 		RunPhase.BOSS_LOCKED_PLACEHOLDER:
 			return "BOSS LOCKED PLACEHOLDER"
+		RunPhase.BOSS_ARENA_PLACEHOLDER:
+			return "BOSS ARENA PLACEHOLDER"
 		RunPhase.RUN_VICTORY:
 			return "RUN VICTORY"
 		RunPhase.RUN_DEATH:
@@ -1305,7 +1427,9 @@ func _objective_text() -> String:
 		RunPhase.SHOP:
 			return "Buy one merchant item with Run Ash."
 		RunPhase.BOSS_LOCKED_PLACEHOLDER:
-			return "You reached the Ash Warden gate. Press E at the seal to complete the locked demo route."
+			return "You reached the Ash Warden gate. Press E at the seal to enter the Sentencing Furnace placeholder."
+		RunPhase.BOSS_ARENA_PLACEHOLDER:
+			return "Break the Ash Warden placeholder seal, then use the exit marker."
 		RunPhase.RUN_VICTORY:
 			return "Run complete. Press E to return to the Threshold Nave."
 		RunPhase.RUN_DEATH:
