@@ -2,6 +2,10 @@ extends CharacterBody2D
 
 class_name IsoPhysicsTestPlayer
 
+signal damaged(amount: int, remaining_health: int)
+signal died
+signal respawned
+
 @export var move_speed: float = 260.0
 @export var attack_radius: float = 82.0
 @export var attack_damage: int = 1
@@ -9,6 +13,12 @@ class_name IsoPhysicsTestPlayer
 @export var heavy_attack_damage: int = 2
 @export var heavy_attack_cooldown: float = 0.52
 @export var heavy_attack_radius_multiplier: float = 1.15
+
+@export_category("Player Health")
+@export var max_health: int = 6
+@export var contact_damage_iframe_duration: float = 0.55
+@export var hit_flash_duration: float = 0.16
+@export var show_player_health_bar: bool = true
 
 @export_category("Collision")
 @export var auto_create_collision_shape: bool = true
@@ -80,6 +90,10 @@ class_name IsoPhysicsTestPlayer
 
 var facing: Vector2 = Vector2(1.0, 1.0).normalized()
 
+var current_health: int = 0
+var _damage_iframe_remaining: float = 0.0
+var _hit_flash_remaining: float = 0.0
+
 var _attack_cooldown_remaining: float = 0.0
 var _attack_flash_remaining: float = 0.0
 var _heavy_attack_cooldown_remaining: float = 0.0
@@ -143,6 +157,8 @@ const _ANIM_FRAMES: Dictionary = {
 
 func _ready() -> void:
 	add_to_group("player")
+	if current_health <= 0:
+		current_health = max_health
 	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
 	safe_margin = physics_safe_margin
 	if auto_create_collision_shape:
@@ -174,6 +190,10 @@ func _update_timers(delta: float) -> void:
 		_attack_flash_remaining = maxf(0.0, _attack_flash_remaining - delta)
 	if _animation_lock_remaining > 0.0:
 		_animation_lock_remaining = maxf(0.0, _animation_lock_remaining - delta)
+	if _damage_iframe_remaining > 0.0:
+		_damage_iframe_remaining = maxf(0.0, _damage_iframe_remaining - delta)
+	if _hit_flash_remaining > 0.0:
+		_hit_flash_remaining = maxf(0.0, _hit_flash_remaining - delta)
 
 func _update_movement() -> bool:
 	if _is_dead:
@@ -329,7 +349,14 @@ func _apply_active_attack_hit() -> void:
 		if not _is_target_inside_attack_hitbox(target, _active_attack_radius, _active_attack_arc_degrees):
 			continue
 		_active_attack_hit_targets[target_id] = true
-		target.call("take_damage", _active_attack_damage)
+		_deliver_attack_damage_to_target(target)
+
+
+func _deliver_attack_damage_to_target(target: Node2D) -> void:
+	if target.has_method("receive_player_hit"):
+		target.call("receive_player_hit", _active_attack_damage, global_position, facing, _active_attack_anim)
+		return
+	target.call("take_damage", _active_attack_damage)
 
 func _is_target_inside_attack_hitbox(target: Node2D, active_radius: float, arc_degrees: float) -> bool:
 	var to_target: Vector2 = target.global_position - global_position
@@ -380,24 +407,57 @@ func _find_nearest_attack_target(max_distance: float) -> Node2D:
 			nearest_target = target
 	return nearest_target
 
-func take_damage(_amount: int = 1) -> void:
+func take_damage(amount: int = 1) -> bool:
 	if _is_dead:
-		return
+		return false
+	if amount <= 0:
+		return false
 	if _is_dash_invulnerable():
-		return
+		return false
+	if _damage_iframe_remaining > 0.0:
+		return false
+
+	current_health = max(0, current_health - amount)
+	_damage_iframe_remaining = contact_damage_iframe_duration
+	_hit_flash_remaining = hit_flash_duration
 	_clear_active_attack()
+	emit_signal("damaged", amount, current_health)
+
+	if current_health <= 0:
+		play_death_animation()
+		return true
+
 	_lock_animation("hit", _PRIORITY_HIT, _get_animation_duration("hit"), false, false)
+	return true
+
+func heal_full() -> void:
+	current_health = max_health
+	_is_dead = false
+	_damage_iframe_remaining = 0.0
+	_hit_flash_remaining = 0.0
+	queue_redraw()
+
+func get_health_text() -> String:
+	return "%d/%d" % [current_health, max_health]
 
 func play_death_animation() -> void:
+	if _is_dead:
+		return
 	_is_dead = true
 	velocity = Vector2.ZERO
 	_dash_remaining = 0.0
+	_damage_iframe_remaining = 0.0
 	_clear_active_attack()
+	emit_signal("died")
 	_lock_animation("death", _PRIORITY_DEATH, _get_animation_duration("death"), true, true)
 
 func play_respawn_animation() -> void:
 	_is_dead = false
+	current_health = max_health
+	_damage_iframe_remaining = 0.0
+	_hit_flash_remaining = 0.0
 	_clear_active_attack()
+	emit_signal("respawned")
 	_lock_animation("respawn", _PRIORITY_RESPAWN, _get_animation_duration("respawn"), false, true)
 
 func _update_visual_animation(delta: float, moving: bool) -> void:
@@ -628,6 +688,12 @@ func _load_texture_if_exists(path: String) -> Texture2D:
 
 func _draw() -> void:
 	_draw_filled_ellipse(Rect2(Vector2(-20.0, 10.0), Vector2(40.0, 13.0)), Color(0.0, 0.0, 0.0, 0.34))
+	if _hit_flash_remaining > 0.0:
+		draw_arc(Vector2.ZERO, collision_radius + 14.0, 0.0, TAU, 28, Color(1.0, 0.35, 0.22, 0.78), 3.0)
+	elif _damage_iframe_remaining > 0.0:
+		draw_arc(Vector2.ZERO, collision_radius + 12.0, 0.0, TAU, 28, Color(0.55, 0.75, 1.0, 0.42), 2.0)
+	if show_player_health_bar:
+		_draw_player_health_bar()
 	if _attack_flash_remaining > 0.0:
 		draw_circle(Vector2.ZERO, attack_radius, Color(0.85, 0.62, 0.34, 0.10))
 		draw_arc(Vector2.ZERO, attack_radius, 0.0, TAU, 64, Color(0.95, 0.80, 0.48, 0.72), 2.0)
