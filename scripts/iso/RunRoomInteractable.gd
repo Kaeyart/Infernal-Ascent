@@ -100,6 +100,8 @@ func _draw_shadow() -> void:
 
 func _draw_object(kind: String, base_color: Color, pulse: float) -> void:
 	match kind:
+		"boss_antechamber":
+			_draw_sealed_gate(base_color, pulse)
 		"fountain":
 			_draw_fountain(base_color, pulse)
 		"forge", "forge_mark":
@@ -134,9 +136,21 @@ func _draw_shop(base_color: Color, pulse: float) -> void:
 	draw_circle(Vector2(0.0, -31.0), 12.0 + pulse * 2.0, Color(0.76, 0.48, 1.0, 0.48))
 	draw_string(ThemeDB.fallback_font, Vector2(-18.0, -15.0), "?", HORIZONTAL_ALIGNMENT_CENTER, 36.0, 18, Color(1.0, 0.86, 0.45, 1.0))
 
+func _draw_sealed_gate(base_color: Color, pulse: float) -> void:
+	# V22.2: boss placeholder is a physical sealed door inside the room, not a floating UI object.
+	draw_circle(Vector2(0.0, -50.0), 40.0 + pulse * 4.0, Color(0.95, 0.74, 0.36, 0.12 + pulse * 0.08))
+	draw_rect(Rect2(Vector2(-36.0, -92.0), Vector2(72.0, 84.0)), Color(0.035, 0.026, 0.018, 0.96), true)
+	draw_rect(Rect2(Vector2(-36.0, -92.0), Vector2(72.0, 84.0)), Color(0.86, 0.70, 0.42, 0.90), false, 2.0)
+	draw_line(Vector2(0.0, -86.0), Vector2(0.0, -16.0), Color(1.0, 0.86, 0.52, 0.95), 2.0)
+	draw_line(Vector2(-22.0, -52.0), Vector2(22.0, -52.0), Color(1.0, 0.86, 0.52, 0.95), 2.0)
+	draw_arc(Vector2(0.0, -92.0), 36.0, PI, TAU, 24, Color(0.86, 0.70, 0.42, 0.76), 2.0)
+
 func _draw_prompt(title: String, base_color: Color) -> void:
 	var font: Font = ThemeDB.fallback_font
 	var kind: String = str(payload.get("kind", "object"))
+	if kind == "boss_antechamber":
+		_draw_boss_gate_name(title, base_color)
+		return
 	var has_meta: bool = kind == "reward" or kind == "forge_mark" or kind == "shop_item"
 	var rect: Rect2 = Rect2(Vector2(-112.0, 30.0), Vector2(224.0, 58.0 if has_meta else 46.0))
 	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.88), true)
@@ -155,8 +169,22 @@ func _draw_prompt(title: String, base_color: Color) -> void:
 	var prompt_y: float = rect.position.y + (52.0 if has_meta else 38.0)
 	draw_string(font, Vector2(rect.position.x + 8.0, prompt_y), prompt, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 11, Color(0.72, 0.94, 1.0, 1.0 if _player_in_range else 0.68))
 
+func _draw_boss_gate_name(title: String, base_color: Color) -> void:
+	var font: Font = ThemeDB.fallback_font
+	var rect: Rect2 = Rect2(Vector2(-116.0, -136.0), Vector2(232.0, 30.0))
+	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.84), true)
+	draw_rect(rect, Color(base_color.r, base_color.g, base_color.b, 0.78), false, 1.4)
+	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 20.0), title.to_upper(), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 11, Color(1.0, 0.90, 0.68, 1.0))
+	if _player_in_range and not _used:
+		var prompt_rect: Rect2 = Rect2(Vector2(-74.0, 10.0), Vector2(148.0, 24.0))
+		draw_rect(prompt_rect, Color(0.018, 0.013, 0.010, 0.82), true)
+		draw_rect(prompt_rect, Color(base_color.r, base_color.g, base_color.b, 0.72), false, 1.2)
+		draw_string(font, Vector2(prompt_rect.position.x + 6.0, prompt_rect.position.y + 17.0), "[E] APPROACH", HORIZONTAL_ALIGNMENT_CENTER, prompt_rect.size.x - 12.0, 10, Color(0.72, 0.94, 1.0, 1.0))
+
 func _prompt_text_for_kind(kind: String) -> String:
 	match kind:
+		"boss_antechamber":
+			return "[E] APPROACH"
 		"reward":
 			return "[E] CLAIM"
 		"fountain":
@@ -173,6 +201,8 @@ func _prompt_text_for_kind(kind: String) -> String:
 
 func _color_for_kind(kind: String) -> Color:
 	match kind:
+		"boss_antechamber":
+			return Color(0.86, 0.70, 0.42, 1.0)
 		"reward":
 			return _color_for_reward_category(str(payload.get("category", "Utility")))
 		"fountain":

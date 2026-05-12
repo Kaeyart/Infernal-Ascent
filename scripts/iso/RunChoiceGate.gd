@@ -5,11 +5,13 @@ class_name RunChoiceGate
 signal gate_chosen(choice_data: Dictionary)
 signal gate_focus_changed(choice_data: Dictionary, focused: bool)
 
-@export var interact_radius: float = 92.0
-@export var gate_width: float = 106.0
-@export var gate_height: float = 136.0
+@export var interact_radius: float = 82.0
+@export var gate_width: float = 86.0
+@export var gate_height: float = 112.0
 @export var pulse_speed: float = 2.0
 @export var debug_draw_radius: bool = false
+@export var show_world_gate_label: bool = true
+@export var show_focus_prompt: bool = true
 
 var choice_data: Dictionary = {}
 var _time: float = 0.0
@@ -86,7 +88,10 @@ func _draw() -> void:
 		base_color = Color(0.34, 0.34, 0.34, 0.85)
 	_draw_shadow()
 	_draw_portal(base_color, pulse)
-	_draw_minimal_label(display_name, icon, base_color, pulse)
+	if show_world_gate_label:
+		_draw_minimal_label(display_name, icon, base_color, pulse)
+	elif show_focus_prompt and _player_in_range:
+		_draw_focus_prompt(base_color, pulse)
 	if debug_draw_radius:
 		draw_arc(Vector2.ZERO, interact_radius, 0.0, TAU, 64, Color(0.3, 0.8, 1.0, 0.65), 1.0)
 
@@ -99,23 +104,32 @@ func _draw_shadow() -> void:
 
 func _draw_portal(base_color: Color, pulse: float) -> void:
 	var portal_top: Vector2 = Vector2(0.0, -gate_height * 0.48)
-	var glow_alpha: float = 0.14 + pulse * 0.18
-	draw_rect(Rect2(Vector2(-gate_width * 0.48, -gate_height * 0.88), Vector2(gate_width * 0.96, gate_height * 0.86)), Color(base_color.r, base_color.g, base_color.b, glow_alpha), true)
-	draw_arc(portal_top, gate_width * 0.53, PI, TAU, 44, Color(base_color.r, base_color.g, base_color.b, 0.92), 4.0)
-	draw_line(Vector2(-gate_width * 0.53, portal_top.y), Vector2(-gate_width * 0.53, 0.0), Color(base_color.r, base_color.g, base_color.b, 0.92), 4.0)
-	draw_line(Vector2(gate_width * 0.53, portal_top.y), Vector2(gate_width * 0.53, 0.0), Color(base_color.r, base_color.g, base_color.b, 0.92), 4.0)
-	draw_arc(portal_top, gate_width * 0.66, PI, TAU, 44, Color(1.0, 0.82, 0.36, 0.45 if _player_in_range else 0.22), 2.0)
+	var glow_alpha: float = 0.07 + pulse * 0.08
+	draw_rect(Rect2(Vector2(-gate_width * 0.42, -gate_height * 0.82), Vector2(gate_width * 0.84, gate_height * 0.78)), Color(base_color.r, base_color.g, base_color.b, glow_alpha), true)
+	draw_arc(portal_top, gate_width * 0.50, PI, TAU, 44, Color(base_color.r, base_color.g, base_color.b, 0.82), 3.0)
+	draw_line(Vector2(-gate_width * 0.50, portal_top.y), Vector2(-gate_width * 0.50, 0.0), Color(base_color.r, base_color.g, base_color.b, 0.82), 3.0)
+	draw_line(Vector2(gate_width * 0.50, portal_top.y), Vector2(gate_width * 0.50, 0.0), Color(base_color.r, base_color.g, base_color.b, 0.82), 3.0)
+	draw_arc(portal_top, gate_width * 0.62, PI, TAU, 44, Color(1.0, 0.82, 0.36, 0.30 if _player_in_range else 0.12), 1.5)
 	if _player_in_range:
-		draw_rect(Rect2(Vector2(-gate_width * 0.62, -gate_height * 0.95), Vector2(gate_width * 1.24, gate_height * 1.00)), Color(1.0, 0.80, 0.28, 0.10 + pulse * 0.08), false, 3.0)
+		draw_arc(portal_top, gate_width * 0.72, PI, TAU, 44, Color(1.0, 0.80, 0.28, 0.26 + pulse * 0.10), 2.0)
+
+func _draw_focus_prompt(base_color: Color, pulse: float) -> void:
+	var font: Font = ThemeDB.fallback_font
+	var rect: Rect2 = Rect2(Vector2(-42.0, 20.0), Vector2(84.0, 24.0))
+	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.82), true)
+	draw_rect(rect, Color(base_color.r, base_color.g, base_color.b, 0.70 + pulse * 0.15), false, 1.4)
+	draw_string(font, Vector2(rect.position.x + 6.0, rect.position.y + 17.0), "[E] ENTER", HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 12.0, 11, Color(0.86, 0.94, 1.0, 1.0))
 
 func _draw_minimal_label(display_name: String, icon: String, base_color: Color, pulse: float) -> void:
+	# V22.2: keep the door name above the door, but do not turn the world-space gate into a second UI card.
 	var font: Font = ThemeDB.fallback_font
-	var rect: Rect2 = Rect2(Vector2(-92.0, 28.0), Vector2(184.0, 52.0))
-	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.86), true)
-	draw_rect(rect, Color(base_color.r, base_color.g, base_color.b, 0.82), false, 2.0)
-	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 18.0), "%s  %s" % [icon, display_name], HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 14, Color(1.0, 0.88, 0.64, 1.0))
-	var prompt: String = "[E] ENTER" if _player_in_range else "GATE"
-	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 40.0), prompt, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 12, Color(0.72, 0.92, 1.0, 1.0 if _player_in_range else 0.70))
+	var clean_name: String = display_name.to_upper()
+	var rect: Rect2 = Rect2(Vector2(-68.0, -142.0), Vector2(136.0, 24.0))
+	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.82), true)
+	draw_rect(rect, Color(base_color.r, base_color.g, base_color.b, 0.62 + pulse * 0.12), false, 1.25)
+	draw_string(font, Vector2(rect.position.x + 6.0, rect.position.y + 17.0), clean_name, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 12.0, 10, Color(1.0, 0.88, 0.64, 0.96))
+	if show_focus_prompt and _player_in_range:
+		_draw_focus_prompt(base_color, pulse)
 
 func _color_for_room_type(room_type: String) -> Color:
 	match room_type:

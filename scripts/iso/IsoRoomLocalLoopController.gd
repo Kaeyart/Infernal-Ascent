@@ -5,6 +5,7 @@ class_name IsoRoomLocalLoopController
 ## V19 — Reward Consistency Pass extends the existing loop with a standardized temporary reward catalogue.
 ## V20 — Demo Run Length Lock makes the run reach a predictable boss-antechamber placeholder after four rooms.
 ## V21 — Fountain / Shop / Forge Functional Pass makes support rooms useful instead of placeholders.
+## V22.2 — Presentation cleanup removes residual debug overlays and anchors route/boss gates inside the room.
 ## Owns the local Circle 0 demo run state machine. This script intentionally does not add
 ## new enemies, art, boss logic, sound, or save logic.
 
@@ -30,7 +31,7 @@ enum RunPhase {
 @export var return_to_hub_enabled: bool = true
 @export var hub_scene_path: String = "res://scenes/iso/hub/iso_hub_threshold_nave_v1.tscn"
 @export var ash_sigils_per_completed_run: int = 1
-@export var print_debug: bool = true
+@export var print_debug: bool = false
 @export var auto_start_run_on_ready: bool = true
 
 @export_category("V20 Demo Length Lock")
@@ -54,7 +55,7 @@ enum RunPhase {
 @export var gate_spawn_delay: float = 0.35
 @export var reward_choices_per_room: int = 3
 @export var heal_on_fountain_ratio: float = 0.55
-@export var show_route_debug_labels: bool = true
+@export var show_route_debug_labels: bool = false
 @export var force_first_choice_reward: bool = true
 
 @export_category("V11/V12/V13 Circle 0 Zone")
@@ -304,6 +305,8 @@ func _spawn_choice_gates_deferred(expected_phase_serial: int) -> void:
 	_set_phase(RunPhase.ROUTE_CHOICE, "Choose the next chamber.")
 	if runtime_adapter != null:
 		runtime_adapter.refresh_room_presentation_only("choice", current_depth, current_room_variant)
+		if runtime_adapter.has_method("hide_live_authoring_overlays"):
+			runtime_adapter.call("hide_live_authoring_overlays")
 	var choices: Array[Dictionary] = _build_gate_choices()
 	_current_gate_choices = choices.duplicate(true)
 	var positions: Array[Vector2] = _get_gate_positions()
@@ -312,11 +315,14 @@ func _spawn_choice_gates_deferred(expected_phase_serial: int) -> void:
 		var gate: RunChoiceGate = RunChoiceGate.new()
 		parent_node.add_child(gate)
 		gate.setup(choices[i], positions[i % positions.size()])
+		gate.show_world_gate_label = true
+		gate.show_focus_prompt = true
+		gate.debug_draw_radius = false
 		gate.gate_chosen.connect(_on_route_gate_chosen)
 		if gate.has_signal("gate_focus_changed"):
 			gate.gate_focus_changed.connect(_on_gate_focus_changed)
 		_active_gates.append(gate)
-	last_status = "Choose one of three physical gates. The HUD cards match the physical gates left-to-right."
+	last_status = "Choose one of the three physical gates. The bottom route cards match left, center, and right."
 	_room_completion_pending = false
 	_show_intro("Route Gate Crossing", "Choose the next chamber")
 	_debug("Spawned V14 route gates: %s" % str(choices))
@@ -667,7 +673,7 @@ func _enter_boss_antechamber_placeholder() -> void:
 		"description": "The demo run length is now locked. The Ash Warden fight is reserved for the boss milestones.",
 		"icon": "B",
 	}
-	_spawn_single_interactable(data, Vector2(0.0, -130.0), Callable(self, "_on_boss_antechamber_used"))
+	_spawn_single_interactable(data, _get_boss_gate_position(), Callable(self, "_on_boss_antechamber_used"))
 	_show_intro(last_room_title, "The first gatekeeper waits beyond this seal")
 	last_status = "Boss Antechamber reached. Press E at the sealed gate to complete the current demo route."
 	_set_phase(RunPhase.BOSS_LOCKED_PLACEHOLDER, last_status)
@@ -1089,6 +1095,20 @@ func _get_reward_position() -> Vector2:
 	if runtime_adapter != null:
 		return runtime_adapter.get_reward_socket_position()
 	return Vector2.ZERO
+
+func _get_boss_gate_position() -> Vector2:
+	# V22.3 parser hotfix: V22.2 called this helper but did not define it.
+	# Keep the sealed Ash Warden gate inside the current room using the adapter's safe socket.
+	if runtime_adapter != null:
+		if runtime_adapter.has_method("get_boss_gate_position"):
+			var adapter_pos: Variant = runtime_adapter.call("get_boss_gate_position")
+			if adapter_pos is Vector2:
+				return adapter_pos
+		if runtime_adapter.has_method("get_reward_socket_position"):
+			var fallback_pos: Variant = runtime_adapter.call("get_reward_socket_position")
+			if fallback_pos is Vector2:
+				return fallback_pos
+	return _get_reward_position()
 
 func _get_runtime_parent() -> Node:
 	var parent_node: Node = get_parent()

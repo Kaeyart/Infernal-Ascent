@@ -8,7 +8,7 @@ class_name IsoRoomSetDressing
 @export var variant: String = "ash_intake_hall"
 @export var depth: int = 1
 @export var debug_labels: bool = false
-@export var show_layout_readability_marks: bool = true
+@export var show_layout_readability_marks: bool = false
 
 var _time: float = 0.0
 
@@ -19,6 +19,7 @@ func setup(data: Dictionary) -> void:
 	variant = str(data.get("variant", variant))
 	depth = int(data.get("depth", depth))
 	debug_labels = bool(data.get("debug_labels", debug_labels))
+	show_layout_readability_marks = bool(data.get("show_layout_marks", show_layout_readability_marks))
 	add_to_group("circle0_room_dressing")
 	queue_redraw()
 
@@ -31,10 +32,14 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
-	_draw_floor_base()
-	_draw_boundary_language()
-	if show_layout_readability_marks:
-		_draw_layout_readability_marks()
+	var minimal_overlay: bool = variant == "route_gate_crossing" or variant == "boss_antechamber"
+	if not minimal_overlay:
+		_draw_floor_base()
+		_draw_boundary_language()
+		if show_layout_readability_marks:
+			_draw_layout_readability_marks()
+	else:
+		_draw_minimal_runtime_shadow()
 	match variant:
 		"cinder_drain":
 			_draw_cinder_drain()
@@ -56,6 +61,8 @@ func _draw() -> void:
 			_draw_shop_room()
 		"route_gate_crossing":
 			_draw_route_crossing()
+		"boss_antechamber":
+			_draw_boss_antechamber_placeholder()
 		_:
 			_draw_ash_intake_hall()
 	if debug_labels:
@@ -196,14 +203,27 @@ func _draw_shop_room() -> void:
 	_draw_candle_cluster(Vector2(0.0, 50.0))
 	_draw_sigil_circle(Vector2(0.0, -68.0), 108.0, Color(0.74, 0.50, 0.22, 0.18))
 
+func _draw_minimal_runtime_shadow() -> void:
+	# A very light grounding shadow only; no fake floor sheet over the authored room art.
+	var pts: PackedVector2Array = PackedVector2Array()
+	for i: int in range(48):
+		var a: float = TAU * float(i) / 48.0
+		pts.append(Vector2(cos(a) * 260.0, sin(a) * 88.0 - 10.0))
+	draw_colored_polygon(pts, Color(0.0, 0.0, 0.0, 0.10))
+
+func _draw_boss_antechamber_placeholder() -> void:
+	# The real arena comes in V23. This placeholder only marks the sealed centerline.
+	_draw_sigil_circle(Vector2(0.0, -74.0), 86.0, Color(0.86, 0.70, 0.42, 0.10))
+	_draw_gate_socket(Vector2(0.0, -92.0), Color(0.86, 0.70, 0.42, 0.20))
+	_draw_hanging_chain(Vector2(-74.0, -158.0), 62.0)
+	_draw_hanging_chain(Vector2(74.0, -158.0), 62.0)
+
 func _draw_route_crossing() -> void:
-	_draw_sigil_circle(Vector2(0.0, -122.0), 170.0, Color(0.78, 0.44, 0.22, 0.25))
-	_draw_gate_socket(Vector2(-220.0, -122.0), Color(0.80, 0.34, 0.16, 0.42))
-	_draw_gate_socket(Vector2(0.0, -182.0), Color(0.90, 0.58, 0.20, 0.42))
-	_draw_gate_socket(Vector2(220.0, -122.0), Color(0.80, 0.34, 0.16, 0.42))
-	_draw_wall_segment(Vector2(-260.0, -165.0), Vector2(-148.0, -230.0))
-	_draw_wall_segment(Vector2(260.0, -165.0), Vector2(148.0, -230.0))
-	_draw_hanging_chain(Vector2(0.0, -250.0), 86.0)
+	# V22.2: route choice uses the authored room as the scene. We draw only subtle sockets.
+	_draw_sigil_circle(Vector2(0.0, -86.0), 88.0, Color(0.78, 0.44, 0.22, 0.08))
+	_draw_gate_socket(Vector2(-142.0, -54.0), Color(0.80, 0.34, 0.16, 0.18))
+	_draw_gate_socket(Vector2(0.0, -98.0), Color(0.90, 0.58, 0.20, 0.18))
+	_draw_gate_socket(Vector2(142.0, -54.0), Color(0.80, 0.34, 0.16, 0.18))
 
 func _draw_zone_ellipse(pos: Vector2, radius: Vector2, fill: Color, outline: Color) -> void:
 	var pts: PackedVector2Array = PackedVector2Array()

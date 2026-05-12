@@ -12,7 +12,7 @@ signal combat_room_cleared()
 @export var move_existing_nodes_to_markers: bool = true
 @export var clear_room_when_test_enemies_dead: bool = true
 @export var hide_legacy_node2d_test_player: bool = true
-@export var debug_print_mapping: bool = true
+@export var debug_print_mapping: bool = false
 @export var player_node_name: String = "IsoPhysicsTestPlayer"
 @export var patron_flow_node_name: String = "PatronFlow"
 @export var marker_root_name: String = "Markers"
@@ -27,6 +27,7 @@ signal combat_room_cleared()
 @export var max_enemies_cycle_1: int = 2
 @export var max_enemies_cycle_2: int = 3
 @export var max_enemies_cycle_3_plus: int = 4
+@export var max_enemies_cycle_4_plus: int = 5
 @export var show_enemy_debug_ranges: bool = false
 @export var route_choice_flow_handles_room_clear: bool = true
 
@@ -41,6 +42,12 @@ signal combat_room_cleared()
 @export var hazard_debug_draw_radius: bool = false
 @export var hazard_draw_warning_labels: bool = true
 @export var elite_extra_hazard: bool = true
+
+@export_category("V22.2 Route Choice / Boss Presentation Cleanup")
+@export var hide_authoring_markers_in_play: bool = true
+@export var hide_legacy_patron_flow_visuals: bool = true
+@export var use_safe_route_gate_sockets: bool = true
+@export var strip_authoring_overlay_text_in_play: bool = true
 
 var room_root: Node = null
 var player_node: Node2D = null
@@ -62,6 +69,8 @@ func _ready() -> void:
 		return
 	if hide_legacy_node2d_test_player:
 		_hide_legacy_test_players()
+	if hide_authoring_markers_in_play:
+		hide_live_authoring_overlays()
 	_setup_runtime_nodes()
 
 func set_shared_patron_manager(manager: PatronRunManager) -> void:
@@ -106,6 +115,8 @@ func start_combat_encounter(cycle_index: int = 1) -> void:
 	_clear_existing_test_enemies()
 	_clear_existing_projectiles()
 	_clear_room_presentation_nodes()
+	if hide_authoring_markers_in_play:
+		hide_live_authoring_overlays()
 	_room_cleared = false
 	_alive_enemy_count = 0
 	_setup_runtime_nodes()
@@ -121,7 +132,10 @@ func prepare_non_combat_room() -> void:
 		return
 	_clear_existing_test_enemies()
 	_clear_existing_projectiles()
+	_clear_existing_hazards()
 	_clear_room_presentation_nodes()
+	if hide_authoring_markers_in_play:
+		hide_live_authoring_overlays()
 	_room_cleared = false
 	_alive_enemy_count = 0
 	var player_spawn: Node2D = _find_marker(["PlayerSpawn", "Player Spawn", "SpawnPlayer", "Spawn_Player", "player_spawn"])
@@ -139,6 +153,8 @@ func clear_runtime_dangers() -> void:
 	_clear_existing_hazards()
 
 func _setup_runtime_nodes() -> void:
+	if hide_authoring_markers_in_play:
+		hide_live_authoring_overlays()
 	var player_spawn: Node2D = _find_marker(["PlayerSpawn", "Player Spawn", "SpawnPlayer", "Spawn_Player", "player_spawn"])
 	var reward_socket: Node2D = _find_marker(["RewardSocket", "Reward Socket", "Reward", "BoonSocket", "Boon Socket", "AltarSocket", "Altar Socket"])
 	var door_left: Node2D = _find_marker(["DoorL", "Door L", "Door_Left", "DoorLeft", "LeftDoor", "DoorSocketLeft", "DoorSocket_L"])
@@ -217,6 +233,8 @@ func _find_or_create_patron_flow(reward_socket: Node2D, door_left: Node2D, door_
 		found_flow.position = Vector2.ZERO
 		print("[IsoRuntimeAdapter] Created PatronFlow.")
 	if found_flow != null:
+		if hide_legacy_patron_flow_visuals:
+			_hide_patron_flow_visuals(found_flow)
 		var shared_manager: PatronRunManager = _find_shared_patron_manager()
 		if shared_manager != null:
 			found_flow.set_manager(shared_manager)
@@ -299,25 +317,66 @@ func _get_encounter_profiles(marker_count: int) -> Array[String]:
 			legacy.append("ash_grunt")
 		return legacy
 	var max_count: int = max_enemies_cycle_3_plus
-	var profiles: Array[String] = []
+	var profiles: Array[String] = _get_v18_variant_profiles()
 	if _encounter_cycle_index <= 1:
 		max_count = max_enemies_cycle_1
-		profiles = ["ash_grunt", "ash_grunt"]
 	elif _encounter_cycle_index == 2:
 		max_count = max_enemies_cycle_2
-		profiles = ["ash_grunt", "cinder_lunger", "ash_grunt"]
-	else:
+	elif _encounter_cycle_index == 3:
 		max_count = max_enemies_cycle_3_plus
-		profiles = ["ash_grunt", "cinder_lunger", "ember_spitter", "ash_grunt"]
+	else:
+		max_count = max_enemies_cycle_4_plus
 	if _active_room_type == "elite_combat":
 		max_count += 1
-		profiles.append("cinder_lunger")
+		if not profiles.has("chainbound_penitent"):
+			profiles.append("chainbound_penitent")
+		if _encounter_cycle_index >= 3 and not profiles.has("bell_wretch"):
+			profiles.append("bell_wretch")
 	var final_count: int = mini(marker_count, maxi(1, max_count))
 	while profiles.size() > final_count:
 		profiles.pop_back()
 	while profiles.size() < final_count:
 		profiles.append("ash_grunt")
 	return profiles
+
+func _get_v18_variant_profiles() -> Array[String]:
+	# V18 enemy consistency rule: each room variant uses enemies for distinct pressure, not random soup.
+	if _encounter_cycle_index <= 1:
+		match _active_room_variant:
+			"furnace_vestibule", "ember_sorting_floor":
+				return ["ash_grunt", "furnace_imp"]
+			_:
+				return ["ash_grunt", "ash_grunt"]
+	if _encounter_cycle_index == 2:
+		match _active_room_variant:
+			"cinder_drain":
+				return ["ash_grunt", "cinder_lunger", "furnace_imp"]
+			"chain_reservoir":
+				return ["chainbound_penitent", "ash_grunt", "ash_grunt"]
+			_:
+				return ["ash_grunt", "cinder_lunger", "ash_grunt"]
+	if _encounter_cycle_index == 3:
+		match _active_room_variant:
+			"furnace_vestibule":
+				return ["furnace_imp", "furnace_imp", "ember_spitter", "ash_grunt"]
+			"chain_reservoir":
+				return ["chainbound_penitent", "ember_spitter", "ash_grunt", "furnace_imp"]
+			"ember_sorting_floor":
+				return ["ember_spitter", "cinder_lunger", "furnace_imp", "ash_grunt"]
+			_:
+				return ["ash_grunt", "cinder_lunger", "ember_spitter", "furnace_imp"]
+	match _active_room_variant:
+		"cinder_drain":
+			return ["cinder_lunger", "cinder_lunger", "ash_grunt", "furnace_imp", "bell_wretch"]
+		"furnace_vestibule":
+			return ["furnace_imp", "furnace_imp", "ember_spitter", "chainbound_penitent", "ash_grunt"]
+		"chain_reservoir":
+			return ["chainbound_penitent", "ash_grunt", "ember_spitter", "bell_wretch", "furnace_imp"]
+		"ember_sorting_floor":
+			return ["ember_spitter", "furnace_imp", "cinder_lunger", "ash_grunt", "bell_wretch"]
+		"penitent_crossing":
+			return ["chainbound_penitent", "cinder_lunger", "ash_grunt", "furnace_imp", "bell_wretch"]
+	return ["ash_grunt", "cinder_lunger", "ember_spitter", "furnace_imp", "chainbound_penitent"]
 
 func _spawn_room_presentation_nodes(include_hazards: bool) -> void:
 	if not enable_room_presentation:
@@ -431,6 +490,16 @@ func _clear_existing_test_enemies() -> void:
 	var group_nodes: Array[Node] = get_tree().get_nodes_in_group("iso_test_enemy")
 	for node: Node in group_nodes:
 		if _is_node_inside_room(node):
+			node.queue_free()
+	# V22.2: clear any leftover runtime enemies that were not tracked in spawned_enemies.
+	var nodes: Array[Node] = []
+	_collect_nodes(room_root if room_root != null else self, nodes)
+	for node: Node in nodes:
+		if node is IsoTestEnemy:
+			node.queue_free()
+			continue
+		var n: String = _normalize_marker_name(node.name)
+		if n.begins_with("isotestenemy"):
 			node.queue_free()
 
 func _clear_existing_projectiles() -> void:
@@ -582,8 +651,12 @@ func _normalize_marker_name(value: String) -> String:
 
 func get_choice_gate_positions() -> Array[Vector2]:
 	var origin: Vector2 = _fallback_room_center()
-	if _active_room_variant == "route_gate_crossing":
-		return [origin + Vector2(-220.0, -122.0), origin + Vector2(0.0, -182.0), origin + Vector2(220.0, -122.0)]
+	if use_safe_route_gate_sockets or _active_room_variant == "route_gate_crossing":
+		return [
+			_clamp_to_demo_floor(origin + Vector2(-142.0, -54.0)),
+			_clamp_to_demo_floor(origin + Vector2(0.0, -98.0)),
+			_clamp_to_demo_floor(origin + Vector2(142.0, -54.0)),
+		]
 	var result: Array[Vector2] = []
 	var door_left: Node2D = _find_marker(["DoorL", "Door L", "Door_Left", "DoorLeft", "LeftDoor", "DoorSocketLeft", "DoorSocket_L"])
 	var door_center: Node2D = _find_marker(["DoorC", "Door C", "Door_C", "DoorCenter", "CenterDoor", "DoorSocketCenter", "DoorSocket_C"])
@@ -595,8 +668,16 @@ func get_choice_gate_positions() -> Array[Vector2]:
 	if door_right != null:
 		result.append(door_right.global_position)
 	if result.size() >= 3:
-		return result
-	return [origin + Vector2(-150.0, -95.0), origin + Vector2(0.0, -130.0), origin + Vector2(150.0, -95.0)]
+		return [
+			_clamp_to_demo_floor(result[0]),
+			_clamp_to_demo_floor(result[1]),
+			_clamp_to_demo_floor(result[2]),
+		]
+	return [
+		_clamp_to_demo_floor(origin + Vector2(-142.0, -54.0)),
+		_clamp_to_demo_floor(origin + Vector2(0.0, -98.0)),
+		_clamp_to_demo_floor(origin + Vector2(142.0, -54.0)),
+	]
 
 func get_reward_socket_position() -> Vector2:
 	var reward_socket: Node2D = _find_marker(["RewardSocket", "Reward Socket", "Reward", "BoonSocket", "Boon Socket", "AltarSocket", "Altar Socket"])
@@ -604,18 +685,28 @@ func get_reward_socket_position() -> Vector2:
 		return reward_socket.global_position
 	var origin: Vector2 = _fallback_room_center()
 	match _active_room_type:
+		"boss_antechamber":
+			return _clamp_to_demo_floor(origin + Vector2(0.0, -72.0))
 		"fountain":
-			return origin + Vector2(0.0, -66.0)
+			return _clamp_to_demo_floor(origin + Vector2(0.0, -66.0))
 		"forge":
-			return origin + Vector2(0.0, -72.0)
+			return _clamp_to_demo_floor(origin + Vector2(0.0, -72.0))
 		"shop":
-			return origin + Vector2(0.0, -72.0)
-	return origin + Vector2(0.0, -68.0)
+			return _clamp_to_demo_floor(origin + Vector2(0.0, -72.0))
+	return _clamp_to_demo_floor(origin + Vector2(0.0, -68.0))
+
+func get_boss_gate_position() -> Vector2:
+	# V22.3: dedicated safe socket for the sealed Ash Warden gate.
+	var boss_socket: Node2D = _find_marker(["BossGate", "Boss Gate", "AshWardenGate", "Ash Warden Gate", "SealedGate", "Sealed Gate", "BossDoor", "Boss Door"])
+	if boss_socket != null:
+		return _clamp_to_demo_floor(boss_socket.global_position)
+	var origin: Vector2 = _fallback_room_center()
+	return _clamp_to_demo_floor(origin + Vector2(0.0, -82.0))
 
 func _get_variant_player_spawn_position() -> Vector2:
 	var c: Vector2 = _fallback_room_center()
 	match _active_room_variant:
-		"reward_altar", "ash_fountain", "cold_forge", "silent_shop", "route_gate_crossing":
+		"reward_altar", "ash_fountain", "cold_forge", "silent_shop", "route_gate_crossing", "boss_antechamber":
 			return c + Vector2(0.0, 100.0)
 	return c + Vector2(0.0, 112.0)
 
@@ -639,6 +730,59 @@ func _fallback_room_center() -> Vector2:
 	if player_spawn != null:
 		return player_spawn.global_position + Vector2(0.0, -90.0)
 	return Vector2.ZERO
+
+func hide_live_authoring_overlays() -> void:
+	if room_root == null:
+		return
+	var marker_root: Node = room_root.find_child(marker_root_name, true, false)
+	if marker_root != null:
+		_hide_canvas_tree(marker_root)
+	var nodes: Array[Node] = []
+	_collect_nodes(room_root, nodes)
+	for node: Node in nodes:
+		if _looks_like_authoring_marker(node):
+			_hide_canvas_tree(node)
+
+func _hide_canvas_tree(node: Node) -> void:
+	if node is CanvasItem:
+		(node as CanvasItem).visible = false
+	for child: Node in node.get_children():
+		_hide_canvas_tree(child)
+
+func _looks_like_authoring_marker(node: Node) -> bool:
+	var n: String = _normalize_marker_name(node.name)
+	if n == "markers" or n == "debug" or n == "debugmarkers" or n.find("debug") >= 0:
+		return true
+	if strip_authoring_overlay_text_in_play and (node is Label or node is Control):
+		var label_text: String = ""
+		if node is Label:
+			label_text = _normalize_marker_name((node as Label).text)
+			if label_text.find("playerspawn") >= 0 or label_text.find("rewardsocket") >= 0 or label_text.find("door") >= 0 or label_text.find("enemy") >= 0 or label_text.find("debug") >= 0 or label_text.find("patronflow") >= 0:
+				return true
+	if n.begins_with("enemy") and (node is CanvasItem):
+		return true
+	if n.find("playerspawn") >= 0 or n.find("rewardsocket") >= 0 or n.find("boonsocket") >= 0:
+		return true
+	if n.find("doorsocket") >= 0 or n == "doorl" or n == "doorc" or n == "doorr" or n.find("door") >= 0:
+		return true
+	if n.find("patronflow") >= 0 or n.find("rewardaltar") >= 0:
+		return true
+	return false
+
+func _hide_patron_flow_visuals(flow: Node) -> void:
+	if flow == null:
+		return
+	if flow is CanvasItem:
+		(flow as CanvasItem).visible = false
+	if flow.has_method("clear_runtime_elements"):
+		flow.call("clear_runtime_elements")
+
+func _clamp_to_demo_floor(world_position: Vector2) -> Vector2:
+	var origin: Vector2 = _fallback_room_center()
+	var local: Vector2 = world_position - origin
+	local.x = clampf(local.x, -210.0, 210.0)
+	local.y = clampf(local.y, -150.0, 26.0)
+	return origin + local
 
 func _print_mapping(player_spawn: Node2D, reward_socket: Node2D, door_left: Node2D, door_center: Node2D, door_right: Node2D) -> void:
 	print("[IsoRuntimeAdapter] Room root: %s" % room_root.name)
