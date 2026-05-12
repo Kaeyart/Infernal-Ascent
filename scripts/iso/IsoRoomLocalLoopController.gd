@@ -2,8 +2,9 @@ extends Node2D
 
 class_name IsoRoomLocalLoopController
 ## V14 — Run Flow Consistency Pass.
+## V19 — Reward Consistency Pass extends the existing loop with a standardized temporary reward catalogue.
 ## Owns the local Circle 0 demo run state machine. This script intentionally does not add
-## new enemies, art, rewards, boss logic, sound, or save logic.
+## new enemies, art, boss logic, sound, or save logic.
 
 enum RunPhase {
 	HUB,
@@ -62,6 +63,7 @@ var run_bonus_ash_sigils: int = 0
 var heal_on_room_clear_amount: int = 0
 var route_history: Array[Dictionary] = []
 var reward_history: Array[String] = []
+var reward_display_history: Array[String] = []
 var room_variant_history: Array[String] = []
 var run_finished: bool = false
 var current_phase: int = RunPhase.HUB
@@ -128,6 +130,7 @@ func _reset_run_counters() -> void:
 	_current_gate_choices.clear()
 	_last_selected_gate_name = ""
 	reward_history.clear()
+	reward_display_history.clear()
 	room_variant_history.clear()
 	run_finished = false
 	_advance_in_progress = false
@@ -516,28 +519,75 @@ func _room_choice(room_type: String) -> Dictionary:
 			return {"room_type": "shop", "display_name": "Shop", "description": "Reserved economy", "icon": "S", "rarity": "rare"}
 	return {"room_type": "combat", "display_name": "Combat", "description": "More ash-born enemies", "icon": "C", "rarity": "common"}
 
-func _build_reward_choices() -> Array[Dictionary]:
-	var all_rewards: Array[Dictionary] = [
-		{"kind": "reward", "reward_id": "max_hp", "display_name": "+1 Max HP", "description": "Heal 1 too"},
-		{"kind": "reward", "reward_id": "light_damage", "display_name": "+1 Light Damage", "description": "Faster kills"},
-		{"kind": "reward", "reward_id": "heavy_damage", "display_name": "+1 Heavy Damage", "description": "Bigger punish"},
-		{"kind": "reward", "reward_id": "dash_cooldown", "display_name": "Quicker Dash", "description": "-0.05s cooldown"},
-		{"kind": "reward", "reward_id": "move_speed", "display_name": "Ashen Stride", "description": "+15 move speed"},
-		{"kind": "reward", "reward_id": "attack_range", "display_name": "Longer Reach", "description": "+8 attack radius"},
-		{"kind": "reward", "reward_id": "contact_resist", "display_name": "Iron Penance", "description": "+0.10s hurt i-frames"},
-		{"kind": "reward", "reward_id": "ash_bonus", "display_name": "Ash Tithe", "description": "+1 sigil on return"},
-		{"kind": "reward", "reward_id": "heal_on_clear", "display_name": "Blood Vow", "description": "Heal 1 after combat"},
+func _reward_catalogue() -> Array[Dictionary]:
+	return [
+		_reward_data("light_damage", "Tempered Edge", "common", "Damage", "Light attack damage +1", "Your light attacks deal 1 additional damage for this run.", "Reliable basic sword damage.", "D"),
+		_reward_data("light_damage_major", "Martyr's Edge", "rare", "Damage", "Light attack damage +2", "Your light attacks deal 2 additional damage for this run.", "Large increase to fast attack pressure.", "D"),
+		_reward_data("heavy_damage", "Grave Weight", "common", "Damage", "Heavy attack damage +1", "Your heavy attacks deal 1 additional damage for this run.", "Safer punish after enemy recovery.", "D"),
+		_reward_data("heavy_damage_major", "Executioner's Burden", "rare", "Damage", "Heavy attack damage +2", "Your heavy attacks deal 2 additional damage for this run.", "Heavy punish becomes a major kill tool.", "D"),
+		_reward_data("attack_cooldown", "Quick Confession", "common", "Damage", "Light attack cooldown -0.04s", "Your light attacks recover 0.04 seconds faster for this run.", "Faster repeated light attacks.", "D"),
+		_reward_data("heavy_recovery", "Condemned Momentum", "uncommon", "Damage", "Heavy attack cooldown -0.06s", "Your heavy attacks recover 0.06 seconds faster for this run.", "Heavy attacks are easier to weave into fights.", "D"),
+		_reward_data("max_hp", "Ashen Vigor", "common", "Defense", "Max HP +1", "Increase max HP by 1 and heal 1 HP immediately.", "Small survivability increase.", "H"),
+		_reward_data("max_hp_major", "Reliquary Heart", "rare", "Defense", "Max HP +2", "Increase max HP by 2 and heal 2 HP immediately.", "Large survivability increase.", "H"),
+		_reward_data("contact_resist", "Iron Penance", "common", "Defense", "Hit i-frames +0.10s", "After taking damage, your invulnerability lasts 0.10 seconds longer.", "More forgiveness after mistakes.", "H"),
+		_reward_data("contact_resist_major", "Blackened Aegis", "uncommon", "Defense", "Hit i-frames +0.18s", "After taking damage, your invulnerability lasts 0.18 seconds longer.", "Better protection from chain hits.", "H"),
+		_reward_data("heal_now", "Mercy in Ash", "common", "Defense", "Heal 2 HP now", "Recover 2 HP immediately. This does not raise max HP.", "Immediate recovery if the run is bleeding out.", "H"),
+		_reward_data("heal_on_clear", "Blood Vow", "uncommon", "Defense", "Heal 1 HP after combat", "After each cleared combat room, recover 1 HP.", "Long-run sustain.", "H"),
+		_reward_data("heal_on_clear_major", "Redemption Tithe", "rare", "Defense", "Heal 2 HP after combat", "After each cleared combat room, recover 2 HP.", "Strong sustain for long routes.", "H"),
+		_reward_data("dash_cooldown", "Quicker Dash", "common", "Mobility", "Dash cooldown -0.05s", "Your dash recovers 0.05 seconds faster for this run.", "More frequent dodges.", "M"),
+		_reward_data("dash_cooldown_major", "Ash Step", "rare", "Mobility", "Dash cooldown -0.09s", "Your dash recovers 0.09 seconds faster for this run.", "High dodge uptime.", "M"),
+		_reward_data("move_speed", "Ashen Stride", "common", "Mobility", "Move speed +15", "Move speed increases by 15 for this run.", "Better spacing and hazard avoidance.", "M"),
+		_reward_data("move_speed_major", "Pilgrim's Haste", "uncommon", "Mobility", "Move speed +25", "Move speed increases by 25 for this run.", "Stronger repositioning.", "M"),
+		_reward_data("dash_duration", "Long Step", "uncommon", "Mobility", "Dash duration +0.03s", "Dash movement lasts 0.03 seconds longer for this run.", "Longer escape and engage distance.", "M"),
+		_reward_data("dash_speed", "Cinder Burst", "uncommon", "Mobility", "Dash speed +0.20x", "Dash speed multiplier increases by 0.20 for this run.", "Faster burst movement.", "M"),
+		_reward_data("attack_range", "Longer Reach", "common", "Utility", "Attack radius +8", "Your attack radius increases by 8 for this run.", "More reliable sword contact.", "U"),
+		_reward_data("attack_range_major", "Saint's Reach", "rare", "Utility", "Attack radius +14", "Your attack radius increases by 14 for this run.", "Large reach boost for safer spacing.", "U"),
+		_reward_data("attack_arc", "Wide Judgment", "uncommon", "Utility", "Attack arcs +15°", "Light and heavy attack cones widen by 15 degrees for this run.", "More forgiving directional attacks.", "U"),
+		_reward_data("ash_bonus", "Ash Tithe", "common", "Utility", "Bonus Ash Sigils +1", "Gain 1 additional Ash Sigil when the run returns to hub.", "More permanent progress reward.", "U"),
+		_reward_data("ash_bonus_major", "Tithe of the Damned", "rare", "Utility", "Bonus Ash Sigils +2", "Gain 2 additional Ash Sigils when the run returns to hub.", "Strong permanent progress reward.", "U"),
+		_reward_data("balanced_penance", "Balanced Penance", "uncommon", "Special", "Max HP +1, move speed +10", "Increase max HP by 1, heal 1 HP, and gain 10 move speed for this run.", "Small defense and mobility hybrid.", "S"),
+		_reward_data("brutal_penance", "Brutal Penance", "rare", "Special", "Heavy damage +2, move speed -10", "Heavy attacks deal 2 additional damage, but move speed decreases by 10 for this run.", "Risk/reward heavy build.", "S"),
 	]
+
+func _reward_data(reward_id: String, display_name: String, rarity: String, category: String, description: String, exact_effect: String, consequence: String, icon: String) -> Dictionary:
+	return {
+		"kind": "reward",
+		"reward_id": reward_id,
+		"display_name": display_name,
+		"rarity": rarity,
+		"category": category,
+		"description": description,
+		"exact_effect": exact_effect,
+		"current_consequence": consequence,
+		"icon": icon,
+	}
+
+func _build_reward_choices() -> Array[Dictionary]:
+	var all_rewards: Array[Dictionary] = _reward_catalogue()
 	var picked: Array[Dictionary] = []
-	var start: int = (rooms_completed + reward_rooms_completed * 2 + _choice_generation_index) % all_rewards.size()
+	var start: int = (rooms_completed * 3 + reward_rooms_completed * 5 + _choice_generation_index) % all_rewards.size()
+	var category_seen: Dictionary = {}
 	for i: int in range(all_rewards.size()):
 		if picked.size() >= reward_choices_per_room:
 			break
 		var reward: Dictionary = all_rewards[(start + i) % all_rewards.size()]
 		var reward_id: String = str(reward.get("reward_id", ""))
+		var category: String = str(reward.get("category", ""))
 		if reward_history.has(reward_id) and picked.size() < reward_choices_per_room - 1:
 			continue
+		if category_seen.has(category) and picked.size() < reward_choices_per_room - 1:
+			continue
 		picked.append(reward)
+		category_seen[category] = true
+	if picked.size() < reward_choices_per_room:
+		for reward: Dictionary in all_rewards:
+			if picked.size() >= reward_choices_per_room:
+				break
+			var reward_id: String = str(reward.get("reward_id", ""))
+			if reward_history.has(reward_id):
+				continue
+			if not picked.has(reward):
+				picked.append(reward)
 	while picked.size() < reward_choices_per_room and picked.size() < all_rewards.size():
 		picked.append(all_rewards[picked.size()])
 	return picked
@@ -545,36 +595,87 @@ func _build_reward_choices() -> Array[Dictionary]:
 func _apply_reward(payload: Dictionary) -> void:
 	var player: Node = _find_player_node()
 	var reward_id: String = str(payload.get("reward_id", ""))
+	var display_name: String = str(payload.get("display_name", reward_id))
 	reward_history.append(reward_id)
+	reward_display_history.append(display_name)
 	if player == null:
 		last_status = "Reward stored, but player was not found."
 		return
 	match reward_id:
 		"max_hp":
-			player.set("max_health", int(player.get("max_health")) + 1)
-			player.set("current_health", mini(int(player.get("max_health")), int(player.get("current_health")) + 1))
+			_add_player_int(player, "max_health", 1)
+			_heal_player_flat(1)
+		"max_hp_major":
+			_add_player_int(player, "max_health", 2)
+			_heal_player_flat(2)
 		"light_damage":
-			player.set("attack_damage", int(player.get("attack_damage")) + 1)
+			_add_player_int(player, "attack_damage", 1)
+		"light_damage_major":
+			_add_player_int(player, "attack_damage", 2)
 		"heavy_damage":
-			player.set("heavy_attack_damage", int(player.get("heavy_attack_damage")) + 1)
+			_add_player_int(player, "heavy_attack_damage", 1)
+		"heavy_damage_major":
+			_add_player_int(player, "heavy_attack_damage", 2)
+		"attack_cooldown":
+			_add_player_float_clamped(player, "attack_cooldown", -0.04, 0.14, 9.0)
+		"heavy_recovery":
+			_add_player_float_clamped(player, "heavy_attack_cooldown", -0.06, 0.24, 9.0)
 		"dash_cooldown":
-			player.set("dash_cooldown", maxf(0.25, float(player.get("dash_cooldown")) - 0.05))
+			_add_player_float_clamped(player, "dash_cooldown", -0.05, 0.25, 9.0)
+		"dash_cooldown_major":
+			_add_player_float_clamped(player, "dash_cooldown", -0.09, 0.22, 9.0)
 		"move_speed":
-			player.set("move_speed", float(player.get("move_speed")) + 15.0)
+			_add_player_float(player, "move_speed", 15.0)
+		"move_speed_major":
+			_add_player_float(player, "move_speed", 25.0)
+		"dash_duration":
+			_add_player_float_clamped(player, "dash_duration", 0.03, 0.05, 0.25)
+		"dash_speed":
+			_add_player_float_clamped(player, "dash_speed_multiplier", 0.20, 1.0, 4.5)
 		"attack_range":
-			player.set("attack_radius", float(player.get("attack_radius")) + 8.0)
+			_add_player_float(player, "attack_radius", 8.0)
+		"attack_range_major":
+			_add_player_float(player, "attack_radius", 14.0)
+		"attack_arc":
+			_add_player_float_clamped(player, "light_attack_arc_degrees", 15.0, 45.0, 170.0)
+			_add_player_float_clamped(player, "heavy_attack_arc_degrees", 15.0, 60.0, 190.0)
 		"contact_resist":
-			player.set("contact_damage_iframe_duration", float(player.get("contact_damage_iframe_duration")) + 0.10)
-		"ash_bonus":
-			run_bonus_ash_sigils += 1
+			_add_player_float(player, "contact_damage_iframe_duration", 0.10)
+		"contact_resist_major":
+			_add_player_float(player, "contact_damage_iframe_duration", 0.18)
+		"heal_now":
+			_heal_player_flat(2)
 		"heal_on_clear":
 			heal_on_room_clear_amount += 1
+		"heal_on_clear_major":
+			heal_on_room_clear_amount += 2
+		"ash_bonus":
+			run_bonus_ash_sigils += 1
+		"ash_bonus_major":
+			run_bonus_ash_sigils += 2
+		"balanced_penance":
+			_add_player_int(player, "max_health", 1)
+			_heal_player_flat(1)
+			_add_player_float(player, "move_speed", 10.0)
+		"brutal_penance":
+			_add_player_int(player, "heavy_attack_damage", 2)
+			_add_player_float(player, "move_speed", -10.0)
 		_:
-			pass
+			push_warning("[IsoLocalLoop] Unknown reward id: %s" % reward_id)
 	if player is CanvasItem:
 		(player as CanvasItem).queue_redraw()
-	last_status = "Reward applied: %s." % str(payload.get("display_name", reward_id))
+	last_status = "Reward applied: %s." % display_name
 	_debug(last_status)
+
+func _add_player_int(player: Node, property_name: String, delta: int) -> void:
+	player.set(property_name, int(player.get(property_name)) + delta)
+
+func _add_player_float(player: Node, property_name: String, delta: float) -> void:
+	player.set(property_name, float(player.get(property_name)) + delta)
+
+func _add_player_float_clamped(player: Node, property_name: String, delta: float, minimum: float, maximum: float) -> void:
+	var value: float = clampf(float(player.get(property_name)) + delta, minimum, maximum)
+	player.set(property_name, value)
 
 func _heal_player_ratio(ratio: float) -> void:
 	var player: Node = _find_player_node()
@@ -624,12 +725,22 @@ func _record_run_results(victory: bool = true) -> void:
 		"ash_sigils_earned": total_sigils,
 		"rooms_cleared": rooms_completed,
 		"patron": "Local Route Loop",
-		"boon": "Circle 0 Route Test",
+		"boon": _reward_display_summary(),
 		"victory": victory,
 		"notes": "V14 run state test returned to the Threshold Nave.",
 	}
 	RunSessionData.record_completed_run(summary)
 	print("[IsoLocalLoop] Recorded V14 run results: " + str(summary))
+
+func _reward_display_summary() -> String:
+	if reward_display_history.is_empty():
+		return "No boon claimed"
+	var output: String = ""
+	for i: int in range(reward_display_history.size()):
+		if i > 0:
+			output += ", "
+		output += reward_display_history[i]
+	return output
 
 func _update_return_to_hub_input() -> void:
 	var interact_down: bool = _is_interact_down()
@@ -791,6 +902,7 @@ func _update_hud() -> void:
 		"objective": _objective_text(),
 		"route": _route_summary(),
 		"rewards": reward_history.duplicate(true),
+		"reward_names": reward_display_history.duplicate(true),
 		"fountains": fountain_rooms_completed,
 		"bonus_sigils": run_bonus_ash_sigils,
 		"currency": RunEconomyData.get_currency_summary_line(),
@@ -909,7 +1021,7 @@ func _objective_text() -> String:
 		RunPhase.ROUTE_CHOICE:
 			return "Walk into one of the three physical gates and press E. Match them with the HUD cards."
 		RunPhase.REWARD:
-			return "Choose one physical reward pickup. Only one reward is taken from this room."
+			return "Choose one boon. Each pedestal shows rarity, category, and exact effect."
 		RunPhase.FOUNTAIN:
 			return "Use the fountain once to recover health."
 		RunPhase.FORGE:

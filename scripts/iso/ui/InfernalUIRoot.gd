@@ -266,14 +266,27 @@ func _update_summary(data: Dictionary, phase: String, objective: String) -> void
 	_summary_panel.visible = true
 	_summary_title.text = "RUN COMPLETE" if is_victory else "RUN ENDED"
 	var outcome: String = "The descent route is complete." if is_victory else "The Penitent Knight fell."
-	_summary_body.text = "%s\n\nRooms cleared: %d / %d\nRewards taken: %s\nBonus Ash Sigils: %d\n\n%s\n\n[E] Return to the Threshold Nave" % [
+	_summary_body.text = "%s\n\nRooms cleared: %d / %d\nBoons claimed: %s\nBonus Ash Sigils: %d\n\n%s\n\n[E] Return to the Threshold Nave" % [
 		outcome,
 		int(data.get("completed", 0)),
 		int(data.get("total", 0)),
-		str(data.get("rewards", [])),
+		_reward_names_text(data.get("reward_names", data.get("rewards", []))),
 		int(data.get("bonus_sigils", 0)),
 		objective,
 	]
+
+func _reward_names_text(value: Variant) -> String:
+	if value is Array:
+		var arr: Array = value as Array
+		if arr.is_empty():
+			return "None"
+		var output: String = ""
+		for i: int in range(arr.size()):
+			if i > 0:
+				output += ", "
+			output += str(arr[i])
+		return output
+	return str(value)
 
 func _focus_meta_text(kind: String, reward_id: String) -> String:
 	match kind:
@@ -290,7 +303,11 @@ func _focus_meta_text(kind: String, reward_id: String) -> String:
 func _focus_body_text(kind: String, description: String, payload: Dictionary) -> String:
 	match kind:
 		"reward":
-			return "%s\n\n%s\n\n[E] Claim this boon. Other boons vanish." % [description, _reward_exact_text(str(payload.get("reward_id", "")))]
+			var rarity: String = str(payload.get("rarity", "common")).to_upper()
+			var category: String = str(payload.get("category", "Boon"))
+			var exact: String = str(payload.get("exact_effect", description))
+			var consequence: String = str(payload.get("current_consequence", "Run-only effect."))
+			return "%s\n%s\n\nCurrent consequence:\n%s\n\n[E] Claim this boon. Other boons vanish." % ["%s · %s" % [rarity, category], exact, consequence]
 		"fountain":
 			return "%s\n\nRestores health once, then opens the next route choice.\n\n[E] Drink" % description
 		"forge":
@@ -298,28 +315,6 @@ func _focus_body_text(kind: String, description: String, payload: Dictionary) ->
 		"shop":
 			return "%s\n\nShop economy is reserved for V21. This marker currently advances the run.\n\n[E] Inspect" % description
 	return "%s\n\n[E] Use" % description
-
-func _reward_exact_text(reward_id: String) -> String:
-	match reward_id:
-		"max_hp":
-			return "Max HP +1. Heal 1 HP immediately."
-		"light_damage":
-			return "Light attack damage +1 for this run."
-		"heavy_damage":
-			return "Heavy attack damage +1 for this run."
-		"dash_cooldown":
-			return "Dash cooldown reduced by 0.05 seconds."
-		"move_speed":
-			return "Move speed +15 for this run."
-		"attack_range":
-			return "Attack radius +8 for this run."
-		"contact_resist":
-			return "Contact damage i-frames +0.10 seconds."
-		"ash_bonus":
-			return "Gain +1 bonus Ash Sigil when returning."
-		"heal_on_clear":
-			return "Heal 1 HP after each combat room."
-	return "Run-only effect. Exact data not mapped yet."
 
 func _route_description(choice: Dictionary) -> String:
 	var room_type: String = str(choice.get("room_type", "combat"))

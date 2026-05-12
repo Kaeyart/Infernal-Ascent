@@ -136,16 +136,21 @@ func _draw_shop(base_color: Color, pulse: float) -> void:
 
 func _draw_prompt(title: String, base_color: Color) -> void:
 	var font: Font = ThemeDB.fallback_font
-	var rect: Rect2 = Rect2(Vector2(-104.0, 30.0), Vector2(208.0, 46.0))
-	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.84), true)
-	draw_rect(rect, Color(base_color.r, base_color.g, base_color.b, 0.78), false, 1.5)
-	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 17.0), title.to_upper(), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 12, Color(1.0, 0.90, 0.68, 1.0))
-	var prompt: String = _prompt_text_for_kind(str(payload.get("kind", "object")))
+	var kind: String = str(payload.get("kind", "object"))
+	var rect: Rect2 = Rect2(Vector2(-112.0, 30.0), Vector2(224.0, 58.0 if kind == "reward" else 46.0))
+	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.88), true)
+	draw_rect(rect, Color(base_color.r, base_color.g, base_color.b, 0.82), false, 1.5)
+	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 16.0), title.to_upper(), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 12, Color(1.0, 0.90, 0.68, 1.0))
+	if kind == "reward":
+		var meta: String = "%s · %s" % [str(payload.get("rarity", "common")).to_upper(), str(payload.get("category", "Boon")).to_upper()]
+		draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 34.0), meta, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 10, Color(0.80, 0.72, 0.58, 0.96))
+	var prompt: String = _prompt_text_for_kind(kind)
 	if _used:
 		prompt = "USED"
 	elif not _player_in_range:
 		prompt = "APPROACH"
-	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 38.0), prompt, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 11, Color(0.72, 0.94, 1.0, 1.0 if _player_in_range else 0.68))
+	var prompt_y: float = rect.position.y + (52.0 if kind == "reward" else 38.0)
+	draw_string(font, Vector2(rect.position.x + 8.0, prompt_y), prompt, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 11, Color(0.72, 0.94, 1.0, 1.0 if _player_in_range else 0.68))
 
 func _prompt_text_for_kind(kind: String) -> String:
 	match kind:
@@ -162,7 +167,7 @@ func _prompt_text_for_kind(kind: String) -> String:
 func _color_for_kind(kind: String) -> Color:
 	match kind:
 		"reward":
-			return Color(0.52, 0.72, 0.34, 1.0)
+			return _color_for_reward_category(str(payload.get("category", "Utility")))
 		"fountain":
 			return Color(0.28, 0.62, 0.86, 1.0)
 		"forge":
@@ -170,3 +175,17 @@ func _color_for_kind(kind: String) -> Color:
 		"shop":
 			return Color(0.62, 0.36, 0.86, 1.0)
 	return Color(0.78, 0.72, 0.62, 1.0)
+
+func _color_for_reward_category(category: String) -> Color:
+	match category.to_lower():
+		"damage":
+			return Color(0.86, 0.36, 0.20, 1.0)
+		"defense":
+			return Color(0.42, 0.68, 0.88, 1.0)
+		"mobility":
+			return Color(0.55, 0.78, 0.34, 1.0)
+		"utility":
+			return Color(0.82, 0.66, 0.28, 1.0)
+		"special":
+			return Color(0.72, 0.42, 0.90, 1.0)
+	return Color(0.52, 0.72, 0.34, 1.0)
