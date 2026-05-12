@@ -96,12 +96,25 @@ func _perform_attack() -> void:
 	_attack_flash_remaining = 0.16
 	_set_animation("attack")
 
-	var enemies: Array[Node] = get_tree().get_nodes_in_group("iso_test_enemy")
-	for enemy_node: Node in enemies:
-		if enemy_node is IsoTestEnemy:
-			var test_enemy: IsoTestEnemy = enemy_node as IsoTestEnemy
-			if not test_enemy.is_dead and global_position.distance_to(test_enemy.global_position) <= attack_radius:
-				test_enemy.take_damage(attack_damage)
+	var targets: Dictionary = {}
+	for enemy_node: Node in get_tree().get_nodes_in_group("iso_test_enemy"):
+		targets[enemy_node] = true
+	for training_node: Node in get_tree().get_nodes_in_group("attack_target"):
+		targets[training_node] = true
+
+	for target_value: Variant in targets.keys():
+		if not (target_value is Node2D):
+			continue
+
+		var target: Node2D = target_value as Node2D
+		if not is_instance_valid(target):
+			continue
+
+		if not target.has_method("take_damage"):
+			continue
+
+		if global_position.distance_to(target.global_position) <= attack_radius:
+			target.call("take_damage", attack_damage)
 
 func _update_visual_animation(delta: float, moving: bool) -> void:
 	if not use_sprite_visuals or _sprite == null:
