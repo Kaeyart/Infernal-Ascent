@@ -2,6 +2,8 @@ extends Node2D
 
 class_name IsoAuthoredRoomRuntimeAdapter
 
+signal combat_room_cleared()
+
 @export var use_parent_as_room_root: bool = true
 @export var auto_create_test_player: bool = true
 @export var auto_create_camera: bool = true
@@ -26,6 +28,18 @@ class_name IsoAuthoredRoomRuntimeAdapter
 @export var max_enemies_cycle_2: int = 3
 @export var max_enemies_cycle_3_plus: int = 4
 @export var show_enemy_debug_ranges: bool = false
+@export var route_choice_flow_handles_room_clear: bool = true
+
+@export_category("Circle 0 Ash Intake Zone V1")
+@export var enable_room_presentation: bool = true
+@export var enable_room_hazards: bool = true
+@export var use_variant_enemy_spawn_positions: bool = true
+@export var room_presentation_debug_labels: bool = false
+@export var hazard_damage: int = 1
+@export var hazard_player_knockback_force: float = 155.0
+@export var hazard_debug_draw_radius: bool = false
+@export var hazard_draw_warning_labels: bool = true
+@export var elite_extra_hazard: bool = true
 
 var room_root: Node = null
 var player_node: Node2D = null
@@ -35,6 +49,10 @@ var shared_patron_manager_override: PatronRunManager = null
 var _room_cleared: bool = false
 var _alive_enemy_count: int = 0
 var _encounter_cycle_index: int = 1
+var _active_room_type: String = "combat"
+var _active_room_variant: String = "ash_intake_hall"
+var _active_depth: int = 1
+var _active_presentation_nodes: Array[Node] = []
 
 func _ready() -> void:
 	room_root = _get_room_root()
@@ -54,19 +72,70 @@ func set_shared_patron_manager(manager: PatronRunManager) -> void:
 func set_encounter_cycle_index(cycle_index: int) -> void:
 	_encounter_cycle_index = maxi(1, cycle_index)
 
+func configure_room_presentation(room_type: String, depth: int = 1, selected_variant: String = "") -> void:
+	_active_room_type = room_type
+	_active_depth = maxi(1, depth)
+	if selected_variant.strip_edges() != "":
+		_active_room_variant = selected_variant
+	else:
+		_active_room_variant = _select_variant_for_room_type(room_type, depth)
+	print("[IsoRuntimeAdapter] Room presentation configured: %s / %s / depth %d" % [_active_room_type, _active_room_variant, _active_depth])
+
+func refresh_room_presentation_only(room_type: String = "", depth: int = -1, selected_variant: String = "") -> void:
+	if room_type.strip_edges() != "" or depth > 0 or selected_variant.strip_edges() != "":
+		configure_room_presentation(room_type if room_type.strip_edges() != "" else _active_room_type, depth if depth > 0 else _active_depth, selected_variant)
+	if room_root == null:
+		room_root = _get_room_root()
+	_clear_room_presentation_nodes()
+	_spawn_room_presentation_nodes(false)
+
 func reset_runtime_for_next_room() -> void:
+	start_combat_encounter(_encounter_cycle_index)
+
+func start_combat_encounter(cycle_index: int = 1) -> void:
+	set_encounter_cycle_index(cycle_index)
+	if room_root == null:
+		room_root = _get_room_root()
+	if room_root == null:
+		return
+	if _active_room_type != "elite_combat":
+		_active_room_type = "combat"
+	if _active_room_variant.strip_edges() == "":
+		_active_room_variant = _select_variant_for_room_type(_active_room_type, _active_depth)
+	_clear_existing_test_enemies()
+	_clear_existing_projectiles()
+	_clear_room_presentation_nodes()
+	_room_cleared = false
+	_alive_enemy_count = 0
+	_setup_runtime_nodes()
+	_spawn_room_presentation_nodes(true)
+	if patron_flow_node != null:
+		patron_flow_node.clear_runtime_elements()
+	print("[IsoRuntimeAdapter] Combat encounter started for cycle %d in %s." % [_encounter_cycle_index, _active_room_variant])
+
+func prepare_non_combat_room() -> void:
 	if room_root == null:
 		room_root = _get_room_root()
 	if room_root == null:
 		return
 	_clear_existing_test_enemies()
 	_clear_existing_projectiles()
+	_clear_room_presentation_nodes()
 	_room_cleared = false
 	_alive_enemy_count = 0
-	_setup_runtime_nodes()
+	var player_spawn: Node2D = _find_marker(["PlayerSpawn", "Player Spawn", "SpawnPlayer", "Spawn_Player", "player_spawn"])
+	player_node = _find_or_create_player(player_spawn)
+	if auto_create_camera and player_node != null:
+		_ensure_camera(player_node)
+	_spawn_room_presentation_nodes(false)
 	if patron_flow_node != null:
 		patron_flow_node.clear_runtime_elements()
-	print("[IsoRuntimeAdapter] Runtime reset for next room cycle.")
+	print("[IsoRuntimeAdapter] Prepared non-combat room shell: %s." % _active_room_variant)
+
+func clear_runtime_dangers() -> void:
+	_clear_existing_test_enemies()
+	_clear_existing_projectiles()
+	_clear_existing_hazards()
 
 func _setup_runtime_nodes() -> void:
 	var player_spawn: Node2D = _find_marker(["PlayerSpawn", "Player Spawn", "SpawnPlayer", "Spawn_Player", "player_spawn"])
@@ -159,21 +228,20 @@ func _find_or_create_patron_flow(reward_socket: Node2D, door_left: Node2D, door_
 	return found_flow
 
 func _spawn_test_enemies_from_markers() -> void:
-	var enemy_markers: Array[Node2D] = _find_enemy_markers()
-	if enemy_markers.is_empty():
-		print("[IsoRuntimeAdapter] No enemy markers found. Press C can still clear room in debug.")
+	var spawn_positions: Array[Vector2] = _get_enemy_spawn_positions()
+	if spawn_positions.is_empty():
+		print("[IsoRuntimeAdapter] No enemy spawn positions found. Press C can still clear room in debug.")
 		return
 	var parent_for_enemies: Node = _get_y_sort_parent()
 	spawned_enemies.clear()
 	_alive_enemy_count = 0
 	_room_cleared = false
-	var profiles: Array[String] = _get_encounter_profiles(enemy_markers.size())
+	var profiles: Array[String] = _get_encounter_profiles(spawn_positions.size())
 	for i: int in range(profiles.size()):
-		var marker: Node2D = enemy_markers[i % enemy_markers.size()]
 		var enemy: IsoTestEnemy = IsoTestEnemy.new()
-		enemy.name = "IsoTestEnemy_%s_%s" % [profiles[i], marker.name]
+		enemy.name = "IsoTestEnemy_%s_%02d" % [profiles[i], i]
 		parent_for_enemies.add_child(enemy)
-		enemy.global_position = marker.global_position
+		enemy.global_position = spawn_positions[i % spawn_positions.size()]
 		enemy.configure_for_encounter_type(profiles[i], _encounter_cycle_index)
 		if not use_encounter_director:
 			enemy.max_health = test_enemy_health
@@ -185,7 +253,38 @@ func _spawn_test_enemies_from_markers() -> void:
 		enemy.died.connect(_on_test_enemy_died)
 		spawned_enemies.append(enemy)
 		_alive_enemy_count += 1
-	print("[IsoRuntimeAdapter] Spawned encounter cycle %d: %s" % [_encounter_cycle_index, str(profiles)])
+	print("[IsoRuntimeAdapter] Spawned %s cycle %d: %s" % [_active_room_variant, _encounter_cycle_index, str(profiles)])
+
+func _get_enemy_spawn_positions() -> Array[Vector2]:
+	if use_variant_enemy_spawn_positions:
+		var variant_positions: Array[Vector2] = _get_variant_enemy_spawn_positions()
+		if not variant_positions.is_empty():
+			return variant_positions
+	var enemy_markers: Array[Node2D] = _find_enemy_markers()
+	var marker_positions: Array[Vector2] = []
+	for marker: Node2D in enemy_markers:
+		marker_positions.append(marker.global_position)
+	if not marker_positions.is_empty():
+		return marker_positions
+	return _get_variant_enemy_spawn_positions()
+
+func _get_variant_enemy_spawn_positions() -> Array[Vector2]:
+	var c: Vector2 = _fallback_room_center()
+	var positions: Array[Vector2] = []
+	match _active_room_variant:
+		"cinder_drain":
+			positions = [c + Vector2(-190.0, -70.0), c + Vector2(190.0, -70.0), c + Vector2(0.0, -145.0), c + Vector2(0.0, 55.0)]
+		"furnace_vestibule":
+			positions = [c + Vector2(-170.0, -115.0), c + Vector2(170.0, -115.0), c + Vector2(-95.0, 35.0), c + Vector2(95.0, 35.0)]
+		"chain_reservoir":
+			positions = [c + Vector2(-205.0, -30.0), c + Vector2(205.0, -30.0), c + Vector2(-95.0, -135.0), c + Vector2(95.0, -135.0)]
+		"ember_sorting_floor":
+			positions = [c + Vector2(-155.0, -50.0), c + Vector2(155.0, -50.0), c + Vector2(-40.0, -155.0), c + Vector2(115.0, 35.0)]
+		_:
+			positions = [c + Vector2(-150.0, -95.0), c + Vector2(150.0, -95.0), c + Vector2(0.0, -155.0), c + Vector2(0.0, 30.0)]
+	if _active_room_type == "elite_combat":
+		positions.append(c + Vector2(0.0, -210.0))
+	return positions
 
 func _get_encounter_profiles(marker_count: int) -> Array[String]:
 	if not use_encounter_director:
@@ -204,12 +303,116 @@ func _get_encounter_profiles(marker_count: int) -> Array[String]:
 	else:
 		max_count = max_enemies_cycle_3_plus
 		profiles = ["ash_grunt", "cinder_lunger", "ember_spitter", "ash_grunt"]
+	if _active_room_type == "elite_combat":
+		max_count += 1
+		profiles.append("cinder_lunger")
 	var final_count: int = mini(marker_count, maxi(1, max_count))
 	while profiles.size() > final_count:
 		profiles.pop_back()
 	while profiles.size() < final_count:
 		profiles.append("ash_grunt")
 	return profiles
+
+func _spawn_room_presentation_nodes(include_hazards: bool) -> void:
+	if not enable_room_presentation:
+		return
+	var parent_node: Node = _get_y_sort_parent()
+	var center: Vector2 = _fallback_room_center()
+	var dressing: IsoRoomSetDressing = IsoRoomSetDressing.new()
+	dressing.name = "Circle0RoomDressing_%s" % _active_room_variant
+	parent_node.add_child(dressing)
+	dressing.global_position = center
+	dressing.setup({
+		"room_type": _active_room_type,
+		"variant": _active_room_variant,
+		"depth": _active_depth,
+		"debug_labels": room_presentation_debug_labels,
+	})
+	_active_presentation_nodes.append(dressing)
+	if include_hazards and enable_room_hazards:
+		_spawn_hazards_for_current_room(parent_node, center)
+
+func _spawn_hazards_for_current_room(parent_node: Node, center: Vector2) -> void:
+	var hazard_specs: Array[Dictionary] = _build_hazard_specs(center)
+	for spec: Dictionary in hazard_specs:
+		var hazard: IsoRoomHazard = IsoRoomHazard.new()
+		hazard.name = "Circle0Hazard_%s" % str(spec.get("hazard_kind", "hazard"))
+		parent_node.add_child(hazard)
+		var hazard_position: Vector2 = center
+		var position_value: Variant = spec.get("position", center)
+		if position_value is Vector2:
+			hazard_position = position_value as Vector2
+		hazard.setup(spec, hazard_position)
+		_active_presentation_nodes.append(hazard)
+
+func _build_hazard_specs(center: Vector2) -> Array[Dictionary]:
+	var specs: Array[Dictionary] = []
+	if _active_room_type != "combat" and _active_room_type != "elite_combat":
+		return specs
+	match _active_room_variant:
+		"cinder_drain":
+			specs.append(_hazard_spec("ash_vent", center + Vector2(-90.0, -48.0), 60.0, 1.25, 0.40, 2.8))
+			specs.append(_hazard_spec("ash_vent", center + Vector2(96.0, -45.0), 60.0, 1.35, 0.40, 3.2))
+		"furnace_vestibule":
+			specs.append(_hazard_spec("ember_grate", center + Vector2(0.0, -56.0), 78.0, 1.00, 1.00, 3.0))
+		"chain_reservoir":
+			specs.append(_hazard_spec("falling_cinder", center + Vector2(-135.0, -72.0), 62.0, 1.35, 0.28, 3.4))
+			specs.append(_hazard_spec("falling_cinder", center + Vector2(135.0, -72.0), 62.0, 1.55, 0.28, 3.9))
+		"ember_sorting_floor":
+			specs.append(_hazard_spec("ember_grate", center + Vector2(-70.0, -42.0), 68.0, 1.00, 0.88, 2.7))
+			specs.append(_hazard_spec("ash_vent", center + Vector2(92.0, -20.0), 58.0, 1.25, 0.38, 2.6))
+		_:
+			specs.append(_hazard_spec("ash_vent", center + Vector2(0.0, -70.0), 58.0, 1.25, 0.38, 3.1))
+	if _active_room_type == "elite_combat" and elite_extra_hazard:
+		specs.append(_hazard_spec("falling_cinder", center + Vector2(0.0, -155.0), 70.0, 1.25, 0.30, 2.9))
+	return specs
+
+func _hazard_spec(kind: String, position: Vector2, radius: float, windup: float, active: float, cooldown: float) -> Dictionary:
+	return {
+		"hazard_kind": kind,
+		"position": position,
+		"radius": radius,
+		"windup_duration": windup,
+		"active_duration": active,
+		"cooldown_duration": cooldown,
+		"damage": hazard_damage,
+		"player_knockback_force": hazard_player_knockback_force,
+		"affects_enemies": true,
+		"debug_draw_radius": hazard_debug_draw_radius,
+		"draw_warning_label": hazard_draw_warning_labels,
+	}
+
+func _clear_room_presentation_nodes() -> void:
+	for node: Node in _active_presentation_nodes:
+		if node != null and is_instance_valid(node):
+			node.queue_free()
+	_active_presentation_nodes.clear()
+	var nodes: Array[Node] = []
+	_collect_nodes(room_root if room_root != null else self, nodes)
+	for node: Node in nodes:
+		if node.is_in_group("circle0_room_dressing") or node.is_in_group("circle0_room_hazard"):
+			node.queue_free()
+
+func _clear_existing_hazards() -> void:
+	var hazard_nodes: Array[Node] = get_tree().get_nodes_in_group("circle0_room_hazard")
+	for node: Node in hazard_nodes:
+		if _is_node_inside_room(node):
+			node.queue_free()
+
+func _select_variant_for_room_type(room_type: String, depth: int) -> String:
+	match room_type:
+		"reward":
+			return "reward_altar"
+		"fountain":
+			return "ash_fountain"
+		"forge":
+			return "cold_forge"
+		"shop":
+			return "silent_shop"
+		"choice":
+			return "route_gate_crossing"
+	var variants: Array[String] = ["ash_intake_hall", "cinder_drain", "furnace_vestibule", "chain_reservoir", "ember_sorting_floor"]
+	return variants[(maxi(1, depth) + _encounter_cycle_index - 2) % variants.size()]
 
 func _clear_existing_test_enemies() -> void:
 	for enemy: IsoTestEnemy in spawned_enemies:
@@ -242,6 +445,11 @@ func _complete_test_room_clear() -> void:
 		return
 	_room_cleared = true
 	_clear_existing_projectiles()
+	_clear_existing_hazards()
+	emit_signal("combat_room_cleared")
+	if route_choice_flow_handles_room_clear:
+		print("[IsoRuntimeAdapter] Combat room cleared. Route choice flow will handle next step.")
+		return
 	if patron_flow_node != null:
 		print("[IsoRuntimeAdapter] Test room cleared. Calling PatronFlow.")
 		patron_flow_node.report_room_cleared()
@@ -363,6 +571,59 @@ func _normalize_marker_name(value: String) -> String:
 	normalized_value = normalized_value.replace(".", "")
 	return normalized_value
 
+func get_choice_gate_positions() -> Array[Vector2]:
+	var origin: Vector2 = _fallback_room_center()
+	if _active_room_variant == "route_gate_crossing":
+		return [origin + Vector2(-185.0, -105.0), origin + Vector2(0.0, -150.0), origin + Vector2(185.0, -105.0)]
+	var result: Array[Vector2] = []
+	var door_left: Node2D = _find_marker(["DoorL", "Door L", "Door_Left", "DoorLeft", "LeftDoor", "DoorSocketLeft", "DoorSocket_L"])
+	var door_center: Node2D = _find_marker(["DoorC", "Door C", "Door_C", "DoorCenter", "CenterDoor", "DoorSocketCenter", "DoorSocket_C"])
+	var door_right: Node2D = _find_marker(["DoorR", "Door R", "Door_Right", "DoorRight", "RightDoor", "DoorSocketRight", "DoorSocket_R"])
+	if door_left != null:
+		result.append(door_left.global_position)
+	if door_center != null:
+		result.append(door_center.global_position)
+	if door_right != null:
+		result.append(door_right.global_position)
+	if result.size() >= 3:
+		return result
+	return [origin + Vector2(-150.0, -95.0), origin + Vector2(0.0, -130.0), origin + Vector2(150.0, -95.0)]
+
+func get_reward_socket_position() -> Vector2:
+	var reward_socket: Node2D = _find_marker(["RewardSocket", "Reward Socket", "Reward", "BoonSocket", "Boon Socket", "AltarSocket", "Altar Socket"])
+	if reward_socket != null:
+		return reward_socket.global_position
+	var origin: Vector2 = _fallback_room_center()
+	match _active_room_type:
+		"fountain":
+			return origin + Vector2(0.0, -66.0)
+		"forge":
+			return origin + Vector2(0.0, -72.0)
+		"shop":
+			return origin + Vector2(0.0, -72.0)
+	return origin + Vector2(0.0, -60.0)
+
+func get_room_center_position() -> Vector2:
+	return _fallback_room_center()
+
+func get_room_variant_name() -> String:
+	return _active_room_variant
+
+func get_player_runtime_position() -> Vector2:
+	if player_node != null and is_instance_valid(player_node):
+		return player_node.global_position
+	var player_group: Array[Node] = get_tree().get_nodes_in_group("player")
+	for grouped_node: Node in player_group:
+		if grouped_node is Node2D:
+			return (grouped_node as Node2D).global_position
+	return _fallback_room_center()
+
+func _fallback_room_center() -> Vector2:
+	var player_spawn: Node2D = _find_marker(["PlayerSpawn", "Player Spawn", "SpawnPlayer", "Spawn_Player", "player_spawn"])
+	if player_spawn != null:
+		return player_spawn.global_position + Vector2(0.0, -90.0)
+	return Vector2.ZERO
+
 func _print_mapping(player_spawn: Node2D, reward_socket: Node2D, door_left: Node2D, door_center: Node2D, door_right: Node2D) -> void:
 	print("[IsoRuntimeAdapter] Room root: %s" % room_root.name)
 	print("[IsoRuntimeAdapter] PlayerSpawn: %s" % _node_label(player_spawn))
@@ -370,6 +631,7 @@ func _print_mapping(player_spawn: Node2D, reward_socket: Node2D, door_left: Node
 	print("[IsoRuntimeAdapter] Door L: %s" % _node_label(door_left))
 	print("[IsoRuntimeAdapter] Door C: %s" % _node_label(door_center))
 	print("[IsoRuntimeAdapter] Door R: %s" % _node_label(door_right))
+	print("[IsoRuntimeAdapter] Circle0 variant: %s" % _active_room_variant)
 
 func _node_label(node: Node2D) -> String:
 	if node == null:
