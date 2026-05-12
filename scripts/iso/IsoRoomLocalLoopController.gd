@@ -3,6 +3,7 @@ extends Node2D
 class_name IsoRoomLocalLoopController
 ## V14 — Run Flow Consistency Pass.
 ## V19 — Reward Consistency Pass extends the existing loop with a standardized temporary reward catalogue.
+## V20 — Demo Run Length Lock makes the run reach a predictable boss-antechamber placeholder after four rooms.
 ## Owns the local Circle 0 demo run state machine. This script intentionally does not add
 ## new enemies, art, boss logic, sound, or save logic.
 
@@ -23,13 +24,20 @@ enum RunPhase {
 	RETURN_TO_HUB,
 }
 
-@export var rooms_until_run_end: int = 7
+@export var rooms_until_run_end: int = 4
 @export var restart_key_enabled: bool = true
 @export var return_to_hub_enabled: bool = true
 @export var hub_scene_path: String = "res://scenes/iso/hub/iso_hub_threshold_nave_v1.tscn"
 @export var ash_sigils_per_completed_run: int = 1
 @export var print_debug: bool = true
 @export var auto_start_run_on_ready: bool = true
+
+@export_category("V20 Demo Length Lock")
+@export var demo_run_length_locked: bool = true
+@export var demo_rooms_before_boss: int = 4
+@export var boss_antechamber_variant: String = "boss_antechamber"
+@export var boss_placeholder_completes_run: bool = true
+@export var force_demo_route_pattern: bool = true
 
 @export_category("V10 Route Loop")
 @export var route_choice_enabled: bool = true
@@ -117,6 +125,8 @@ func _reset_run_counters() -> void:
 	rooms_completed = 0
 	current_room_cycle = 1
 	current_depth = 1
+	if demo_run_length_locked:
+		rooms_until_run_end = maxi(1, demo_rooms_before_boss)
 	current_room_type = "combat"
 	current_room_variant = _select_combat_variant("combat")
 	combat_rooms_cleared = 0
@@ -208,6 +218,7 @@ func _complete_current_room(reason: String) -> void:
 	if not _phase_can_complete_room():
 		_debug("Ignored room completion from invalid phase %s: %s" % [_phase_label(), reason])
 		return
+	var completed_phase: int = current_phase
 	_room_completion_pending = true
 	_route_choice_spawn_pending = false
 	rooms_completed += 1
@@ -218,9 +229,19 @@ func _complete_current_room(reason: String) -> void:
 		"reason": reason,
 	})
 	last_status = "%s. Room %d/%d complete." % [reason, rooms_completed, rooms_until_run_end]
+
+	if completed_phase == RunPhase.BOSS_LOCKED_PLACEHOLDER:
+		_finish_local_run(true, "Demo route complete. The Ash Warden gate has been reached.")
+		return
+
+	if demo_run_length_locked and rooms_completed >= maxi(1, demo_rooms_before_boss):
+		_debug(last_status)
+		_enter_boss_antechamber_placeholder()
+		return
+
 	_set_phase(RunPhase.ROOM_CLEAR, last_status)
 	_debug(last_status)
-	if rooms_completed >= rooms_until_run_end:
+	if not demo_run_length_locked and rooms_completed >= rooms_until_run_end:
 		_finish_local_run(true, "Demo route complete")
 		return
 	if route_choice_enabled:
@@ -468,8 +489,42 @@ func _on_shop_used(_payload: Dictionary) -> void:
 		return
 	_complete_current_room("The silent merchant has nothing yet")
 
+func _enter_boss_antechamber_placeholder() -> void:
+	current_room_type = "boss_antechamber"
+	current_room_variant = boss_antechamber_variant
+	last_room_title = "Boss Antechamber"
+	_room_completion_pending = false
+	_route_choice_spawn_pending = false
+	_clear_route_runtime_nodes()
+	_set_phase(RunPhase.ROOM_INTRO, "Entering the sealed gate before the Ash Warden.")
+	if runtime_adapter != null:
+		runtime_adapter.configure_room_presentation(current_room_type, current_depth, current_room_variant)
+		runtime_adapter.prepare_non_combat_room()
+	var data: Dictionary = {
+		"kind": "boss_antechamber",
+		"display_name": "Sealed Ash Warden Gate",
+		"description": "The demo run length is now locked. The Ash Warden fight is reserved for the boss milestones.",
+		"icon": "B",
+	}
+	_spawn_single_interactable(data, Vector2(0.0, -130.0), Callable(self, "_on_boss_antechamber_used"))
+	_show_intro(last_room_title, "The first gatekeeper waits beyond this seal")
+	last_status = "Boss Antechamber reached. Press E at the sealed gate to complete the current demo route."
+	_set_phase(RunPhase.BOSS_LOCKED_PLACEHOLDER, last_status)
+	_debug(last_status)
+
+func _on_boss_antechamber_used(_payload: Dictionary) -> void:
+	if current_phase != RunPhase.BOSS_LOCKED_PLACEHOLDER:
+		return
+	if not boss_placeholder_completes_run:
+		last_status = "The Ash Warden gate is sealed until the boss milestone."
+		_update_hud()
+		return
+	_complete_current_room("Sealed Ash Warden gate reached")
+
 func _build_gate_choices() -> Array[Dictionary]:
 	_choice_generation_index += 1
+	if demo_run_length_locked and force_demo_route_pattern:
+		return _build_locked_demo_gate_choices()
 	var choices: Array[Dictionary] = []
 	choices.append(_room_choice("combat"))
 	if force_first_choice_reward and rooms_completed == 1 and reward_rooms_completed <= 0:
@@ -488,6 +543,39 @@ func _build_gate_choices() -> Array[Dictionary]:
 	while choices.size() < 3:
 		choices.append(_room_choice("combat"))
 	return choices
+
+func _build_locked_demo_gate_choices() -> Array[Dictionary]:
+	# V20 locks the first demo route into a predictable beginning, middle, and pre-boss end.
+	# rooms_completed is the room just cleared, so it selects the next chamber.
+	if rooms_completed <= 1:
+		return [
+			_room_choice_with_text("combat", "Combat", "Standard fight. Builds toward the Ash Warden route."),
+			_room_choice_with_text("reward", "Reward", "Claim one temporary boon."),
+			_room_choice_with_text("fountain", "Fountain", "Recover before the next chamber."),
+		]
+	if rooms_completed == 2:
+		return [
+			_room_choice_with_text("combat", "Combat", "Another Circle 0 encounter."),
+			_room_choice_with_text("shop", "Shop", "Reserved economy room. Continue after inspection."),
+			_room_choice_with_text("forge", "Forge", "Reserved weapon mark room. Continue after inspection."),
+		]
+	if rooms_completed == 3:
+		return [
+			_room_choice_with_text("elite_combat", "Elite Combat", "Harder final fight before the boss gate."),
+			_room_choice_with_text("combat", "Combat", "Safer final fight before the boss gate."),
+			_room_choice_with_text("combat", "Combat", "Alternate final combat chamber."),
+		]
+	return [
+		_room_choice_with_text("combat", "Combat", "Fallback route chamber."),
+		_room_choice_with_text("reward", "Reward", "Fallback reward chamber."),
+		_room_choice_with_text("fountain", "Fountain", "Fallback recovery chamber."),
+	]
+
+func _room_choice_with_text(room_type: String, display_name: String, description: String) -> Dictionary:
+	var choice: Dictionary = _room_choice(room_type)
+	choice["display_name"] = display_name
+	choice["description"] = description
+	return choice
 
 func _should_skip_room_type(room_type: String, existing_choices: Array[Dictionary]) -> bool:
 	for choice: Dictionary in existing_choices:
@@ -517,6 +605,8 @@ func _room_choice(room_type: String) -> Dictionary:
 			return {"room_type": "forge", "display_name": "Forge", "description": "Reserved weapon system", "icon": "G", "rarity": "rare"}
 		"shop":
 			return {"room_type": "shop", "display_name": "Shop", "description": "Reserved economy", "icon": "S", "rarity": "rare"}
+		"boss_antechamber":
+			return {"room_type": "boss_antechamber", "display_name": "Boss Antechamber", "description": "The Ash Warden gate", "icon": "B", "rarity": "boss"}
 	return {"room_type": "combat", "display_name": "Combat", "description": "More ash-born enemies", "icon": "C", "rarity": "common"}
 
 func _reward_catalogue() -> Array[Dictionary]:
@@ -727,10 +817,10 @@ func _record_run_results(victory: bool = true) -> void:
 		"patron": "Local Route Loop",
 		"boon": _reward_display_summary(),
 		"victory": victory,
-		"notes": "V14 run state test returned to the Threshold Nave.",
+		"notes": "V20 demo route length lock returned to the Threshold Nave.",
 	}
 	RunSessionData.record_completed_run(summary)
-	print("[IsoLocalLoop] Recorded V14 run results: " + str(summary))
+	print("[IsoLocalLoop] Recorded V20 run results: " + str(summary))
 
 func _reward_display_summary() -> String:
 	if reward_display_history.is_empty():
@@ -807,6 +897,8 @@ func _display_room_type(room_type: String) -> String:
 			return "Shop"
 		"choice":
 			return "Route Choice"
+		"boss_antechamber":
+			return "Boss Antechamber"
 	return room_type.capitalize()
 
 func _show_intro(title: String, subtitle: String) -> void:
@@ -921,7 +1013,7 @@ func _update_hud() -> void:
 		return
 	if hud_label == null:
 		return
-	hud_label.text = "Circle 0 - Run Flow V14\nRoom: %s | Type: %s | Phase: %s | Depth: %d | Completed: %d/%d\n%s\nObjective: %s\n%s\n%s" % [
+	hud_label.text = "Circle 0 - Demo Route V20\nRoom: %s | Type: %s | Phase: %s | Depth: %d | Completed: %d/%d\n%s\nObjective: %s\n%s\n%s" % [
 		last_room_title,
 		_display_room_type(current_room_type),
 		_phase_label(),
@@ -1029,7 +1121,7 @@ func _objective_text() -> String:
 		RunPhase.SHOP:
 			return "Use the silent merchant marker to continue. Full economy comes later."
 		RunPhase.BOSS_LOCKED_PLACEHOLDER:
-			return "Boss route is locked until the demo boss milestone."
+			return "You reached the Ash Warden gate. Press E at the seal to complete the locked demo route."
 		RunPhase.RUN_VICTORY:
 			return "Run complete. Press E to return to the Threshold Nave."
 		RunPhase.RUN_DEATH:
