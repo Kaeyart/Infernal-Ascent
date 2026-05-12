@@ -60,9 +60,9 @@ var station_defs: Array[Dictionary] = [
 	{
 		"marker": "FountainMarker",
 		"title": "Fountain",
-		"prompt": "Press E to inspect the fountain.",
-		"kind": "panel",
-		"body": "Recovery station placeholder.\n\nPlanned function:\n- restore health after a run\n- show last run results\n- cleanse temporary penalties\n- prepare for the next descent\n\nCurrent state: visual station only."
+		"prompt": "Press E to view last run results.",
+		"kind": "fountain_results",
+		"body": ""
 	}
 ]
 
@@ -113,6 +113,9 @@ func _ready() -> void:
 	if auto_spawn_npcs:
 		call_deferred("_spawn_hub_npcs")
 
+	if RunSessionData.has_last_run():
+		status_text = "Returned from a run. Visit the Fountain to inspect Last Run Results."
+
 func _process(_delta: float) -> void:
 	if _panel_is_open():
 		_update_panel_input()
@@ -122,7 +125,10 @@ func _process(_delta: float) -> void:
 	var nearest_interactable: Dictionary = _get_nearest_interactable()
 
 	if nearest_interactable.is_empty():
-		status_text = "Hub ready. Walk to a station or NPC."
+		if RunSessionData.has_last_run():
+			status_text = "Hub ready. Last Run Results available at the Fountain."
+		else:
+			status_text = "Hub ready. Walk to a station or NPC."
 	else:
 		status_text = "%s — %s" % [
 			str(nearest_interactable.get("title", "Interact")),
@@ -340,6 +346,10 @@ func _activate_station(station: Dictionary) -> void:
 		_show_patron_shrine_panel()
 		return
 
+	if kind == "fountain_results":
+		_show_fountain_results_panel()
+		return
+
 	if kind == "training_dummy":
 		_spawn_or_reset_training_dummy()
 		_show_panel(title, str(station.get("body", "Training dummy reset.")))
@@ -357,6 +367,9 @@ func _show_weapon_altar_panel() -> void:
 
 func _show_patron_shrine_panel() -> void:
 	_show_panel("Patron Shrine", PatronShrineData.build_patron_shrine_panel_text())
+
+func _show_fountain_results_panel() -> void:
+	_show_panel("Fountain", RunSessionData.build_fountain_panel_text())
 
 func _show_panel(title: String, body: String) -> void:
 	if interaction_panel == null:

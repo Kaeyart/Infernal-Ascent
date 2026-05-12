@@ -4,10 +4,9 @@ class_name IsoRoomLocalLoopController
 ## Local run-loop driver for the active authored room:
 ## res://scenes/iso/rooms/circle0/combat_ash_intake_hall_01_iso.tscn
 ##
-## Hub Runtime Spine V1:
-## - The room loops locally for testing.
-## - When the test run ends, press E to return to the hub.
-## - Hub remains the project main scene.
+## Run Results V1:
+## - When the local run ends, a simple run summary is recorded in RunSessionData.
+## - Returning to the hub lets the Fountain display Last Run Results.
 
 @export var rooms_until_run_end: int = 5
 @export var restart_key_enabled: bool = true
@@ -174,8 +173,27 @@ func _finish_local_run() -> void:
 	run_finished = true
 	_advance_in_progress = false
 	_return_input_armed = false
+	_record_run_results()
 	last_status = "Run complete. Press E to return to the Hub, or T to restart this test run."
 	_debug("Local test run complete. Press E to return to hub.")
+
+func _record_run_results() -> void:
+	var patron_state_text: String = "No patron manager."
+	if shared_patron_manager != null:
+		patron_state_text = shared_patron_manager.describe_run_lock()
+
+	var summary: Dictionary = {
+		"status": "Run Complete",
+		"rooms_cleared": rooms_completed,
+		"room_cycles": current_room_cycle,
+		"weapon_name": "Penitent Blade",
+		"patron_state": patron_state_text,
+		"reward_text": "Ash Sigils +1 (placeholder reward)",
+		"note": "The Penitent Knight completed the current Ash Intake Hall test loop and returned to the Threshold Nave."
+	}
+
+	RunSessionData.record_completed_run(summary)
+	print("[IsoLocalLoop] Recorded run results: " + str(summary))
 
 func _update_return_to_hub_input() -> void:
 	var interact_down: bool = _is_interact_down()
