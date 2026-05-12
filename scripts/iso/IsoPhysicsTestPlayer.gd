@@ -740,6 +740,29 @@ func _draw() -> void:
 	if show_fallback_drawn_body or not use_sprite_visuals or _idle_texture == null:
 		_draw_fallback_body()
 
+
+func _draw_player_health_bar() -> void:
+	if max_health <= 0:
+		return
+
+	var bar_width: float = 54.0
+	var bar_height: float = 6.0
+	var bar_position: Vector2 = Vector2(-bar_width * 0.5, -78.0)
+	var background_rect: Rect2 = Rect2(bar_position, Vector2(bar_width, bar_height))
+	var health_ratio: float = clampf(float(current_health) / float(max_health), 0.0, 1.0)
+	var fill_rect: Rect2 = Rect2(bar_position + Vector2(1.0, 1.0), Vector2((bar_width - 2.0) * health_ratio, bar_height - 2.0))
+
+	draw_rect(background_rect.grow(1.0), Color(0.0, 0.0, 0.0, 0.52), true)
+	draw_rect(background_rect, Color(0.08, 0.05, 0.045, 0.92), true)
+	if current_health > 0:
+		draw_rect(fill_rect, Color(0.78, 0.12, 0.08, 0.95), true)
+	draw_rect(background_rect, Color(0.92, 0.66, 0.36, 0.78), false, 1.0)
+
+	if max_health > 1 and max_health <= 12:
+		for i: int in range(1, max_health):
+			var x: float = bar_position.x + (bar_width * float(i) / float(max_health))
+			draw_line(Vector2(x, bar_position.y + 1.0), Vector2(x, bar_position.y + bar_height - 1.0), Color(0.0, 0.0, 0.0, 0.55), 1.0)
+
 func _draw_fallback_body() -> void:
 	var cape_color: Color = Color("#6d1d1d")
 	var armor_color: Color = Color("#1c2025")
