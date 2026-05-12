@@ -4,14 +4,16 @@ class_name IsoRoomLocalLoopController
 ## Local run-loop driver for the active authored room:
 ## res://scenes/iso/rooms/circle0/combat_ash_intake_hall_01_iso.tscn
 ##
-## Run Results V1:
-## - When the local run ends, a simple run summary is recorded in RunSessionData.
-## - Returning to the hub lets the Fountain display Last Run Results.
+## Run Economy V1:
+## - When the local run ends, +1 Ash Sigil is added to RunEconomyData.
+## - RunSessionData records the reward and current total.
+## - Returning to the hub lets the Fountain display Last Run Results and Ash Sigils.
 
 @export var rooms_until_run_end: int = 5
 @export var restart_key_enabled: bool = true
 @export var return_to_hub_enabled: bool = true
 @export var hub_scene_path: String = "res://scenes/iso/hub/iso_hub_threshold_nave_v1.tscn"
+@export var ash_sigils_per_completed_run: int = 1
 @export var print_debug: bool = true
 
 var shared_patron_manager: PatronRunManager = null
@@ -182,13 +184,17 @@ func _record_run_results() -> void:
 	if shared_patron_manager != null:
 		patron_state_text = shared_patron_manager.describe_run_lock()
 
+	var ash_gained: int = RunEconomyData.add_ash_sigils(ash_sigils_per_completed_run)
+
 	var summary: Dictionary = {
 		"status": "Run Complete",
 		"rooms_cleared": rooms_completed,
 		"room_cycles": current_room_cycle,
 		"weapon_name": "Penitent Blade",
 		"patron_state": patron_state_text,
-		"reward_text": "Ash Sigils +1 (placeholder reward)",
+		"ash_sigils_gained": ash_gained,
+		"ash_sigils_total": RunEconomyData.get_ash_sigils(),
+		"reward_text": "Ash Sigils +%d" % ash_gained,
 		"note": "The Penitent Knight completed the current Ash Intake Hall test loop and returned to the Threshold Nave."
 	}
 
@@ -230,7 +236,7 @@ func _setup_hud() -> void:
 	hud_label = Label.new()
 	hud_label.name = "LocalLoopStatus"
 	hud_label.position = Vector2(18.0, 150.0)
-	hud_label.size = Vector2(860.0, 170.0)
+	hud_label.size = Vector2(900.0, 190.0)
 	hud_layer.add_child(hud_label)
 
 func _update_hud() -> void:
@@ -245,12 +251,13 @@ func _update_hud() -> void:
 	if run_finished:
 		status_text = "Run complete. Press E to return to Hub. Press T to restart test run."
 
-	hud_label.text = "Active Run Room Local Loop V1\nScene: combat_ash_intake_hall_01_iso.tscn\nCycle: %d | Completed: %d/%d\n%s\n%s" % [
+	hud_label.text = "Active Run Room Local Loop V1\nScene: combat_ash_intake_hall_01_iso.tscn\nCycle: %d | Completed: %d/%d\n%s\n%s\n%s" % [
 		current_room_cycle,
 		rooms_completed,
 		rooms_until_run_end,
 		status_text,
-		patron_text
+		patron_text,
+		RunEconomyData.get_currency_summary_line()
 	]
 
 func _collect_nodes(root: Node, out_nodes: Array[Node]) -> void:
