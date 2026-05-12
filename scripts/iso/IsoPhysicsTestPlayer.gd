@@ -18,6 +18,8 @@ signal respawned
 @export var max_health: int = 6
 @export var contact_damage_iframe_duration: float = 0.55
 @export var hit_flash_duration: float = 0.16
+@export var enemy_hit_knockback_speed: float = 185.0
+@export var enemy_hit_knockback_duration: float = 0.10
 @export var show_player_health_bar: bool = true
 
 @export_category("Collision")
@@ -93,6 +95,8 @@ var facing: Vector2 = Vector2(1.0, 1.0).normalized()
 var current_health: int = 0
 var _damage_iframe_remaining: float = 0.0
 var _hit_flash_remaining: float = 0.0
+var _enemy_knockback_remaining: float = 0.0
+var _enemy_knockback_velocity: Vector2 = Vector2.ZERO
 
 var _attack_cooldown_remaining: float = 0.0
 var _attack_flash_remaining: float = 0.0
@@ -194,10 +198,18 @@ func _update_timers(delta: float) -> void:
 		_damage_iframe_remaining = maxf(0.0, _damage_iframe_remaining - delta)
 	if _hit_flash_remaining > 0.0:
 		_hit_flash_remaining = maxf(0.0, _hit_flash_remaining - delta)
+	if _enemy_knockback_remaining > 0.0:
+		_enemy_knockback_remaining = maxf(0.0, _enemy_knockback_remaining - delta)
 
 func _update_movement() -> bool:
 	if _is_dead:
 		velocity = Vector2.ZERO
+		move_and_slide()
+		_moving_this_frame = false
+		return false
+
+	if _enemy_knockback_remaining > 0.0:
+		velocity = _enemy_knockback_velocity
 		move_and_slide()
 		_moving_this_frame = false
 		return false
@@ -407,7 +419,10 @@ func _find_nearest_attack_target(max_distance: float) -> Node2D:
 			nearest_target = target
 	return nearest_target
 
-func take_damage(amount: int = 1) -> bool:
+func receive_enemy_attack(amount: int = 1, source_global_position: Vector2 = Vector2.ZERO, knockback_direction: Vector2 = Vector2.ZERO, knockback_force: float = -1.0) -> bool:
+	return take_damage(amount, source_global_position, knockback_direction, knockback_force)
+
+func take_damage(amount: int = 1, source_global_position: Vector2 = Vector2.ZERO, knockback_direction: Vector2 = Vector2.ZERO, knockback_force: float = -1.0) -> bool:
 	if _is_dead:
 		return false
 	if amount <= 0:
@@ -418,6 +433,7 @@ func take_damage(amount: int = 1) -> bool:
 		return false
 
 	current_health = max(0, current_health - amount)
+	_apply_enemy_hit_knockback(source_global_position, knockback_direction, knockback_force)
 	_damage_iframe_remaining = contact_damage_iframe_duration
 	_hit_flash_remaining = hit_flash_duration
 	_clear_active_attack()
@@ -430,11 +446,23 @@ func take_damage(amount: int = 1) -> bool:
 	_lock_animation("hit", _PRIORITY_HIT, _get_animation_duration("hit"), false, false)
 	return true
 
+func _apply_enemy_hit_knockback(source_global_position: Vector2, knockback_direction: Vector2, knockback_force: float = -1.0) -> void:
+	var final_direction: Vector2 = knockback_direction
+	if final_direction.length() <= 0.01 and source_global_position != Vector2.ZERO:
+		final_direction = global_position - source_global_position
+	if final_direction.length() <= 0.01:
+		return
+	var final_speed: float = knockback_force if knockback_force > 0.0 else enemy_hit_knockback_speed
+	_enemy_knockback_velocity = final_direction.normalized() * final_speed
+	_enemy_knockback_remaining = enemy_hit_knockback_duration
+
 func heal_full() -> void:
 	current_health = max_health
 	_is_dead = false
 	_damage_iframe_remaining = 0.0
 	_hit_flash_remaining = 0.0
+	_enemy_knockback_remaining = 0.0
+	_enemy_knockback_velocity = Vector2.ZERO
 	queue_redraw()
 
 func get_health_text() -> String:
@@ -446,6 +474,8 @@ func play_death_animation() -> void:
 	_is_dead = true
 	velocity = Vector2.ZERO
 	_dash_remaining = 0.0
+	_enemy_knockback_remaining = 0.0
+	_enemy_knockback_velocity = Vector2.ZERO
 	_damage_iframe_remaining = 0.0
 	_clear_active_attack()
 	emit_signal("died")
@@ -456,6 +486,8 @@ func play_respawn_animation() -> void:
 	current_health = max_health
 	_damage_iframe_remaining = 0.0
 	_hit_flash_remaining = 0.0
+	_enemy_knockback_remaining = 0.0
+	_enemy_knockback_velocity = Vector2.ZERO
 	_clear_active_attack()
 	emit_signal("respawned")
 	_lock_animation("respawn", _PRIORITY_RESPAWN, _get_animation_duration("respawn"), false, true)
