@@ -27,7 +27,7 @@ class_name IsoPhysicsTestPlayer
 @export var show_debug_footprint: bool = false
 @export var show_fallback_drawn_body: bool = false
 @export var visual_offset: Vector2 = Vector2(0.0, -30.0)
-@export var visual_scale: Vector2 = Vector2(0.42, 0.42)
+@export var visual_scale: Vector2 = Vector2(0.22, 0.22)
 @export var auto_detect_sprite_frame_size: bool = true
 @export var frame_size: Vector2i = Vector2i(320, 320)
 @export var direction_row_count: int = 4
@@ -62,6 +62,21 @@ class_name IsoPhysicsTestPlayer
 @export var attack_aims_at_mouse: bool = true
 @export var keyboard_attack_faces_nearest_target: bool = true
 @export var nearest_target_face_radius_multiplier: float = 1.55
+@export_category("Combat Timing")
+@export var light_attack_active_start_frame: int = 2
+@export var light_attack_active_end_frame: int = 3
+@export var heavy_attack_active_start_frame: int = 3
+@export var heavy_attack_active_end_frame: int = 4
+@export var attack_uses_directional_cone: bool = true
+@export var light_attack_arc_degrees: float = 115.0
+@export var heavy_attack_arc_degrees: float = 145.0
+@export var show_debug_combat_hitbox: bool = false
+
+@export_category("Dash Timing")
+@export var dash_invulnerable_start_frame: int = 0
+@export var dash_invulnerable_end_frame: int = 2
+@export var show_debug_dash_invulnerability: bool = false
+
 
 var facing: Vector2 = Vector2(1.0, 1.0).normalized()
 
@@ -72,6 +87,14 @@ var _dash_cooldown_remaining: float = 0.0
 var _dash_remaining: float = 0.0
 var _dash_direction: Vector2 = Vector2(1.0, 1.0).normalized()
 var _animation_lock_remaining: float = 0.0
+
+var _active_attack_anim: String = ""
+var _active_attack_damage: int = 0
+var _active_attack_radius: float = 0.0
+var _active_attack_arc_degrees: float = 0.0
+var _active_attack_hit_targets: Dictionary = {}
+var _active_attack_was_active_last_frame: bool = false
+
 
 var _space_previous: bool = false
 var _mouse_previous: bool = false
@@ -135,6 +158,7 @@ func _physics_process(delta: float) -> void:
 	var was_moving: bool = _update_movement()
 	_update_attack_input()
 	_update_visual_animation(delta, was_moving)
+	_update_combat_timing()
 	queue_redraw()
 
 func _update_timers(delta: float) -> void:
@@ -244,32 +268,99 @@ func _perform_attack(anim_name: String = "attack", damage_amount: int = 1, coold
 	if not _can_start_action(priority):
 		return
 
+	var locked: bool = false
 	if anim_name == "heavy_attack":
 		_heavy_attack_cooldown_remaining = cooldown
-		_attack_flash_remaining = 0.26
-		_lock_animation("heavy_attack", priority, _get_animation_duration("heavy_attack"), false, false)
+		_attack_flash_remaining = _get_animation_duration("heavy_attack")
+		locked = _lock_animation("heavy_attack", priority, _get_animation_duration("heavy_attack"), false, false)
 	else:
 		_attack_cooldown_remaining = cooldown
-		_attack_flash_remaining = 0.18
-		_lock_animation("attack", priority, _get_animation_duration("attack"), false, false)
+		_attack_flash_remaining = _get_animation_duration("attack")
+		locked = _lock_animation("attack", priority, _get_animation_duration("attack"), false, false)
 
-	var active_radius: float = attack_radius * radius_multiplier
-	var targets: Dictionary = {}
-	for enemy_node: Node in get_tree().get_nodes_in_group("iso_test_enemy"):
-		targets[enemy_node] = true
-	for training_node: Node in get_tree().get_nodes_in_group("attack_target"):
-		targets[training_node] = true
+	if not locked:
+		return
 
-	for target_value: Variant in targets.keys():
-		if not (target_value is Node2D):
+	_active_attack_anim = anim_name
+	_active_attack_damage = damage_amount
+	_active_attack_radius = attack_radius * radius_multiplier
+	_active_attack_arc_degrees = heavy_attack_arc_degrees if anim_name == "heavy_attack" else light_attack_arc_degrees
+	_active_attack_hit_targets.clear()
+	_active_attack_was_active_last_frame = false
+
+
+func _update_combat_timing() -> void:
+	if _active_attack_anim == "":
+		return
+	if _current_anim != _active_attack_anim:
+		_clear_active_attack()
+		return
+	if _locked_anim != _active_attack_anim and _animation_lock_remaining <= 0.0:
+		_clear_active_attack()
+		return
+
+	var active_now: bool = _is_attack_active_frame(_active_attack_anim, _frame_index)
+	if active_now:
+		_apply_active_attack_hit()
+	_active_attack_was_active_last_frame = active_now
+
+func _is_attack_active_frame(anim_name: String, frame_index: int) -> bool:
+	if anim_name == "heavy_attack":
+		return frame_index >= heavy_attack_active_start_frame and frame_index <= heavy_attack_active_end_frame
+	return frame_index >= light_attack_active_start_frame and frame_index <= light_attack_active_end_frame
+
+func _apply_active_attack_hit() -> void:
+	if _active_attack_anim == "" or _active_attack_damage <= 0:
+		return
+	var targets: Array[Node] = []
+	targets.append_array(get_tree().get_nodes_in_group("iso_test_enemy"))
+	targets.append_array(get_tree().get_nodes_in_group("attack_target"))
+	for node: Node in targets:
+		if not (node is Node2D):
 			continue
-		var target: Node2D = target_value as Node2D
+		var target: Node2D = node as Node2D
 		if not is_instance_valid(target):
 			continue
 		if not target.has_method("take_damage"):
 			continue
-		if global_position.distance_to(target.global_position) <= active_radius:
-			target.call("take_damage", damage_amount)
+		var target_id: int = int(target.get_instance_id())
+		if _active_attack_hit_targets.has(target_id):
+			continue
+		if not _is_target_inside_attack_hitbox(target, _active_attack_radius, _active_attack_arc_degrees):
+			continue
+		_active_attack_hit_targets[target_id] = true
+		target.call("take_damage", _active_attack_damage)
+
+func _is_target_inside_attack_hitbox(target: Node2D, active_radius: float, arc_degrees: float) -> bool:
+	var to_target: Vector2 = target.global_position - global_position
+	var distance: float = to_target.length()
+	if distance > active_radius:
+		return false
+	if distance <= collision_radius:
+		return true
+	if not attack_uses_directional_cone:
+		return true
+	var facing_normalized: Vector2 = facing.normalized()
+	if facing_normalized.length() <= 0.01:
+		return true
+	var target_normalized: Vector2 = to_target.normalized()
+	var half_arc_radians: float = deg_to_rad(maxf(arc_degrees, 1.0) * 0.5)
+	return absf(facing_normalized.angle_to(target_normalized)) <= half_arc_radians
+
+func _clear_active_attack() -> void:
+	_active_attack_anim = ""
+	_active_attack_damage = 0
+	_active_attack_radius = 0.0
+	_active_attack_arc_degrees = 0.0
+	_active_attack_hit_targets.clear()
+	_active_attack_was_active_last_frame = false
+
+func _is_dash_invulnerable() -> bool:
+	if _current_anim != "dash":
+		return false
+	if _locked_anim != "dash" and _dash_remaining <= 0.0:
+		return false
+	return _frame_index >= dash_invulnerable_start_frame and _frame_index <= dash_invulnerable_end_frame
 
 func _find_nearest_attack_target(max_distance: float) -> Node2D:
 	var nearest_target: Node2D = null
@@ -292,16 +383,21 @@ func _find_nearest_attack_target(max_distance: float) -> Node2D:
 func take_damage(_amount: int = 1) -> void:
 	if _is_dead:
 		return
+	if _is_dash_invulnerable():
+		return
+	_clear_active_attack()
 	_lock_animation("hit", _PRIORITY_HIT, _get_animation_duration("hit"), false, false)
 
 func play_death_animation() -> void:
 	_is_dead = true
 	velocity = Vector2.ZERO
 	_dash_remaining = 0.0
+	_clear_active_attack()
 	_lock_animation("death", _PRIORITY_DEATH, _get_animation_duration("death"), true, true)
 
 func play_respawn_animation() -> void:
 	_is_dead = false
+	_clear_active_attack()
 	_lock_animation("respawn", _PRIORITY_RESPAWN, _get_animation_duration("respawn"), false, true)
 
 func _update_visual_animation(delta: float, moving: bool) -> void:
@@ -328,6 +424,8 @@ func _resolve_expired_animation_lock() -> void:
 		_frame_index = _get_frame_count(_current_anim) - 1
 		_apply_sprite_frame()
 		return
+	if _active_attack_anim == _locked_anim:
+		_clear_active_attack()
 	_locked_anim = ""
 	_locked_priority = _PRIORITY_NONE
 	_locked_holds_final_frame = false
@@ -385,6 +483,8 @@ func _set_animation(anim_name: String, restart: bool = false) -> void:
 func _lock_animation(anim_name: String, priority: int, duration: float = -1.0, hold_final_frame: bool = false, force: bool = false) -> bool:
 	if not force and not _can_start_action(priority):
 		return false
+	if anim_name != "attack" and anim_name != "heavy_attack" and _active_attack_anim != "":
+		_clear_active_attack()
 	_locked_anim = anim_name
 	_locked_priority = priority
 	_locked_holds_final_frame = hold_final_frame
@@ -531,6 +631,12 @@ func _draw() -> void:
 	if _attack_flash_remaining > 0.0:
 		draw_circle(Vector2.ZERO, attack_radius, Color(0.85, 0.62, 0.34, 0.10))
 		draw_arc(Vector2.ZERO, attack_radius, 0.0, TAU, 64, Color(0.95, 0.80, 0.48, 0.72), 2.0)
+	if show_debug_combat_hitbox and _active_attack_anim != "":
+		var debug_color: Color = Color(1.0, 0.78, 0.30, 0.40) if _is_attack_active_frame(_active_attack_anim, _frame_index) else Color(0.65, 0.65, 0.65, 0.25)
+		draw_arc(Vector2.ZERO, _active_attack_radius, 0.0, TAU, 64, debug_color, 2.0)
+		draw_line(Vector2.ZERO, facing.normalized() * _active_attack_radius, debug_color, 2.0)
+	if show_debug_dash_invulnerability and _is_dash_invulnerable():
+		draw_arc(Vector2.ZERO, collision_radius + 8.0, 0.0, TAU, 24, Color(0.35, 0.65, 1.0, 0.85), 3.0)
 	if show_debug_footprint:
 		draw_arc(collision_offset, collision_radius, 0.0, TAU, 24, Color(0.3, 0.75, 1.0, 0.65), 1.0)
 	if show_fallback_drawn_body or not use_sprite_visuals or _idle_texture == null:
