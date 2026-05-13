@@ -988,6 +988,8 @@ func _route_reward_gate_choice(source_kind: String, display_name: String, conseq
 		"short_consequence": consequence,
 		"current_consequence": consequence,
 		"exact_effect": consequence,
+		"description": consequence,
+		"body": consequence,
 		"prompt": "[E] Enter",
 		"reward_source": {
 			"kind": source_kind,
@@ -1064,6 +1066,8 @@ func _patron_gate_choice(patron_id: String, display_name: String, consequence: S
 		"short_consequence": consequence,
 		"current_consequence": consequence,
 		"exact_effect": consequence,
+		"description": consequence,
+		"body": consequence,
 		"prompt": "[E] Enter",
 		"reward_source": {
 			"kind": "patron",
@@ -2107,6 +2111,35 @@ func _setup_hud() -> void:
 	hud_label.size = Vector2(1040.0, 250.0)
 	hud_layer.add_child(hud_label)
 
+
+func _t014_pretty_id(raw_id: String) -> String:
+	var clean: String = raw_id.strip_edges()
+	if clean == "":
+		return "None"
+	clean = clean.replace("patron_", "").replace("forge_mark_", "").replace("weapon_ascension_", "")
+	clean = clean.replace("_", " ")
+	return clean.capitalize()
+
+func _t014_build_status_summary() -> String:
+	var forge_text: String = "None"
+	if active_forge_mark.strip_edges() != "":
+		forge_text = _t014_pretty_id(active_forge_mark)
+
+	var ascension_text: String = "None"
+	var ascension_value: Variant = get("weapon_ascension_id")
+	if ascension_value != null and str(ascension_value).strip_edges() != "":
+		ascension_text = _t014_pretty_id(str(ascension_value))
+
+	var recent: Array[String] = []
+	var start_index: int = maxi(0, reward_display_history.size() - 3)
+	for i: int in range(start_index, reward_display_history.size()):
+		recent.append(str(reward_display_history[i]))
+	var boon_text: String = "None"
+	if not recent.is_empty():
+		boon_text = " | ".join(recent)
+
+	return "BUILD: Boons: %s  ||  Forge: %s  ||  Weapon: %s  ||  Run Gold: %d" % [boon_text, forge_text, ascension_text, run_ash_shards]
+
 func _update_hud() -> void:
 	var status_text: String = last_status
 	if current_phase == RunPhase.HUB and auto_start_run_on_ready:
@@ -2128,6 +2161,7 @@ func _update_hud() -> void:
 		"fountains": fountain_rooms_completed,
 		"bonus_sigils": run_bonus_ash_sigils,
 		"currency": "%s | Run Ash: %d | %s" % [RunEconomyData.get_currency_summary_line(), run_ash_shards, PERMANENT_UPGRADE_SCRIPT.build_summary_line()],
+		"build_status": _t014_build_status_summary(),
 		"player": _player_ui_state(),
 		"choices": _current_gate_choices.duplicate(true),
 		"hazards_active": current_phase == RunPhase.COMBAT,
@@ -2157,7 +2191,7 @@ func _update_hud() -> void:
 		status_text,
 		_objective_text(),
 		"Route: " + _route_summary(),
-		RunEconomyData.get_currency_summary_line()
+		RunEconomyData.get_currency_summary_line() + "\n" + _t014_build_status_summary()
 	]
 
 func _player_ui_state() -> Dictionary:

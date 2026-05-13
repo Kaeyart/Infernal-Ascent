@@ -121,15 +121,30 @@ func _draw_focus_prompt(base_color: Color, pulse: float) -> void:
 	draw_string(font, Vector2(rect.position.x + 6.0, rect.position.y + 17.0), "[E] ENTER", HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 12.0, 11, Color(0.86, 0.94, 1.0, 1.0))
 
 func _draw_minimal_label(display_name: String, icon: String, base_color: Color, pulse: float) -> void:
-	# V22.2: keep the door name above the door, but do not turn the world-space gate into a second UI card.
+	# T-014: route gates must read as reward promises, not generic doors.
 	var font: Font = ThemeDB.fallback_font
 	var clean_name: String = display_name.to_upper()
-	var rect: Rect2 = Rect2(Vector2(-68.0, -142.0), Vector2(136.0, 24.0))
-	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.82), true)
+	var consequence: String = str(choice_data.get("short_consequence", choice_data.get("exact_effect", choice_data.get("description", ""))))
+	var compact_consequence: String = _t014_compact_text(consequence, 54)
+
+	var rect_height: float = 24.0
+	if _player_in_range and compact_consequence.strip_edges() != "":
+		rect_height = 48.0
+	var rect: Rect2 = Rect2(Vector2(-78.0, -154.0), Vector2(156.0, rect_height))
+	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.84), true)
 	draw_rect(rect, Color(base_color.r, base_color.g, base_color.b, 0.62 + pulse * 0.12), false, 1.25)
 	draw_string(font, Vector2(rect.position.x + 6.0, rect.position.y + 17.0), clean_name, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 12.0, 10, Color(1.0, 0.88, 0.64, 0.96))
+	if _player_in_range and compact_consequence.strip_edges() != "":
+		draw_string(font, Vector2(rect.position.x + 7.0, rect.position.y + 36.0), compact_consequence, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 14.0, 8, Color(0.80, 0.86, 0.78, 0.90))
 	if show_focus_prompt and _player_in_range:
 		_draw_focus_prompt(base_color, pulse)
+
+
+func _t014_compact_text(value: String, max_len: int = 58) -> String:
+	var clean: String = value.replace("\n", " ").strip_edges()
+	if clean.length() <= max_len:
+		return clean
+	return clean.substr(0, maxi(0, max_len - 3)).strip_edges() + "..."
 
 func _color_for_room_type(room_type: String) -> Color:
 	match room_type:

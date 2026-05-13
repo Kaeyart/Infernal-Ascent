@@ -17,6 +17,14 @@ var _used: bool = false
 
 func setup(data: Dictionary, spawn_position: Vector2) -> void:
 	payload = data.duplicate(true)
+	var reward_kind: String = str(payload.get("reward_kind", ""))
+	if not payload.has("kind") or str(payload.get("kind", "")).strip_edges() == "":
+		if reward_kind == "boon" or reward_kind == "synergy_boon" or reward_kind == "weapon_ascension":
+			payload["kind"] = "reward"
+		elif reward_kind == "forge_mark":
+			payload["kind"] = "forge_mark"
+		elif reward_kind == "gold_payout" or reward_kind == "health_boost":
+			payload["kind"] = "reward"
 	global_position = spawn_position
 	z_index = 44
 	z_as_relative = false
@@ -160,23 +168,38 @@ func _draw_prompt(title: String, base_color: Color) -> void:
 	if kind == "boss_antechamber" or kind == "boss_exit":
 		_draw_boss_gate_name(title, base_color)
 		return
+
 	var has_meta: bool = kind == "reward" or kind == "forge_mark" or kind == "shop_item"
-	var rect: Rect2 = Rect2(Vector2(-112.0, 30.0), Vector2(224.0, 58.0 if has_meta else 46.0))
-	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.88), true)
+	var effect_text: String = _t014_payload_effect_text()
+	var has_effect: bool = effect_text.strip_edges() != ""
+	var rect_height: float = 48.0
+	if has_meta:
+		rect_height = 64.0
+	if has_effect:
+		rect_height += 22.0
+	var rect: Rect2 = Rect2(Vector2(-132.0, 30.0), Vector2(264.0, rect_height))
+	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.90), true)
 	draw_rect(rect, Color(base_color.r, base_color.g, base_color.b, 0.82), false, 1.5)
 	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 16.0), title.to_upper(), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 12, Color(1.0, 0.90, 0.68, 1.0))
+
+	var y: float = rect.position.y + 34.0
 	if has_meta:
 		var meta: String = "%s · %s" % [str(payload.get("rarity", "common")).to_upper(), str(payload.get("category", "Boon")).to_upper()]
 		if kind == "shop_item":
-			meta = "COST %d RUN ASH" % int(payload.get("cost", 0))
-		draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + 34.0), meta, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 10, Color(0.80, 0.72, 0.58, 0.96))
+			meta = "COST %d RUN GOLD" % int(payload.get("cost", 0))
+		draw_string(font, Vector2(rect.position.x + 8.0, y), meta, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 10, Color(0.80, 0.72, 0.58, 0.96))
+		y += 16.0
+
+	if has_effect:
+		draw_string(font, Vector2(rect.position.x + 10.0, y), _t014_compact_text(effect_text, 84), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 20.0, 9, Color(0.78, 0.86, 0.76, 0.96))
+		y += 20.0
+
 	var prompt: String = _prompt_text_for_kind(kind)
 	if _used:
 		prompt = "USED"
 	elif not _player_in_range:
 		prompt = "APPROACH"
-	var prompt_y: float = rect.position.y + (52.0 if has_meta else 38.0)
-	draw_string(font, Vector2(rect.position.x + 8.0, prompt_y), prompt, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 11, Color(0.72, 0.94, 1.0, 1.0 if _player_in_range else 0.68))
+	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + rect.size.y - 8.0), prompt, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 11, Color(0.72, 0.94, 1.0, 1.0 if _player_in_range else 0.68))
 
 func _draw_boss_gate_name(title: String, base_color: Color) -> void:
 	var font: Font = ThemeDB.fallback_font
@@ -189,6 +212,21 @@ func _draw_boss_gate_name(title: String, base_color: Color) -> void:
 		draw_rect(prompt_rect, Color(0.018, 0.013, 0.010, 0.82), true)
 		draw_rect(prompt_rect, Color(base_color.r, base_color.g, base_color.b, 0.72), false, 1.2)
 		draw_string(font, Vector2(prompt_rect.position.x + 6.0, prompt_rect.position.y + 17.0), "[E] APPROACH", HORIZONTAL_ALIGNMENT_CENTER, prompt_rect.size.x - 12.0, 10, Color(0.72, 0.94, 1.0, 1.0))
+
+
+func _t014_payload_effect_text() -> String:
+	var keys: Array[String] = ["exact_effect", "description", "body", "short_consequence", "current_consequence"]
+	for key: String in keys:
+		var value: String = str(payload.get(key, "")).strip_edges()
+		if value != "":
+			return value
+	return ""
+
+func _t014_compact_text(value: String, max_len: int = 86) -> String:
+	var clean: String = value.replace("\n", " ").strip_edges()
+	if clean.length() <= max_len:
+		return clean
+	return clean.substr(0, maxi(0, max_len - 3)).strip_edges() + "..."
 
 func _prompt_text_for_kind(kind: String) -> String:
 	match kind:
