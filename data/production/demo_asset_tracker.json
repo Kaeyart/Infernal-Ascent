@@ -73,21 +73,23 @@
     {
       "id": "S-007",
       "name": "Two Patrons Per Run",
-      "lane": "LOGIC",
-      "status": "Rework",
+      "lane": "DATA/LOGIC",
+      "status": "In Progress",
       "priority": "P0",
-      "need": "Each run has exactly two active patrons.",
-      "acceptance": "Reward pool uses active patrons plus neutral boons.",
-      "notes": "Old two-patrons-per-run lock rejected. Replace with weighted boon reward pool in T-008."
+      "need": "First reward is always a boon; patrons are weighted reward sources; owned boons can generate upgrades. No two-patron lock.",
+      "acceptance": "First reward offers patron boons; later rewards can offer boons, upgrades, synergies, or neutral rewards.",
+      "notes": "Old two-patrons-per-run lock rejected. Replace with weighted boon reward pool in T-008.",
+      "system": "Boon Reward Pool + Patron Weighting"
     },
     {
       "id": "S-008",
       "name": "Chain Saint Boon Set",
       "lane": "DATA/LOGIC",
-      "status": "Missing",
+      "status": "In Progress",
       "priority": "P0",
-      "need": "8 stagger/control/riposte boons.",
-      "acceptance": "A Chain Saint build is recognizable in gameplay."
+      "need": "Make Azazel boons affect combat through stagger/control/Q/heavy/ultimate hooks.",
+      "acceptance": "A Chain Saint build is recognizable in gameplay.",
+      "system": "Azazel Boon Mechanics V1"
     },
     {
       "id": "S-009",

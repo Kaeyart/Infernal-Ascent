@@ -1,5 +1,12 @@
 extends CharacterBody2D
 class_name IsoPhysicsTestPlayer
+
+# T-009 Azazel boon runtime. Placeholder combat hooks until final patron/VFX pass.
+var t009_owned_boon_ids: Dictionary = {}
+var t009_owned_boon_payloads: Dictionary = {}
+var t009_light_hit_counter: int = 0
+var t009_bound_step_touched: Dictionary = {}
+
 # T004_Q_ABILITY_PLACEHOLDER_START
 @export_group("T004 Q Ability Placeholder")
 @export var q_ability_enabled: bool = true
@@ -1310,6 +1317,9 @@ func _t004_call_damage_method(target: Node, arg1: Variant = null, arg2: Variant 
 		if hit_direction.length_squared() <= 0.001:
 			hit_direction = Vector2.RIGHT
 
+	_t009_pre_damage_azazel_effects(target, attack_kind, hit_position, hit_direction)
+	damage_amount = _t009_modify_azazel_damage(target, damage_amount, attack_kind)
+
 	# T-006: allow normal enemies to react before damage is applied.
 	if target.has_method("receive_player_ability_interaction"):
 		target.call("receive_player_ability_interaction", attack_kind, damage_amount, hit_position, hit_direction, knockback_force, stagger_amount)
@@ -1335,12 +1345,14 @@ func _t004_call_damage_method(target: Node, arg1: Variant = null, arg2: Variant 
 	# take_damage(amount: int, source_global_position: Vector2, hit_direction: Vector2, attack_kind: String)
 	if script_path.ends_with("AshWardenBoss.gd"):
 		target.call("take_damage", damage_amount, hit_position, hit_direction, attack_kind)
+		_t009_after_damage_azazel_effects(target, attack_kind, damage_amount)
 		return
 
 	# Known normal enemy signature:
 	# take_damage(amount: int)
 	if method_args.size() <= 1:
 		target.call("take_damage", damage_amount)
+		_t009_after_damage_azazel_effects(target, attack_kind, damage_amount)
 		return
 
 	var call_args: Array = []
@@ -1388,6 +1400,7 @@ func _t004_call_damage_method(target: Node, arg1: Variant = null, arg2: Variant 
 					call_args.append(damage_amount)
 
 	Callable(target, "take_damage").callv(call_args)
+	_t009_after_damage_azazel_effects(target, attack_kind, damage_amount)
 
 func _t004_get_method_args(target: Object, method_name: String) -> Array:
 	if target == null:
@@ -1702,3 +1715,114 @@ func _t005_draw_ultimate_meter_hint() -> void:
 		return
 	draw_arc(Vector2(0.0, -68.0), 24.0, 0.0, TAU, 28, Color(1.0, 0.76, 0.28, 0.82), 2.0)
 # T005_ULTIMATE_PLACEHOLDER_FUNCTIONS_END
+
+
+# T-009 — Called by the run controller when a boon is claimed.
+func apply_run_boon(payload: Dictionary) -> void:
+	var boon_id: String = str(payload.get("boon_id", payload.get("id", payload.get("reward_id", ""))))
+	if boon_id == "":
+		return
+	t009_owned_boon_ids[boon_id] = true
+	t009_owned_boon_payloads[boon_id] = payload.duplicate(true)
+	queue_redraw()
+
+func has_run_boon(boon_id: String) -> bool:
+	return bool(t009_owned_boon_ids.get(boon_id, false))
+
+func _t009_has_azazel_boon(boon_id: String) -> bool:
+	return has_run_boon(boon_id)
+
+func _t009_pre_damage_azazel_effects(target: Node, attack_kind: String, hit_position: Vector2, hit_direction: Vector2) -> void:
+	if target == null or not is_instance_valid(target):
+		return
+
+	var kind: String = attack_kind.to_lower()
+
+	if (kind.find("q") >= 0 or kind.find("riposte") >= 0) and _t009_has_azazel_boon("azazel_condemned_mark"):
+		if target.has_method("apply_azazel_mark"):
+			target.call("apply_azazel_mark")
+		else:
+			target.set_meta("t009_azazel_condemned_mark", true)
+
+	if kind.find("heavy") >= 0:
+		if _t009_has_azazel_boon("azazel_iron_sentence") and target.has_method("apply_azazel_bonus_stagger"):
+			target.call("apply_azazel_bonus_stagger", 30.0)
+		if _t009_has_azazel_boon("azazel_dragged_below") and target.has_method("apply_azazel_pull"):
+			target.call("apply_azazel_pull", global_position, 42.0)
+
+	if kind.find("ultimate") >= 0 and _t009_has_azazel_boon("azazel_final_shackle"):
+		if target.has_method("apply_azazel_root"):
+			target.call("apply_azazel_root", 2.0)
+
+func _t009_modify_azazel_damage(target: Node, damage_amount: int, attack_kind: String) -> int:
+	if target == null or not is_instance_valid(target):
+		return damage_amount
+	var kind: String = attack_kind.to_lower()
+	var result: int = damage_amount
+
+	if kind.find("heavy") >= 0 and _t009_has_azazel_boon("azazel_condemned_mark"):
+		var marked: bool = false
+		if target.has_method("consume_azazel_mark"):
+			marked = bool(target.call("consume_azazel_mark"))
+		elif target.has_meta("t009_azazel_condemned_mark"):
+			marked = bool(target.get_meta("t009_azazel_condemned_mark"))
+			target.remove_meta("t009_azazel_condemned_mark")
+		if marked:
+			result = max(1, int(ceil(float(result) * 1.2)))
+
+	return result
+
+func _t009_after_damage_azazel_effects(target: Node, attack_kind: String, damage_amount: int) -> void:
+	if target == null or not is_instance_valid(target):
+		return
+	var kind: String = attack_kind.to_lower()
+
+	if kind.find("light") >= 0 and _t009_has_azazel_boon("azazel_chain_echo"):
+		t009_light_hit_counter += 1
+		if t009_light_hit_counter >= 3:
+			t009_light_hit_counter = 0
+			_t009_chain_lash_nearby(target)
+
+func _t009_chain_lash_nearby(primary_target: Node) -> void:
+	if primary_target == null or not is_instance_valid(primary_target):
+		return
+	if not primary_target is Node2D:
+		return
+	var origin: Vector2 = (primary_target as Node2D).global_position
+	var best: Node = null
+	var best_dist: float = 999999.0
+	for node: Node in get_tree().get_nodes_in_group("iso_test_enemy"):
+		if node == primary_target or node == null or not is_instance_valid(node):
+			continue
+		if not node is Node2D:
+			continue
+		if not node.has_method("take_damage"):
+			continue
+		var dist: float = origin.distance_to((node as Node2D).global_position)
+		if dist <= 180.0 and dist < best_dist:
+			best = node
+			best_dist = dist
+	if best != null:
+		_t004_call_damage_method(best, 1, origin, ((best as Node2D).global_position - origin).normalized(), 60.0, "azazel_chain_echo")
+
+func _t009_update_bound_step_dash_slow() -> void:
+	if not _t009_has_azazel_boon("azazel_bound_step"):
+		return
+	if not has_method("_is_dash_invulnerable"):
+		return
+	var dash_active: bool = bool(call("_is_dash_invulnerable"))
+	if not dash_active:
+		t009_bound_step_touched.clear()
+		return
+	for node: Node in get_tree().get_nodes_in_group("iso_test_enemy"):
+		if node == null or not is_instance_valid(node):
+			continue
+		if not node is Node2D:
+			continue
+		var key: String = str(node.get_instance_id())
+		if t009_bound_step_touched.has(key):
+			continue
+		if global_position.distance_to((node as Node2D).global_position) <= 48.0:
+			t009_bound_step_touched[key] = true
+			if node.has_method("apply_azazel_slow"):
+				node.call("apply_azazel_slow", 1.5, 0.55)

@@ -1,6 +1,14 @@
 extends Node2D
 class_name IsoTestEnemy
 
+# T-009 Azazel placeholder control state.
+var t009_azazel_slow_timer: float = 0.0
+var t009_azazel_slow_multiplier: float = 1.0
+var t009_azazel_root_timer: float = 0.0
+var t009_azazel_marked: bool = false
+var t009_azazel_original_move_speed: float = -1.0
+
+
 
 # T-006 enemy interaction state. Placeholder logic until final enemy art/animations exist.
 var t006_stagger_value: float = 0.0
@@ -277,6 +285,7 @@ func apply_encounter_profile(profile_name: String) -> void:
 	heavy_knockback_speed = 230.0
 
 func _process(delta: float) -> void:
+	_t009_update_azazel_enemy_effects(delta)
 	_t006_update_enemy_interaction(delta)
 	_visual_time += delta
 	_update_timers(delta)
@@ -1009,4 +1018,70 @@ func _t006_has_property(prop_name: String) -> bool:
 		if str(prop_info.get("name", "")) == prop_name:
 			return true
 	return false
+
+
+# T-009 — Azazel placeholder enemy effect hooks.
+func apply_azazel_mark() -> void:
+	t009_azazel_marked = true
+	set_meta("t009_azazel_condemned_mark", true)
+	modulate = Color(0.82, 0.72, 1.0, 1.0)
+	queue_redraw()
+
+func consume_azazel_mark() -> bool:
+	var was_marked: bool = t009_azazel_marked or (has_meta("t009_azazel_condemned_mark") and bool(get_meta("t009_azazel_condemned_mark")))
+	t009_azazel_marked = false
+	if has_meta("t009_azazel_condemned_mark"):
+		remove_meta("t009_azazel_condemned_mark")
+	return was_marked
+
+func apply_azazel_slow(duration: float = 1.5, multiplier: float = 0.55) -> void:
+	t009_azazel_slow_timer = max(t009_azazel_slow_timer, duration)
+	t009_azazel_slow_multiplier = clampf(multiplier, 0.05, 1.0)
+	_t009_capture_move_speed()
+
+func apply_azazel_root(duration: float = 2.0) -> void:
+	t009_azazel_root_timer = max(t009_azazel_root_timer, duration)
+	_t009_capture_move_speed()
+
+func apply_azazel_pull(source_position: Vector2, pull_distance: float = 42.0) -> void:
+	var dir: Vector2 = (source_position - global_position).normalized()
+	if dir.length_squared() <= 0.001:
+		return
+	global_position += dir * min(pull_distance, 64.0)
+	queue_redraw()
+
+func apply_azazel_bonus_stagger(amount: float = 30.0) -> void:
+	if has_method("_t006_add_stagger"):
+		call("_t006_add_stagger", amount)
+	else:
+		set_meta("t009_bonus_stagger", amount)
+
+func _t009_capture_move_speed() -> void:
+	if t009_azazel_original_move_speed >= 0.0:
+		return
+	for prop_info: Dictionary in get_property_list():
+		if str(prop_info.get("name", "")) == "move_speed":
+			t009_azazel_original_move_speed = float(get("move_speed"))
+			return
+
+func _t009_update_azazel_enemy_effects(delta: float) -> void:
+	if t009_azazel_slow_timer > 0.0:
+		t009_azazel_slow_timer = max(0.0, t009_azazel_slow_timer - delta)
+	if t009_azazel_root_timer > 0.0:
+		t009_azazel_root_timer = max(0.0, t009_azazel_root_timer - delta)
+
+	if t009_azazel_original_move_speed >= 0.0:
+		if t009_azazel_root_timer > 0.0:
+			set("move_speed", 0.0)
+		elif t009_azazel_slow_timer > 0.0:
+			set("move_speed", t009_azazel_original_move_speed * t009_azazel_slow_multiplier)
+		else:
+			set("move_speed", t009_azazel_original_move_speed)
+
+	if t009_azazel_marked:
+		modulate = Color(0.82, 0.72, 1.0, 1.0)
+	elif t009_azazel_root_timer > 0.0:
+		modulate = Color(0.75, 0.78, 1.0, 1.0)
+	elif t009_azazel_slow_timer > 0.0:
+		modulate = Color(0.78, 0.92, 1.0, 1.0)
 

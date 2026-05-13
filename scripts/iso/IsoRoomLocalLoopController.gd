@@ -92,6 +92,8 @@ enum RunPhase {
 @export var elite_combat_variant_offset: int = 2
 
 var shared_patron_manager: PatronRunManager = null
+# T-008 boon reward pool state
+var run_boon_state: Node = null
 var runtime_adapter: IsoAuthoredRoomRuntimeAdapter = null
 var rooms_completed: int = 0
 var current_room_cycle: int = 1
@@ -124,6 +126,7 @@ var _choice_generation_index: int = 0
 var _active_gates: Array[RunChoiceGate] = []
 var _active_interactables: Array[RunRoomInteractable] = []
 var _current_gate_choices: Array[Dictionary] = []
+var _pending_reward_source: Dictionary = {}
 var _last_selected_gate_name: String = ""
 var _room_completion_pending: bool = false
 var _route_choice_spawn_pending: bool = false
@@ -153,6 +156,7 @@ func _ready() -> void:
 	_audio_context("combat")
 	_setup_hud()
 	_create_shared_manager()
+	_ensure_run_boon_state()
 	call_deferred("_wire_room_deferred")
 
 func _process(_delta: float) -> void:
@@ -172,6 +176,9 @@ func start_new_local_run() -> void:
 	_set_phase(RunPhase.RUN_START, "Circle 0 run restarted.")
 	if shared_patron_manager != null:
 		shared_patron_manager.reset_run()
+	_ensure_run_boon_state()
+	if run_boon_state != null and run_boon_state.has_method("reset_for_new_run"):
+		run_boon_state.call("reset_for_new_run")
 	_enter_combat_room("combat")
 	_debug("Circle 0 route run restarted.")
 
@@ -203,6 +210,7 @@ func _reset_run_counters() -> void:
 	_last_selected_gate_name = ""
 	reward_history.clear()
 	reward_display_history.clear()
+	_pending_reward_source.clear()
 	room_variant_history.clear()
 	run_finished = false
 	_advance_in_progress = false
@@ -304,6 +312,13 @@ func _complete_current_room(reason: String) -> void:
 	})
 	last_status = "%s. Room %d/%d complete." % [reason, rooms_completed, rooms_until_run_end]
 
+	if completed_phase == RunPhase.COMBAT:
+		if rooms_completed == 1 and _pending_reward_source.is_empty():
+			_set_first_room_boon_source()
+		if not _pending_reward_source.is_empty():
+			_enter_pending_reward_source_room(reason)
+			return
+
 	if completed_phase == RunPhase.BOSS_LOCKED_PLACEHOLDER:
 		_finish_local_run(true, "Demo route complete. The Ash Warden gate has been reached.")
 		return
@@ -390,6 +405,10 @@ func _on_route_gate_chosen(choice_data: Dictionary) -> void:
 	_advance_in_progress = true
 	_audio_event("gate_open")
 	_last_selected_gate_name = str(choice_data.get("display_name", "Unknown Gate"))
+
+	if choice_data.has("reward_source") and choice_data.get("reward_source") is Dictionary:
+		_pending_reward_source = (choice_data.get("reward_source") as Dictionary).duplicate(true)
+
 	_clear_route_runtime_nodes()
 	_current_gate_choices.clear()
 	current_depth += 1
@@ -398,6 +417,8 @@ func _on_route_gate_chosen(choice_data: Dictionary) -> void:
 	match current_room_type:
 		"combat", "elite_combat":
 			_enter_combat_room(current_room_type)
+		"patron_boon":
+			_enter_combat_room("combat")
 		"reward":
 			_enter_reward_room()
 		"fountain":
@@ -443,8 +464,8 @@ func _enter_reward_room() -> void:
 		runtime_adapter.configure_room_presentation(current_room_type, current_depth, current_room_variant)
 		runtime_adapter.prepare_non_combat_room()
 	_spawn_reward_choices()
-	_show_intro(last_room_title, "Choose one physical upgrade")
-	last_status = "Reward room. Pick exactly one physical upgrade, then new route gates appear."
+	_show_intro(last_room_title, "Choose one boon or reward")
+	last_status = "Reward room. Pick exactly one boon or reward, then new route gates appear."
 	_set_phase(RunPhase.REWARD, last_status)
 	_debug(last_status)
 
@@ -506,7 +527,7 @@ func _enter_shop_room() -> void:
 	_debug(last_status)
 
 func _spawn_reward_choices() -> void:
-	var rewards: Array[Dictionary] = _build_reward_choices()
+	var rewards: Array[Dictionary] = _build_pending_reward_choices() if not _pending_reward_source.is_empty() else _build_reward_choices()
 	var center: Vector2 = _get_reward_position()
 	var offsets: Array[Vector2] = [Vector2(-128.0, 8.0), Vector2(0.0, -34.0), Vector2(128.0, 8.0)]
 	if reward_choices_per_room >= 4:
@@ -520,6 +541,12 @@ func _spawn_reward_choices() -> void:
 		if item.has_signal("focus_changed"):
 			item.focus_changed.connect(_on_interactable_focus_changed)
 		_active_interactables.append(item)
+
+func _clear_active_interactables() -> void:
+	for item: RunRoomInteractable in _active_interactables:
+		if item != null and is_instance_valid(item):
+			item.queue_free()
+	_active_interactables.clear()
 
 func _spawn_single_interactable(data: Dictionary, position: Vector2, callback: Callable) -> void:
 	var item: RunRoomInteractable = RunRoomInteractable.new()
@@ -535,12 +562,41 @@ func _on_reward_chosen(payload: Dictionary) -> void:
 		return
 	if _room_completion_pending:
 		return
+
+	var had_pending_source: bool = not _pending_reward_source.is_empty()
+	var pending_source_name: String = str(_pending_reward_source.get("display_name", "Patron"))
+
 	for item: RunRoomInteractable in _active_interactables:
 		if item != null and is_instance_valid(item):
 			item.mark_used()
 	_audio_event("reward_claim")
-	_apply_reward(payload)
+
+	if str(payload.get("reward_kind", "")) == "boon":
+		_claim_boon_payload(payload)
+	else:
+		_apply_reward(payload)
+
 	reward_rooms_completed += 1
+
+	if had_pending_source:
+		_pending_reward_source.clear()
+		_clear_route_runtime_nodes()
+		_clear_active_interactables()
+		last_status = "%s boon claimed: %s." % [pending_source_name, str(payload.get("display_name", "Unknown"))]
+		_set_phase(RunPhase.ROOM_CLEAR, last_status)
+		_room_completion_pending = false
+
+		if demo_run_length_locked and rooms_completed >= maxi(1, demo_rooms_before_boss):
+			_enter_boss_antechamber_placeholder()
+			return
+
+		if route_choice_enabled:
+			_schedule_route_choice_spawn()
+		else:
+			current_depth += 1
+			_enter_combat_room("combat")
+		return
+
 	_complete_current_room("Reward claimed: %s" % str(payload.get("display_name", "Unknown")))
 
 func _on_fountain_used(_payload: Dictionary) -> void:
@@ -907,16 +963,177 @@ func _clear_boss_placeholder_nodes() -> void:
 		if node.is_in_group("boss_placeholder") or node.is_in_group("ash_warden_boss") or node.is_in_group("boss_runtime"):
 			node.queue_free()
 
+
+func _build_first_patron_gate_choices() -> Array[Dictionary]:
+	return [
+		_patron_gate_choice("patron_azazel_chains", "AZAZEL", "Clear the next room to receive a boon from Azazel."),
+		_patron_gate_choice("patron_mammon_furnace", "MAMMON", "Clear the next room to receive a boon from Mammon."),
+		_patron_gate_choice("patron_minos_judge", "MINOS", "Clear the next room to receive a boon from Minos."),
+	]
+
+func _patron_gate_choice(patron_id: String, display_name: String, consequence: String) -> Dictionary:
+	return {
+		"room_type": "patron_boon",
+		"display_name": display_name,
+		"icon": "✦",
+		"risk": "Standard",
+		"risk_level": "Standard",
+		"short_consequence": consequence,
+		"current_consequence": consequence,
+		"exact_effect": consequence,
+		"prompt": "[E] Enter",
+		"reward_source": {
+			"kind": "patron",
+			"patron_id": patron_id,
+			"display_name": display_name,
+		},
+	}
+
+
+func _set_first_room_boon_source() -> void:
+	# First-room rule: the first combat clear always pays a patron boon before route gates.
+	# Later route-gated patron rewards still use the chosen gate's reward_source.
+	if not _pending_reward_source.is_empty():
+		return
+
+	var patron_options: Array[Dictionary] = [
+		{
+			"kind": "patron",
+			"patron_id": "patron_azazel_chains",
+			"display_name": "AZAZEL",
+		},
+		{
+			"kind": "patron",
+			"patron_id": "patron_mammon_furnace",
+			"display_name": "MAMMON",
+		},
+		{
+			"kind": "patron",
+			"patron_id": "patron_minos_judge",
+			"display_name": "MINOS",
+		},
+	]
+
+	var index: int = abs(hash(str(Time.get_ticks_msec()) + ":" + str(rooms_completed) + ":" + str(current_depth))) % patron_options.size()
+	_pending_reward_source = patron_options[index].duplicate(true)
+
+func _enter_pending_reward_source_room(reason: String) -> void:
+	var source_name: String = str(_pending_reward_source.get("display_name", "Patron"))
+	current_room_type = "reward"
+	current_room_variant = "patron_boon_reward"
+	last_room_title = "%s Boon" % source_name
+	_clear_route_runtime_nodes()
+	_set_phase(RunPhase.ROOM_INTRO, "%s offers a boon." % source_name)
+	if runtime_adapter != null:
+		runtime_adapter.configure_room_presentation("reward", current_depth, "reward_altar")
+		runtime_adapter.prepare_non_combat_room()
+	_spawn_reward_choices()
+	_show_intro(last_room_title, "Choose one boon from %s" % source_name)
+	last_status = "%s reward. Pick exactly one boon." % source_name
+	_room_completion_pending = false
+	_set_phase(RunPhase.REWARD, last_status)
+	_debug("%s after %s" % [last_status, reason])
+
+func _build_pending_reward_choices() -> Array[Dictionary]:
+	var source_kind: String = str(_pending_reward_source.get("kind", ""))
+	var patron_id: String = str(_pending_reward_source.get("patron_id", ""))
+	if source_kind != "patron" or patron_id == "":
+		return _build_reward_choices()
+
+	var file_path: String = _boon_file_for_patron(patron_id)
+	if file_path == "":
+		return _build_reward_choices()
+
+	var json_text: String = FileAccess.get_file_as_string(file_path)
+	var parsed: Variant = JSON.parse_string(json_text)
+	var raw_boons: Array = []
+
+	if parsed is Array:
+		raw_boons = parsed as Array
+	elif parsed is Dictionary:
+		var parsed_dict: Dictionary = parsed as Dictionary
+		if parsed_dict.get("boons", []) is Array:
+			raw_boons = parsed_dict.get("boons", []) as Array
+
+	var choices: Array[Dictionary] = []
+	for raw_boon: Variant in raw_boons:
+		if not (raw_boon is Dictionary):
+			continue
+		var boon: Dictionary = raw_boon as Dictionary
+		choices.append(_boon_payload_from_data(boon, patron_id))
+		if choices.size() >= reward_choices_per_room:
+			break
+
+	if choices.is_empty():
+		return _build_reward_choices()
+	return choices
+
+func _boon_file_for_patron(patron_id: String) -> String:
+	match patron_id:
+		"patron_azazel_chains":
+			return "res://data/boons/azazel_chains_boons.json"
+		"patron_mammon_furnace":
+			return "res://data/boons/mammon_furnace_boons.json"
+		"patron_minos_judge":
+			return "res://data/boons/minos_judge_boons.json"
+	return ""
+
+func _boon_payload_from_data(boon: Dictionary, patron_id: String) -> Dictionary:
+	var source_name: String = str(_pending_reward_source.get("display_name", "Patron"))
+	var boon_id: String = str(boon.get("id", boon.get("boon_id", "unknown_boon")))
+	var boon_name: String = str(boon.get("name", boon.get("display_name", boon_id)))
+	var rarity: String = str(boon.get("rarity", "common"))
+	var category: String = str(boon.get("category", "boon"))
+	var exact_effect: String = str(boon.get("description_exact", boon.get("exact_effect", boon.get("description", "Gain a patron boon for this run."))))
+
+	return {
+		"id": boon_id,
+		"reward_kind": "boon",
+		"boon_id": boon_id,
+		"patron_id": patron_id,
+		"patron_name": source_name,
+		"display_name": boon_name,
+		"rarity": rarity,
+		"category": category,
+		"exact_effect": exact_effect,
+		"current_consequence": "%s boon. Applies for this run." % source_name,
+		"prompt": "[E] Claim",
+		"icon": str(boon.get("icon", "✦")),
+		"raw_boon": boon.duplicate(true),
+	}
+
+
+func _t009_notify_players_of_boon(payload: Dictionary) -> void:
+	for node: Node in get_tree().get_nodes_in_group("player"):
+		if node != null and is_instance_valid(node) and node.has_method("apply_run_boon"):
+			node.call("apply_run_boon", payload)
+
+func _claim_boon_payload(payload: Dictionary) -> void:
+	var boon_id: String = str(payload.get("boon_id", payload.get("id", "unknown_boon")))
+	var patron_name: String = str(payload.get("patron_name", "Patron"))
+	var display_name: String = str(payload.get("display_name", boon_id))
+
+	reward_history.append(boon_id)
+	reward_display_history.append("%s: %s" % [patron_name, display_name])
+	_t009_notify_players_of_boon(payload)
+
+	if run_boon_state != null and is_instance_valid(run_boon_state):
+		if run_boon_state.has_method("claim_boon"):
+			run_boon_state.call("claim_boon", payload)
+		elif run_boon_state.has_method("add_boon"):
+			run_boon_state.call("add_boon", payload)
+		elif run_boon_state.has_method("record_boon"):
+			run_boon_state.call("record_boon", payload)
+
+
 func _build_gate_choices() -> Array[Dictionary]:
 	_choice_generation_index += 1
 	if demo_run_length_locked and force_demo_route_pattern:
 		return _build_locked_demo_gate_choices()
 	var choices: Array[Dictionary] = []
+	if rooms_completed == 1 and reward_rooms_completed <= 0:
+		return _build_first_patron_gate_choices()
 	choices.append(_room_choice("combat"))
-	if force_first_choice_reward and rooms_completed == 1 and reward_rooms_completed <= 0:
-		choices.append(_room_choice("reward"))
-		choices.append(_room_choice("fountain"))
-		return choices
 	var pool: Array[String] = ["reward", "fountain", "combat", "forge", "shop", "elite_combat"]
 	var start: int = (_choice_generation_index + rooms_completed + combat_rooms_cleared) % pool.size()
 	for i: int in range(pool.size()):
@@ -934,11 +1151,7 @@ func _build_locked_demo_gate_choices() -> Array[Dictionary]:
 	# V20 locks the first demo route into a predictable beginning, middle, and pre-boss end.
 	# rooms_completed is the room just cleared, so it selects the next chamber.
 	if rooms_completed <= 1:
-		return [
-			_room_choice_with_text("combat", "Combat", "Standard fight. Builds toward the Ash Warden route."),
-			_room_choice_with_text("reward", "Reward", "Claim one temporary boon."),
-			_room_choice_with_text("fountain", "Fountain", "Recover before the next chamber."),
-		]
+		return _build_first_patron_gate_choices()
 	if rooms_completed == 2:
 		return [
 			_room_choice_with_text("combat", "Combat", "Another Circle 0 encounter."),
@@ -997,6 +1210,100 @@ func _room_choice(room_type: String) -> Dictionary:
 			return {"room_type": "boss_arena", "display_name": "The Sentencing Furnace", "description": "Ash Warden boss arena", "icon": "W", "rarity": "boss"}
 	return {"room_type": "combat", "display_name": "Combat", "description": "More ash-born enemies", "icon": "C", "rarity": "common"}
 
+
+func _ensure_run_boon_state() -> void:
+	if run_boon_state != null and is_instance_valid(run_boon_state):
+		return
+	var state_script: Script = load("res://scripts/run/RunBoonState.gd") as Script
+	if state_script == null:
+		push_warning("[IsoLocalLoop] T-008 could not load RunBoonState.gd")
+		return
+	run_boon_state = state_script.new() as Node
+	if run_boon_state == null:
+		push_warning("[IsoLocalLoop] T-008 RunBoonState did not create a Node")
+		return
+	run_boon_state.name = "LocalRunBoonState"
+	add_child(run_boon_state)
+
+func _t008_build_boon_reward_choices() -> Array[Dictionary]:
+	_ensure_run_boon_state()
+	var pool_script: Script = load("res://scripts/run/BoonRewardPool.gd") as Script
+	if pool_script == null:
+		return []
+	var pool: RefCounted = pool_script.new() as RefCounted
+	if pool == null or not pool.has_method("build_choices"):
+		return []
+	var context: Dictionary = {
+		"reward_history": reward_history.duplicate(true),
+		"reward_display_history": reward_display_history.duplicate(true),
+		"rooms_completed": rooms_completed,
+		"reward_rooms_completed": reward_rooms_completed,
+	}
+	var choices: Variant = pool.call("build_choices", run_boon_state, rooms_completed, reward_rooms_completed, reward_choices_per_room, context)
+	if typeof(choices) == TYPE_ARRAY:
+		return choices as Array[Dictionary]
+	return []
+
+func _t008_try_apply_boon_reward(payload: Dictionary) -> bool:
+	var kind: String = str(payload.get("kind", ""))
+	if kind != "boon" and kind != "boon_upgrade" and kind != "synergy_boon" and kind != "neutral_reward":
+		return false
+
+	var reward_id: String = str(payload.get("reward_id", payload.get("boon_id", "")))
+	var display_name: String = str(payload.get("display_name", reward_id))
+	reward_history.append(reward_id)
+	reward_display_history.append(display_name)
+
+	if kind == "boon" or kind == "boon_upgrade" or kind == "synergy_boon":
+		_ensure_run_boon_state()
+		if run_boon_state != null and run_boon_state.has_method("add_boon"):
+			run_boon_state.call("add_boon", payload)
+		_t009_notify_players_of_boon(payload)
+		_t008_apply_immediate_boon_effect(payload)
+		last_status = "Boon claimed: %s." % display_name
+		_debug(last_status)
+		return true
+
+	# Neutral rewards are still generated by the boon reward pool, but they map to existing run economy/player effects.
+	match reward_id:
+		"neutral_max_hp_minor":
+			var player: Node = _find_player_node()
+			if player != null:
+				_add_player_int(player, "max_health", 1)
+				_heal_player_flat(1)
+		"neutral_ash_sigil_minor":
+			run_bonus_ash_sigils += 1
+		"neutral_gold_small":
+			if Engine.has_singleton("RunEconomyData"):
+				pass
+		_:
+			push_warning("[IsoLocalLoop] Unknown T-008 neutral reward id: %s" % reward_id)
+	last_status = "Reward claimed: %s." % display_name
+	_debug(last_status)
+	return true
+
+func _t008_apply_immediate_boon_effect(payload: Dictionary) -> void:
+	# T-008 only applies safe immediate placeholder effects.
+	# Full effect hooks arrive in patron-specific tickets.
+	var player: Node = _find_player_node()
+	if player == null:
+		return
+	var effect_id: String = str(payload.get("effect_id", ""))
+	match effect_id:
+		"final_appeal_ultimate_discount":
+			if player.get("judgment_ultimate_cost") != null:
+				_add_player_float_clamped(player, "judgment_ultimate_cost", -15.0, 35.0, 100.0)
+		"heavy_stagger_multiplier":
+			if player.get("heavy_stagger_multiplier") != null:
+				_add_player_float_clamped(player, "heavy_stagger_multiplier", 0.30, 1.0, 3.0)
+		"low_hp_damage_multiplier":
+			# Stored in RunBoonState for later logic; no safe direct player stat yet.
+			pass
+		_:
+			pass
+	if player is CanvasItem:
+		(player as CanvasItem).queue_redraw()
+
 func _reward_catalogue() -> Array[Dictionary]:
 	return [
 		_reward_data("light_damage", "Tempered Edge", "common", "Damage", "Light attack damage +1", "Your light attacks deal 1 additional damage for this run.", "Reliable basic sword damage.", "D"),
@@ -1041,6 +1348,9 @@ func _reward_data(reward_id: String, display_name: String, rarity: String, categ
 	}
 
 func _build_reward_choices() -> Array[Dictionary]:
+	var boon_choices: Array[Dictionary] = _t008_build_boon_reward_choices()
+	if not boon_choices.is_empty():
+		return boon_choices
 	var all_rewards: Array[Dictionary] = _reward_catalogue()
 	var picked: Array[Dictionary] = []
 	var start: int = (rooms_completed * 3 + reward_rooms_completed * 5 + _choice_generation_index) % all_rewards.size()
@@ -1071,6 +1381,8 @@ func _build_reward_choices() -> Array[Dictionary]:
 	return picked
 
 func _apply_reward(payload: Dictionary) -> void:
+	if _t008_try_apply_boon_reward(payload):
+		return
 	var player: Node = _find_player_node()
 	var reward_id: String = str(payload.get("reward_id", ""))
 	var display_name: String = str(payload.get("display_name", reward_id))
@@ -1511,7 +1823,7 @@ func _update_hud() -> void:
 func _player_ui_state() -> Dictionary:
 	var player: Node = _find_player_node()
 	if player == null:
-		return {"current_health": 0, "max_health": 1}
+		return {"current_health": 0, "max_health": 1, "judgment": {"current": 0.0, "max": 100.0, "ratio": 0.0, "is_full": false}}
 	var current_hp: int = 0
 	var max_hp: int = 1
 	var current_value: Variant = player.get("current_health")
@@ -1520,9 +1832,15 @@ func _player_ui_state() -> Dictionary:
 	var max_value: Variant = player.get("max_health")
 	if max_value != null:
 		max_hp = maxi(1, int(max_value))
+	var judgment_state: Dictionary = {"current": 0.0, "max": 100.0, "ratio": 0.0, "is_full": false}
+	if player.has_method("get_judgment_ui_state"):
+		var judgment_variant: Variant = player.call("get_judgment_ui_state")
+		if judgment_variant is Dictionary:
+			judgment_state = judgment_variant as Dictionary
 	return {
 		"current_health": current_hp,
 		"max_health": max_hp,
+		"judgment": judgment_state,
 	}
 
 func _on_interactable_focus_changed(payload: Dictionary, focused: bool) -> void:
