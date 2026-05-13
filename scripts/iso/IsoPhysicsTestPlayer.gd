@@ -21,6 +21,29 @@ var _t004_q_hit_targets: Array = []
 var _t004_q_last_direction: Vector2 = Vector2.DOWN
 # T004_Q_ABILITY_PLACEHOLDER_END
 
+# T005_ULTIMATE_PLACEHOLDER_START
+@export_group("T005 Ultimate Placeholder")
+@export var ultimate_enabled: bool = true
+@export var ultimate_key_debug_enabled: bool = true
+@export var ultimate_meter_cost: float = 100.0
+@export var ultimate_damage: int = 5
+@export var ultimate_stagger_damage: float = 45.0
+@export var ultimate_radius: float = 138.0
+@export var ultimate_forward_dot: float = -0.10
+@export var ultimate_knockback: float = 360.0
+@export var ultimate_recovery_time: float = 0.58
+@export var ultimate_flash_time: float = 0.32
+@export var ultimate_hit_pause: float = 0.085
+@export var show_debug_ultimate: bool = true
+
+var _t005_ultimate_recovery_remaining: float = 0.0
+var _t005_ultimate_flash_remaining: float = 0.0
+var _t005_ultimate_key_was_down: bool = false
+var _t005_ultimate_last_direction: Vector2 = Vector2.DOWN
+var _t005_ultimate_hit_targets: Array = []
+# T005_ULTIMATE_PLACEHOLDER_END
+
+
 
 const PERMANENT_UPGRADE_SCRIPT: Script = preload("res://scripts/run/PermanentUpgradeData.gd")
 const INFERNAL_AUDIO_SCRIPT: Script = preload("res://scripts/audio/InfernalAudio.gd")
@@ -1224,21 +1247,145 @@ func _t004_apply_damage_to_target(target: Node2D, amount: int, knockback_force: 
 	return false
 
 
-func _t004_call_damage_method(target: Node2D, method_name: String, amount: int, knockback_force: float) -> void:
-	var method_arg_count: int = _t004_get_method_arg_count(target, method_name)
-	var hit_direction: Vector2 = (target.global_position - global_position).normalized()
+
+func _t004_call_damage_method(target: Node, arg1: Variant = null, arg2: Variant = null, arg3: Variant = null, arg4: Variant = null, arg5: Variant = null) -> void:
+	if target == null or not is_instance_valid(target):
+		return
+	if not target.has_method("take_damage"):
+		return
+
+	var raw_args: Array = [arg1, arg2, arg3, arg4, arg5]
+
+	var damage_amount: int = 1
+	var damage_found: bool = false
+	var hit_position: Vector2 = global_position
+	var hit_direction: Vector2 = facing.normalized()
+	var knockback_force: float = 0.0
+	var stagger_amount: float = 0.0
+	var attack_kind: String = "player_ability"
+	var vector_values: Array = []
+
+	for raw_value: Variant in raw_args:
+		if raw_value == null:
+			continue
+
+		var raw_type: int = typeof(raw_value)
+
+		if raw_type == TYPE_STRING:
+			attack_kind = str(raw_value)
+		elif raw_type == TYPE_INT:
+			if not damage_found:
+				damage_amount = int(raw_value)
+				damage_found = true
+			else:
+				stagger_amount = float(raw_value)
+		elif raw_type == TYPE_FLOAT:
+			if not damage_found:
+				damage_amount = int(round(float(raw_value)))
+				damage_found = true
+			elif knockback_force == 0.0:
+				knockback_force = float(raw_value)
+			else:
+				stagger_amount = float(raw_value)
+		elif raw_type == TYPE_VECTOR2:
+			vector_values.append(raw_value)
+
+	if vector_values.size() == 1:
+		var only_vector: Vector2 = vector_values[0] as Vector2
+		if only_vector.length() <= 2.0:
+			hit_direction = only_vector.normalized()
+			hit_position = global_position
+		else:
+			hit_position = only_vector
+	elif vector_values.size() >= 2:
+		hit_position = vector_values[0] as Vector2
+		hit_direction = (vector_values[1] as Vector2).normalized()
+
 	if hit_direction.length_squared() <= 0.001:
-		hit_direction = _t004_q_last_direction
+		if target is Node2D:
+			hit_direction = ((target as Node2D).global_position - hit_position).normalized()
+		if hit_direction.length_squared() <= 0.001:
+			hit_direction = facing.normalized()
+		if hit_direction.length_squared() <= 0.001:
+			hit_direction = Vector2.RIGHT
 
-	if method_arg_count <= 1:
-		target.call(method_name, amount)
-	elif method_arg_count == 2:
-		target.call(method_name, amount, global_position)
-	elif method_arg_count == 3:
-		target.call(method_name, amount, global_position, knockback_force)
-	else:
-		target.call(method_name, amount, global_position, knockback_force, hit_direction)
+	var method_args: Array = []
+	for raw_method_info: Dictionary in target.get_method_list():
+		var method_info: Dictionary = raw_method_info
+		if str(method_info.get("name", "")) == "take_damage":
+			method_args = method_info.get("args", [])
+			break
 
+	var script_path: String = ""
+	var script_resource: Script = target.get_script() as Script
+	if script_resource != null:
+		script_path = script_resource.resource_path
+
+	# Known boss signature:
+	# take_damage(amount: int, source_global_position: Vector2, hit_direction: Vector2, attack_kind: String)
+	if script_path.ends_with("AshWardenBoss.gd"):
+		target.call("take_damage", damage_amount, hit_position, hit_direction, attack_kind)
+		return
+
+	# Known normal enemy signature:
+	# take_damage(amount: int)
+	if method_args.size() <= 1:
+		target.call("take_damage", damage_amount)
+		return
+
+	var call_args: Array = []
+	for i: int in range(method_args.size()):
+		var arg_info: Dictionary = method_args[i] as Dictionary
+		var arg_name: String = str(arg_info.get("name", "")).to_lower()
+		var arg_type: int = int(arg_info.get("type", TYPE_NIL))
+
+		if i == 0:
+			call_args.append(damage_amount)
+			continue
+
+		match arg_type:
+			TYPE_VECTOR2:
+				if arg_name.find("dir") >= 0 or arg_name.find("normal") >= 0:
+					call_args.append(hit_direction)
+				elif arg_name.find("source") >= 0 or arg_name.find("pos") >= 0 or arg_name.find("origin") >= 0 or arg_name.find("global") >= 0:
+					call_args.append(hit_position)
+				else:
+					call_args.append(hit_position)
+			TYPE_STRING:
+				call_args.append(attack_kind)
+			TYPE_INT:
+				if arg_name.find("stagger") >= 0:
+					call_args.append(int(round(stagger_amount)))
+				else:
+					call_args.append(int(round(knockback_force)))
+			TYPE_FLOAT:
+				if arg_name.find("stagger") >= 0:
+					call_args.append(stagger_amount)
+				else:
+					call_args.append(knockback_force)
+			TYPE_BOOL:
+				call_args.append(false)
+			TYPE_OBJECT:
+				call_args.append(self)
+			_:
+				if arg_name.find("kind") >= 0 or arg_name.find("type") >= 0:
+					call_args.append(attack_kind)
+				elif arg_name.find("dir") >= 0:
+					call_args.append(hit_direction)
+				elif arg_name.find("pos") >= 0 or arg_name.find("source") >= 0:
+					call_args.append(hit_position)
+				else:
+					call_args.append(damage_amount)
+
+	Callable(target, "take_damage").callv(call_args)
+
+func _t004_get_method_args(target: Object, method_name: String) -> Array:
+	if target == null:
+		return []
+	for method_info: Dictionary in target.get_method_list():
+		if str(method_info.get("name", "")) == method_name:
+			return method_info.get("args", []) as Array
+	return []
 
 func _t004_get_method_arg_count(target: Node, method_name: String) -> int:
 	var methods: Array = target.get_method_list()
@@ -1309,3 +1456,239 @@ func _t004_draw_q_cooldown_debug() -> void:
 	var end_angle: float = start_angle + TAU * ratio
 	draw_arc(Vector2(0.0, -44.0), radius, start_angle, end_angle, 20, Color(0.82, 0.68, 0.32, 0.75), 2.0)
 # T004_Q_ABILITY_PLACEHOLDER_FUNCTIONS_END
+
+
+# T005_ULTIMATE_PLACEHOLDER_FUNCTIONS_START
+func _t005_tick_ultimate(delta: float) -> void:
+	if _t005_ultimate_recovery_remaining > 0.0:
+		_t005_ultimate_recovery_remaining = maxf(0.0, _t005_ultimate_recovery_remaining - delta)
+	if _t005_ultimate_flash_remaining > 0.0:
+		_t005_ultimate_flash_remaining = maxf(0.0, _t005_ultimate_flash_remaining - delta)
+		queue_redraw()
+
+
+func _t005_consume_ultimate_input() -> bool:
+	var pressed_action: bool = false
+	if InputMap.has_action("player_ultimate"):
+		pressed_action = Input.is_action_just_pressed("player_ultimate")
+
+	if not ultimate_key_debug_enabled:
+		return pressed_action
+
+	var key_is_down: bool = Input.is_key_pressed(KEY_R)
+	var pressed_key: bool = key_is_down and not _t005_ultimate_key_was_down
+	_t005_ultimate_key_was_down = key_is_down
+	return pressed_action or pressed_key
+
+
+func _t005_try_start_ultimate() -> void:
+	if not ultimate_enabled:
+		return
+	if _t005_ultimate_recovery_remaining > 0.0:
+		return
+	if not _t005_can_spend_ultimate_meter():
+		_t005_pulse_failed_ultimate()
+		return
+	if not _t005_spend_ultimate_meter():
+		_t005_pulse_failed_ultimate()
+		return
+
+	_t005_ultimate_last_direction = facing.normalized()
+	if _t005_ultimate_last_direction.length_squared() <= 0.001:
+		_t005_ultimate_last_direction = Vector2.DOWN
+
+	_t005_ultimate_recovery_remaining = ultimate_recovery_time
+	_t005_ultimate_flash_remaining = ultimate_flash_time
+	_t005_ultimate_hit_targets.clear()
+	_t005_apply_ultimate_hit()
+	queue_redraw()
+
+
+func _t005_can_spend_ultimate_meter() -> bool:
+	if has_method("can_spend_judgment"):
+		return bool(call("can_spend_judgment", ultimate_meter_cost))
+	var meter_value: Variant = get("judgment_meter")
+	if meter_value == null:
+		return false
+	return float(meter_value) >= ultimate_meter_cost
+
+
+func _t005_spend_ultimate_meter() -> bool:
+	if has_method("spend_judgment"):
+		return bool(call("spend_judgment", ultimate_meter_cost))
+	var meter_value: Variant = get("judgment_meter")
+	if meter_value == null:
+		return false
+	var current_meter: float = float(meter_value)
+	if current_meter < ultimate_meter_cost:
+		return false
+	set("judgment_meter", maxf(0.0, current_meter - ultimate_meter_cost))
+	return true
+
+
+func _t005_pulse_failed_ultimate() -> void:
+	# Small local feedback only. Final UI/audio comes later.
+	_t005_ultimate_flash_remaining = minf(0.10, maxf(ultimate_flash_time * 0.35, 0.06))
+	queue_redraw()
+
+
+func _t005_apply_ultimate_hit() -> void:
+	var targets: Array = []
+	_t005_append_group_nodes(targets, "attack_target")
+	_t005_append_group_nodes(targets, "enemy")
+	_t005_append_group_nodes(targets, "boss")
+
+	var hit_count: int = 0
+	for target_obj in targets:
+		var target: Node2D = target_obj as Node2D
+		if target == null:
+			continue
+		if target == self:
+			continue
+		if not is_instance_valid(target):
+			continue
+
+		var delta_to_target: Vector2 = target.global_position - global_position
+		var distance_to_target: float = delta_to_target.length()
+		if distance_to_target > ultimate_radius:
+			continue
+
+		var direction_to_target: Vector2 = delta_to_target.normalized()
+		if distance_to_target <= 6.0:
+			direction_to_target = _t005_ultimate_last_direction
+
+		if direction_to_target.dot(_t005_ultimate_last_direction) < ultimate_forward_dot:
+			continue
+
+		if _t005_apply_damage_to_target(target, ultimate_damage, ultimate_knockback):
+			_t005_ultimate_hit_targets.append(target)
+			hit_count += 1
+			_t005_apply_stagger_to_target(target)
+
+	if hit_count > 0:
+		_t005_apply_ultimate_hit_pause()
+
+
+func _t005_append_group_nodes(targets: Array, group_name: String) -> void:
+	var group_nodes: Array = get_tree().get_nodes_in_group(group_name)
+	for node_obj in group_nodes:
+		var node: Node = node_obj as Node
+		if node == null:
+			continue
+		if not targets.has(node):
+			targets.append(node)
+
+
+func _t005_apply_damage_to_target(target: Node2D, amount: int, knockback_force: float) -> bool:
+	if target.has_method("take_damage"):
+		_t005_call_damage_method(target, "take_damage", amount, knockback_force)
+		return true
+	if target.has_method("receive_damage"):
+		_t005_call_damage_method(target, "receive_damage", amount, knockback_force)
+		return true
+	if target.has_method("apply_damage"):
+		_t005_call_damage_method(target, "apply_damage", amount, knockback_force)
+		return true
+	if target.has_method("damage"):
+		_t005_call_damage_method(target, "damage", amount, knockback_force)
+		return true
+	if target.has_method("take_hit"):
+		_t005_call_damage_method(target, "take_hit", amount, knockback_force)
+		return true
+	if target.has_method("hit"):
+		_t005_call_damage_method(target, "hit", amount, knockback_force)
+		return true
+	return false
+
+
+func _t005_call_damage_method(target: Node2D, method_name: String, amount: int, knockback_force: float) -> void:
+	var method_arg_count: int = _t005_get_method_arg_count(target, method_name)
+	var hit_direction: Vector2 = (target.global_position - global_position).normalized()
+	if hit_direction.length_squared() <= 0.001:
+		hit_direction = _t005_ultimate_last_direction
+
+	if method_arg_count <= 1:
+		target.call(method_name, amount)
+	elif method_arg_count == 2:
+		target.call(method_name, amount, global_position)
+	elif method_arg_count == 3:
+		target.call(method_name, amount, global_position, knockback_force)
+	else:
+		target.call(method_name, amount, global_position, knockback_force, hit_direction)
+
+
+func _t005_get_method_arg_count(target: Node, method_name: String) -> int:
+	var methods: Array = target.get_method_list()
+	for method_obj in methods:
+		var method_data: Dictionary = method_obj as Dictionary
+		if String(method_data.get("name", "")) != method_name:
+			continue
+		var args: Array = method_data.get("args", [])
+		return args.size()
+	return 1
+
+
+func _t005_apply_stagger_to_target(target: Node2D) -> void:
+	if target.has_method("apply_stagger"):
+		target.call("apply_stagger", ultimate_stagger_damage, global_position)
+	elif target.has_method("add_stagger"):
+		target.call("add_stagger", ultimate_stagger_damage)
+	elif target.has_method("stagger"):
+		target.call("stagger", ultimate_stagger_damage)
+
+
+func _t005_apply_ultimate_hit_pause() -> void:
+	# Several earlier feel patches used local pause timers. Use them if present, otherwise do nothing.
+	var pause_value: Variant = get("_hit_pause_remaining")
+	if pause_value != null:
+		set("_hit_pause_remaining", maxf(float(pause_value), ultimate_hit_pause))
+	var pause_value_alt: Variant = get("hit_pause_remaining")
+	if pause_value_alt != null:
+		set("hit_pause_remaining", maxf(float(pause_value_alt), ultimate_hit_pause))
+
+
+func _t005_get_ultimate_ready_ratio() -> float:
+	if has_method("get_judgment_meter_ratio"):
+		return float(call("get_judgment_meter_ratio"))
+	var meter_value: Variant = get("judgment_meter")
+	var max_value: Variant = get("judgment_meter_max")
+	if meter_value == null or max_value == null:
+		return 0.0
+	var max_meter: float = maxf(1.0, float(max_value))
+	return clampf(float(meter_value) / max_meter, 0.0, 1.0)
+
+
+func _t005_draw_ultimate_debug() -> void:
+	if not show_debug_ultimate:
+		return
+	if _t005_ultimate_flash_remaining <= 0.0:
+		return
+	var alpha: float = clampf(_t005_ultimate_flash_remaining / maxf(ultimate_flash_time, 0.001), 0.0, 1.0)
+	var dir: Vector2 = _t005_ultimate_last_direction.normalized()
+	if dir.length_squared() <= 0.001:
+		dir = Vector2.DOWN
+	var left_dir: Vector2 = dir.rotated(-0.78)
+	var right_dir: Vector2 = dir.rotated(0.78)
+	var slash_poly: PackedVector2Array = PackedVector2Array([
+		Vector2.ZERO,
+		left_dir * (ultimate_radius * 0.72),
+		dir * (ultimate_radius * 1.10),
+		right_dir * (ultimate_radius * 0.72),
+	])
+	draw_colored_polygon(slash_poly, Color(1.0, 0.78, 0.30, 0.22 * alpha))
+	draw_line(Vector2.ZERO, dir * ultimate_radius, Color(1.0, 0.93, 0.58, 0.95 * alpha), 5.0)
+	draw_line(left_dir * 18.0, dir * (ultimate_radius * 1.05), Color(1.0, 0.63, 0.22, 0.82 * alpha), 3.0)
+	draw_line(right_dir * 18.0, dir * (ultimate_radius * 1.05), Color(1.0, 0.63, 0.22, 0.82 * alpha), 3.0)
+	draw_arc(Vector2.ZERO, ultimate_radius * 0.62, 0.0, TAU, 40, Color(0.82, 0.58, 0.20, 0.42 * alpha), 2.0)
+
+
+func _t005_draw_ultimate_meter_hint() -> void:
+	if not show_debug_ultimate:
+		return
+	if _t005_ultimate_flash_remaining > 0.0:
+		return
+	var ratio: float = _t005_get_ultimate_ready_ratio()
+	if ratio < 1.0:
+		return
+	draw_arc(Vector2(0.0, -68.0), 24.0, 0.0, TAU, 28, Color(1.0, 0.76, 0.28, 0.82), 2.0)
+# T005_ULTIMATE_PLACEHOLDER_FUNCTIONS_END
