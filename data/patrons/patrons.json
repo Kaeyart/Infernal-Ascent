@@ -1,0 +1,53 @@
+[
+  {
+    "id": "patron_azazel_chains",
+    "display_name": "Azazel, the Chain-Bound Rebel",
+    "short_name": "Azazel",
+    "title": "The Chain-Bound Rebel",
+    "domain": "chains, forbidden weapons, rebellion, punishment",
+    "short_theme": "Stagger, binding, heavy attacks, riposte punishment.",
+    "base_weight": 1.0,
+    "first_boon_weight": 1.0,
+    "keepsake_weight_bonus": 4.0,
+    "boon_quality_bonus_from_keepsake": 0.15,
+    "color_accent": "#b58a48",
+    "icon_path": "res://art/iso/ui/patrons/patron_azazel_chains_icon.png",
+    "header_path": "res://art/iso/ui/patrons/patron_azazel_chains_header.png",
+    "mechanic_tags": ["chain", "stagger", "root", "riposte", "heavy"],
+    "lore_note": "A known rebel and forbidden teacher, reinterpreted as a chained patron of punishment and weaponized defiance."
+  },
+  {
+    "id": "patron_mammon_furnace",
+    "display_name": "Mammon, the Gilded Furnace",
+    "short_name": "Mammon",
+    "title": "The Gilded Furnace",
+    "domain": "greed, gold, furnace heat, debt, molten punishment",
+    "short_theme": "Burn, ash trails, explosions, gold interactions, hazard pressure.",
+    "base_weight": 1.0,
+    "first_boon_weight": 1.0,
+    "keepsake_weight_bonus": 4.0,
+    "boon_quality_bonus_from_keepsake": 0.15,
+    "color_accent": "#c96f2f",
+    "icon_path": "res://art/iso/ui/patrons/patron_mammon_furnace_icon.png",
+    "header_path": "res://art/iso/ui/patrons/patron_mammon_furnace_header.png",
+    "mechanic_tags": ["burn", "ash", "explosion", "gold", "hazard"],
+    "lore_note": "A prince of greed reimagined as the furnace that melts value, debt, and flesh into punishment."
+  },
+  {
+    "id": "patron_minos_judge",
+    "display_name": "Minos, the Blind Judge",
+    "short_name": "Minos",
+    "title": "The Blind Judge",
+    "domain": "judgment, sentencing, verdicts, execution, measured guilt",
+    "short_theme": "Judged marks, precision timing, execution, Judgment meter gain.",
+    "base_weight": 1.0,
+    "first_boon_weight": 1.0,
+    "keepsake_weight_bonus": 4.0,
+    "boon_quality_bonus_from_keepsake": 0.15,
+    "color_accent": "#9fb1c8",
+    "icon_path": "res://art/iso/ui/patrons/patron_minos_judge_icon.png",
+    "header_path": "res://art/iso/ui/patrons/patron_minos_judge_header.png",
+    "mechanic_tags": ["judged", "execution", "meter", "perfect_dodge", "verdict"],
+    "lore_note": "The infernal judge adapted from classical punishment mythology into Hell's bureaucratic court of verdicts."
+  }
+]

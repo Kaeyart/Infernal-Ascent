@@ -1,0 +1,93 @@
+[
+  {
+    "id": "synergy_azazel_mammon_burning_chains",
+    "name": "Burning Chains",
+    "required_patrons": ["patron_azazel_chains", "patron_mammon_furnace"],
+    "required_tags": ["chain", "burn"],
+    "rarity": "rare",
+    "category": "synergy",
+    "description_exact": "Rooted or slowed enemies burn for 2 seconds.",
+    "effect_id": "controlled_enemies_burn",
+    "effect": { "duration": 2.0, "damage_per_second": 0.5 },
+    "icon_path": "res://art/iso/ui/boons/synergy_burning_chains.png",
+    "vfx_hook": "vfx_burning_chains"
+  },
+  {
+    "id": "synergy_azazel_mammon_furnace_shackles",
+    "name": "Furnace Shackles",
+    "required_patrons": ["patron_azazel_chains", "patron_mammon_furnace"],
+    "required_tags": ["heavy", "burn"],
+    "rarity": "rare",
+    "category": "synergy",
+    "description_exact": "Heavy attacks against burning enemies briefly bind them.",
+    "effect_id": "heavy_vs_burning_bind",
+    "effect": { "duration": 1.0 },
+    "icon_path": "res://art/iso/ui/boons/synergy_furnace_shackles.png",
+    "vfx_hook": "vfx_furnace_shackles"
+  },
+  {
+    "id": "synergy_azazel_mammon_debt_bound_flame",
+    "name": "Debt-Bound Flame",
+    "required_patrons": ["patron_azazel_chains", "patron_mammon_furnace"],
+    "required_tags": ["gold", "chain"],
+    "rarity": "legendary",
+    "category": "synergy",
+    "description_exact": "After spending gold, your next chain effect also burns enemies.",
+    "effect_id": "shop_spend_chain_burn",
+    "effect": { "duration": 2.5 },
+    "icon_path": "res://art/iso/ui/boons/synergy_debt_bound_flame.png",
+    "vfx_hook": "vfx_debt_bound_flame"
+  },
+  {
+    "id": "synergy_azazel_minos_bound_verdict",
+    "name": "Bound Verdict",
+    "required_patrons": ["patron_azazel_chains", "patron_minos_judge"],
+    "required_tags": ["chain", "judged"],
+    "rarity": "rare",
+    "category": "synergy",
+    "description_exact": "Judged enemies build stagger 20% faster.",
+    "effect_id": "judged_stagger_multiplier",
+    "effect": { "stagger_multiplier": 1.2 },
+    "icon_path": "res://art/iso/ui/boons/synergy_bound_verdict.png",
+    "vfx_hook": "vfx_bound_verdict"
+  },
+  {
+    "id": "synergy_azazel_minos_no_appeal",
+    "name": "No Appeal",
+    "required_patrons": ["patron_azazel_chains", "patron_minos_judge"],
+    "required_tags": ["q", "judged"],
+    "rarity": "rare",
+    "category": "synergy",
+    "description_exact": "Q against a Judged enemy roots it briefly.",
+    "effect_id": "q_vs_judged_root",
+    "effect": { "duration": 1.2 },
+    "icon_path": "res://art/iso/ui/boons/synergy_no_appeal.png",
+    "vfx_hook": "vfx_no_appeal"
+  },
+  {
+    "id": "synergy_mammon_minos_trial_by_flame",
+    "name": "Trial by Flame",
+    "required_patrons": ["patron_mammon_furnace", "patron_minos_judge"],
+    "required_tags": ["burn", "judged"],
+    "rarity": "rare",
+    "category": "synergy",
+    "description_exact": "Judged enemies ignite when hit by heavy attacks.",
+    "effect_id": "heavy_judged_ignite",
+    "effect": { "duration": 2.0, "damage_per_second": 0.5 },
+    "icon_path": "res://art/iso/ui/boons/synergy_trial_by_flame.png",
+    "vfx_hook": "vfx_trial_by_flame"
+  },
+  {
+    "id": "synergy_mammon_minos_gilded_judgment",
+    "name": "Gilded Judgment",
+    "required_patrons": ["patron_mammon_furnace", "patron_minos_judge"],
+    "required_tags": ["gold", "judged"],
+    "rarity": "rare",
+    "category": "synergy",
+    "description_exact": "Killing a Judged enemy has a chance to drop extra run gold.",
+    "effect_id": "judged_kill_gold_chance",
+    "effect": { "chance": 0.25, "gold": 5 },
+    "icon_path": "res://art/iso/ui/boons/synergy_gilded_judgment.png",
+    "vfx_hook": "vfx_gilded_judgment"
+  }
+]

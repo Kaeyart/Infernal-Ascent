@@ -64,19 +64,21 @@
       "id": "S-006",
       "name": "Patron Data Schema",
       "lane": "DATA",
-      "status": "Missing",
+      "status": "Placeholder",
       "priority": "P0",
       "need": "Patron, boon, synergy, active run patron structures.",
-      "acceptance": "Data loads cleanly; not hardcoded in UI scripts."
+      "acceptance": "Data loads cleanly; not hardcoded in UI scripts.",
+      "notes": "T-007 added patron, boon, and synergy data schema. Runtime reward integration comes in T-008."
     },
     {
       "id": "S-007",
       "name": "Two Patrons Per Run",
       "lane": "LOGIC",
-      "status": "Missing",
+      "status": "Rework",
       "priority": "P0",
       "need": "Each run has exactly two active patrons.",
-      "acceptance": "Reward pool uses active patrons plus neutral boons."
+      "acceptance": "Reward pool uses active patrons plus neutral boons.",
+      "notes": "Old two-patrons-per-run lock rejected. Replace with weighted boon reward pool in T-008."
     },
     {
       "id": "S-008",
