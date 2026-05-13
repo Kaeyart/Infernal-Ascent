@@ -1,0 +1,270 @@
+{
+  "version": "T-014B",
+  "name": "Infernal UI Art Skin V1",
+  "assets": [
+    {
+      "id": "ui_card_ascension_accent",
+      "path": "res://art/iso/ui/infernal_skin_v1/cards/ui_card_ascension_accent.png",
+      "size": [
+        64,
+        12
+      ]
+    },
+    {
+      "id": "ui_card_forge_accent",
+      "path": "res://art/iso/ui/infernal_skin_v1/cards/ui_card_forge_accent.png",
+      "size": [
+        64,
+        12
+      ]
+    },
+    {
+      "id": "ui_card_patron_accent",
+      "path": "res://art/iso/ui/infernal_skin_v1/cards/ui_card_patron_accent.png",
+      "size": [
+        64,
+        12
+      ]
+    },
+    {
+      "id": "ui_boss_health_fill",
+      "path": "res://art/iso/ui/infernal_skin_v1/hud/ui_boss_health_fill.png",
+      "size": [
+        488,
+        18
+      ]
+    },
+    {
+      "id": "ui_boss_health_frame",
+      "path": "res://art/iso/ui/infernal_skin_v1/hud/ui_boss_health_frame.png",
+      "size": [
+        520,
+        42
+      ]
+    },
+    {
+      "id": "ui_health_fill",
+      "path": "res://art/iso/ui/infernal_skin_v1/hud/ui_health_fill.png",
+      "size": [
+        260,
+        20
+      ]
+    },
+    {
+      "id": "ui_health_frame",
+      "path": "res://art/iso/ui/infernal_skin_v1/hud/ui_health_frame.png",
+      "size": [
+        292,
+        44
+      ]
+    },
+    {
+      "id": "ui_judgment_meter_fill",
+      "path": "res://art/iso/ui/infernal_skin_v1/hud/ui_judgment_meter_fill.png",
+      "size": [
+        260,
+        16
+      ]
+    },
+    {
+      "id": "ui_judgment_meter_frame",
+      "path": "res://art/iso/ui/infernal_skin_v1/hud/ui_judgment_meter_frame.png",
+      "size": [
+        292,
+        38
+      ]
+    },
+    {
+      "id": "ui_q_cooldown_frame",
+      "path": "res://art/iso/ui/infernal_skin_v1/hud/ui_q_cooldown_frame.png",
+      "size": [
+        72,
+        72
+      ]
+    },
+    {
+      "id": "ui_ultimate_ready_frame",
+      "path": "res://art/iso/ui/infernal_skin_v1/hud/ui_ultimate_ready_frame.png",
+      "size": [
+        72,
+        72
+      ]
+    },
+    {
+      "id": "patron_azazel_icon",
+      "path": "res://art/iso/ui/infernal_skin_v1/icons/patron_azazel_icon.png",
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "patron_mammon_icon",
+      "path": "res://art/iso/ui/infernal_skin_v1/icons/patron_mammon_icon.png",
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "patron_minos_icon",
+      "path": "res://art/iso/ui/infernal_skin_v1/icons/patron_minos_icon.png",
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "ui_icon_ascension",
+      "path": "res://art/iso/ui/infernal_skin_v1/icons/ui_icon_ascension.png",
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "ui_icon_boon",
+      "path": "res://art/iso/ui/infernal_skin_v1/icons/ui_icon_boon.png",
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "ui_icon_boss",
+      "path": "res://art/iso/ui/infernal_skin_v1/icons/ui_icon_boss.png",
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "ui_icon_elite",
+      "path": "res://art/iso/ui/infernal_skin_v1/icons/ui_icon_elite.png",
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "ui_icon_forge",
+      "path": "res://art/iso/ui/infernal_skin_v1/icons/ui_icon_forge.png",
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "ui_icon_fountain",
+      "path": "res://art/iso/ui/infernal_skin_v1/icons/ui_icon_fountain.png",
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "ui_icon_gold",
+      "path": "res://art/iso/ui/infernal_skin_v1/icons/ui_icon_gold.png",
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "ui_icon_health",
+      "path": "res://art/iso/ui/infernal_skin_v1/icons/ui_icon_health.png",
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "ui_panel_forge",
+      "path": "res://art/iso/ui/infernal_skin_v1/panels/ui_panel_forge.png",
+      "size": [
+        512,
+        260
+      ]
+    },
+    {
+      "id": "ui_panel_reliquary",
+      "path": "res://art/iso/ui/infernal_skin_v1/panels/ui_panel_reliquary.png",
+      "size": [
+        512,
+        260
+      ]
+    },
+    {
+      "id": "ui_panel_reward_choice",
+      "path": "res://art/iso/ui/infernal_skin_v1/panels/ui_panel_reward_choice.png",
+      "size": [
+        512,
+        226
+      ]
+    },
+    {
+      "id": "ui_panel_route_choice",
+      "path": "res://art/iso/ui/infernal_skin_v1/panels/ui_panel_route_choice.png",
+      "size": [
+        448,
+        162
+      ]
+    },
+    {
+      "id": "ui_panel_run_result",
+      "path": "res://art/iso/ui/infernal_skin_v1/panels/ui_panel_run_result.png",
+      "size": [
+        720,
+        390
+      ]
+    },
+    {
+      "id": "ui_panel_shop",
+      "path": "res://art/iso/ui/infernal_skin_v1/panels/ui_panel_shop.png",
+      "size": [
+        512,
+        260
+      ]
+    },
+    {
+      "id": "ui_panel_weapon_ascension",
+      "path": "res://art/iso/ui/infernal_skin_v1/panels/ui_panel_weapon_ascension.png",
+      "size": [
+        560,
+        288
+      ]
+    },
+    {
+      "id": "ui_tooltip_frame",
+      "path": "res://art/iso/ui/infernal_skin_v1/panels/ui_tooltip_frame.png",
+      "size": [
+        360,
+        128
+      ]
+    },
+    {
+      "id": "ui_rarity_common_trim",
+      "path": "res://art/iso/ui/infernal_skin_v1/trims/ui_rarity_common_trim.png",
+      "size": [
+        256,
+        158
+      ]
+    },
+    {
+      "id": "ui_rarity_legendary_trim",
+      "path": "res://art/iso/ui/infernal_skin_v1/trims/ui_rarity_legendary_trim.png",
+      "size": [
+        256,
+        158
+      ]
+    },
+    {
+      "id": "ui_rarity_rare_trim",
+      "path": "res://art/iso/ui/infernal_skin_v1/trims/ui_rarity_rare_trim.png",
+      "size": [
+        256,
+        158
+      ]
+    }
+  ]
+}

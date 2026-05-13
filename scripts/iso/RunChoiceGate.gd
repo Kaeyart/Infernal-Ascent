@@ -2,6 +2,8 @@ extends Node2D
 
 class_name RunChoiceGate
 
+const UI_SKIN_SCRIPT: Script = preload("res://scripts/iso/ui/InfernalUISkinV1.gd")
+
 signal gate_chosen(choice_data: Dictionary)
 signal gate_focus_changed(choice_data: Dictionary, focused: bool)
 
@@ -119,6 +121,15 @@ func _draw_focus_prompt(base_color: Color, pulse: float) -> void:
 	draw_rect(rect, Color(0.018, 0.013, 0.010, 0.82), true)
 	draw_rect(rect, Color(base_color.r, base_color.g, base_color.b, 0.70 + pulse * 0.15), false, 1.4)
 	draw_string(font, Vector2(rect.position.x + 6.0, rect.position.y + 17.0), "[E] ENTER", HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 12.0, 11, Color(0.86, 0.94, 1.0, 1.0))
+
+func _draw_skin_panel_texture(rect: Rect2, kind: String = "route", alpha: float = 0.92) -> bool:
+	if UI_SKIN_SCRIPT == null:
+		return false
+	var texture: Texture2D = UI_SKIN_SCRIPT.panel_texture(kind)
+	if texture == null:
+		return false
+	draw_texture_rect(texture, rect, false, Color(1.0, 1.0, 1.0, alpha))
+	return true
 
 func _draw_minimal_label(display_name: String, icon: String, base_color: Color, pulse: float) -> void:
 	# T-014: route gates must read as reward promises, not generic doors.
