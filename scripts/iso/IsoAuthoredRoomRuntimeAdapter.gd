@@ -57,7 +57,7 @@ signal combat_room_cleared()
 var room_root: Node = null
 var player_node: Node2D = null
 var patron_flow_node: IsoPatronFlowController = null
-var spawned_enemies: Array[IsoTestEnemy] = []
+var spawned_enemies: Array[Node] = []
 var shared_patron_manager_override: PatronRunManager = null
 var _room_cleared: bool = false
 var _alive_enemy_count: int = 0
@@ -267,7 +267,14 @@ func _spawn_test_enemies_from_markers() -> void:
 	_room_cleared = false
 	var profiles: Array[String] = _get_encounter_profiles(spawn_positions.size())
 	for i: int in range(profiles.size()):
-		var enemy: IsoTestEnemy = IsoTestEnemy.new()
+		var enemy_script: Script = load("res://scripts/iso/IsoTestEnemy.gd") as Script
+		if enemy_script == null:
+			push_warning("Could not load IsoTestEnemy.gd")
+			continue
+		var enemy: Node2D = enemy_script.new() as Node2D
+		if enemy == null:
+			push_warning("IsoTestEnemy.gd did not create a Node2D")
+			continue
 		enemy.name = "IsoTestEnemy_%s_%02d" % [profiles[i], i]
 		parent_for_enemies.add_child(enemy)
 		enemy.global_position = spawn_positions[i % spawn_positions.size()]
@@ -492,7 +499,7 @@ func _select_variant_for_room_type(room_type: String, depth: int) -> String:
 	return variants[(maxi(1, depth) + _encounter_cycle_index - 2) % variants.size()]
 
 func _clear_existing_test_enemies() -> void:
-	for enemy: IsoTestEnemy in spawned_enemies:
+	for enemy: Node in spawned_enemies:
 		if enemy != null and is_instance_valid(enemy):
 			enemy.queue_free()
 	spawned_enemies.clear()
@@ -504,7 +511,7 @@ func _clear_existing_test_enemies() -> void:
 	var nodes: Array[Node] = []
 	_collect_nodes(room_root if room_root != null else self, nodes)
 	for node: Node in nodes:
-		if node is IsoTestEnemy:
+		if node is Node and node.is_in_group("iso_test_enemy"):
 			node.queue_free()
 			continue
 		var n: String = _normalize_marker_name(node.name)
@@ -518,7 +525,7 @@ func _clear_existing_projectiles() -> void:
 		if node is AshBoltProjectile:
 			node.queue_free()
 
-func _on_test_enemy_died(enemy: IsoTestEnemy) -> void:
+func _on_test_enemy_died(enemy: Node) -> void:
 	var enemy_index: int = spawned_enemies.find(enemy)
 	if enemy_index >= 0:
 		spawned_enemies.remove_at(enemy_index)

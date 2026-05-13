@@ -45,7 +45,7 @@
       "id": "S-004",
       "name": "Ultimate: Judgment Break",
       "lane": "LOGIC",
-      "status": "Missing",
+      "status": "Placeholder",
       "priority": "P0",
       "need": "Full-meter execution slash with stagger/boss value.",
       "acceptance": "Consumes meter, damages enemies, has readable windup/impact."
@@ -54,10 +54,11 @@
       "id": "S-005",
       "name": "Enemy Interaction Rebuild",
       "lane": "LOGIC",
-      "status": "Missing",
+      "status": "In Progress",
       "priority": "P0",
       "need": "Stagger, knockback, vulnerability windows, Q/ultimate reactions.",
-      "acceptance": "First three enemies teach different responses."
+      "acceptance": "First three enemies teach different responses.",
+      "notes": "T-006 adds placeholder stagger, vulnerability, hit reaction, and role-aware player ability interactions."
     },
     {
       "id": "S-006",

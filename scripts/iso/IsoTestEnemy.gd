@@ -1,10 +1,22 @@
 extends Node2D
-
 class_name IsoTestEnemy
+
+
+# T-006 enemy interaction state. Placeholder logic until final enemy art/animations exist.
+var t006_stagger_value: float = 0.0
+var t006_stagger_threshold: float = 100.0
+var t006_stagger_recover_rate: float = 24.0
+var t006_stagger_timer: float = 0.0
+var t006_hit_react_timer: float = 0.0
+var t006_vulnerability_timer: float = 0.0
+var t006_last_player_attack_kind: String = ""
+var t006_base_modulate: Color = Color.WHITE
+var t006_base_modulate_captured: bool = false
+
 
 const INFERNAL_AUDIO_SCRIPT: Script = preload("res://scripts/audio/InfernalAudio.gd")
 
-signal died(enemy: IsoTestEnemy)
+signal died(enemy: Node)
 signal damaged(amount: int, remaining_health: int)
 signal feel_event(event_name: String, strength: float, world_position: Vector2)
 
@@ -265,6 +277,7 @@ func apply_encounter_profile(profile_name: String) -> void:
 	heavy_knockback_speed = 230.0
 
 func _process(delta: float) -> void:
+	_t006_update_enemy_interaction(delta)
 	_visual_time += delta
 	_update_timers(delta)
 	_update_damage_numbers(delta)
@@ -435,9 +448,9 @@ func _apply_support_pulse() -> void:
 	for node: Node in enemies:
 		if node == self:
 			continue
-		if not (node is IsoTestEnemy):
+		if not (node is Node and node.is_in_group("iso_test_enemy")):
 			continue
-		var enemy: IsoTestEnemy = node as IsoTestEnemy
+		var enemy: Node = node
 		if enemy.is_dead:
 			continue
 		if global_position.distance_to(enemy.global_position) <= support_pulse_range:
@@ -866,3 +879,134 @@ func _draw_filled_ellipse(rect: Rect2, color: Color) -> void:
 		var angle: float = TAU * float(i) / 24.0
 		points.append(rect.position + rect.size * 0.5 + Vector2(cos(angle) * rect.size.x * 0.5, sin(angle) * rect.size.y * 0.5))
 	draw_colored_polygon(points, color)
+
+
+# T-006 — Called by IsoPhysicsTestPlayer before take_damage().
+func receive_player_ability_interaction(attack_kind: String = "attack", damage_amount: int = 1, source_position: Vector2 = Vector2.ZERO, hit_direction: Vector2 = Vector2.RIGHT, knockback_force: float = 0.0, stagger_amount: float = 0.0) -> void:
+	if not t006_base_modulate_captured:
+		t006_base_modulate = modulate
+		t006_base_modulate_captured = true
+
+	t006_last_player_attack_kind = attack_kind
+	var role_id: String = _t006_get_enemy_role_id()
+	var stagger_gain: float = _t006_get_base_stagger_for_attack(attack_kind, stagger_amount)
+
+	if role_id.find("cinder") >= 0 or role_id.find("lunger") >= 0:
+		if attack_kind.find("q") >= 0 or attack_kind.find("riposte") >= 0 or attack_kind.find("ultimate") >= 0:
+			stagger_gain *= 1.45
+	elif role_id.find("ember") >= 0 or role_id.find("spitter") >= 0:
+		if attack_kind.find("q") >= 0 or attack_kind.find("ultimate") >= 0:
+			stagger_gain *= 1.25
+	elif role_id.find("ash") >= 0 or role_id.find("grunt") >= 0:
+		if attack_kind.find("heavy") >= 0:
+			stagger_gain *= 1.20
+
+	_t006_add_stagger(stagger_gain)
+	t006_hit_react_timer = max(t006_hit_react_timer, 0.10)
+
+	if attack_kind.find("ultimate") >= 0:
+		t006_vulnerability_timer = max(t006_vulnerability_timer, 1.25)
+	elif attack_kind.find("q") >= 0 or attack_kind.find("riposte") >= 0:
+		t006_vulnerability_timer = max(t006_vulnerability_timer, 0.65)
+	elif attack_kind.find("heavy") >= 0:
+		t006_vulnerability_timer = max(t006_vulnerability_timer, 0.35)
+
+	_t006_apply_placeholder_knockback(hit_direction, knockback_force, attack_kind)
+	_t006_apply_placeholder_modulate()
+
+func get_player_ability_damage_multiplier(attack_kind: String = "attack") -> float:
+	var role_id: String = _t006_get_enemy_role_id()
+	var multiplier: float = 1.0
+	if t006_stagger_timer > 0.0:
+		multiplier += 0.20
+	if t006_vulnerability_timer > 0.0:
+		multiplier += 0.10
+	if role_id.find("cinder") >= 0 or role_id.find("lunger") >= 0:
+		if attack_kind.find("q") >= 0 or attack_kind.find("riposte") >= 0:
+			multiplier += 0.15
+	if role_id.find("ember") >= 0 or role_id.find("spitter") >= 0:
+		if attack_kind.find("ultimate") >= 0:
+			multiplier += 0.15
+	return multiplier
+
+func is_t006_staggered() -> bool:
+	return t006_stagger_timer > 0.0
+
+func _t006_add_stagger(amount: float) -> void:
+	t006_stagger_value = clamp(t006_stagger_value + amount, 0.0, t006_stagger_threshold)
+	if t006_stagger_value >= t006_stagger_threshold:
+		t006_stagger_timer = max(t006_stagger_timer, 0.80)
+		t006_stagger_value = max(0.0, t006_stagger_threshold * 0.35)
+
+func _t006_get_base_stagger_for_attack(attack_kind: String, explicit_stagger: float) -> float:
+	if explicit_stagger > 0.0:
+		return explicit_stagger
+	if attack_kind.find("ultimate") >= 0:
+		return 70.0
+	if attack_kind.find("q") >= 0 or attack_kind.find("riposte") >= 0:
+		return 42.0
+	if attack_kind.find("heavy") >= 0:
+		return 36.0
+	return 16.0
+
+func _t006_apply_placeholder_knockback(hit_direction: Vector2, knockback_force: float, attack_kind: String) -> void:
+	var dir: Vector2 = hit_direction.normalized()
+	if dir.length_squared() <= 0.001:
+		dir = Vector2.RIGHT
+	var force: float = knockback_force
+	if force <= 0.0:
+		if attack_kind.find("ultimate") >= 0:
+			force = 180.0
+		elif attack_kind.find("q") >= 0 or attack_kind.find("heavy") >= 0:
+			force = 95.0
+		else:
+			force = 38.0
+
+	if _t006_has_property("velocity"):
+		var current_velocity: Variant = get("velocity")
+		if typeof(current_velocity) == TYPE_VECTOR2:
+			set("velocity", (current_velocity as Vector2) + dir * force)
+	else:
+		global_position += dir * min(force * 0.035, 10.0)
+
+func _t006_update_enemy_interaction(delta) -> void:
+	if not t006_base_modulate_captured:
+		t006_base_modulate = modulate
+		t006_base_modulate_captured = true
+
+	if t006_stagger_timer > 0.0:
+		t006_stagger_timer = max(0.0, t006_stagger_timer - delta)
+	if t006_hit_react_timer > 0.0:
+		t006_hit_react_timer = max(0.0, t006_hit_react_timer - delta)
+	if t006_vulnerability_timer > 0.0:
+		t006_vulnerability_timer = max(0.0, t006_vulnerability_timer - delta)
+
+	if t006_stagger_timer <= 0.0 and t006_stagger_value > 0.0:
+		t006_stagger_value = max(0.0, t006_stagger_value - t006_stagger_recover_rate * delta)
+
+	_t006_apply_placeholder_modulate()
+
+func _t006_apply_placeholder_modulate() -> void:
+	if t006_stagger_timer > 0.0:
+		modulate = Color(1.0, 0.86, 0.48, 1.0)
+	elif t006_hit_react_timer > 0.0:
+		modulate = Color(1.0, 0.72, 0.58, 1.0)
+	elif t006_vulnerability_timer > 0.0:
+		modulate = Color(0.95, 0.88, 1.0, 1.0)
+	elif t006_base_modulate_captured:
+		modulate = t006_base_modulate
+
+func _t006_get_enemy_role_id() -> String:
+	var chunks: Array[String] = [name.to_lower()]
+	var possible_props: Array[String] = ["enemy_id", "enemy_type", "enemy_kind", "archetype", "display_name"]
+	for prop_name: String in possible_props:
+		if _t006_has_property(prop_name):
+			chunks.append(str(get(prop_name)).to_lower())
+	return " ".join(chunks)
+
+func _t006_has_property(prop_name: String) -> bool:
+	for prop_info: Dictionary in get_property_list():
+		if str(prop_info.get("name", "")) == prop_name:
+			return true
+	return false
+

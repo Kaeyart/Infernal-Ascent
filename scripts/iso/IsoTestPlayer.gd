@@ -55,10 +55,20 @@ func _perform_attack() -> void:
 
 	var enemies: Array[Node] = get_tree().get_nodes_in_group("iso_test_enemy")
 	for enemy_node: Node in enemies:
-		if enemy_node is IsoTestEnemy:
-			var enemy: IsoTestEnemy = enemy_node as IsoTestEnemy
-			if not enemy.is_dead and global_position.distance_to(enemy.global_position) <= attack_radius:
-				enemy.take_damage(attack_damage)
+		if enemy_node == null or not is_instance_valid(enemy_node):
+			continue
+		if not enemy_node is Node2D:
+			continue
+		if not enemy_node.has_method("take_damage"):
+			continue
+
+		var enemy_position: Vector2 = (enemy_node as Node2D).global_position
+		var enemy_is_dead: bool = false
+		if "is_dead" in enemy_node:
+			enemy_is_dead = bool(enemy_node.get("is_dead"))
+
+		if not enemy_is_dead and global_position.distance_to(enemy_position) <= attack_radius:
+			enemy_node.call("take_damage", attack_damage)
 
 func _draw() -> void:
 	var shadow_color: Color = Color(0.0, 0.0, 0.0, 0.32)

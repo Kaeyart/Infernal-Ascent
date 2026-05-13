@@ -5,7 +5,7 @@ extends Node2D
 
 const ROOM_LOADER_SCRIPT: Script = preload("res://scripts/iso/room_pipeline/IsoGodotTileRoomLoader.gd")
 const PLAYER_SCRIPT: Script = preload("res://scripts/iso/IsoPhysicsTestPlayer.gd")
-const ENEMY_SCRIPT: Script = preload("res://scripts/iso/IsoTestEnemy.gd")
+const ENEMY_SCRIPT_PATH: String = "res://scripts/iso/IsoTestEnemy.gd"
 const HAZARD_SCRIPT: Script = preload("res://scripts/iso/IsoRoomHazard.gd")
 const GATE_SCRIPT: Script = preload("res://scripts/iso/RunChoiceGate.gd")
 
@@ -175,7 +175,7 @@ func _spawn_enemies() -> void:
 		if typeof(enemy_value) != TYPE_DICTIONARY:
 			continue
 		var enemy_data: Dictionary = enemy_value
-		var enemy_node: Node2D = ENEMY_SCRIPT.new() as Node2D
+		var enemy_node: Node2D = (load(ENEMY_SCRIPT_PATH) as Script).new() as Node2D
 		if enemy_node == null:
 			continue
 		enemy_node.name = "GeneratedRoomEnemy_%s" % String(enemy_data.get("role", "enemy"))

@@ -1248,6 +1248,7 @@ func _t004_apply_damage_to_target(target: Node2D, amount: int, knockback_force: 
 
 
 
+
 func _t004_call_damage_method(target: Node, arg1: Variant = null, arg2: Variant = null, arg3: Variant = null, arg4: Variant = null, arg5: Variant = null) -> void:
 	if target == null or not is_instance_valid(target):
 		return
@@ -1308,6 +1309,15 @@ func _t004_call_damage_method(target: Node, arg1: Variant = null, arg2: Variant 
 			hit_direction = facing.normalized()
 		if hit_direction.length_squared() <= 0.001:
 			hit_direction = Vector2.RIGHT
+
+	# T-006: allow normal enemies to react before damage is applied.
+	if target.has_method("receive_player_ability_interaction"):
+		target.call("receive_player_ability_interaction", attack_kind, damage_amount, hit_position, hit_direction, knockback_force, stagger_amount)
+
+	# T-006: let enemies expose temporary vulnerability without changing every take_damage signature.
+	if target.has_method("get_player_ability_damage_multiplier"):
+		var multiplier: float = float(target.call("get_player_ability_damage_multiplier", attack_kind))
+		damage_amount = max(1, int(ceil(float(damage_amount) * multiplier)))
 
 	var method_args: Array = []
 	for raw_method_info: Dictionary in target.get_method_list():
