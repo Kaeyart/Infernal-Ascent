@@ -5,7 +5,7 @@ class_name IsoHubRuntimeController
 ## V27 — Permanent Upgrade V1.
 ## V28 — Save System V1 loads/saves hub currency, upgrades, and last-run data.
 
-const PLAYER_SCRIPT: Script = preload("res://scripts/iso/IsoPhysicsTestPlayer.gd")
+const PLAYER_SCRIPT_PATH: String = "res://scripts/iso/IsoPhysicsTestPlayer.gd"
 const PANEL_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubInteractionPanel.gd")
 const NPC_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubNPC.gd")
 const TRAINING_DUMMY_SCRIPT: Script = preload("res://scripts/iso/hub/IsoHubTrainingDummy.gd")
@@ -159,7 +159,7 @@ var npc_defs: Array[Dictionary] = [
 ]
 
 func _ready() -> void:
-	_audio_context("hub")
+	call_deferred("_audio_context", "hub")
 	SaveGameData.load_or_create()
 	_setup_hud()
 	_setup_interaction_panel()
@@ -201,13 +201,36 @@ func _spawn_player_from_marker() -> void:
 
 	player_node = _find_existing_player()
 	if player_node == null:
-		player_node = PLAYER_SCRIPT.new()
+		player_node = _create_player_instance()
+		if player_node == null:
+			status_text = "Player script could not be loaded. Check IsoPhysicsTestPlayer.gd."
+			push_error("[IsoHubRuntime] Could not create player from " + PLAYER_SCRIPT_PATH)
+			return
 		player_node.name = "IsoHubPlayer"
 		_get_y_sorted_root().add_child(player_node)
 		print("[IsoHubRuntime] Created IsoHubPlayer.")
 
 	player_node.global_position = spawn_position
 	_ensure_camera(player_node)
+
+
+func _create_player_instance() -> Node2D:
+	if not ResourceLoader.exists(PLAYER_SCRIPT_PATH):
+		push_error("[IsoHubRuntime] Missing player script: " + PLAYER_SCRIPT_PATH)
+		return null
+
+	var loaded_resource: Resource = load(PLAYER_SCRIPT_PATH)
+	var player_script: Script = loaded_resource as Script
+	if player_script == null:
+		push_error("[IsoHubRuntime] Player script exists but could not be loaded. It may contain a parser error: " + PLAYER_SCRIPT_PATH)
+		return null
+
+	var player_instance: Object = player_script.new()
+	if not player_instance is Node2D:
+		push_error("[IsoHubRuntime] Player script did not create a Node2D instance: " + PLAYER_SCRIPT_PATH)
+		return null
+
+	return player_instance as Node2D
 
 func _spawn_station_markers() -> void:
 	_clear_station_markers()

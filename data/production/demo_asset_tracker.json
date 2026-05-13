@@ -36,7 +36,7 @@
       "id": "S-003",
       "name": "Q Ability: Penitent Riposte / Ashen Cleave",
       "lane": "LOGIC",
-      "status": "Missing",
+      "status": "Placeholder",
       "priority": "P0",
       "need": "Skill-expression ability; riposte preferred, cleave fallback.",
       "acceptance": "Works in combat with placeholder VFX and cooldown."

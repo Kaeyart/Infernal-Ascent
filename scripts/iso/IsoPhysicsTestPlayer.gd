@@ -1,6 +1,26 @@
 extends CharacterBody2D
-
 class_name IsoPhysicsTestPlayer
+# T004_Q_ABILITY_PLACEHOLDER_START
+@export_group("T004 Q Ability Placeholder")
+@export var q_ability_enabled: bool = true
+@export var q_ability_cooldown: float = 4.25
+@export var q_ability_damage: int = 2
+@export var q_ability_radius: float = 82.0
+@export var q_ability_forward_dot: float = 0.18
+@export var q_ability_knockback: float = 210.0
+@export var q_ability_judgment_gain_on_hit: float = 12.0
+@export var q_ability_recovery_time: float = 0.34
+@export var q_ability_flash_time: float = 0.18
+@export var show_debug_q_ability: bool = true
+
+var q_ability_cooldown_remaining: float = 0.0
+var _t004_q_recovery_remaining: float = 0.0
+var _t004_q_flash_remaining: float = 0.0
+var _t004_q_key_was_down: bool = false
+var _t004_q_hit_targets: Array = []
+var _t004_q_last_direction: Vector2 = Vector2.DOWN
+# T004_Q_ABILITY_PLACEHOLDER_END
+
 
 const PERMANENT_UPGRADE_SCRIPT: Script = preload("res://scripts/run/PermanentUpgradeData.gd")
 const INFERNAL_AUDIO_SCRIPT: Script = preload("res://scripts/audio/InfernalAudio.gd")
@@ -8,6 +28,23 @@ const INFERNAL_AUDIO_SCRIPT: Script = preload("res://scripts/audio/InfernalAudio
 signal damaged(amount: int, remaining_health: int)
 signal died
 signal respawned
+
+
+# --- T003 JUDGMENT METER DECLARATIONS START ---
+signal judgment_meter_changed(current: float, maximum: float, ratio: float, is_full: bool)
+signal judgment_meter_gained(amount: float, reason: String)
+signal judgment_meter_spent(amount: float)
+
+@export_category("Judgment Meter")
+@export var judgment_meter_max: float = 100.0
+@export var judgment_meter_start: float = 0.0
+@export var judgment_gain_light_hit: float = 8.0
+@export var judgment_gain_heavy_hit: float = 14.0
+@export var judgment_ultimate_cost: float = 100.0
+@export var enable_debug_judgment_keys: bool = true
+
+var judgment_meter: float = 0.0
+# --- T003 JUDGMENT METER DECLARATIONS END ---
 
 @export var move_speed: float = 260.0
 @export var attack_radius: float = 86.0
@@ -192,6 +229,7 @@ const _ANIM_FRAMES: Dictionary = {
 }
 
 func _ready() -> void:
+	_initialize_judgment_meter_t003()
 	add_to_group("player")
 	if current_health <= 0:
 		current_health = max_health
@@ -207,6 +245,10 @@ func _ready() -> void:
 	queue_redraw()
 
 func _physics_process(delta: float) -> void:
+	_t004_tick_q_ability(delta)
+	if _t004_consume_q_input():
+		_t004_try_start_q_ability()
+
 	_update_timers(delta)
 	var was_moving: bool = _update_movement(delta)
 	_update_attack_input()
@@ -428,6 +470,8 @@ func _deliver_attack_damage_to_target(target: Node2D) -> void:
 	target.call("take_damage", _active_attack_damage)
 
 func _register_successful_attack_hit(anim_name: String) -> void:
+	var hit_gain: float = judgment_gain_heavy_hit if anim_name == "heavy_attack" else judgment_gain_light_hit
+	gain_judgment(hit_gain, "successful_" + anim_name)
 	var pause_duration: float = hit_pause_duration_heavy if anim_name == "heavy_attack" else hit_pause_duration_light
 	_feel_hit_pause_remaining = maxf(_feel_hit_pause_remaining, pause_duration)
 	var shake_strength: float = heavy_attack_hit_shake_strength if anim_name == "heavy_attack" else attack_hit_shake_strength
@@ -537,6 +581,7 @@ func get_health_text() -> String:
 	return "%d/%d" % [current_health, max_health]
 
 func play_death_animation() -> void:
+	reset_judgment_meter()
 	if _is_dead:
 		return
 	_is_dead = true
@@ -834,7 +879,15 @@ func _load_texture_if_exists(path: String) -> Texture2D:
 		return resource as Texture2D
 	return null
 
+
+func _unhandled_input(event: InputEvent) -> void:
+	_handle_judgment_debug_input_t003(event)
+
 func _draw() -> void:
+	if _t004_q_flash_remaining > 0.0:
+		_t004_draw_q_ability_debug()
+	_t004_draw_q_cooldown_debug()
+
 	_draw_filled_ellipse(Rect2(Vector2(-20.0, 10.0), Vector2(40.0, 13.0)), Color(0.0, 0.0, 0.0, 0.34))
 	if show_dash_streak and _dash_remaining > 0.0:
 		_draw_dash_streak()
@@ -988,3 +1041,271 @@ func _draw_filled_ellipse(rect: Rect2, color: Color) -> void:
 		var angle: float = TAU * float(i) / 24.0
 		points.append(rect.position + rect.size * 0.5 + Vector2(cos(angle) * rect.size.x * 0.5, sin(angle) * rect.size.y * 0.5))
 	draw_colored_polygon(points, color)
+
+
+# --- T003 JUDGMENT METER FUNCTIONS START ---
+func _initialize_judgment_meter_t003() -> void:
+	judgment_meter = clampf(judgment_meter_start, 0.0, judgment_meter_max)
+	_emit_judgment_meter_changed_t003()
+
+func get_judgment_meter_ratio() -> float:
+	if judgment_meter_max <= 0.0:
+		return 0.0
+	return clampf(judgment_meter / judgment_meter_max, 0.0, 1.0)
+
+func is_judgment_full() -> bool:
+	return judgment_meter >= judgment_meter_max
+
+func gain_judgment(amount: float, reason: String = "") -> void:
+	if amount <= 0.0:
+		return
+	var previous_value: float = judgment_meter
+	judgment_meter = clampf(judgment_meter + amount, 0.0, judgment_meter_max)
+	var gained: float = judgment_meter - previous_value
+	if gained <= 0.0:
+		return
+	emit_signal("judgment_meter_gained", gained, reason)
+	_emit_judgment_meter_changed_t003()
+	queue_redraw()
+
+func can_spend_judgment(amount: float) -> bool:
+	return amount > 0.0 and judgment_meter >= amount
+
+func spend_judgment(amount: float) -> bool:
+	if not can_spend_judgment(amount):
+		return false
+	judgment_meter = clampf(judgment_meter - amount, 0.0, judgment_meter_max)
+	emit_signal("judgment_meter_spent", amount)
+	_emit_judgment_meter_changed_t003()
+	queue_redraw()
+	return true
+
+func reset_judgment_meter() -> void:
+	judgment_meter = clampf(judgment_meter_start, 0.0, judgment_meter_max)
+	_emit_judgment_meter_changed_t003()
+	queue_redraw()
+
+func get_judgment_ui_state() -> Dictionary:
+	return {
+		"current": judgment_meter,
+		"max": judgment_meter_max,
+		"ratio": get_judgment_meter_ratio(),
+		"is_full": is_judgment_full(),
+	}
+
+func _emit_judgment_meter_changed_t003() -> void:
+	emit_signal("judgment_meter_changed", judgment_meter, judgment_meter_max, get_judgment_meter_ratio(), is_judgment_full())
+
+func _handle_judgment_debug_input_t003(event: InputEvent) -> void:
+	if not enable_debug_judgment_keys:
+		return
+	if event is InputEventKey:
+		var key_event: InputEventKey = event as InputEventKey
+		if not key_event.pressed or key_event.echo:
+			return
+		if key_event.keycode == KEY_J:
+			gain_judgment(25.0, "debug_key")
+		elif key_event.keycode == KEY_U:
+			spend_judgment(judgment_ultimate_cost)
+# --- T003 JUDGMENT METER FUNCTIONS END ---
+
+
+# T004_Q_ABILITY_PLACEHOLDER_FUNCTIONS_START
+func _t004_tick_q_ability(delta: float) -> void:
+	if q_ability_cooldown_remaining > 0.0:
+		q_ability_cooldown_remaining = maxf(0.0, q_ability_cooldown_remaining - delta)
+	if _t004_q_recovery_remaining > 0.0:
+		_t004_q_recovery_remaining = maxf(0.0, _t004_q_recovery_remaining - delta)
+	if _t004_q_flash_remaining > 0.0:
+		_t004_q_flash_remaining = maxf(0.0, _t004_q_flash_remaining - delta)
+		queue_redraw()
+
+
+func _t004_consume_q_input() -> bool:
+	var pressed_action: bool = false
+	if InputMap.has_action("player_q"):
+		pressed_action = Input.is_action_just_pressed("player_q")
+
+	var key_is_down: bool = Input.is_key_pressed(KEY_Q)
+	var pressed_key: bool = key_is_down and not _t004_q_key_was_down
+	_t004_q_key_was_down = key_is_down
+
+	return pressed_action or pressed_key
+
+
+func _t004_try_start_q_ability() -> void:
+	if not q_ability_enabled:
+		return
+	if q_ability_cooldown_remaining > 0.0:
+		return
+	if _t004_q_recovery_remaining > 0.0:
+		return
+
+	_t004_q_last_direction = facing.normalized()
+	if _t004_q_last_direction.length_squared() <= 0.001:
+		_t004_q_last_direction = Vector2.DOWN
+
+	q_ability_cooldown_remaining = q_ability_cooldown
+	_t004_q_recovery_remaining = q_ability_recovery_time
+	_t004_q_flash_remaining = q_ability_flash_time
+	_t004_q_hit_targets.clear()
+
+	_t004_apply_q_ability_hit()
+	queue_redraw()
+
+
+func _t004_apply_q_ability_hit() -> void:
+	var targets: Array = []
+	_t004_append_group_nodes(targets, "attack_target")
+	_t004_append_group_nodes(targets, "enemy")
+	_t004_append_group_nodes(targets, "boss")
+
+	var hit_count: int = 0
+	for target_obj in targets:
+		var target: Node2D = target_obj as Node2D
+		if target == null:
+			continue
+		if target == self:
+			continue
+		if not is_instance_valid(target):
+			continue
+
+		var delta_to_target: Vector2 = target.global_position - global_position
+		var distance_to_target: float = delta_to_target.length()
+		if distance_to_target > q_ability_radius:
+			continue
+
+		var direction_to_target: Vector2 = delta_to_target.normalized()
+		if distance_to_target <= 6.0:
+			direction_to_target = _t004_q_last_direction
+
+		if direction_to_target.dot(_t004_q_last_direction) < q_ability_forward_dot:
+			continue
+
+		if _t004_apply_damage_to_target(target, q_ability_damage, q_ability_knockback):
+			_t004_q_hit_targets.append(target)
+			hit_count += 1
+
+	if hit_count > 0:
+		_t004_gain_judgment_from_q(hit_count)
+
+
+func _t004_append_group_nodes(targets: Array, group_name: String) -> void:
+	if not get_tree().has_group(group_name):
+		return
+	var group_nodes: Array = get_tree().get_nodes_in_group(group_name)
+	for node_obj in group_nodes:
+		var node: Node = node_obj as Node
+		if node == null:
+			continue
+		if not targets.has(node):
+			targets.append(node)
+
+
+func _t004_apply_damage_to_target(target: Node2D, amount: int, knockback_force: float) -> bool:
+	if target.has_method("take_damage"):
+		_t004_call_damage_method(target, "take_damage", amount, knockback_force)
+		return true
+	if target.has_method("receive_damage"):
+		_t004_call_damage_method(target, "receive_damage", amount, knockback_force)
+		return true
+	if target.has_method("apply_damage"):
+		_t004_call_damage_method(target, "apply_damage", amount, knockback_force)
+		return true
+	if target.has_method("damage"):
+		_t004_call_damage_method(target, "damage", amount, knockback_force)
+		return true
+	if target.has_method("take_hit"):
+		_t004_call_damage_method(target, "take_hit", amount, knockback_force)
+		return true
+	if target.has_method("hit"):
+		_t004_call_damage_method(target, "hit", amount, knockback_force)
+		return true
+	return false
+
+
+func _t004_call_damage_method(target: Node2D, method_name: String, amount: int, knockback_force: float) -> void:
+	var method_arg_count: int = _t004_get_method_arg_count(target, method_name)
+	var hit_direction: Vector2 = (target.global_position - global_position).normalized()
+	if hit_direction.length_squared() <= 0.001:
+		hit_direction = _t004_q_last_direction
+
+	if method_arg_count <= 1:
+		target.call(method_name, amount)
+	elif method_arg_count == 2:
+		target.call(method_name, amount, global_position)
+	elif method_arg_count == 3:
+		target.call(method_name, amount, global_position, knockback_force)
+	else:
+		target.call(method_name, amount, global_position, knockback_force, hit_direction)
+
+
+func _t004_get_method_arg_count(target: Node, method_name: String) -> int:
+	var methods: Array = target.get_method_list()
+	for method_obj in methods:
+		var method_data: Dictionary = method_obj as Dictionary
+		if String(method_data.get("name", "")) != method_name:
+			continue
+		var args: Array = method_data.get("args", [])
+		return args.size()
+	return 1
+
+
+func _t004_gain_judgment_from_q(hit_count: int) -> void:
+	var gain_amount: float = q_ability_judgment_gain_on_hit * float(hit_count)
+	if has_method("gain_judgment"):
+		call("gain_judgment", gain_amount)
+	elif has_method("_gain_judgment"):
+		call("_gain_judgment", gain_amount)
+	elif _t004_has_property("judgment_meter"):
+		var current_judgment: float = float(get("judgment_meter"))
+		set("judgment_meter", clampf(current_judgment + gain_amount, 0.0, 100.0))
+
+
+
+
+func _t004_has_property(property_name: String) -> bool:
+	var properties: Array = get_property_list()
+	for property_obj in properties:
+		var property_data: Dictionary = property_obj as Dictionary
+		if String(property_data.get("name", "")) == property_name:
+			return true
+	return false
+
+func _t004_get_q_cooldown_ratio() -> float:
+	if q_ability_cooldown <= 0.001:
+		return 0.0
+	return clampf(q_ability_cooldown_remaining / q_ability_cooldown, 0.0, 1.0)
+
+
+func _t004_draw_q_ability_debug() -> void:
+	if not show_debug_q_ability:
+		return
+	var alpha: float = clampf(_t004_q_flash_remaining / maxf(q_ability_flash_time, 0.001), 0.0, 1.0)
+	var center_color: Color = Color(0.88, 0.72, 0.36, 0.18 * alpha)
+	var edge_color: Color = Color(1.0, 0.82, 0.38, 0.78 * alpha)
+	var dir: Vector2 = _t004_q_last_direction.normalized()
+	if dir.length_squared() <= 0.001:
+		dir = Vector2.DOWN
+
+	draw_circle(Vector2.ZERO, q_ability_radius, center_color)
+	draw_arc(Vector2.ZERO, q_ability_radius, -0.25 * PI, 0.25 * PI, 24, edge_color, 3.0)
+
+	var left_dir: Vector2 = dir.rotated(-0.95)
+	var right_dir: Vector2 = dir.rotated(0.95)
+	draw_line(Vector2.ZERO, left_dir * q_ability_radius, edge_color, 2.0)
+	draw_line(Vector2.ZERO, right_dir * q_ability_radius, edge_color, 2.0)
+	draw_line(Vector2.ZERO, dir * q_ability_radius, Color(1.0, 0.94, 0.62, 0.95 * alpha), 3.0)
+
+
+func _t004_draw_q_cooldown_debug() -> void:
+	if not show_debug_q_ability:
+		return
+	if q_ability_cooldown_remaining <= 0.0:
+		return
+	var ratio: float = _t004_get_q_cooldown_ratio()
+	var radius: float = 18.0
+	var start_angle: float = -PI * 0.5
+	var end_angle: float = start_angle + TAU * ratio
+	draw_arc(Vector2(0.0, -44.0), radius, start_angle, end_angle, 20, Color(0.82, 0.68, 0.32, 0.75), 2.0)
+# T004_Q_ABILITY_PLACEHOLDER_FUNCTIONS_END
