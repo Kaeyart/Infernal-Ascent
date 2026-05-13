@@ -1,0 +1,2169 @@
+{
+  "status_values": [
+    "Missing",
+    "Placeholder",
+    "In Progress",
+    "Accepted",
+    "Rework"
+  ],
+  "lanes": [
+    "LOGIC",
+    "ART",
+    "DATA",
+    "INTEGRATION",
+    "AUDIO"
+  ],
+  "systems": [
+    {
+      "id": "S-001",
+      "name": "Player Combat Kit Spec",
+      "lane": "LOGIC",
+      "status": "Missing",
+      "priority": "P0",
+      "need": "Lock light combo, heavy, Q, ultimate, Judgment meter, dash/cancel rules.",
+      "acceptance": "Spec accepted; no ambiguity about player buttons."
+    },
+    {
+      "id": "S-002",
+      "name": "Judgment Meter",
+      "lane": "LOGIC",
+      "status": "Missing",
+      "priority": "P0",
+      "need": "Meter gained from hits, kills, dodges/ripostes; spent by ultimate.",
+      "acceptance": "Visible in HUD; persists only during run; resets correctly."
+    },
+    {
+      "id": "S-003",
+      "name": "Q Ability: Penitent Riposte / Ashen Cleave",
+      "lane": "LOGIC",
+      "status": "Missing",
+      "priority": "P0",
+      "need": "Skill-expression ability; riposte preferred, cleave fallback.",
+      "acceptance": "Works in combat with placeholder VFX and cooldown."
+    },
+    {
+      "id": "S-004",
+      "name": "Ultimate: Judgment Break",
+      "lane": "LOGIC",
+      "status": "Missing",
+      "priority": "P0",
+      "need": "Full-meter execution slash with stagger/boss value.",
+      "acceptance": "Consumes meter, damages enemies, has readable windup/impact."
+    },
+    {
+      "id": "S-005",
+      "name": "Enemy Interaction Rebuild",
+      "lane": "LOGIC",
+      "status": "Missing",
+      "priority": "P0",
+      "need": "Stagger, knockback, vulnerability windows, Q/ultimate reactions.",
+      "acceptance": "First three enemies teach different responses."
+    },
+    {
+      "id": "S-006",
+      "name": "Patron Data Schema",
+      "lane": "DATA",
+      "status": "Missing",
+      "priority": "P0",
+      "need": "Patron, boon, synergy, active run patron structures.",
+      "acceptance": "Data loads cleanly; not hardcoded in UI scripts."
+    },
+    {
+      "id": "S-007",
+      "name": "Two Patrons Per Run",
+      "lane": "LOGIC",
+      "status": "Missing",
+      "priority": "P0",
+      "need": "Each run has exactly two active patrons.",
+      "acceptance": "Reward pool uses active patrons plus neutral boons."
+    },
+    {
+      "id": "S-008",
+      "name": "Chain Saint Boon Set",
+      "lane": "DATA/LOGIC",
+      "status": "Missing",
+      "priority": "P0",
+      "need": "8 stagger/control/riposte boons.",
+      "acceptance": "A Chain Saint build is recognizable in gameplay."
+    },
+    {
+      "id": "S-009",
+      "name": "Furnace Mother Boon Set",
+      "lane": "DATA/LOGIC",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "8 burn/ash/area-denial boons.",
+      "acceptance": "Furnace playstyle is distinct and synergizes with Chain Saint."
+    },
+    {
+      "id": "S-010",
+      "name": "Blind Judge Boon Set",
+      "lane": "DATA/LOGIC",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "8 mark/verdict/execution/timing boons.",
+      "acceptance": "Judged state is visible and mechanically relevant."
+    },
+    {
+      "id": "S-011",
+      "name": "Patron Synergy Boons",
+      "lane": "DATA/LOGIC",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Rare boons unlocked by active patron pairs.",
+      "acceptance": "At least Chain+Furnace synergies work."
+    },
+    {
+      "id": "S-012",
+      "name": "Forge Marks V1",
+      "lane": "LOGIC",
+      "status": "Placeholder",
+      "priority": "P0",
+      "need": "Serrated Edge, Grave Weight, Ash Step affect weapon behavior.",
+      "acceptance": "Forge visit changes combat for the run."
+    },
+    {
+      "id": "S-013",
+      "name": "Weapon Ascension Choice",
+      "lane": "LOGIC",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Mid-run evolution into Martyr Blade, Warden Breaker, Ash Serpent Edge.",
+      "acceptance": "One of three ascensions meaningfully changes combat."
+    },
+    {
+      "id": "S-014",
+      "name": "Boon/Forge/Ascension UI Presentation",
+      "lane": "INTEGRATION",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Non-debug card/menu presentation for choices.",
+      "acceptance": "Player understands choices without debug text."
+    },
+    {
+      "id": "S-015",
+      "name": "Room Plate / Authored Room Loader",
+      "lane": "INTEGRATION",
+      "status": "Placeholder",
+      "priority": "P1",
+      "need": "Load room plate + sockets + collision mask.",
+      "acceptance": "One authored room plays correctly."
+    },
+    {
+      "id": "S-016",
+      "name": "Ash Warden Visual Integration",
+      "lane": "ART/INTEGRATION",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Replace boss placeholder with real boss art/animations.",
+      "acceptance": "Boss feels like a boss, not a large test enemy."
+    },
+    {
+      "id": "S-017",
+      "name": "Audio Replacement Pass",
+      "lane": "AUDIO",
+      "status": "Placeholder",
+      "priority": "P3",
+      "need": "Replace procedural noise with curated/usable SFX/music.",
+      "acceptance": "Important actions are readable through sound."
+    }
+  ],
+  "assets": [
+    {
+      "id": "A-P001",
+      "category": "Player",
+      "name": "player_q_riposte_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Directional Q/riposte animation or fallback skill animation.",
+      "acceptance": "Readable in combat; does not obscure hazards."
+    },
+    {
+      "id": "A-P002",
+      "category": "Player",
+      "name": "player_ultimate_judgment_break_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Directional ultimate animation or strong impact pose.",
+      "acceptance": "Readable in combat; does not obscure hazards."
+    },
+    {
+      "id": "A-P003",
+      "category": "Player",
+      "name": "vfx_player_dash_trail.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Readable dash trail aligned to isometric movement.",
+      "acceptance": "Readable in combat; does not obscure hazards."
+    },
+    {
+      "id": "A-P004",
+      "category": "Player",
+      "name": "vfx_player_hit_spark.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Small hit feedback on player/enemy contact.",
+      "acceptance": "Readable in combat; does not obscure hazards."
+    },
+    {
+      "id": "A-P005",
+      "category": "Player",
+      "name": "vfx_player_judgment_meter_gain.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Tiny gain pulse for Judgment meter.",
+      "acceptance": "Readable in combat; does not obscure hazards."
+    },
+    {
+      "id": "A-P006",
+      "category": "Player",
+      "name": "vfx_player_ultimate_slash_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Large directional slash effect.",
+      "acceptance": "Readable in combat; does not obscure hazards."
+    },
+    {
+      "id": "A-E001",
+      "category": "Enemy",
+      "name": "ash_grunt_idle_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ash Grunt idle_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E002",
+      "category": "Enemy",
+      "name": "ash_grunt_walk_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ash Grunt walk_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E003",
+      "category": "Enemy",
+      "name": "ash_grunt_attack_warning_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ash Grunt attack_warning_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E004",
+      "category": "Enemy",
+      "name": "ash_grunt_attack_active_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ash Grunt attack_active_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E005",
+      "category": "Enemy",
+      "name": "ash_grunt_hit_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ash Grunt hit_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E006",
+      "category": "Enemy",
+      "name": "ash_grunt_death_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ash Grunt death_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E007",
+      "category": "Enemy",
+      "name": "ash_grunt_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ash Grunt icon sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E008",
+      "category": "Enemy",
+      "name": "cinder_lunger_idle_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Cinder Lunger idle_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E009",
+      "category": "Enemy",
+      "name": "cinder_lunger_crouch_warning_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Cinder Lunger crouch_warning_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E010",
+      "category": "Enemy",
+      "name": "cinder_lunger_lunge_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Cinder Lunger lunge_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E011",
+      "category": "Enemy",
+      "name": "cinder_lunger_recovery_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Cinder Lunger recovery_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E012",
+      "category": "Enemy",
+      "name": "cinder_lunger_hit_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Cinder Lunger hit_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E013",
+      "category": "Enemy",
+      "name": "cinder_lunger_death_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Cinder Lunger death_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E014",
+      "category": "Enemy",
+      "name": "cinder_lunger_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Cinder Lunger icon sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E015",
+      "category": "Enemy",
+      "name": "ember_spitter_idle_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ember Spitter idle_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E016",
+      "category": "Enemy",
+      "name": "ember_spitter_move_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ember Spitter move_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E017",
+      "category": "Enemy",
+      "name": "ember_spitter_charge_warning_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ember Spitter charge_warning_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E018",
+      "category": "Enemy",
+      "name": "ember_spitter_spit_attack_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ember Spitter spit_attack_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E019",
+      "category": "Enemy",
+      "name": "ember_spitter_hit_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ember Spitter hit_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E020",
+      "category": "Enemy",
+      "name": "ember_spitter_death_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ember Spitter death_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E021",
+      "category": "Enemy",
+      "name": "ember_spitter_projectile.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ember Spitter projectile sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E022",
+      "category": "Enemy",
+      "name": "ember_spitter_projectile_impact.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ember Spitter projectile_impact sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E023",
+      "category": "Enemy",
+      "name": "ember_spitter_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Ember Spitter icon sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E024",
+      "category": "Enemy",
+      "name": "chainbound_penitent_idle_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Chainbound Penitent idle_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E025",
+      "category": "Enemy",
+      "name": "chainbound_penitent_walk_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Chainbound Penitent walk_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E026",
+      "category": "Enemy",
+      "name": "chainbound_penitent_heavy_warning_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Chainbound Penitent heavy_warning_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E027",
+      "category": "Enemy",
+      "name": "chainbound_penitent_heavy_swing_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Chainbound Penitent heavy_swing_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E028",
+      "category": "Enemy",
+      "name": "chainbound_penitent_stagger_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Chainbound Penitent stagger_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E029",
+      "category": "Enemy",
+      "name": "chainbound_penitent_hit_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Chainbound Penitent hit_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E030",
+      "category": "Enemy",
+      "name": "chainbound_penitent_death_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Chainbound Penitent death_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E031",
+      "category": "Enemy",
+      "name": "chainbound_penitent_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Chainbound Penitent icon sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E032",
+      "category": "Enemy",
+      "name": "furnace_imp_idle_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Furnace Imp idle_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E033",
+      "category": "Enemy",
+      "name": "furnace_imp_scuttle_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Furnace Imp scuttle_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E034",
+      "category": "Enemy",
+      "name": "furnace_imp_attack_warning_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Furnace Imp attack_warning_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E035",
+      "category": "Enemy",
+      "name": "furnace_imp_attack_active_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Furnace Imp attack_active_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E036",
+      "category": "Enemy",
+      "name": "furnace_imp_hit_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Furnace Imp hit_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E037",
+      "category": "Enemy",
+      "name": "furnace_imp_death_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Furnace Imp death_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E038",
+      "category": "Enemy",
+      "name": "furnace_imp_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Furnace Imp icon sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E039",
+      "category": "Enemy",
+      "name": "bell_wretch_idle_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Bell Wretch idle_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E040",
+      "category": "Enemy",
+      "name": "bell_wretch_move_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Bell Wretch move_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E041",
+      "category": "Enemy",
+      "name": "bell_wretch_alarm_warning_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Bell Wretch alarm_warning_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E042",
+      "category": "Enemy",
+      "name": "bell_wretch_alarm_cast_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Bell Wretch alarm_cast_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E043",
+      "category": "Enemy",
+      "name": "bell_wretch_hit_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Bell Wretch hit_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E044",
+      "category": "Enemy",
+      "name": "bell_wretch_death_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Bell Wretch death_4dir sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E045",
+      "category": "Enemy",
+      "name": "bell_wretch_buff_or_alarm_vfx.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Bell Wretch buff_or_alarm_vfx sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-E046",
+      "category": "Enemy",
+      "name": "bell_wretch_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Bell Wretch icon sprite/asset.",
+      "acceptance": "Enemy role reads at gameplay scale; animation aligns with hit timing."
+    },
+    {
+      "id": "A-B001",
+      "category": "Boss",
+      "name": "ash_warden_idle_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Ash Warden boss presentation asset.",
+      "acceptance": "Boss silhouette and attack state are readable."
+    },
+    {
+      "id": "A-B002",
+      "category": "Boss",
+      "name": "ash_warden_walk_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Ash Warden boss presentation asset.",
+      "acceptance": "Boss silhouette and attack state are readable."
+    },
+    {
+      "id": "A-B003",
+      "category": "Boss",
+      "name": "ash_warden_melee_sweep_warning_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Ash Warden boss presentation asset.",
+      "acceptance": "Boss silhouette and attack state are readable."
+    },
+    {
+      "id": "A-B004",
+      "category": "Boss",
+      "name": "ash_warden_melee_sweep_attack_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Ash Warden boss presentation asset.",
+      "acceptance": "Boss silhouette and attack state are readable."
+    },
+    {
+      "id": "A-B005",
+      "category": "Boss",
+      "name": "ash_warden_chain_slam_warning_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Ash Warden boss presentation asset.",
+      "acceptance": "Boss silhouette and attack state are readable."
+    },
+    {
+      "id": "A-B006",
+      "category": "Boss",
+      "name": "ash_warden_chain_slam_attack_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Ash Warden boss presentation asset.",
+      "acceptance": "Boss silhouette and attack state are readable."
+    },
+    {
+      "id": "A-B007",
+      "category": "Boss",
+      "name": "ash_warden_lunge_warning_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Ash Warden boss presentation asset.",
+      "acceptance": "Boss silhouette and attack state are readable."
+    },
+    {
+      "id": "A-B008",
+      "category": "Boss",
+      "name": "ash_warden_lunge_attack_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Ash Warden boss presentation asset.",
+      "acceptance": "Boss silhouette and attack state are readable."
+    },
+    {
+      "id": "A-B009",
+      "category": "Boss",
+      "name": "ash_warden_phase_transition.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Ash Warden boss presentation asset.",
+      "acceptance": "Boss silhouette and attack state are readable."
+    },
+    {
+      "id": "A-B010",
+      "category": "Boss",
+      "name": "ash_warden_stagger.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Ash Warden boss presentation asset.",
+      "acceptance": "Boss silhouette and attack state are readable."
+    },
+    {
+      "id": "A-B011",
+      "category": "Boss",
+      "name": "ash_warden_hit.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Ash Warden boss presentation asset.",
+      "acceptance": "Boss silhouette and attack state are readable."
+    },
+    {
+      "id": "A-B012",
+      "category": "Boss",
+      "name": "ash_warden_death.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Ash Warden boss presentation asset.",
+      "acceptance": "Boss silhouette and attack state are readable."
+    },
+    {
+      "id": "A-B013",
+      "category": "Boss",
+      "name": "ash_warden_boss_portrait.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Ash Warden boss presentation asset.",
+      "acceptance": "Boss silhouette and attack state are readable."
+    },
+    {
+      "id": "A-R001",
+      "category": "Room",
+      "name": "ash_intake_hall_room_plate.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Authored isometric room plate for ash_intake_hall.",
+      "acceptance": "Room shape is readable; props do not hide danger."
+    },
+    {
+      "id": "A-R101",
+      "category": "Room",
+      "name": "ash_intake_hall_collision_mask.json",
+      "lane": "DATA",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Collision polygon / playable bounds for ash_intake_hall.",
+      "acceptance": "Player stays inside valid floor; gates/spawns legal."
+    },
+    {
+      "id": "A-R002",
+      "category": "Room",
+      "name": "cinder_drain_room_plate.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Authored isometric room plate for cinder_drain.",
+      "acceptance": "Room shape is readable; props do not hide danger."
+    },
+    {
+      "id": "A-R102",
+      "category": "Room",
+      "name": "cinder_drain_collision_mask.json",
+      "lane": "DATA",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Collision polygon / playable bounds for cinder_drain.",
+      "acceptance": "Player stays inside valid floor; gates/spawns legal."
+    },
+    {
+      "id": "A-R003",
+      "category": "Room",
+      "name": "furnace_vestibule_room_plate.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Authored isometric room plate for furnace_vestibule.",
+      "acceptance": "Room shape is readable; props do not hide danger."
+    },
+    {
+      "id": "A-R103",
+      "category": "Room",
+      "name": "furnace_vestibule_collision_mask.json",
+      "lane": "DATA",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Collision polygon / playable bounds for furnace_vestibule.",
+      "acceptance": "Player stays inside valid floor; gates/spawns legal."
+    },
+    {
+      "id": "A-R004",
+      "category": "Room",
+      "name": "chain_reservoir_room_plate.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Authored isometric room plate for chain_reservoir.",
+      "acceptance": "Room shape is readable; props do not hide danger."
+    },
+    {
+      "id": "A-R104",
+      "category": "Room",
+      "name": "chain_reservoir_collision_mask.json",
+      "lane": "DATA",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Collision polygon / playable bounds for chain_reservoir.",
+      "acceptance": "Player stays inside valid floor; gates/spawns legal."
+    },
+    {
+      "id": "A-R005",
+      "category": "Room",
+      "name": "ember_sorting_floor_room_plate.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Authored isometric room plate for ember_sorting_floor.",
+      "acceptance": "Room shape is readable; props do not hide danger."
+    },
+    {
+      "id": "A-R105",
+      "category": "Room",
+      "name": "ember_sorting_floor_collision_mask.json",
+      "lane": "DATA",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Collision polygon / playable bounds for ember_sorting_floor.",
+      "acceptance": "Player stays inside valid floor; gates/spawns legal."
+    },
+    {
+      "id": "A-R006",
+      "category": "Room",
+      "name": "penitent_crossing_room_plate.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Authored isometric room plate for penitent_crossing.",
+      "acceptance": "Room shape is readable; props do not hide danger."
+    },
+    {
+      "id": "A-R106",
+      "category": "Room",
+      "name": "penitent_crossing_collision_mask.json",
+      "lane": "DATA",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Collision polygon / playable bounds for penitent_crossing.",
+      "acceptance": "Player stays inside valid floor; gates/spawns legal."
+    },
+    {
+      "id": "A-S001",
+      "category": "Support Room",
+      "name": "reward_altar_room_plate.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Support-room or interactable art.",
+      "acceptance": "Object silhouette + label + [E] prompt reads clearly."
+    },
+    {
+      "id": "A-S002",
+      "category": "Support Room",
+      "name": "reward_pedestal_common.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Support-room or interactable art.",
+      "acceptance": "Object silhouette + label + [E] prompt reads clearly."
+    },
+    {
+      "id": "A-S003",
+      "category": "Support Room",
+      "name": "fountain_room_plate.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Support-room or interactable art.",
+      "acceptance": "Object silhouette + label + [E] prompt reads clearly."
+    },
+    {
+      "id": "A-S004",
+      "category": "Support Room",
+      "name": "fountain_basin_idle.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Support-room or interactable art.",
+      "acceptance": "Object silhouette + label + [E] prompt reads clearly."
+    },
+    {
+      "id": "A-S005",
+      "category": "Support Room",
+      "name": "shop_room_plate.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Support-room or interactable art.",
+      "acceptance": "Object silhouette + label + [E] prompt reads clearly."
+    },
+    {
+      "id": "A-S006",
+      "category": "Support Room",
+      "name": "ash_merchant_sprite_idle.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Support-room or interactable art.",
+      "acceptance": "Object silhouette + label + [E] prompt reads clearly."
+    },
+    {
+      "id": "A-S007",
+      "category": "Support Room",
+      "name": "forge_room_plate.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Support-room or interactable art.",
+      "acceptance": "Object silhouette + label + [E] prompt reads clearly."
+    },
+    {
+      "id": "A-S008",
+      "category": "Support Room",
+      "name": "cold_forge_anvil_idle.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Support-room or interactable art.",
+      "acceptance": "Object silhouette + label + [E] prompt reads clearly."
+    },
+    {
+      "id": "A-S009",
+      "category": "Support Room",
+      "name": "boss_antechamber_plate.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Support-room or interactable art.",
+      "acceptance": "Object silhouette + label + [E] prompt reads clearly."
+    },
+    {
+      "id": "A-S010",
+      "category": "Support Room",
+      "name": "sealed_ash_warden_gate_closed.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Support-room or interactable art.",
+      "acceptance": "Object silhouette + label + [E] prompt reads clearly."
+    },
+    {
+      "id": "A-H001",
+      "category": "Hub",
+      "name": "hub_threshold_nave_plate.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Hub station or base art.",
+      "acceptance": "Station purpose readable without debug label overload."
+    },
+    {
+      "id": "A-H002",
+      "category": "Hub",
+      "name": "hub_hell_gate_idle.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Hub station or base art.",
+      "acceptance": "Station purpose readable without debug label overload."
+    },
+    {
+      "id": "A-H003",
+      "category": "Hub",
+      "name": "hub_memory_pool_idle.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Hub station or base art.",
+      "acceptance": "Station purpose readable without debug label overload."
+    },
+    {
+      "id": "A-H004",
+      "category": "Hub",
+      "name": "hub_reliquary_altar_idle.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Hub station or base art.",
+      "acceptance": "Station purpose readable without debug label overload."
+    },
+    {
+      "id": "A-H005",
+      "category": "Hub",
+      "name": "hub_forge_station_idle.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Hub station or base art.",
+      "acceptance": "Station purpose readable without debug label overload."
+    },
+    {
+      "id": "A-H006",
+      "category": "Hub",
+      "name": "hub_codex_lectern_idle.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Hub station or base art.",
+      "acceptance": "Station purpose readable without debug label overload."
+    },
+    {
+      "id": "A-H007",
+      "category": "Hub",
+      "name": "hub_sealed_descent_door_locked.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "Hub station or base art.",
+      "acceptance": "Station purpose readable without debug label overload."
+    },
+    {
+      "id": "A-U001",
+      "category": "UI",
+      "name": "ui_panel_reward_choice.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-U002",
+      "category": "UI",
+      "name": "ui_panel_route_choice.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-U003",
+      "category": "UI",
+      "name": "ui_panel_shop.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-U004",
+      "category": "UI",
+      "name": "ui_panel_forge.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-U005",
+      "category": "UI",
+      "name": "ui_panel_reliquary.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-U006",
+      "category": "UI",
+      "name": "ui_panel_run_result.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-U007",
+      "category": "UI",
+      "name": "ui_panel_weapon_ascension.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-U008",
+      "category": "UI",
+      "name": "ui_health_frame.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-U009",
+      "category": "UI",
+      "name": "ui_judgment_meter_frame.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-U010",
+      "category": "UI",
+      "name": "ui_boss_health_frame.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-U011",
+      "category": "UI",
+      "name": "ui_prompt_e_key.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-U012",
+      "category": "UI",
+      "name": "ui_rarity_common_trim.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-U013",
+      "category": "UI",
+      "name": "ui_rarity_rare_trim.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-U014",
+      "category": "UI",
+      "name": "ui_rarity_legendary_trim.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Interface frame/icon for non-debug presentation.",
+      "acceptance": "Readable, thematically consistent, does not cover combat."
+    },
+    {
+      "id": "A-BO001",
+      "category": "Patron/Boon",
+      "name": "patron_chain_saint_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO002",
+      "category": "Patron/Boon",
+      "name": "patron_chain_saint_header.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO003",
+      "category": "Patron/Boon",
+      "name": "boon_chain_stagger.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO004",
+      "category": "Patron/Boon",
+      "name": "boon_chain_root.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO005",
+      "category": "Patron/Boon",
+      "name": "boon_chain_heavy_bonus.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO006",
+      "category": "Patron/Boon",
+      "name": "boon_chain_dash_bind.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO007",
+      "category": "Patron/Boon",
+      "name": "boon_chain_riposte_mark.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO008",
+      "category": "Patron/Boon",
+      "name": "boon_chain_ultimate_shackle.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO009",
+      "category": "Patron/Boon",
+      "name": "boon_chain_echo_lash.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO010",
+      "category": "Patron/Boon",
+      "name": "boon_chain_execution_meter.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO011",
+      "category": "Patron/Boon",
+      "name": "patron_furnace_mother_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO012",
+      "category": "Patron/Boon",
+      "name": "patron_furnace_mother_header.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO013",
+      "category": "Patron/Boon",
+      "name": "boon_furnace_burn.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO014",
+      "category": "Patron/Boon",
+      "name": "boon_furnace_ash_trail.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO015",
+      "category": "Patron/Boon",
+      "name": "boon_furnace_explosion.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO016",
+      "category": "Patron/Boon",
+      "name": "boon_furnace_hazard_boost.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO017",
+      "category": "Patron/Boon",
+      "name": "boon_furnace_low_hp_fire.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO018",
+      "category": "Patron/Boon",
+      "name": "boon_furnace_heavy_ember.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO019",
+      "category": "Patron/Boon",
+      "name": "boon_furnace_dash_ignite.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO020",
+      "category": "Patron/Boon",
+      "name": "boon_furnace_final_flame.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO021",
+      "category": "Patron/Boon",
+      "name": "patron_blind_judge_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO022",
+      "category": "Patron/Boon",
+      "name": "patron_blind_judge_header.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO023",
+      "category": "Patron/Boon",
+      "name": "boon_judge_mark.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO024",
+      "category": "Patron/Boon",
+      "name": "boon_judge_crit.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO025",
+      "category": "Patron/Boon",
+      "name": "boon_judge_execution.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO026",
+      "category": "Patron/Boon",
+      "name": "boon_judge_meter_gain.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO027",
+      "category": "Patron/Boon",
+      "name": "boon_judge_perfect_dodge.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO028",
+      "category": "Patron/Boon",
+      "name": "boon_judge_ultimate_damage.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO029",
+      "category": "Patron/Boon",
+      "name": "boon_judge_first_strike.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-BO030",
+      "category": "Patron/Boon",
+      "name": "boon_judge_sentence.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P2",
+      "need": "Patron/boon identity icon or header art.",
+      "acceptance": "Icon is readable at UI size and reinforces patron identity."
+    },
+    {
+      "id": "A-F001",
+      "category": "Forge/Weapon",
+      "name": "forge_mark_serrated_edge_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Forge mark or weapon ascension icon.",
+      "acceptance": "Choice is visually distinct and mechanically clear."
+    },
+    {
+      "id": "A-F002",
+      "category": "Forge/Weapon",
+      "name": "forge_mark_grave_weight_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Forge mark or weapon ascension icon.",
+      "acceptance": "Choice is visually distinct and mechanically clear."
+    },
+    {
+      "id": "A-F003",
+      "category": "Forge/Weapon",
+      "name": "forge_mark_ash_step_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Forge mark or weapon ascension icon.",
+      "acceptance": "Choice is visually distinct and mechanically clear."
+    },
+    {
+      "id": "A-F004",
+      "category": "Forge/Weapon",
+      "name": "weapon_ascension_martyr_blade_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Forge mark or weapon ascension icon.",
+      "acceptance": "Choice is visually distinct and mechanically clear."
+    },
+    {
+      "id": "A-F005",
+      "category": "Forge/Weapon",
+      "name": "weapon_ascension_warden_breaker_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Forge mark or weapon ascension icon.",
+      "acceptance": "Choice is visually distinct and mechanically clear."
+    },
+    {
+      "id": "A-F006",
+      "category": "Forge/Weapon",
+      "name": "weapon_ascension_ash_serpent_edge_icon.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Forge mark or weapon ascension icon.",
+      "acceptance": "Choice is visually distinct and mechanically clear."
+    },
+    {
+      "id": "A-Z001",
+      "category": "Hazard",
+      "name": "hazard_ash_vent_idle.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Hazard state visual.",
+      "acceptance": "Warning/active/cooldown readable without debug markers."
+    },
+    {
+      "id": "A-Z002",
+      "category": "Hazard",
+      "name": "hazard_ash_vent_warning.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Hazard state visual.",
+      "acceptance": "Warning/active/cooldown readable without debug markers."
+    },
+    {
+      "id": "A-Z003",
+      "category": "Hazard",
+      "name": "hazard_ash_vent_active.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Hazard state visual.",
+      "acceptance": "Warning/active/cooldown readable without debug markers."
+    },
+    {
+      "id": "A-Z004",
+      "category": "Hazard",
+      "name": "hazard_ash_vent_cooldown.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Hazard state visual.",
+      "acceptance": "Warning/active/cooldown readable without debug markers."
+    },
+    {
+      "id": "A-Z005",
+      "category": "Hazard",
+      "name": "hazard_ember_grate_idle.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Hazard state visual.",
+      "acceptance": "Warning/active/cooldown readable without debug markers."
+    },
+    {
+      "id": "A-Z006",
+      "category": "Hazard",
+      "name": "hazard_ember_grate_warning.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Hazard state visual.",
+      "acceptance": "Warning/active/cooldown readable without debug markers."
+    },
+    {
+      "id": "A-Z007",
+      "category": "Hazard",
+      "name": "hazard_ember_grate_active.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Hazard state visual.",
+      "acceptance": "Warning/active/cooldown readable without debug markers."
+    },
+    {
+      "id": "A-Z008",
+      "category": "Hazard",
+      "name": "hazard_ember_grate_cooldown.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Hazard state visual.",
+      "acceptance": "Warning/active/cooldown readable without debug markers."
+    },
+    {
+      "id": "A-Z009",
+      "category": "Hazard",
+      "name": "hazard_falling_cinder_warning_marker.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Hazard state visual.",
+      "acceptance": "Warning/active/cooldown readable without debug markers."
+    },
+    {
+      "id": "A-Z010",
+      "category": "Hazard",
+      "name": "hazard_falling_cinder_impact.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Hazard state visual.",
+      "acceptance": "Warning/active/cooldown readable without debug markers."
+    },
+    {
+      "id": "A-V001",
+      "category": "VFX",
+      "name": "vfx_light_attack_arc_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Combat or interaction VFX.",
+      "acceptance": "Adds readability/impact without obscuring gameplay."
+    },
+    {
+      "id": "A-V002",
+      "category": "VFX",
+      "name": "vfx_heavy_attack_arc_4dir.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Combat or interaction VFX.",
+      "acceptance": "Adds readability/impact without obscuring gameplay."
+    },
+    {
+      "id": "A-V003",
+      "category": "VFX",
+      "name": "vfx_q_riposte_guard.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Combat or interaction VFX.",
+      "acceptance": "Adds readability/impact without obscuring gameplay."
+    },
+    {
+      "id": "A-V004",
+      "category": "VFX",
+      "name": "vfx_q_riposte_counter_slash.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Combat or interaction VFX.",
+      "acceptance": "Adds readability/impact without obscuring gameplay."
+    },
+    {
+      "id": "A-V005",
+      "category": "VFX",
+      "name": "vfx_ultimate_judgment_break_windup.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Combat or interaction VFX.",
+      "acceptance": "Adds readability/impact without obscuring gameplay."
+    },
+    {
+      "id": "A-V006",
+      "category": "VFX",
+      "name": "vfx_ultimate_judgment_break_slash.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Combat or interaction VFX.",
+      "acceptance": "Adds readability/impact without obscuring gameplay."
+    },
+    {
+      "id": "A-V007",
+      "category": "VFX",
+      "name": "vfx_enemy_hit_spark.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Combat or interaction VFX.",
+      "acceptance": "Adds readability/impact without obscuring gameplay."
+    },
+    {
+      "id": "A-V008",
+      "category": "VFX",
+      "name": "vfx_enemy_death_ash_burst.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Combat or interaction VFX.",
+      "acceptance": "Adds readability/impact without obscuring gameplay."
+    },
+    {
+      "id": "A-V009",
+      "category": "VFX",
+      "name": "vfx_dash_trail.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Combat or interaction VFX.",
+      "acceptance": "Adds readability/impact without obscuring gameplay."
+    },
+    {
+      "id": "A-V010",
+      "category": "VFX",
+      "name": "vfx_reward_claim.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Combat or interaction VFX.",
+      "acceptance": "Adds readability/impact without obscuring gameplay."
+    },
+    {
+      "id": "A-V011",
+      "category": "VFX",
+      "name": "vfx_heal.png",
+      "lane": "ART",
+      "status": "Missing",
+      "priority": "P1",
+      "need": "Combat or interaction VFX.",
+      "acceptance": "Adds readability/impact without obscuring gameplay."
+    },
+    {
+      "id": "A-A001",
+      "category": "Audio",
+      "name": "sfx_player_light_attack.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A002",
+      "category": "Audio",
+      "name": "sfx_player_heavy_attack.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A003",
+      "category": "Audio",
+      "name": "sfx_player_dash.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A004",
+      "category": "Audio",
+      "name": "sfx_player_hit.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A005",
+      "category": "Audio",
+      "name": "sfx_enemy_warning.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A006",
+      "category": "Audio",
+      "name": "sfx_enemy_hit.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A007",
+      "category": "Audio",
+      "name": "sfx_enemy_death.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A008",
+      "category": "Audio",
+      "name": "sfx_gate_open.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A009",
+      "category": "Audio",
+      "name": "sfx_reward_claim.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A010",
+      "category": "Audio",
+      "name": "sfx_fountain_use.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A011",
+      "category": "Audio",
+      "name": "sfx_forge_apply.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A012",
+      "category": "Audio",
+      "name": "sfx_hazard_warning.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A013",
+      "category": "Audio",
+      "name": "sfx_boss_phase.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A014",
+      "category": "Audio",
+      "name": "sfx_boss_death.wav",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A015",
+      "category": "Audio",
+      "name": "music_hub_ambience_loop.ogg",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A016",
+      "category": "Audio",
+      "name": "music_combat_loop_01.ogg",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A017",
+      "category": "Audio",
+      "name": "music_boss_loop_ash_warden.ogg",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A018",
+      "category": "Audio",
+      "name": "music_victory_sting.ogg",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    },
+    {
+      "id": "A-A019",
+      "category": "Audio",
+      "name": "music_death_sting.ogg",
+      "lane": "AUDIO",
+      "status": "Missing",
+      "priority": "P3",
+      "need": "SFX/music asset.",
+      "acceptance": "Supports readability and does not become noise."
+    }
+  ],
+  "phases": [
+    {
+      "order": "0",
+      "title": "Tracker and Folder Discipline",
+      "lane": "DATA",
+      "goal": "Create tracker docs/json/validator and folder discipline.",
+      "acceptance": "Everything has a status."
+    },
+    {
+      "order": "1",
+      "title": "Combat Kit Design Lock",
+      "lane": "LOGIC",
+      "goal": "Spec light/heavy/Q/ultimate/meter/dash/cancel rules.",
+      "acceptance": "No ambiguity about player kit."
+    },
+    {
+      "order": "2",
+      "title": "Combat Kit Logic Prototype",
+      "lane": "LOGIC",
+      "goal": "Implement combo, heavy, Q, ultimate, Judgment meter with placeholders.",
+      "acceptance": "Player stops being left-click-only."
+    },
+    {
+      "order": "3",
+      "title": "Enemy Interaction Logic Pass",
+      "lane": "LOGIC",
+      "goal": "Rebuild enemy stagger/knockback/vulnerability around new kit.",
+      "acceptance": "First enemies teach different responses."
+    },
+    {
+      "order": "4",
+      "title": "Patron Data Schema",
+      "lane": "DATA",
+      "goal": "Data model for patrons, boons, synergies, active run state.",
+      "acceptance": "Patrons load from data."
+    },
+    {
+      "order": "5",
+      "title": "Two Patrons Per Run",
+      "lane": "LOGIC",
+      "goal": "Exactly two active patrons in each run.",
+      "acceptance": "Rewards pull from active patrons."
+    },
+    {
+      "order": "6",
+      "title": "First Patron: Chain Saint",
+      "lane": "DATA/LOGIC",
+      "goal": "Implement 8 Chain Saint boons.",
+      "acceptance": "Build identity recognizable."
+    },
+    {
+      "order": "7",
+      "title": "Second Patron: Furnace Mother + Synergy",
+      "lane": "DATA/LOGIC",
+      "goal": "Implement burn/ash boons + first synergies.",
+      "acceptance": "Two-patron synergy works."
+    },
+    {
+      "order": "8",
+      "title": "Forge Marks Logic",
+      "lane": "LOGIC",
+      "goal": "Serrated Edge, Grave Weight, Ash Step.",
+      "acceptance": "Forge changes weapon behavior."
+    },
+    {
+      "order": "9",
+      "title": "Weapon Ascension Logic",
+      "lane": "LOGIC",
+      "goal": "Martyr Blade, Warden Breaker, Ash Serpent Edge.",
+      "acceptance": "Mid-run evolution changes combat."
+    },
+    {
+      "order": "10",
+      "title": "Choice UI Presentation",
+      "lane": "INTEGRATION",
+      "goal": "Reward/patron/forge/ascension cards.",
+      "acceptance": "No debug choice UI."
+    },
+    {
+      "order": "11",
+      "title": "Enemy Art Batch 1",
+      "lane": "ART",
+      "goal": "Ash Grunt, Cinder Lunger, Ember Spitter.",
+      "acceptance": "Enemies visually distinct."
+    },
+    {
+      "order": "12",
+      "title": "Ash Intake Hall Real Room",
+      "lane": "ART/INTEGRATION",
+      "goal": "Room plate, collision, spawns, hazards, gates.",
+      "acceptance": "One room feels real."
+    },
+    {
+      "order": "13",
+      "title": "Hazard Art States",
+      "lane": "ART",
+      "goal": "Idle/warning/active/cooldown visuals.",
+      "acceptance": "Danger language works visually."
+    },
+    {
+      "order": "14",
+      "title": "Support Room Function + Art",
+      "lane": "INTEGRATION",
+      "goal": "Reward/fountain/shop/forge become presentable.",
+      "acceptance": "Support rooms worth entering."
+    },
+    {
+      "order": "15",
+      "title": "Enemy Art Batch 2",
+      "lane": "ART",
+      "goal": "Chainbound, Imp, Bell Wretch.",
+      "acceptance": "Six-enemy roster readable."
+    },
+    {
+      "order": "16",
+      "title": "Remaining Combat Rooms",
+      "lane": "ART/INTEGRATION",
+      "goal": "Five remaining combat rooms.",
+      "acceptance": "Run no longer feels repeated."
+    },
+    {
+      "order": "17",
+      "title": "Blind Judge + Full Synergies",
+      "lane": "DATA/LOGIC",
+      "goal": "Third patron and remaining synergy pairs.",
+      "acceptance": "Multiple run identities exist."
+    },
+    {
+      "order": "18",
+      "title": "Ash Warden Art + Arena",
+      "lane": "ART/INTEGRATION",
+      "goal": "Boss sprite, animations, arena, VFX.",
+      "acceptance": "Boss feels like a boss."
+    },
+    {
+      "order": "19",
+      "title": "Hub Art + Progression Presentation",
+      "lane": "INTEGRATION",
+      "goal": "Hub station art and progression UI.",
+      "acceptance": "Hub feels like a place."
+    },
+    {
+      "order": "20",
+      "title": "Audio Replacement",
+      "lane": "AUDIO/INTEGRATION",
+      "goal": "Replace procedural noise with usable SFX/music.",
+      "acceptance": "Audio supports gameplay."
+    },
+    {
+      "order": "21",
+      "title": "QA / Balance / Packaging",
+      "lane": "INTEGRATION",
+      "goal": "Stabilize, export, README, controls.",
+      "acceptance": "Someone else can play it."
+    }
+  ]
+}
