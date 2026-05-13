@@ -110,6 +110,8 @@ var heal_on_room_clear_amount: int = 0
 var run_ash_shards: int = 0
 var shop_purchases: int = 0
 var active_forge_mark: String = ""
+var weapon_ascension_id: String = ""
+var weapon_ascension_offer_used: bool = false
 var forge_marks_chosen: Array[String] = []
 var route_history: Array[Dictionary] = []
 var reward_history: Array[String] = []
@@ -204,6 +206,8 @@ func _reset_run_counters() -> void:
 	reward_choices_per_room = clampi(_base_reward_choices_per_room + int(permanent_modifiers.get("bonus_reward_choices", 0)), 3, 4)
 	shop_purchases = 0
 	active_forge_mark = ""
+	weapon_ascension_id = ""
+	weapon_ascension_offer_used = false
 	forge_marks_chosen.clear()
 	route_history.clear()
 	_current_gate_choices.clear()
@@ -317,6 +321,9 @@ func _complete_current_room(reason: String) -> void:
 			_set_first_room_boon_source()
 		if not _pending_reward_source.is_empty():
 			_enter_pending_reward_source_room(reason)
+			return
+		if _should_offer_weapon_ascension():
+			_enter_weapon_ascension_room(reason)
 			return
 
 	if completed_phase == RunPhase.BOSS_LOCKED_PLACEHOLDER:
@@ -498,16 +505,15 @@ func _enter_forge_room() -> void:
 	current_room_type = "forge"
 	current_room_variant = "cold_forge"
 	last_room_title = "Cold Forge"
-	forge_rooms_seen += 1
 	_room_completion_pending = false
 	_clear_route_runtime_nodes()
-	_set_phase(RunPhase.ROOM_INTRO, "Entering forge room.")
+	_set_phase(RunPhase.ROOM_INTRO, "Entering the Cold Forge.")
 	if runtime_adapter != null:
 		runtime_adapter.configure_room_presentation(current_room_type, current_depth, current_room_variant)
 		runtime_adapter.prepare_non_combat_room()
-	_spawn_forge_marks()
-	_show_intro(last_room_title, "Choose one run-only sword mark")
-	last_status = "Forge room. Choose one sword mark for this run."
+	_spawn_identity_choices(_build_forge_mark_payloads(), _on_build_identity_chosen)
+	_show_intro(last_room_title, "Choose one weapon mark")
+	last_status = "Cold Forge. Choose one run-only weapon mark."
 	_set_phase(RunPhase.FORGE, last_status)
 	_debug(last_status)
 
@@ -574,8 +580,10 @@ func _on_reward_chosen(payload: Dictionary) -> void:
 	_audio_event("reward_claim")
 
 	var reward_kind: String = str(payload.get("reward_kind", ""))
-	if reward_kind == "boon":
+	if reward_kind == "boon" or reward_kind == "synergy_boon":
 		_claim_boon_payload(payload)
+	elif reward_kind == "forge_mark" or reward_kind == "weapon_ascension":
+		_claim_build_identity_payload(payload)
 	elif reward_kind == "gold_payout" or reward_kind == "health_boost":
 		_claim_route_payout_payload(payload)
 	else:
@@ -1145,6 +1153,12 @@ func _build_pending_reward_choices() -> Array[Dictionary]:
 		if choices.size() >= reward_choices_per_room:
 			break
 
+	var synergy_choices: Array[Dictionary] = _build_azazel_mammon_synergy_choices(patron_id)
+	if not synergy_choices.is_empty() and choices.size() >= 3:
+		choices[choices.size() - 1] = synergy_choices[0]
+	elif not synergy_choices.is_empty() and choices.size() < reward_choices_per_room:
+		choices.append(synergy_choices[0])
+
 	if choices.is_empty():
 		return _build_reward_choices()
 	return choices
@@ -1199,6 +1213,7 @@ func _claim_boon_payload(payload: Dictionary) -> void:
 
 	reward_history.append(boon_id)
 	reward_display_history.append("%s: %s" % [patron_name, display_name])
+	_grant_build_identity_payload_to_player(payload)
 	_t010_grant_boon_to_player(payload)
 	_grant_boon_payload_to_player(payload)
 	_t009_notify_players_of_boon(payload)
@@ -1224,6 +1239,206 @@ func _t010_grant_boon_to_player(payload: Dictionary) -> void:
 			player_node.call("grant_boon_payload", payload)
 		elif player_node.has_method("t010_receive_boon_payload"):
 			player_node.call("t010_receive_boon_payload", payload)
+
+
+
+func _load_json_dictionary(file_path: String) -> Dictionary:
+	var json_text: String = FileAccess.get_file_as_string(file_path)
+	if json_text == "":
+		return {}
+	var parsed: Variant = JSON.parse_string(json_text)
+	if parsed is Dictionary:
+		return parsed as Dictionary
+	return {}
+
+func _build_azazel_mammon_synergy_choices(patron_id: String) -> Array[Dictionary]:
+	if patron_id != "patron_azazel_chains" and patron_id != "patron_mammon_furnace":
+		return []
+	if not (_has_claimed_patron_boon("patron_azazel_chains") and _has_claimed_patron_boon("patron_mammon_furnace")):
+		return []
+
+	var data: Dictionary = _load_json_dictionary("res://data/boons/azazel_mammon_synergies.json")
+	var raw_synergies: Array = data.get("synergies", []) as Array
+	var choices: Array[Dictionary] = []
+	for raw_item: Variant in raw_synergies:
+		if not (raw_item is Dictionary):
+			continue
+		var synergy: Dictionary = raw_item as Dictionary
+		var synergy_id: String = str(synergy.get("id", ""))
+		if reward_history.has(synergy_id):
+			continue
+		choices.append(_synergy_payload_from_data(synergy))
+		if choices.size() >= 1:
+			break
+	return choices
+
+func _has_claimed_patron_boon(patron_id: String) -> bool:
+	for entry: String in reward_history:
+		if patron_id == "patron_azazel_chains" and entry.find("azazel") >= 0:
+			return true
+		if patron_id == "patron_mammon_furnace" and entry.find("mammon") >= 0:
+			return true
+		if patron_id == "patron_minos_judge" and entry.find("minos") >= 0:
+			return true
+	return false
+
+func _synergy_payload_from_data(synergy: Dictionary) -> Dictionary:
+	var synergy_id: String = str(synergy.get("id", "unknown_synergy"))
+	var display_name: String = str(synergy.get("display_name", synergy_id))
+	var exact_effect: String = str(synergy.get("exact_effect", "Gain a rare cross-patron synergy."))
+	return {
+		"id": synergy_id,
+		"reward_kind": "synergy_boon",
+		"boon_id": synergy_id,
+		"patron_id": "patron_synergy",
+		"patron_name": "AZAZEL + MAMMON",
+		"display_name": display_name,
+		"rarity": str(synergy.get("rarity", "rare")),
+		"category": "synergy",
+		"exact_effect": exact_effect,
+		"description": exact_effect,
+		"body": exact_effect,
+		"short_consequence": exact_effect,
+		"current_consequence": "Cross-patron synergy: %s" % exact_effect,
+		"prompt": "[E] Claim",
+		"icon": "⛓",
+		"raw_boon": synergy.duplicate(true),
+	}
+
+func _build_forge_mark_payloads() -> Array[Dictionary]:
+	var data: Dictionary = _load_json_dictionary("res://data/build_identity/forge_marks.json")
+	var raw_marks: Array = data.get("forge_marks", []) as Array
+	var choices: Array[Dictionary] = []
+	for raw_mark: Variant in raw_marks:
+		if not (raw_mark is Dictionary):
+			continue
+		var mark: Dictionary = raw_mark as Dictionary
+		var mark_id: String = str(mark.get("id", "unknown_mark"))
+		var display_name: String = str(mark.get("display_name", mark_id))
+		var exact_effect: String = str(mark.get("exact_effect", "Modify your weapon for this run."))
+		choices.append({
+			"id": mark_id,
+			"reward_kind": "forge_mark",
+			"forge_mark_id": mark_id,
+			"display_name": display_name,
+			"rarity": str(mark.get("rarity", "common")),
+			"category": "forge",
+			"exact_effect": exact_effect,
+			"description": exact_effect,
+			"body": exact_effect,
+			"short_consequence": exact_effect,
+			"current_consequence": "Run weapon mark: %s" % exact_effect,
+			"prompt": "[E] Forge",
+			"icon": "⌁",
+			"raw_mark": mark.duplicate(true),
+		})
+	return choices
+
+func _build_weapon_ascension_payloads() -> Array[Dictionary]:
+	var data: Dictionary = _load_json_dictionary("res://data/build_identity/weapon_ascensions.json")
+	var raw_ascensions: Array = data.get("weapon_ascensions", []) as Array
+	var choices: Array[Dictionary] = []
+	for raw_ascension: Variant in raw_ascensions:
+		if not (raw_ascension is Dictionary):
+			continue
+		var ascension: Dictionary = raw_ascension as Dictionary
+		var ascension_id: String = str(ascension.get("id", "unknown_ascension"))
+		var display_name: String = str(ascension.get("display_name", ascension_id))
+		var exact_effect: String = str(ascension.get("exact_effect", "Evolve your weapon for the rest of this run."))
+		choices.append({
+			"id": ascension_id,
+			"reward_kind": "weapon_ascension",
+			"weapon_ascension_id": ascension_id,
+			"display_name": display_name,
+			"rarity": str(ascension.get("rarity", "rare")),
+			"category": "weapon_ascension",
+			"exact_effect": exact_effect,
+			"description": exact_effect,
+			"body": exact_effect,
+			"short_consequence": exact_effect,
+			"current_consequence": "Weapon evolution: %s" % exact_effect,
+			"prompt": "[E] Ascend",
+			"icon": "✠",
+			"raw_ascension": ascension.duplicate(true),
+		})
+	return choices
+
+func _spawn_identity_choices(choices: Array[Dictionary], callback: Callable) -> void:
+	var center: Vector2 = _get_reward_position()
+	var offsets: Array[Vector2] = [Vector2(-128.0, 8.0), Vector2(0.0, -34.0), Vector2(128.0, 8.0)]
+	var parent_node: Node = _get_runtime_parent()
+	for i: int in range(mini(choices.size(), offsets.size())):
+		var item: RunRoomInteractable = RunRoomInteractable.new()
+		parent_node.add_child(item)
+		item.setup(choices[i], center + offsets[i])
+		item.activated.connect(callback)
+		if item.has_signal("focus_changed"):
+			item.focus_changed.connect(_on_interactable_focus_changed)
+		_active_interactables.append(item)
+
+func _enter_weapon_ascension_room(reason: String) -> void:
+	weapon_ascension_offer_used = true
+	current_room_type = "reward"
+	current_room_variant = "weapon_ascension"
+	last_room_title = "Weapon Ascension"
+	_clear_route_runtime_nodes()
+	_set_phase(RunPhase.ROOM_INTRO, "The Penitent Blade demands a form.")
+	if runtime_adapter != null:
+		runtime_adapter.configure_room_presentation("reward", current_depth, "reward_altar")
+		runtime_adapter.prepare_non_combat_room()
+	_spawn_identity_choices(_build_weapon_ascension_payloads(), _on_build_identity_chosen)
+	_show_intro(last_room_title, "Choose one weapon evolution")
+	last_status = "Weapon Ascension. Choose one evolution for the rest of this run."
+	_room_completion_pending = false
+	_set_phase(RunPhase.REWARD, last_status)
+	_debug("%s after %s" % [last_status, reason])
+
+func _should_offer_weapon_ascension() -> bool:
+	if weapon_ascension_offer_used:
+		return false
+	if weapon_ascension_id != "":
+		return false
+	return rooms_completed >= 3
+
+func _on_build_identity_chosen(payload: Dictionary) -> void:
+	if _room_completion_pending:
+		return
+	for item: RunRoomInteractable in _active_interactables:
+		if item != null and is_instance_valid(item):
+			item.mark_used()
+	_audio_event("reward_claim")
+	_claim_build_identity_payload(payload)
+	_clear_active_interactables()
+	_set_phase(RunPhase.ROOM_CLEAR, "Claimed: %s." % str(payload.get("display_name", "Unknown")))
+	_room_completion_pending = false
+	if route_choice_enabled:
+		_schedule_route_choice_spawn()
+	else:
+		current_depth += 1
+		_enter_combat_room("combat")
+
+func _claim_build_identity_payload(payload: Dictionary) -> void:
+	var reward_kind: String = str(payload.get("reward_kind", ""))
+	var display_name: String = str(payload.get("display_name", "Unknown"))
+
+	if reward_kind == "forge_mark":
+		active_forge_mark = str(payload.get("forge_mark_id", payload.get("id", "")))
+		forge_marks_chosen.append(active_forge_mark)
+		reward_history.append(active_forge_mark)
+		reward_display_history.append("Forge: " + display_name)
+	elif reward_kind == "weapon_ascension":
+		weapon_ascension_id = str(payload.get("weapon_ascension_id", payload.get("id", "")))
+		reward_history.append(weapon_ascension_id)
+		reward_display_history.append("Ascension: " + display_name)
+
+	_grant_build_identity_payload_to_player(payload)
+	last_status = "Claimed %s." % display_name
+
+func _grant_build_identity_payload_to_player(payload: Dictionary) -> void:
+	var players: Array[Node] = get_tree().get_nodes_in_group("player")
+	for player: Node in players:
+		if player != null and is_instance_valid(player) and player.has_method("apply_build_identity_payload"):
+			player.call("apply_build_identity_payload", payload)
 
 
 func _build_gate_choices() -> Array[Dictionary]:
