@@ -21,6 +21,13 @@ var t006_last_player_attack_kind: String = ""
 var t006_base_modulate: Color = Color.WHITE
 var t006_base_modulate_captured: bool = false
 
+
+# T-011/T-012/T-013 build identity status placeholders.
+var t011_burning_chains_timer: float = 0.0
+var t011_burning_tick_timer: float = 0.0
+var t011_furnace_shackle_timer: float = 0.0
+
+
 # T-010 Mammon / burn interaction state. Placeholder fire logic until final VFX/art exists.
 var t010_burn_timer: float = 0.0
 var t010_burn_tick_timer: float = 0.0
@@ -302,11 +309,13 @@ func apply_encounter_profile(profile_name: String) -> void:
 func _process(delta: float) -> void:
 	_t009_update_azazel_enemy_effects(delta)
 	_t006_update_enemy_interaction(delta)
+	_t011_update_build_identity_status(delta)
 	_t010_update_mammon_enemy_effects(delta)
 	_t009_update_azazel_status(delta)
 	_visual_time += delta
 	_update_timers(delta)
 	_update_damage_numbers(delta)
+	_t011_apply_build_identity_modulate()
 
 	if is_dead:
 		if _death_free_remaining >= 0.0:
@@ -601,6 +610,42 @@ func _update_simple_chase(delta: float) -> void:
 	var to_player: Vector2 = player_2d.global_position - global_position
 	if to_player.length() <= aggro_radius and to_player.length() > 4.0:
 		global_position += to_player.normalized() * (0.0 if t010_root_timer > 0.0 else move_speed * (t010_slow_factor if t010_slow_timer > 0.0 else 1.0)) * delta # T-010 movement modifier
+
+
+func t011_apply_burning_chains(duration: float = 2.0) -> void:
+	t011_burning_chains_timer = maxf(t011_burning_chains_timer, duration)
+	t011_burning_tick_timer = minf(t011_burning_tick_timer, 0.25)
+	queue_redraw()
+
+func t011_apply_furnace_shackles(duration: float = 0.8) -> void:
+	t011_furnace_shackle_timer = maxf(t011_furnace_shackle_timer, duration)
+	if "t009_azazel_root_timer" in self:
+		set("t009_azazel_root_timer", maxf(float(get("t009_azazel_root_timer")), duration))
+	queue_redraw()
+
+func _t011_update_build_identity_status(delta: float) -> void:
+	if is_dead:
+		return
+
+	if t011_furnace_shackle_timer > 0.0:
+		t011_furnace_shackle_timer = maxf(0.0, t011_furnace_shackle_timer - delta)
+		_knockback_velocity = Vector2.ZERO
+
+	if t011_burning_chains_timer > 0.0:
+		t011_burning_chains_timer = maxf(0.0, t011_burning_chains_timer - delta)
+		t011_burning_tick_timer -= delta
+		if t011_burning_tick_timer <= 0.0:
+			t011_burning_tick_timer = 0.75
+			take_damage(1)
+
+func _t011_apply_build_identity_modulate() -> void:
+	if t011_burning_chains_timer > 0.0:
+		modulate = Color(1.25, 0.72, 0.38, 1.0)
+	elif t011_furnace_shackle_timer > 0.0:
+		modulate = Color(0.75, 0.88, 1.2, 1.0)
+	elif t006_hit_react_timer <= 0.0 and t006_stagger_timer <= 0.0 and t006_vulnerability_timer <= 0.0:
+		modulate = Color.WHITE
+
 
 func _draw() -> void:
 	_draw_filled_ellipse(Rect2(Vector2(-20.0, 12.0), Vector2(40.0, 13.0)), Color(0.0, 0.0, 0.0, 0.34))

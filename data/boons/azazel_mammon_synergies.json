@@ -1,0 +1,58 @@
+{
+  "synergies": [
+    {
+      "id": "synergy_azazel_mammon_burning_chains",
+      "display_name": "Burning Chains",
+      "rarity": "rare",
+      "category": "synergy",
+      "patrons": [
+        "patron_azazel_chains",
+        "patron_mammon_furnace"
+      ],
+      "exact_effect": "Enemies you slow, root, or bind also burn for a short time.",
+      "tags": [
+        "azazel",
+        "mammon",
+        "chain",
+        "burn",
+        "control"
+      ]
+    },
+    {
+      "id": "synergy_azazel_mammon_furnace_shackles",
+      "display_name": "Furnace Shackles",
+      "rarity": "rare",
+      "category": "synergy",
+      "patrons": [
+        "patron_azazel_chains",
+        "patron_mammon_furnace"
+      ],
+      "exact_effect": "Heavy-style hits against burning enemies briefly bind them.",
+      "tags": [
+        "azazel",
+        "mammon",
+        "heavy",
+        "burn",
+        "root"
+      ]
+    },
+    {
+      "id": "synergy_azazel_mammon_ashen_chain_reaction",
+      "display_name": "Ashen Chain Reaction",
+      "rarity": "rare",
+      "category": "synergy",
+      "patrons": [
+        "patron_azazel_chains",
+        "patron_mammon_furnace"
+      ],
+      "exact_effect": "Killing a bound or burning enemy spreads a short burn to nearby enemies.",
+      "tags": [
+        "azazel",
+        "mammon",
+        "death",
+        "spread",
+        "burn"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "forge_marks": [
+    {
+      "id": "forge_mark_serrated_edge",
+      "display_name": "Serrated Edge",
+      "rarity": "common",
+      "category": "forge_mark",
+      "exact_effect": "Your weapon bites deeper. Light-style hits and repeated strikes apply burning wound pressure.",
+      "tags": [
+        "forge",
+        "weapon",
+        "damage_over_time",
+        "mammon"
+      ]
+    },
+    {
+      "id": "forge_mark_grave_weight",
+      "display_name": "Grave Weight",
+      "rarity": "common",
+      "category": "forge_mark",
+      "exact_effect": "Your heavy-style attacks hit harder and briefly bind enemies, but this mark favors slower committed attacks.",
+      "tags": [
+        "forge",
+        "weapon",
+        "heavy",
+        "stagger",
+        "azazel"
+      ]
+    },
+    {
+      "id": "forge_mark_ash_step",
+      "display_name": "Ash Step",
+      "rarity": "common",
+      "category": "forge_mark",
+      "exact_effect": "Your dash leaves ash momentum. The next attack after movement gains fire pressure.",
+      "tags": [
+        "forge",
+        "weapon",
+        "dash",
+        "fire",
+        "mammon"
+      ]
+    }
+  ]
+}

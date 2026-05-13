@@ -1,0 +1,43 @@
+{
+  "weapon_ascensions": [
+    {
+      "id": "weapon_ascension_martyr_blade",
+      "display_name": "Martyr Blade",
+      "rarity": "rare",
+      "category": "weapon_ascension",
+      "exact_effect": "Risk/reward evolution. Below half health, your Q and ultimate gain extra Judgment damage.",
+      "tags": [
+        "ascension",
+        "risk",
+        "judgment",
+        "minos"
+      ]
+    },
+    {
+      "id": "weapon_ascension_warden_breaker",
+      "display_name": "Warden Breaker",
+      "rarity": "rare",
+      "category": "weapon_ascension",
+      "exact_effect": "Stagger evolution. Heavy-style hits and Judgment Break deal bonus pressure to bound or staggered enemies.",
+      "tags": [
+        "ascension",
+        "stagger",
+        "heavy",
+        "azazel"
+      ]
+    },
+    {
+      "id": "weapon_ascension_ash_serpent_edge",
+      "display_name": "Ash Serpent Edge",
+      "rarity": "rare",
+      "category": "weapon_ascension",
+      "exact_effect": "Mobility/fire evolution. Q and ultimate send burning ash pressure through enemies.",
+      "tags": [
+        "ascension",
+        "fire",
+        "dash",
+        "mammon"
+      ]
+    }
+  ]
+}

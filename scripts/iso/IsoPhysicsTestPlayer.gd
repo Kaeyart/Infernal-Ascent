@@ -2,6 +2,14 @@ extends CharacterBody2D
 class_name IsoPhysicsTestPlayer
 
 
+# T-011/T-012/T-013 build identity state.
+var t011_build_identity_ids: Dictionary = {}
+var t012_active_forge_mark_id: String = ""
+var t013_weapon_ascension_id: String = ""
+var t011_last_build_identity_debug: String = ""
+
+
+
 # T-010 Mammon boon runtime state. First-pass fire/greed mechanics.
 var t010_mammon_boons: Dictionary = {}
 var t010_dash_fire_timer: float = 0.0
@@ -929,6 +937,69 @@ func _load_texture_if_exists(path: String) -> Texture2D:
 func _unhandled_input(event: InputEvent) -> void:
 	_handle_judgment_debug_input_t003(event)
 
+
+func apply_build_identity_payload(payload: Dictionary) -> void:
+	var reward_kind: String = str(payload.get("reward_kind", ""))
+	var id_value: String = str(payload.get("boon_id", payload.get("forge_mark_id", payload.get("weapon_ascension_id", payload.get("id", "")))))
+	var display_name: String = str(payload.get("display_name", id_value))
+
+	if id_value == "":
+		return
+
+	t011_build_identity_ids[id_value] = true
+
+	if reward_kind == "forge_mark":
+		t012_active_forge_mark_id = id_value
+	elif reward_kind == "weapon_ascension":
+		t013_weapon_ascension_id = id_value
+
+	t011_last_build_identity_debug = "%s gained" % display_name
+	print("[BuildIdentity] Player received: %s (%s)" % [display_name, id_value])
+
+func t011_has_build_identity(id_value: String) -> bool:
+	return bool(t011_build_identity_ids.get(id_value, false))
+
+func _t011_modify_damage_for_build_identity(base_damage: int, attack_kind: String) -> int:
+	var modified: int = base_damage
+	var kind: String = attack_kind.to_lower()
+
+	if t012_active_forge_mark_id == "forge_mark_grave_weight" and (kind.find("heavy") >= 0 or kind.find("ultimate") >= 0):
+		modified += 1
+	if t012_active_forge_mark_id == "forge_mark_serrated_edge" and (kind.find("light") >= 0 or kind.find("attack") >= 0):
+		modified += 1
+	if t013_weapon_ascension_id == "weapon_ascension_warden_breaker" and (kind.find("heavy") >= 0 or kind.find("ultimate") >= 0):
+		modified += 1
+	if t013_weapon_ascension_id == "weapon_ascension_ash_serpent_edge" and (kind.find("q") >= 0 or kind.find("ultimate") >= 0):
+		modified += 1
+
+	return maxi(1, modified)
+
+func _t011_apply_build_identity_status_to_target(target: Node, attack_kind: String, hit_position: Vector2) -> void:
+	if target == null or not is_instance_valid(target):
+		return
+
+	var kind: String = attack_kind.to_lower()
+
+	if t012_active_forge_mark_id == "forge_mark_serrated_edge" and target.has_method("t011_apply_burning_chains"):
+		target.call("t011_apply_burning_chains", 1.5)
+
+	if t012_active_forge_mark_id == "forge_mark_grave_weight" and (kind.find("heavy") >= 0 or kind.find("ultimate") >= 0):
+		if target.has_method("t011_apply_furnace_shackles"):
+			target.call("t011_apply_furnace_shackles", 0.75)
+
+	if t013_weapon_ascension_id == "weapon_ascension_ash_serpent_edge" and (kind.find("q") >= 0 or kind.find("ultimate") >= 0):
+		if target.has_method("t011_apply_burning_chains"):
+			target.call("t011_apply_burning_chains", 2.0)
+
+	if t011_has_build_identity("synergy_azazel_mammon_burning_chains"):
+		if target.has_method("t011_apply_burning_chains") and (kind.find("q") >= 0 or kind.find("heavy") >= 0 or kind.find("ultimate") >= 0):
+			target.call("t011_apply_burning_chains", 2.0)
+
+	if t011_has_build_identity("synergy_azazel_mammon_furnace_shackles"):
+		if target.has_method("t011_apply_furnace_shackles") and (kind.find("heavy") >= 0 or kind.find("ultimate") >= 0):
+			target.call("t011_apply_furnace_shackles", 1.0)
+
+
 func _draw() -> void:
 	if _t004_q_flash_remaining > 0.0:
 		_t004_draw_q_ability_debug()
@@ -1352,6 +1423,8 @@ func _t004_call_damage_method(target: Node, arg1: Variant = null, arg2: Variant 
 	if _t009_is_ultimate_attack_kind(attack_kind):
 		_t009_on_ultimate_hit(target)
 
+	damage_amount = _t011_modify_damage_for_build_identity(damage_amount, attack_kind)
+
 	var method_args: Array = []
 	for raw_method_info: Dictionary in target.get_method_list():
 		var method_info: Dictionary = raw_method_info
@@ -1423,6 +1496,7 @@ func _t004_call_damage_method(target: Node, arg1: Variant = null, arg2: Variant 
 					call_args.append(damage_amount)
 
 	Callable(target, "take_damage").callv(call_args)
+	_t011_apply_build_identity_status_to_target(target, attack_kind, hit_position)
 	_t010_apply_mammon_hit_effects(target, attack_kind, damage_amount, hit_position) # mammon_dispatch_hook
 	_t009_after_damage_azazel_effects(target, attack_kind, damage_amount)
 
