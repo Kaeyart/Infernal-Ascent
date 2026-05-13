@@ -2,6 +2,8 @@ extends Node2D
 
 class_name RunRoomInteractable
 
+const UI_SKIN_SCRIPT_PATH: String = "res://scripts/iso/ui/InfernalUISkinV1.gd"
+
 signal activated(payload: Dictionary)
 signal focus_changed(payload: Dictionary, focused: bool)
 
@@ -86,6 +88,18 @@ func _interact_pressed_once() -> bool:
 		return true
 	return Input.is_physical_key_pressed(KEY_E)
 
+func _t014b_get_choice_panel_texture() -> Texture2D:
+	var skin_script: Script = load(UI_SKIN_SCRIPT_PATH) as Script
+	if skin_script == null:
+		return null
+	if not skin_script.has_method("panel_texture"):
+		return null
+	var texture_value: Variant = skin_script.call("panel_texture", "reward")
+	if texture_value is Texture2D:
+		return texture_value as Texture2D
+	return null
+
+
 func _draw() -> void:
 	var kind: String = str(payload.get("kind", "reward"))
 	var title: String = str(payload.get("display_name", "Interact"))
@@ -99,12 +113,14 @@ func _draw() -> void:
 	if debug_draw_radius:
 		draw_arc(Vector2.ZERO, interact_radius, 0.0, TAU, 48, Color(0.3, 0.8, 1.0, 0.65), 1.0)
 
+
 func _draw_shadow() -> void:
 	var points: PackedVector2Array = PackedVector2Array()
 	for i: int in range(28):
 		var angle: float = TAU * float(i) / 28.0
 		points.append(Vector2(cos(angle) * 48.0, sin(angle) * 14.0 + 11.0))
 	draw_colored_polygon(points, Color(0.0, 0.0, 0.0, 0.34))
+
 
 func _draw_object(kind: String, base_color: Color, pulse: float) -> void:
 	match kind:
@@ -121,6 +137,7 @@ func _draw_object(kind: String, base_color: Color, pulse: float) -> void:
 		_:
 			_draw_reward(base_color, pulse)
 
+
 func _draw_reward(base_color: Color, pulse: float) -> void:
 	draw_circle(Vector2(0.0, -34.0), 30.0 + pulse * 4.0, Color(base_color.r, base_color.g, base_color.b, 0.20 + pulse * 0.12))
 	draw_rect(Rect2(Vector2(-20.0, -58.0), Vector2(40.0, 40.0)), Color(0.045, 0.035, 0.026, 0.96), true)
@@ -128,11 +145,13 @@ func _draw_reward(base_color: Color, pulse: float) -> void:
 	draw_line(Vector2(0.0, -55.0), Vector2(0.0, -21.0), Color(1.0, 0.92, 0.62, 0.95), 2.0)
 	draw_line(Vector2(-15.0, -38.0), Vector2(15.0, -38.0), Color(1.0, 0.92, 0.62, 0.95), 2.0)
 
+
 func _draw_fountain(base_color: Color, pulse: float) -> void:
 	draw_rect(Rect2(Vector2(-38.0, -31.0), Vector2(76.0, 30.0)), Color(0.06, 0.08, 0.11, 0.96), true)
 	draw_rect(Rect2(Vector2(-38.0, -31.0), Vector2(76.0, 30.0)), base_color, false, 2.0)
 	draw_arc(Vector2(0.0, -38.0), 26.0 + pulse * 4.0, deg_to_rad(200.0), deg_to_rad(340.0), 20, Color(0.65, 0.88, 1.0, 0.88), 2.5)
 	draw_circle(Vector2(0.0, -25.0), 10.0, Color(0.55, 0.82, 1.0, 0.80))
+
 
 func _draw_forge(base_color: Color, pulse: float) -> void:
 	draw_rect(Rect2(Vector2(-36.0, -42.0), Vector2(72.0, 40.0)), Color(0.10, 0.055, 0.032, 0.96), true)
@@ -140,11 +159,13 @@ func _draw_forge(base_color: Color, pulse: float) -> void:
 	draw_line(Vector2(-22.0, -16.0), Vector2(22.0, -16.0), Color(0.86, 0.78, 0.65, 1.0), 4.0)
 	draw_circle(Vector2(0.0, -28.0), 8.0 + pulse * 2.0, Color(1.0, 0.35, 0.10, 0.34))
 
+
 func _draw_shop(base_color: Color, pulse: float) -> void:
 	draw_rect(Rect2(Vector2(-32.0, -52.0), Vector2(64.0, 48.0)), Color(0.06, 0.045, 0.08, 0.96), true)
 	draw_rect(Rect2(Vector2(-32.0, -52.0), Vector2(64.0, 48.0)), base_color, false, 2.0)
 	draw_circle(Vector2(0.0, -31.0), 12.0 + pulse * 2.0, Color(0.76, 0.48, 1.0, 0.48))
 	draw_string(ThemeDB.fallback_font, Vector2(-18.0, -15.0), "?", HORIZONTAL_ALIGNMENT_CENTER, 36.0, 18, Color(1.0, 0.86, 0.45, 1.0))
+
 
 func _draw_sealed_gate(base_color: Color, pulse: float) -> void:
 	# V22.2: boss placeholder is a physical sealed door inside the room, not a floating UI object.
@@ -155,12 +176,14 @@ func _draw_sealed_gate(base_color: Color, pulse: float) -> void:
 	draw_line(Vector2(-22.0, -52.0), Vector2(22.0, -52.0), Color(1.0, 0.86, 0.52, 0.95), 2.0)
 	draw_arc(Vector2(0.0, -92.0), 36.0, PI, TAU, 24, Color(0.86, 0.70, 0.42, 0.76), 2.0)
 
+
 func _draw_boss_exit(base_color: Color, pulse: float) -> void:
 	draw_circle(Vector2(0.0, -44.0), 34.0 + pulse * 4.0, Color(0.35, 0.72, 1.0, 0.14 + pulse * 0.08))
 	draw_rect(Rect2(Vector2(-30.0, -78.0), Vector2(60.0, 68.0)), Color(0.020, 0.030, 0.040, 0.94), true)
 	draw_rect(Rect2(Vector2(-30.0, -78.0), Vector2(60.0, 68.0)), base_color, false, 2.0)
 	draw_line(Vector2(-18.0, -44.0), Vector2(18.0, -44.0), Color(0.76, 0.94, 1.0, 0.92), 2.0)
 	draw_line(Vector2(0.0, -62.0), Vector2(0.0, -26.0), Color(0.76, 0.94, 1.0, 0.92), 2.0)
+
 
 func _draw_prompt(title: String, base_color: Color) -> void:
 	var font: Font = ThemeDB.fallback_font
@@ -200,6 +223,7 @@ func _draw_prompt(title: String, base_color: Color) -> void:
 	elif not _player_in_range:
 		prompt = "APPROACH"
 	draw_string(font, Vector2(rect.position.x + 8.0, rect.position.y + rect.size.y - 8.0), prompt, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 16.0, 11, Color(0.72, 0.94, 1.0, 1.0 if _player_in_range else 0.68))
+
 
 func _draw_boss_gate_name(title: String, base_color: Color) -> void:
 	var font: Font = ThemeDB.fallback_font
