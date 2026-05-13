@@ -1199,6 +1199,7 @@ func _claim_boon_payload(payload: Dictionary) -> void:
 
 	reward_history.append(boon_id)
 	reward_display_history.append("%s: %s" % [patron_name, display_name])
+	_t010_grant_boon_to_player(payload)
 	_grant_boon_payload_to_player(payload)
 	_t009_notify_players_of_boon(payload)
 
@@ -1209,6 +1210,20 @@ func _claim_boon_payload(payload: Dictionary) -> void:
 			run_boon_state.call("add_boon", payload)
 		elif run_boon_state.has_method("record_boon"):
 			run_boon_state.call("record_boon", payload)
+
+
+
+func _t010_grant_boon_to_player(payload: Dictionary) -> void:
+	var players: Array[Node] = get_tree().get_nodes_in_group("player")
+	for player_node: Node in players:
+		if player_node == null or not is_instance_valid(player_node):
+			continue
+		if player_node.has_method("receive_boon_payload"):
+			player_node.call("receive_boon_payload", payload)
+		elif player_node.has_method("grant_boon_payload"):
+			player_node.call("grant_boon_payload", payload)
+		elif player_node.has_method("t010_receive_boon_payload"):
+			player_node.call("t010_receive_boon_payload", payload)
 
 
 func _build_gate_choices() -> Array[Dictionary]:

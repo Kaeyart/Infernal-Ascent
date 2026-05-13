@@ -97,10 +97,11 @@
       "id": "S-009",
       "name": "Furnace Mother Boon Set",
       "lane": "DATA/LOGIC",
-      "status": "Missing",
+      "status": "In Progress",
       "priority": "P1",
       "need": "8 burn/ash/area-denial boons.",
-      "acceptance": "Furnace playstyle is distinct and synergizes with Chain Saint."
+      "acceptance": "Furnace playstyle is distinct and synergizes with Chain Saint.",
+      "Status": "In Progress"
     },
     {
       "id": "S-010",

@@ -2,6 +2,15 @@ extends CharacterBody2D
 class_name IsoPhysicsTestPlayer
 
 
+# T-010 Mammon boon runtime state. First-pass fire/greed mechanics.
+var t010_mammon_boons: Dictionary = {}
+var t010_dash_fire_timer: float = 0.0
+var t010_dash_fire_tick: float = 0.0
+var t010_first_attack_after_dash_empowered: bool = false
+var t010_light_hit_count: int = 0
+var t010_furnace_bloom_cooldown: float = 0.0
+
+
 # T-009 Azazel boon mechanics. Placeholder mechanics until final boon UI/VFX exists.
 var t009_owned_boons: Dictionary = {}
 var t009_light_hit_count: int = 0
@@ -280,6 +289,7 @@ func _ready() -> void:
 	queue_redraw()
 
 func _physics_process(delta: float) -> void:
+	_t010_update_mammon_player_effects(delta)
 	_t009_update_azazel_dash_effects(delta)
 	_t004_tick_q_ability(delta)
 	if _t004_consume_q_input():
@@ -1413,6 +1423,7 @@ func _t004_call_damage_method(target: Node, arg1: Variant = null, arg2: Variant 
 					call_args.append(damage_amount)
 
 	Callable(target, "take_damage").callv(call_args)
+	_t010_apply_mammon_hit_effects(target, attack_kind, damage_amount, hit_position) # mammon_dispatch_hook
 	_t009_after_damage_azazel_effects(target, attack_kind, damage_amount)
 
 func _t004_get_method_args(target: Object, method_name: String) -> Array:
@@ -1969,3 +1980,155 @@ func _t009_update_azazel_dash_effects(delta: float) -> void:
 			if enemy_node.has_method("t009_apply_slow"):
 				enemy_node.call("t009_apply_slow", 0.45, 1.25)
 			t009_bound_step_cooldown = 0.18
+
+
+func receive_boon_payload(payload: Dictionary) -> void:
+	_t010_record_mammon_boon(payload)
+	if has_method("t009_record_azazel_boon"):
+		call("t009_record_azazel_boon", payload)
+
+
+func _t010_record_mammon_boon(payload: Dictionary) -> void:
+	var patron_id: String = str(payload.get("patron_id", ""))
+	var boon_id: String = str(payload.get("boon_id", payload.get("id", ""))).to_lower()
+	if patron_id != "patron_mammon_furnace" and boon_id.find("mammon") < 0 and boon_id.find("furnace") < 0 and boon_id.find("cinder") < 0:
+		return
+
+	t010_mammon_boons[boon_id] = true
+	print("[T010] Mammon boon received: %s" % boon_id)
+
+func _t010_has_mammon_boon(fragment: String) -> bool:
+	var needle: String = fragment.to_lower()
+	for key: Variant in t010_mammon_boons.keys():
+		var id: String = str(key).to_lower()
+		if id.find(needle) >= 0:
+			return true
+	return false
+
+func _t010_has_any_mammon_boon() -> bool:
+	return not t010_mammon_boons.is_empty()
+
+func _t010_update_mammon_player_effects(delta: float) -> void:
+	if t010_furnace_bloom_cooldown > 0.0:
+		t010_furnace_bloom_cooldown = maxf(0.0, t010_furnace_bloom_cooldown - delta)
+
+	if not _t010_has_any_mammon_boon():
+		return
+
+	if t010_dash_fire_timer > 0.0:
+		t010_dash_fire_timer = maxf(0.0, t010_dash_fire_timer - delta)
+		t010_dash_fire_tick -= delta
+		if t010_dash_fire_tick <= 0.0:
+			t010_dash_fire_tick = 0.18
+			_t010_apply_burn_to_nearby_enemies(global_position, 52.0, 1.7, 1)
+
+	var dash_pressed: bool = false
+	if InputMap.has_action("dash") and Input.is_action_just_pressed("dash"):
+		dash_pressed = true
+	if Input.is_physical_key_pressed(KEY_SHIFT):
+		dash_pressed = true
+
+	if dash_pressed and (_t010_has_mammon_boon("ash") or _t010_has_mammon_boon("dash") or _t010_has_mammon_boon("step")):
+		t010_dash_fire_timer = 0.42
+		t010_dash_fire_tick = 0.01
+		t010_first_attack_after_dash_empowered = true
+
+func _t010_apply_mammon_hit_effects(target: Node, attack_kind: String = "attack", damage_amount: int = 1, hit_position: Vector2 = Vector2.ZERO) -> void:
+	if target == null or not is_instance_valid(target):
+		return
+	if not _t010_has_any_mammon_boon():
+		return
+
+	var kind: String = attack_kind.to_lower()
+	var is_light: bool = kind.find("light") >= 0 or kind == "attack" or kind == "player_ability"
+	var is_heavy: bool = kind.find("heavy") >= 0
+	var is_q: bool = kind.find("q") >= 0 or kind.find("cleave") >= 0 or kind.find("riposte") >= 0
+	var is_ultimate: bool = kind.find("ultimate") >= 0 or kind.find("judgment") >= 0
+
+	# Cinder Edge / generic burn lane: light-style hits ignite enemies.
+	if is_light and (_t010_has_mammon_boon("cinder") or _t010_has_mammon_boon("burn")):
+		_t010_apply_burn_to_target(target, 2.4, 1)
+
+	# Kindled Wounds: Q against burning enemies deals bonus damage.
+	if is_q and (_t010_has_mammon_boon("kindled") or _t010_has_mammon_boon("wound")):
+		if target.has_method("t010_is_burning") and bool(target.call("t010_is_burning")):
+			_t010_direct_extra_damage(target, 1, "mammon_kindled")
+
+	# Scorched Heavy: heavy attacks emit a small ember burst.
+	if is_heavy and (_t010_has_mammon_boon("heavy") or _t010_has_mammon_boon("ember") or _t010_has_mammon_boon("scorch")):
+		var origin: Vector2 = hit_position
+		if origin == Vector2.ZERO and target is Node2D:
+			origin = (target as Node2D).global_position
+		_t010_apply_burn_to_nearby_enemies(origin, 86.0, 2.0, 1)
+
+	# Ash Step / Dash Ignite: first hit after dash gets a small fire bonus.
+	if t010_first_attack_after_dash_empowered and (_t010_has_mammon_boon("ash") or _t010_has_mammon_boon("dash") or _t010_has_mammon_boon("step")):
+		t010_first_attack_after_dash_empowered = false
+		_t010_direct_extra_damage(target, 1, "mammon_ash_step")
+		_t010_apply_burn_to_target(target, 1.6, 1)
+
+	# Coal Heart / low HP fire: simple low-health damage bonus.
+	if (_t010_has_mammon_boon("low") or _t010_has_mammon_boon("coal") or _t010_has_mammon_boon("heart")) and _t010_is_player_low_health():
+		_t010_direct_extra_damage(target, 1, "mammon_coal_heart")
+
+	# Furnace Bloom: burning enemy death creates a small burst.
+	if (_t010_has_mammon_boon("explosion") or _t010_has_mammon_boon("bloom")) and t010_furnace_bloom_cooldown <= 0.0:
+		var dead_now: bool = false
+		if "is_dead" in target:
+			dead_now = bool(target.get("is_dead"))
+		if dead_now and target is Node2D:
+			t010_furnace_bloom_cooldown = 0.35
+			_t010_apply_burn_to_nearby_enemies((target as Node2D).global_position, 104.0, 2.2, 1)
+
+	# Ultimate fire fantasy: if the player has any final flame style boon, ultimate burns survivors.
+	if is_ultimate and (_t010_has_mammon_boon("final") or _t010_has_mammon_boon("flame")):
+		_t010_apply_burn_to_target(target, 3.0, 1)
+
+func _t010_apply_burn_to_target(target: Node, duration: float, damage_per_tick: int) -> void:
+	if target == null or not is_instance_valid(target):
+		return
+	if target.has_method("t010_apply_burn"):
+		target.call("t010_apply_burn", duration, damage_per_tick, self)
+
+func _t010_apply_burn_to_nearby_enemies(origin: Vector2, radius: float, duration: float, damage_per_tick: int) -> void:
+	var enemies: Array[Node] = get_tree().get_nodes_in_group("iso_test_enemy")
+	for enemy_node: Node in enemies:
+		if enemy_node == null or not is_instance_valid(enemy_node):
+			continue
+		if not enemy_node is Node2D:
+			continue
+		var enemy_pos: Vector2 = (enemy_node as Node2D).global_position
+		if enemy_pos.distance_to(origin) <= radius:
+			_t010_apply_burn_to_target(enemy_node, duration, damage_per_tick)
+
+func _t010_direct_extra_damage(target: Node, amount: int, attack_kind: String) -> void:
+	if target == null or not is_instance_valid(target):
+		return
+	if target.has_method("take_damage"):
+		# Use the existing safe dispatcher if present.
+		if has_method("_t004_call_damage_method"):
+			call("_t004_call_damage_method", target, amount, global_position, 0.0, attack_kind)
+		else:
+			target.call("take_damage", amount)
+
+func _t010_is_player_low_health() -> bool:
+	var current_hp: float = 9999.0
+	var max_hp_value: float = 9999.0
+
+	if "health" in self:
+		current_hp = float(get("health"))
+	elif "current_health" in self:
+		current_hp = float(get("current_health"))
+	elif "hp" in self:
+		current_hp = float(get("hp"))
+
+	if "max_health" in self:
+		max_hp_value = float(get("max_health"))
+	elif "maximum_health" in self:
+		max_hp_value = float(get("maximum_health"))
+	elif "max_hp" in self:
+		max_hp_value = float(get("max_hp"))
+
+	if max_hp_value <= 0.0 or max_hp_value >= 9999.0:
+		return false
+	return current_hp / max_hp_value <= 0.40

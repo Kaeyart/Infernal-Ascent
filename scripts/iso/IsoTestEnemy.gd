@@ -21,11 +21,19 @@ var t006_last_player_attack_kind: String = ""
 var t006_base_modulate: Color = Color.WHITE
 var t006_base_modulate_captured: bool = false
 
+# T-010 Mammon / burn interaction state. Placeholder fire logic until final VFX/art exists.
+var t010_burn_timer: float = 0.0
+var t010_burn_tick_timer: float = 0.0
+var t010_burn_tick_interval: float = 0.75
+var t010_burn_damage: int = 1
+var t010_slow_timer: float = 0.0
+var t010_slow_factor: float = 1.0
+var t010_root_timer: float = 0.0
+var t010_enemy_base_modulate: Color = Color.WHITE
+var t010_enemy_base_modulate_captured: bool = false
+
 # T-009 Azazel status hooks.
 var t009_azazel_mark_timer: float = 0.0
-var t009_azazel_root_timer: float = 0.0
-var t009_azazel_slow_timer: float = 0.0
-var t009_azazel_slow_multiplier: float = 1.0
 var t009_azazel_base_move_speed: float = -1.0
 
 
@@ -294,6 +302,7 @@ func apply_encounter_profile(profile_name: String) -> void:
 func _process(delta: float) -> void:
 	_t009_update_azazel_enemy_effects(delta)
 	_t006_update_enemy_interaction(delta)
+	_t010_update_mammon_enemy_effects(delta)
 	_t009_update_azazel_status(delta)
 	_visual_time += delta
 	_update_timers(delta)
@@ -489,14 +498,14 @@ func _update_chase_or_spacing(delta: float, player_2d: Node2D, to_player: Vector
 		return
 	if projectile_enabled or support_pulse_enabled:
 		if distance < desired_spacing - spacing_dead_zone and distance > 0.01:
-			global_position -= to_player.normalized() * move_speed * delta
+			global_position -= to_player.normalized() * (0.0 if t010_root_timer > 0.0 else move_speed * (t010_slow_factor if t010_slow_timer > 0.0 else 1.0)) * delta # T-010 movement modifier
 		elif distance > desired_spacing + spacing_dead_zone and distance <= aggro_radius:
-			global_position += to_player.normalized() * move_speed * delta
+			global_position += to_player.normalized() * (0.0 if t010_root_timer > 0.0 else move_speed * (t010_slow_factor if t010_slow_timer > 0.0 else 1.0)) * delta # T-010 movement modifier
 		return
 	if distance <= attack_range * 0.78 and not lunge_enabled:
 		return
 	if distance <= aggro_radius and distance > 4.0:
-		global_position += to_player.normalized() * move_speed * delta
+		global_position += to_player.normalized() * (0.0 if t010_root_timer > 0.0 else move_speed * (t010_slow_factor if t010_slow_timer > 0.0 else 1.0)) * delta # T-010 movement modifier
 
 func _update_damage_numbers(delta: float) -> void:
 	for i: int in range(_damage_numbers.size() - 1, -1, -1):
@@ -591,7 +600,7 @@ func _update_simple_chase(delta: float) -> void:
 	var player_2d: Node2D = player_node as Node2D
 	var to_player: Vector2 = player_2d.global_position - global_position
 	if to_player.length() <= aggro_radius and to_player.length() > 4.0:
-		global_position += to_player.normalized() * move_speed * delta
+		global_position += to_player.normalized() * (0.0 if t010_root_timer > 0.0 else move_speed * (t010_slow_factor if t010_slow_timer > 0.0 else 1.0)) * delta # T-010 movement modifier
 
 func _draw() -> void:
 	_draw_filled_ellipse(Rect2(Vector2(-20.0, 12.0), Vector2(40.0, 13.0)), Color(0.0, 0.0, 0.0, 0.34))
@@ -1150,3 +1159,58 @@ func _t009_update_azazel_status(delta: float) -> void:
 		modulate = Color(1.0, 0.82, 0.38, 1.0)
 	elif t009_azazel_root_timer > 0.0:
 		modulate = Color(0.70, 0.85, 1.0, 1.0)
+
+
+func t010_apply_burn(duration: float = 2.5, damage_per_tick: int = 1, _source: Node = null) -> void:
+	if is_dead:
+		return
+	t010_burn_timer = maxf(t010_burn_timer, duration)
+	t010_burn_tick_timer = minf(t010_burn_tick_timer, 0.12)
+	t010_burn_damage = maxi(1, damage_per_tick)
+	queue_redraw()
+
+func t010_is_burning() -> bool:
+	return t010_burn_timer > 0.0
+
+func t010_apply_slow(duration: float = 1.25, factor: float = 0.55) -> void:
+	if is_dead:
+		return
+	t010_slow_timer = maxf(t010_slow_timer, duration)
+	t010_slow_factor = clampf(factor, 0.15, 1.0)
+	queue_redraw()
+
+func t010_apply_root(duration: float = 1.0) -> void:
+	if is_dead:
+		return
+	t010_root_timer = maxf(t010_root_timer, duration)
+	queue_redraw()
+
+func t010_apply_pull(source_position: Vector2, strength: float = 34.0) -> void:
+	if is_dead:
+		return
+	var dir: Vector2 = (source_position - global_position).normalized()
+	if dir.length_squared() > 0.001:
+		global_position += dir * strength
+		queue_redraw()
+
+func _t010_update_mammon_enemy_effects(delta: float) -> void:
+	if not t010_enemy_base_modulate_captured:
+		t010_enemy_base_modulate = modulate
+		t010_enemy_base_modulate_captured = true
+
+	if t010_burn_timer > 0.0:
+		t010_burn_timer = maxf(0.0, t010_burn_timer - delta)
+		t010_burn_tick_timer -= delta
+		if t010_burn_tick_timer <= 0.0 and not is_dead:
+			t010_burn_tick_timer = t010_burn_tick_interval
+			if has_method("take_damage"):
+				call("take_damage", t010_burn_damage)
+		modulate = Color(1.0, 0.55, 0.25, 1.0)
+	elif t010_root_timer > 0.0:
+		t010_root_timer = maxf(0.0, t010_root_timer - delta)
+		modulate = Color(0.75, 0.55, 0.32, 1.0)
+	elif t010_slow_timer > 0.0:
+		t010_slow_timer = maxf(0.0, t010_slow_timer - delta)
+		modulate = Color(0.92, 0.72, 0.42, 1.0)
+	else:
+		modulate = t010_enemy_base_modulate
