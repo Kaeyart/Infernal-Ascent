@@ -1,6 +1,11 @@
 extends CharacterBody2D
 class_name IsoPhysicsTestPlayer
 
+
+# T-009 Azazel boon mechanics. Placeholder mechanics until final boon UI/VFX exists.
+var t009_owned_boons: Dictionary = {}
+var t009_light_hit_count: int = 0
+var t009_bound_step_cooldown: float = 0.0
 # T-009 Azazel boon runtime. Placeholder combat hooks until final patron/VFX pass.
 var t009_owned_boon_ids: Dictionary = {}
 var t009_owned_boon_payloads: Dictionary = {}
@@ -275,6 +280,7 @@ func _ready() -> void:
 	queue_redraw()
 
 func _physics_process(delta: float) -> void:
+	_t009_update_azazel_dash_effects(delta)
 	_t004_tick_q_ability(delta)
 	if _t004_consume_q_input():
 		_t004_try_start_q_ability()
@@ -1329,6 +1335,13 @@ func _t004_call_damage_method(target: Node, arg1: Variant = null, arg2: Variant 
 		var multiplier: float = float(target.call("get_player_ability_damage_multiplier", attack_kind))
 		damage_amount = max(1, int(ceil(float(damage_amount) * multiplier)))
 
+	if _t009_is_q_attack_kind(attack_kind):
+		_t009_on_q_hit(target)
+	if _t009_is_heavy_attack_kind(attack_kind):
+		damage_amount = _t009_apply_heavy_modifiers_to_damage(target, damage_amount)
+	if _t009_is_ultimate_attack_kind(attack_kind):
+		_t009_on_ultimate_hit(target)
+
 	var method_args: Array = []
 	for raw_method_info: Dictionary in target.get_method_list():
 		var method_info: Dictionary = raw_method_info
@@ -1826,3 +1839,133 @@ func _t009_update_bound_step_dash_slow() -> void:
 			t009_bound_step_touched[key] = true
 			if node.has_method("apply_azazel_slow"):
 				node.call("apply_azazel_slow", 1.5, 0.55)
+
+func receive_run_boon(payload: Dictionary) -> void:
+	var patron_id: String = str(payload.get("patron_id", ""))
+	var boon_id: String = str(payload.get("boon_id", payload.get("id", "")))
+	if patron_id != "patron_azazel_chains":
+		return
+	if boon_id == "":
+		return
+	t009_owned_boons[boon_id] = payload.duplicate(true)
+	print("[T009] Azazel boon received: %s" % boon_id)
+
+func _t009_has_boon_token(token: String) -> bool:
+	for raw_key: Variant in t009_owned_boons.keys():
+		var boon_id: String = str(raw_key)
+		if boon_id.find(token) >= 0:
+			return true
+	return false
+
+func _t009_is_q_attack_kind(attack_kind: String) -> bool:
+	var kind: String = attack_kind.to_lower()
+	return kind.find("q") >= 0 or kind.find("riposte") >= 0 or kind.find("cleave") >= 0
+
+func _t009_is_heavy_attack_kind(attack_kind: String) -> bool:
+	var kind: String = attack_kind.to_lower()
+	return kind.find("heavy") >= 0 or kind.find("grave") >= 0
+
+func _t009_is_ultimate_attack_kind(attack_kind: String) -> bool:
+	var kind: String = attack_kind.to_lower()
+	return kind.find("ultimate") >= 0 or kind.find("judgment") >= 0 or kind.find("break") >= 0
+
+func _t009_apply_light_attack_damage(target: Node, base_damage: int) -> void:
+	if target == null or not is_instance_valid(target):
+		return
+	if not target.has_method("take_damage"):
+		return
+	target.call("take_damage", base_damage)
+	_t009_on_light_hit(target)
+
+func _t009_apply_heavy_attack_damage(target: Node, base_damage: int) -> void:
+	var final_damage: int = _t009_apply_heavy_modifiers_to_damage(target, base_damage)
+	if target != null and is_instance_valid(target) and target.has_method("take_damage"):
+		target.call("take_damage", final_damage)
+
+func _t009_apply_heavy_modifiers_to_damage(target: Node, base_damage: int) -> int:
+	var final_damage: int = base_damage
+	var consumed_mark: bool = false
+	if target != null and is_instance_valid(target) and target.has_method("t009_consume_azazel_mark"):
+		consumed_mark = bool(target.call("t009_consume_azazel_mark"))
+	elif target != null and is_instance_valid(target) and bool(target.get_meta("t009_azazel_marked", false)):
+		target.set_meta("t009_azazel_marked", false)
+		consumed_mark = true
+	if consumed_mark and _t009_has_boon_token("riposte_mark"):
+		final_damage += 2
+	if _t009_has_boon_token("heavy_bonus") or _t009_has_boon_token("chain_stagger"):
+		if target != null and is_instance_valid(target) and target.has_method("t009_add_stagger_pressure"):
+			target.call("t009_add_stagger_pressure", 35.0)
+	if _t009_has_boon_token("chain_stagger"):
+		final_damage += 1
+	if _t009_has_boon_token("dash_bind") or _t009_has_boon_token("root"):
+		if target != null and is_instance_valid(target) and target.has_method("t009_pull_toward"):
+			target.call("t009_pull_toward", global_position, 145.0)
+	return final_damage
+
+func _t009_on_light_hit(target: Node) -> void:
+	if not _t009_has_boon_token("echo_lash"):
+		return
+	t009_light_hit_count += 1
+	if t009_light_hit_count % 3 != 0:
+		return
+	var enemies: Array[Node] = get_tree().get_nodes_in_group("iso_test_enemy")
+	var best_target: Node = null
+	var best_distance: float = INF
+	for enemy_node: Node in enemies:
+		if enemy_node == target:
+			continue
+		if enemy_node == null or not is_instance_valid(enemy_node):
+			continue
+		if not enemy_node is Node2D:
+			continue
+		if not enemy_node.has_method("take_damage"):
+			continue
+		var distance: float = global_position.distance_to((enemy_node as Node2D).global_position)
+		if distance < 190.0 and distance < best_distance:
+			best_distance = distance
+			best_target = enemy_node
+	if best_target != null:
+		best_target.call("take_damage", 1)
+		if best_target.has_method("t009_apply_slow"):
+			best_target.call("t009_apply_slow", 0.70, 0.8)
+
+func _t009_on_q_hit(target: Node) -> void:
+	if not _t009_has_boon_token("riposte_mark"):
+		return
+	if target == null or not is_instance_valid(target):
+		return
+	target.set_meta("t009_azazel_marked", true)
+	if target.has_method("t009_apply_azazel_mark"):
+		target.call("t009_apply_azazel_mark", 5.0)
+
+func _t009_on_ultimate_hit(target: Node) -> void:
+	if not _t009_has_boon_token("ultimate_shackle"):
+		return
+	if target == null or not is_instance_valid(target):
+		return
+	if target.has_method("t009_apply_root"):
+		target.call("t009_apply_root", 2.0)
+	else:
+		target.set_meta("t009_azazel_rooted", true)
+
+func _t009_update_azazel_dash_effects(delta: float) -> void:
+	if t009_bound_step_cooldown > 0.0:
+		t009_bound_step_cooldown = maxf(0.0, t009_bound_step_cooldown - delta)
+	if not _t009_has_boon_token("dash_bind"):
+		return
+	if t009_bound_step_cooldown > 0.0:
+		return
+	if not has_method("_is_dash_invulnerable"):
+		return
+	if not _is_dash_invulnerable():
+		return
+	var enemies: Array[Node] = get_tree().get_nodes_in_group("iso_test_enemy")
+	for enemy_node: Node in enemies:
+		if enemy_node == null or not is_instance_valid(enemy_node):
+			continue
+		if not enemy_node is Node2D:
+			continue
+		if global_position.distance_to((enemy_node as Node2D).global_position) <= 56.0:
+			if enemy_node.has_method("t009_apply_slow"):
+				enemy_node.call("t009_apply_slow", 0.45, 1.25)
+			t009_bound_step_cooldown = 0.18

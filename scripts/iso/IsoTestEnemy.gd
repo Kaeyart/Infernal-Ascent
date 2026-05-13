@@ -21,6 +21,13 @@ var t006_last_player_attack_kind: String = ""
 var t006_base_modulate: Color = Color.WHITE
 var t006_base_modulate_captured: bool = false
 
+# T-009 Azazel status hooks.
+var t009_azazel_mark_timer: float = 0.0
+var t009_azazel_root_timer: float = 0.0
+var t009_azazel_slow_timer: float = 0.0
+var t009_azazel_slow_multiplier: float = 1.0
+var t009_azazel_base_move_speed: float = -1.0
+
 
 const INFERNAL_AUDIO_SCRIPT: Script = preload("res://scripts/audio/InfernalAudio.gd")
 
@@ -287,6 +294,7 @@ func apply_encounter_profile(profile_name: String) -> void:
 func _process(delta: float) -> void:
 	_t009_update_azazel_enemy_effects(delta)
 	_t006_update_enemy_interaction(delta)
+	_t009_update_azazel_status(delta)
 	_visual_time += delta
 	_update_timers(delta)
 	_update_damage_numbers(delta)
@@ -1085,3 +1093,60 @@ func _t009_update_azazel_enemy_effects(delta: float) -> void:
 	elif t009_azazel_slow_timer > 0.0:
 		modulate = Color(0.78, 0.92, 1.0, 1.0)
 
+func t009_apply_azazel_mark(duration: float = 5.0) -> void:
+	t009_azazel_mark_timer = maxf(t009_azazel_mark_timer, duration)
+	set_meta("t009_azazel_marked", true)
+	queue_redraw()
+
+func t009_consume_azazel_mark() -> bool:
+	if t009_azazel_mark_timer <= 0.0 and not bool(get_meta("t009_azazel_marked", false)):
+		return false
+	t009_azazel_mark_timer = 0.0
+	set_meta("t009_azazel_marked", false)
+	queue_redraw()
+	return true
+
+func t009_add_stagger_pressure(amount: float) -> void:
+	t006_stagger_value += amount
+	if t006_stagger_value >= t006_stagger_threshold:
+		t006_stagger_timer = maxf(t006_stagger_timer, 0.8)
+
+func t009_apply_root(duration: float = 1.5) -> void:
+	t009_azazel_root_timer = maxf(t009_azazel_root_timer, duration)
+	queue_redraw()
+
+func t009_apply_slow(multiplier: float = 0.55, duration: float = 1.2) -> void:
+	if t009_azazel_base_move_speed < 0.0:
+		t009_azazel_base_move_speed = move_speed
+	t009_azazel_slow_multiplier = clampf(multiplier, 0.15, 1.0)
+	t009_azazel_slow_timer = maxf(t009_azazel_slow_timer, duration)
+	move_speed = t009_azazel_base_move_speed * t009_azazel_slow_multiplier
+	queue_redraw()
+
+func t009_pull_toward(point: Vector2, force: float = 130.0) -> void:
+	var direction: Vector2 = (point - global_position).normalized()
+	if direction.length_squared() <= 0.001:
+		return
+	_knockback_velocity = direction * force
+	_knockback_remaining = maxf(_knockback_remaining, 0.10)
+	queue_redraw()
+
+func _t009_update_azazel_status(delta: float) -> void:
+	if t009_azazel_mark_timer > 0.0:
+		t009_azazel_mark_timer = maxf(0.0, t009_azazel_mark_timer - delta)
+		if t009_azazel_mark_timer <= 0.0:
+			set_meta("t009_azazel_marked", false)
+	if t009_azazel_root_timer > 0.0:
+		t009_azazel_root_timer = maxf(0.0, t009_azazel_root_timer - delta)
+		_state = EnemyState.RECOVERY
+		_knockback_velocity = Vector2.ZERO
+		_knockback_remaining = 0.0
+	if t009_azazel_slow_timer > 0.0:
+		t009_azazel_slow_timer = maxf(0.0, t009_azazel_slow_timer - delta)
+		if t009_azazel_slow_timer <= 0.0 and t009_azazel_base_move_speed >= 0.0:
+			move_speed = t009_azazel_base_move_speed
+			t009_azazel_slow_multiplier = 1.0
+	if t009_azazel_mark_timer > 0.0:
+		modulate = Color(1.0, 0.82, 0.38, 1.0)
+	elif t009_azazel_root_timer > 0.0:
+		modulate = Color(0.70, 0.85, 1.0, 1.0)

@@ -1,23 +1,57 @@
 # T-009 — Azazel Boon Mechanics V1
 
-Goal: make the first patron mechanically visible in combat.
+Status target: placeholder mechanics, not final UI or VFX.
 
-This patch does not add final patron art. It wires the Azazel boon payloads into the player/enemy runtime using placeholder effects.
+This patch makes the first patron lane mechanically visible after the route-gated boon system.
 
-Implemented V1 hooks:
+Patron:
 
-- Iron Sentence: heavy attacks apply extra stagger pressure.
-- Bound Step: dashing through enemies slows them briefly.
-- Condemned Mark: Q hits mark enemies; the next heavy hit consumes the mark for bonus damage.
-- Chain Echo: repeated light hits trigger a small chain lash on a nearby enemy.
-- Final Shackle: Judgment Break roots surviving enemies briefly.
-- Dragged Below: heavy attacks pull enemies slightly toward the player.
-- Rebel's Mercy / Rusted Oath are registered in the player boon list but are deferred for cleaner death/damage-event hooks.
+```text
+Azazel, the Chain-Bound Rebel
+```
 
-Acceptance:
+Implemented placeholder mechanics:
 
-- Claiming an Azazel boon notifies the player.
-- Q, light, heavy, ultimate still work.
-- Condemned Mark can be seen through debug prints/meta behavior and heavy bonus damage.
-- Bound Step / Final Shackle / Dragged Below visibly affect enemies through placeholder slow/root/pull behavior.
-- No parser errors.
+```text
+Condemned Mark
+Q marks an enemy. A later heavy-style hit can consume the mark for bonus damage.
+
+Iron Sentence
+Heavy-style damage adds extra stagger pressure and a small damage bump.
+
+Dragged Below
+Heavy-style hits can pull enemies slightly toward the player.
+
+Final Shackle
+Judgment Break roots surviving enemies briefly.
+
+Bound Step
+Dashing through enemies slows them briefly.
+
+Chain Echo
+Every third light hit lashes a nearby enemy for 1 damage.
+```
+
+Deferred:
+
+```text
+Rebel's Mercy
+Rusted Oath
+Final icons
+Final UI cards
+Final chain VFX
+Balance tuning
+```
+
+Test checklist:
+
+```text
+Start a run.
+Claim an Azazel boon.
+Confirm the player receives the boon without parser errors.
+If Condemned Mark appears: use Q on enemy, then heavy/ability hit.
+If Bound Step appears: dash through enemy and confirm brief slow/status tint.
+If Final Shackle appears: fill Judgment and use ultimate.
+If Chain Echo appears: land repeated light hits and confirm nearby lash.
+Confirm Mammon/Minos boons can still be claimed without crashing, even if they have no mechanics yet.
+```

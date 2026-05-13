@@ -1199,6 +1199,7 @@ func _claim_boon_payload(payload: Dictionary) -> void:
 
 	reward_history.append(boon_id)
 	reward_display_history.append("%s: %s" % [patron_name, display_name])
+	_grant_boon_payload_to_player(payload)
 	_t009_notify_players_of_boon(payload)
 
 	if run_boon_state != null and is_instance_valid(run_boon_state):
@@ -2104,3 +2105,9 @@ func _audio_context(context_name: String) -> void:
 func _debug(message: String) -> void:
 	if print_debug:
 		print("[IsoLocalLoop] " + message)
+
+func _grant_boon_payload_to_player(payload: Dictionary) -> void:
+	var players: Array[Node] = get_tree().get_nodes_in_group("player")
+	for player_node: Node in players:
+		if player_node != null and is_instance_valid(player_node) and player_node.has_method("receive_run_boon"):
+			player_node.call("receive_run_boon", payload)

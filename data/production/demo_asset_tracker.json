@@ -85,11 +85,13 @@
       "id": "S-008",
       "name": "Chain Saint Boon Set",
       "lane": "DATA/LOGIC",
-      "status": "In Progress",
+      "status": "Placeholder",
       "priority": "P0",
       "need": "Make Azazel boons affect combat through stagger/control/Q/heavy/ultimate hooks.",
       "acceptance": "A Chain Saint build is recognizable in gameplay.",
-      "system": "Azazel Boon Mechanics V1"
+      "system": "Azazel Boon Mechanics V1",
+      "Status": "Placeholder",
+      "notes": "T-009 adds first placeholder Azazel combat mechanics."
     },
     {
       "id": "S-009",
