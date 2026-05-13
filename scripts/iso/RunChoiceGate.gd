@@ -133,6 +133,8 @@ func _draw_minimal_label(display_name: String, icon: String, base_color: Color, 
 
 func _color_for_room_type(room_type: String) -> Color:
 	match room_type:
+		"patron_boon":
+			return Color(0.86, 0.62, 0.24, 1.0)
 		"combat":
 			return Color(0.80, 0.30, 0.12, 1.0)
 		"elite_combat":

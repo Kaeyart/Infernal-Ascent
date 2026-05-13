@@ -378,6 +378,8 @@ func _spawn_choice_gates_deferred(expected_phase_serial: int) -> void:
 	var choices: Array[Dictionary] = _build_gate_choices()
 	_current_gate_choices = choices.duplicate(true)
 	var positions: Array[Vector2] = _get_gate_positions()
+	if choices.size() == 1 and positions.size() >= 2:
+		positions = [positions[1]]
 	var parent_node: Node = _get_runtime_parent()
 	for i: int in range(choices.size()):
 		var gate: RunChoiceGate = RunChoiceGate.new()
@@ -417,7 +419,7 @@ func _on_route_gate_chosen(choice_data: Dictionary) -> void:
 	match current_room_type:
 		"combat", "elite_combat":
 			_enter_combat_room(current_room_type)
-		"patron_boon":
+		"patron_boon", "route_reward":
 			_enter_combat_room("combat")
 		"reward":
 			_enter_reward_room()
@@ -571,8 +573,11 @@ func _on_reward_chosen(payload: Dictionary) -> void:
 			item.mark_used()
 	_audio_event("reward_claim")
 
-	if str(payload.get("reward_kind", "")) == "boon":
+	var reward_kind: String = str(payload.get("reward_kind", ""))
+	if reward_kind == "boon":
 		_claim_boon_payload(payload)
+	elif reward_kind == "gold_payout" or reward_kind == "health_boost":
+		_claim_route_payout_payload(payload)
 	else:
 		_apply_reward(payload)
 
@@ -964,6 +969,76 @@ func _clear_boss_placeholder_nodes() -> void:
 			node.queue_free()
 
 
+
+func _route_reward_gate_choice(source_kind: String, display_name: String, consequence: String) -> Dictionary:
+	return {
+		"room_type": "route_reward",
+		"display_name": display_name,
+		"icon": "◆",
+		"risk": "Standard",
+		"risk_level": "Standard",
+		"short_consequence": consequence,
+		"current_consequence": consequence,
+		"exact_effect": consequence,
+		"prompt": "[E] Enter",
+		"reward_source": {
+			"kind": source_kind,
+			"display_name": display_name,
+		},
+	}
+
+func _gold_payout_payload() -> Dictionary:
+	return {
+		"id": "route_gold_payout",
+		"reward_kind": "gold_payout",
+		"display_name": "Run Gold",
+		"rarity": "common",
+		"category": "currency",
+		"exact_effect": "Gain +4 run gold to spend in shops this run.",
+		"description": "Gain +4 run gold to spend in shops this run.",
+		"body": "Gain +4 run gold to spend in shops this run.",
+		"short_consequence": "+4 run gold.",
+		"current_consequence": "Gold can be spent in shops before the run ends.",
+		"prompt": "[E] Claim",
+		"icon": "¤",
+		"amount": 4,
+	}
+
+func _health_boost_payload() -> Dictionary:
+	return {
+		"id": "route_health_boost",
+		"reward_kind": "health_boost",
+		"display_name": "Health Boon",
+		"rarity": "common",
+		"category": "survival",
+		"exact_effect": "Recover 1 HP now. Later this can become max-health growth.",
+		"description": "Recover 1 HP now. Later this can become max-health growth.",
+		"body": "Recover 1 HP now. Later this can become max-health growth.",
+		"short_consequence": "Recover 1 HP.",
+		"current_consequence": "Immediate survival reward.",
+		"prompt": "[E] Claim",
+		"icon": "+",
+		"amount": 1,
+	}
+
+func _claim_route_payout_payload(payload: Dictionary) -> void:
+	var kind: String = str(payload.get("reward_kind", ""))
+	if kind == "gold_payout":
+		var amount: int = int(payload.get("amount", 4))
+		run_ash_shards += amount
+		reward_history.append(str(payload.get("id", "route_gold_payout")))
+		reward_display_history.append("Gold: +%d" % amount)
+		last_status = "Claimed +%d run gold." % amount
+		return
+
+	if kind == "health_boost":
+		var heal_amount: int = int(payload.get("amount", 1))
+		_heal_player_flat(heal_amount)
+		reward_history.append(str(payload.get("id", "route_health_boost")))
+		reward_display_history.append("Health: +%d" % heal_amount)
+		last_status = "Recovered %d HP." % heal_amount
+		return
+
 func _build_first_patron_gate_choices() -> Array[Dictionary]:
 	return [
 		_patron_gate_choice("patron_azazel_chains", "AZAZEL", "Clear the next room to receive a boon from Azazel."),
@@ -1037,6 +1112,12 @@ func _enter_pending_reward_source_room(reason: String) -> void:
 func _build_pending_reward_choices() -> Array[Dictionary]:
 	var source_kind: String = str(_pending_reward_source.get("kind", ""))
 	var patron_id: String = str(_pending_reward_source.get("patron_id", ""))
+
+	if source_kind == "gold":
+		return [_gold_payout_payload()]
+	if source_kind == "health":
+		return [_health_boost_payload()]
+
 	if source_kind != "patron" or patron_id == "":
 		return _build_reward_choices()
 
@@ -1096,7 +1177,10 @@ func _boon_payload_from_data(boon: Dictionary, patron_id: String) -> Dictionary:
 		"rarity": rarity,
 		"category": category,
 		"exact_effect": exact_effect,
-		"current_consequence": "%s boon. Applies for this run." % source_name,
+		"description": exact_effect,
+		"body": exact_effect,
+		"short_consequence": exact_effect,
+		"current_consequence": "%s boon: %s" % [source_name, exact_effect],
 		"prompt": "[E] Claim",
 		"icon": str(boon.get("icon", "✦")),
 		"raw_boon": boon.duplicate(true),
@@ -1128,46 +1212,71 @@ func _claim_boon_payload(payload: Dictionary) -> void:
 
 func _build_gate_choices() -> Array[Dictionary]:
 	_choice_generation_index += 1
+
 	if demo_run_length_locked and force_demo_route_pattern:
 		return _build_locked_demo_gate_choices()
-	var choices: Array[Dictionary] = []
+
 	if rooms_completed == 1 and reward_rooms_completed <= 0:
 		return _build_first_patron_gate_choices()
-	choices.append(_room_choice("combat"))
-	var pool: Array[String] = ["reward", "fountain", "combat", "forge", "shop", "elite_combat"]
-	var start: int = (_choice_generation_index + rooms_completed + combat_rooms_cleared) % pool.size()
-	for i: int in range(pool.size()):
-		if choices.size() >= 3:
-			break
-		var room_type: String = pool[(start + i) % pool.size()]
-		if _should_skip_room_type(room_type, choices):
-			continue
-		choices.append(_room_choice(room_type))
-	while choices.size() < 3:
-		choices.append(_room_choice("combat"))
+
+	if rooms_completed >= maxi(1, demo_rooms_before_boss - 1):
+		return [
+			_room_choice_with_text("elite_combat", "ELITE", "Mandatory final trial before the Ash Warden."),
+		]
+
+	var patron_cycle: int = (_choice_generation_index + rooms_completed) % 3
+	var patron_choice: Dictionary
+	if patron_cycle == 0:
+		patron_choice = _patron_gate_choice("patron_azazel_chains", "AZAZEL", "Clear the next room to receive a boon from Azazel.")
+	elif patron_cycle == 1:
+		patron_choice = _patron_gate_choice("patron_mammon_furnace", "MAMMON", "Clear the next room to receive a boon from Mammon.")
+	else:
+		patron_choice = _patron_gate_choice("patron_minos_judge", "MINOS", "Clear the next room to receive a boon from Minos.")
+
+	var choices: Array[Dictionary] = [patron_choice]
+
+	if rooms_completed % 3 == 0:
+		choices.append(_room_choice_with_text("forge", "FORGE", "Modify your weapon for this run."))
+	elif rooms_completed % 3 == 1:
+		choices.append(_route_reward_gate_choice("gold", "GOLD", "Clear the next room to gain run gold for shops."))
+	else:
+		choices.append(_route_reward_gate_choice("health", "HEALTH", "Clear the next room to recover health."))
+
+	if shop_rooms_seen <= 0 and rooms_completed >= 2:
+		choices.append(_room_choice_with_text("shop", "SHOP", "Spend run gold on survival or power."))
+	elif fountain_rooms_completed <= 0:
+		choices.append(_room_choice_with_text("fountain", "FOUNTAIN", "Recover before the next chamber."))
+	else:
+		choices.append(_route_reward_gate_choice("gold", "GOLD", "Clear the next room to gain run gold for shops."))
+
 	return choices
 
 func _build_locked_demo_gate_choices() -> Array[Dictionary]:
-	# V20 locks the first demo route into a predictable beginning, middle, and pre-boss end.
-	# rooms_completed is the room just cleared, so it selects the next chamber.
+	# Route gates advertise reward sources. Generic COMBAT gates are intentionally removed.
+	# The room behind most reward-source gates is still combat, but the displayed promise is the reward.
+	if rooms_completed >= maxi(1, demo_rooms_before_boss - 1):
+		return [
+			_room_choice_with_text("elite_combat", "ELITE", "Mandatory final trial before the Ash Warden."),
+		]
+
 	if rooms_completed <= 1:
-		return _build_first_patron_gate_choices()
+		return [
+			_patron_gate_choice("patron_azazel_chains", "AZAZEL", "Clear the next room to receive a boon from Azazel."),
+			_route_reward_gate_choice("gold", "GOLD", "Clear the next room to gain run gold for shops."),
+			_route_reward_gate_choice("health", "HEALTH", "Clear the next room to recover health."),
+		]
+
 	if rooms_completed == 2:
 		return [
-			_room_choice_with_text("combat", "Combat", "Another Circle 0 encounter."),
-			_room_choice_with_text("shop", "Shop", "Reserved economy room. Continue after inspection."),
-			_room_choice_with_text("forge", "Forge", "Reserved weapon mark room. Continue after inspection."),
+			_patron_gate_choice("patron_mammon_furnace", "MAMMON", "Clear the next room to receive a boon from Mammon."),
+			_room_choice_with_text("shop", "SHOP", "Spend run gold on survival or power."),
+			_route_reward_gate_choice("gold", "GOLD", "Clear the next room to gain run gold for shops."),
 		]
-	if rooms_completed == 3:
-		return [
-			_room_choice_with_text("elite_combat", "Elite Combat", "Harder final fight before the boss gate."),
-			_room_choice_with_text("combat", "Combat", "Safer final fight before the boss gate."),
-			_room_choice_with_text("combat", "Combat", "Alternate final combat chamber."),
-		]
+
 	return [
-		_room_choice_with_text("combat", "Combat", "Fallback route chamber."),
-		_room_choice_with_text("reward", "Reward", "Fallback reward chamber."),
-		_room_choice_with_text("fountain", "Fountain", "Fallback recovery chamber."),
+		_patron_gate_choice("patron_minos_judge", "MINOS", "Clear the next room to receive a boon from Minos."),
+		_room_choice_with_text("forge", "FORGE", "Modify your weapon for this run."),
+		_room_choice_with_text("fountain", "FOUNTAIN", "Recover before the Ash Warden route."),
 	]
 
 func _room_choice_with_text(room_type: String, display_name: String, description: String) -> Dictionary:
@@ -1428,7 +1537,7 @@ func _apply_reward(payload: Dictionary) -> void:
 			_add_player_float(player, "attack_radius", 14.0)
 		"attack_arc":
 			_add_player_float_clamped(player, "light_attack_arc_degrees", 15.0, 45.0, 170.0)
-			_add_player_float_clamped(player, "heavy_attack_arc_degrees", 15.0, 60.0, 190.0)
+			_add_player_float_clamped(player, "heavy_attack_arawc_degrees", 15.0, 60.0, 190.0)
 		"contact_resist":
 			_add_player_float(player, "contact_damage_iframe_duration", 0.10)
 		"contact_resist_major":
